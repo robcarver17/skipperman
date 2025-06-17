@@ -1,3 +1,12 @@
+
+
+- added 'notes' app
+- Replace registration data and health on import of replacement manual registration
+- Fixed caching issue
+- added explicit under age warnings, cleaned up age code
+- Common sort order for all sailor related reports
+- audit log for qualifications
+
 # Version 3.01
 
 - WA files not deleted after import. Adding concept of 'temporary skip'

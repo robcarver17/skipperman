@@ -41,6 +41,7 @@ from app.objects.composed.food_at_event import (
 from app.objects.composed.notes_for_groups import (
     compose_dict_of_notes_for_groups_at_event,
 )
+from app.objects.composed.notes_with_volunteers import compose_list_of_notes_with_volunteers_from_list_of_notes
 from app.objects.composed.roles_and_teams import compose_dict_of_teams_with_roles
 from app.objects.composed.ticks_in_dicts import (
     create_qualifications_and_tick_items_as_dict_from_underyling,
@@ -346,6 +347,11 @@ object_definition_for_list_of_notes_for_groups = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_notes_for_groups
 )
 
+object_definition_for_list_of_notes = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_notes
+)
+
+
 
 ## ITERABLE
 object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id = IterableObjectDefinition(
@@ -360,6 +366,8 @@ object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_i
     required_key_for_iteration="list_of_cadet_ids",
     key_for_underlying_object="cadet_id",
 )
+
+
 
 
 ## DERIVED
@@ -514,6 +522,17 @@ object_definition_for_club_dinghy_limits = DerivedObjectDefinition(
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_club_dinghy_limits=object_definition_for_list_of_club_dinghy_limits_with_ids
     ),
+)
+
+object_definition_for_list_of_notes_with_volunteers = DerivedObjectDefinition(
+    composition_function=compose_list_of_notes_with_volunteers_from_list_of_notes,
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_notes = object_definition_for_list_of_notes,
+        list_of_volunteers = object_definition_for_volunteers
+    ),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_notes = object_definition_for_list_of_notes
+    )
 )
 
 object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups = DerivedObjectDefinition(

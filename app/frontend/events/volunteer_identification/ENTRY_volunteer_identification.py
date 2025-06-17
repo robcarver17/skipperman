@@ -52,10 +52,9 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.cadets import Cadet
 from app.objects.event_warnings import (
-    HIGH_PRIORITY,
     VOLUNTEER_IDENTITY,
-    MEDIUM_PRIORITY,
 )
+from app.data_access.configuration.fixed import MEDIUM_PRIORITY, HIGH_PRIORITY
 
 from app.objects.utilities.exceptions import NoMoreData, arg_not_passed, missing_data
 from app.objects.relevant_information_for_volunteers import (

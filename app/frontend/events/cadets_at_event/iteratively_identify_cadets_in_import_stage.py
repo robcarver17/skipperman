@@ -44,10 +44,9 @@ from app.frontend.shared.get_or_select_cadet_forms import (
 )
 from app.objects.event_warnings import (
     CADET_IDENTITY,
-    HIGH_PRIORITY,
     CADET_REGISTRATION,
-    LOW_PRIORITY,
 )
+from app.data_access.configuration.fixed import LOW_PRIORITY, HIGH_PRIORITY
 from app.objects.events import Event
 from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SIMILARITY_BOTH
 

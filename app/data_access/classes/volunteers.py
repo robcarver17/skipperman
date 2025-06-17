@@ -1,3 +1,4 @@
+from app.objects.notes import ListOfNotes
 from app.objects.volunteers import (
     ListOfVolunteers,
 )
@@ -124,5 +125,16 @@ class DataListOfTargetForRoleAtEvent(object):
         self,
         list_of_targets_for_roles_at_event: ListOfTargetForRoleWithIdAtEvent,
         event_id: str,
+    ):
+        raise NotImplemented
+
+
+class DataListOfNotes(object):
+    def read(self) -> ListOfNotes:
+        raise NotImplemented
+
+    def write(
+        self,
+        list_of_notes: ListOfNotes
     ):
         raise NotImplemented

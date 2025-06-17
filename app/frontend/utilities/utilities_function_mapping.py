@@ -14,6 +14,7 @@ from app.frontend.utilities.data_and_backups.restore_backup_from_snapshot import
     display_form_view_of_snapshots,
     post_form_view_of_snapshots,
 )
+from app.frontend.utilities.notes.ENTRY_notes import display_form_notes, post_form_notes
 
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
@@ -65,6 +66,8 @@ utilities_function_mapping = (
                         display_form_for_event_cleaning,
                         post_form_view_of_event_data_cleaning,
                     ): 0,
+                    (display_form_notes,
+                     post_form_notes):0
                 },
             }
         )

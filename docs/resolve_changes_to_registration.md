@@ -89,3 +89,7 @@ If you have the option to change availability and/or status, you then have three
 - Use the original data in Skipperman (which ignores any updates made in Wild Apricot)
 - Use the data in the form. You can select a different status and/or available days. If you don't make any changes in the form, choosing this button will be the same as using the new data from Wild Apricot, since the form is prepopulated with new data.
 - Use the new data imported from Wild Apricot (recommended)
+
+# Manual registrations
+
+If the registration was done manually, and you subsequently have the cadet properly registered, then the registration details will be imported from the form, including health information. To see any 'other information' they have added you will need to go to the 'registration details' page.

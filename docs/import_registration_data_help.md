@@ -280,6 +280,7 @@ You have three options:
 - Use the data in the form. You can select a different status and/or available days. If you don't make any changes in the form, choosing this button will be the same as using the new data from Wild Apricot.
 - Use the new data imported from Wild Apricot (recommended)
 
+If a sailor was originally registered manually, then all their registration data will be imported. Warning - you won't see any notes they have entered unless you look at the registration details page.
 
 ## New conflicts between volunteer and cadet information
 

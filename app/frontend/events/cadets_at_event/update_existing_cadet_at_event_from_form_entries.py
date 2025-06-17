@@ -13,7 +13,7 @@ from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_eve
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages,
     update_availability_of_existing_cadet_at_event_and_return_messages,
     update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting,
-    update_registration_details_for_existing_cadet_at_event,
+    update_registration_details_for_existing_cadet_at_event_who_was_manual,
 )
 from app.backend.registration_data.cadet_registration_data import get_cadet_at_event
 from app.backend.registration_data.identified_cadets_at_event import (
@@ -213,14 +213,14 @@ def update_comparing_new_and_existing_cadet_at_event(
             new_status=new_status,
         )
         if registration_replaces_manual_reg:
-            update_registration_details_for_existing_cadet_at_event(
+            update_registration_details_for_existing_cadet_at_event_who_was_manual(
                 object_store=interface.object_store,
                 event=event,
                 cadet=cadet,
                 row_in_registration_data=new_cadet_at_event.data_in_row,
 
             )
-            interface.log_error("Cadet %s was manually registered; imported details from registration form and updated health information. This will not add any volunteers, food or clothing. Check registration details page. " % cadet)
+            interface.log_error("Cadet %s was manually registered; imported details from registration form and updated health information. " % cadet)
 
     else:
         interface.log_error(

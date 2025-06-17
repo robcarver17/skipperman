@@ -228,6 +228,10 @@ class GenericDataApi(object):
     def data_list_of_group_notes_at_event(self) -> DataListOfGroupNotesAtEvent:
         raise NotImplemented
 
+    @property
+    def data_list_of_notes(self) -> DataListOfNotes:
+        raise NotImplemented
+
     ## Specials
 
     def delete_all_master_data(self, are_you_sure: bool = False):

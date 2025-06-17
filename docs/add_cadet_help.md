@@ -35,7 +35,7 @@ The date of birth, and other details, can be edited later.
 Click on 'Check details'. At this stage you may be presented with a series of warnings:
 
 - The first name or surname seems too short. Don't use initials.
-- The sailor seems very young (less than 7 years old) or very old (over 19 years old) for a cadet. Check their date of birth is accurate.   
+- The sailor seems very young (less than 8 years old at end of current school year) or very old (over 19 years old at end of current school year) for a cadet. Check their date of birth is accurate. This is no problem for junior sailors entered for junior racing events.  
 - The sailor looks very similar to one or more existing sailors. Remember, we don't want to create duplicate sailors so be sure this is a different person. But you will get this warning for twins with the same birthday, as well as those with similar names.
 
 

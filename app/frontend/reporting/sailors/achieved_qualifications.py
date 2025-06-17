@@ -1,3 +1,4 @@
+import app.frontend.utilities.notes.render_notes
 from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.init_directories import temp_file_name_in_download_directory
@@ -21,7 +22,7 @@ def write_qualifications_to_temp_csv_file_and_return_filename(
     )
 
     list_of_cadet_names_with_qualifications = (
-        list_of_cadet_names_with_qualifications.sort_by_date()
+        app.frontend.utilities.notes.render_notes.sort_by_date()
     )
     df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_str()
 

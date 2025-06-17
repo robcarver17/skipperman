@@ -358,6 +358,12 @@ class CsvDataApi(GenericDataApi):
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 
+    @property
+    def data_list_of_notes(self) -> CsvDataListOfNotes:
+        return CsvDataListOfNotes(
+            self.master_data_path, backup_data_path=self.backup_data_path
+        )
+
     #### USERS
 
     @property

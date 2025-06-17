@@ -8,6 +8,7 @@ from app.frontend.utilities.data_and_backups.ENTRY_data_and_backups import (
     display_form_data_and_backups,
 )
 from app.frontend.utilities.files.ENTRY_files import display_form_file_management
+from app.frontend.utilities.notes.ENTRY_notes import display_form_notes
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -28,11 +29,14 @@ from app.objects.utilities.exceptions import missing_data
 DATA_AND_BACKUP = "Data: backup, upload, and restore"
 DATA_CLEAN = "Delete sensitive data"
 FILES = "File management"
+NOTES = "Write notes"
 
 DICT_OF_MENU_OPTIONS = {
     DATA_AND_BACKUP: display_form_data_and_backups,
     DATA_CLEAN: display_form_for_event_cleaning,
     FILES: display_form_file_management,
+    NOTES: display_form_notes
+
 }
 
 list_of_menu_labels = list(DICT_OF_MENU_OPTIONS.keys())

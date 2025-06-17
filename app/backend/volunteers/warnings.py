@@ -49,18 +49,15 @@ from app.objects.events import Event
 from app.objects.registration_data import get_volunteer_status_from_row
 from app.objects.event_warnings import (
     ListOfEventWarnings,
-    MEDIUM_PRIORITY,
     CADET_WITHOUT_ADULT,
     VOLUNTEER_AVAILABILITY,
     VOLUNTEER_GROUP,
-    LOW_PRIORITY,
-    LOWEST_PRIORITY,
     VOLUNTEER_UNCONNECTED,
     VOLUNTEER_QUALIFICATION,
-    HIGH_PRIORITY,
     VOLUNTEER_IDENTITY,
     VOLUNTEER_PREFERENCE,
 )
+from app.data_access.configuration.fixed import LOWEST_PRIORITY, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
 from app.backend.events.event_warnings import (
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
     process_warnings_into_warning_list,

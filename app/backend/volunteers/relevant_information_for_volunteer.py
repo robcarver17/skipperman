@@ -11,9 +11,8 @@ from app.objects.event_warnings import (
     ListOfEventWarnings,
     VOLUNTEER_AVAILABILITY,
     VOLUNTEER_PREFERENCE,
-    HIGH_PRIORITY,
-    LOW_PRIORITY,
 )
+from app.data_access.configuration.fixed import LOW_PRIORITY, HIGH_PRIORITY
 
 
 def relevant_information_requires_clarification(

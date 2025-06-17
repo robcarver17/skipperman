@@ -23,11 +23,6 @@ class EventWarningLog(GenericSkipperManObjectWithIds):
         return not self.ignored
 
 
-LOWEST_PRIORITY = "4 - Very low"
-LOW_PRIORITY = "3 - Low"
-MEDIUM_PRIORITY = "2 - Medium"
-HIGH_PRIORITY = "1 - High"
-
 CADET_IDENTITY = "Cadet identity"
 CADET_DOB = "Cadet DOB"
 CADET_REGISTRATION = "Cadet registration"

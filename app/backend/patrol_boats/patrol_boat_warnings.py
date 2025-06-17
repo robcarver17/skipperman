@@ -8,8 +8,8 @@ from app.objects.event_warnings import (
     ListOfEventWarnings,
     VOLUNTEER_QUALIFICATION,
     MISSING_DRIVER,
-    HIGH_PRIORITY,
 )
+from app.data_access.configuration.fixed import HIGH_PRIORITY
 from app.objects.volunteers import ListOfVolunteers
 
 from app.data_access.store.object_store import ObjectStore

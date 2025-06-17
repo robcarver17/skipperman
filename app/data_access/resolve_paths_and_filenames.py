@@ -85,6 +85,7 @@ GROUPS_FILE_ID = "groups"
 VOLUNTEER_ROLES_FILE_ID = "roles"
 VOLUNTEER_TEAMS_FILE_ID = "volunteer_teams"
 VOLUNTEER_ROLE_AND_TEAMS_FILE_ID = "volunteer_roles_and_teams"
+NOTES_FILE_ID = "list_of_notes"
 
 LIST_OF_PATROL_BOATS_FILE_ID = "list_of_patrol_boats"
 LIST_OF_CLUB_DINGHIES_FILE_ID = "list_of_club_dinghies"
@@ -152,6 +153,7 @@ _dict_of_filenames_and_paths = {
         "cadets_with_groups_for_event_%s.csv",
     ),
     GROUP_NOTES_ID: ("mapped_events", "group_notes.csv"),
+    NOTES_FILE_ID: ("lists", "notes.csv"),
     VOLUNTEER_ROLES_FILE_ID: ("lists", "roles.csv"),
     VOLUNTEER_TEAMS_FILE_ID: ("lists", "volunteer_teams.csv"),
     VOLUNTEER_ROLE_AND_TEAMS_FILE_ID: ("lists", "list_of_role_and_team_ids.csv"),

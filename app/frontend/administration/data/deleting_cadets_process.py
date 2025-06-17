@@ -1,6 +1,6 @@
 from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 
-from app.backend.administration.delete_cadets import (
+from app.backend.administration_and_utilities.delete_cadets import (
     delete_cadet_in_data_and_return_warnings,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form

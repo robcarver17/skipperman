@@ -9,14 +9,13 @@ from app.objects.events import Event
 from app.objects.event_warnings import (
     ListOfEventWarnings,
     CADET_IDENTITY,
-    MEDIUM_PRIORITY,
     CADET_DOB,
     CADET_REGISTRATION,
     CADET_WITHOUT_ADULT,
     CADET_MANUALLY_ADDED,
     CADET_SKIPPED_TEMPORARY,
-    LOW_PRIORITY, HIGH_PRIORITY,
 )
+from app.data_access.configuration.fixed import LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
 from app.backend.events.event_warnings import (
     add_or_update_list_of_new_event_warnings_clearing_any_missing,
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,

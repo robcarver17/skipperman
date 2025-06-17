@@ -4,6 +4,8 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
     update_dict_of_all_event_info_for_cadets,
 )
+from app.backend.clothing.dict_of_clothing_for_event import remove_clothing_for_cadet_at_event
+from app.backend.food.modify_food_data import remove_food_requirements_for_cadet_at_event
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent, get_health_from_event_row
@@ -107,7 +109,7 @@ def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
     )
 
 
-def update_registration_details_for_existing_cadet_at_event(
+def update_registration_details_for_existing_cadet_at_event_who_was_manual(
     object_store: ObjectStore,
     event: Event,
     cadet: Cadet,
@@ -128,4 +130,13 @@ def update_registration_details_for_existing_cadet_at_event(
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         object_store=object_store,
     )
+
+    remove_clothing_for_cadet_at_event(
+        object_store=object_store, event=event, cadet=cadet
+    )
+
+    remove_food_requirements_for_cadet_at_event(
+        object_store=object_store, event=event, cadet=cadet
+    )
+
 

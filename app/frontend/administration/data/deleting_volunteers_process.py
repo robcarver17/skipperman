@@ -1,4 +1,4 @@
-from app.backend.administration.delete_volunteers import (
+from app.backend.administration_and_utilities.delete_volunteers import (
     delete_volunteer_in_data_and_return_warnings,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form

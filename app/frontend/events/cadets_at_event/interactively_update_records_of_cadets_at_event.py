@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
-    update_registration_details_for_existing_cadet_at_event
+    update_registration_details_for_existing_cadet_at_event_who_was_manual
 from app.backend.events.event_warnings import (
     add_new_event_warning_checking_for_duplicate,
 )
@@ -52,12 +52,9 @@ from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 
 from app.objects.event_warnings import (
-    HIGH_PRIORITY,
     CADET_REGISTRATION,
-    LOW_PRIORITY,
-    LOWEST_PRIORITY,
-    MEDIUM_PRIORITY,
 )
+from app.data_access.configuration.fixed import LOWEST_PRIORITY, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
 
 
 def display_form_interactively_update_cadets_at_event(

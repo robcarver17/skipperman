@@ -433,3 +433,14 @@ def get_data_access_for_list_of_notes_for_groups(
         read_method=data.data_list_of_group_notes_at_event.read_all_notes,
         write_method=data.data_list_of_group_notes_at_event.write_notes,
     )
+
+def get_data_access_for_list_of_notes(
+    data: GenericDataApi,
+) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_notes",
+        read_method=data.data_list_of_notes.read,
+        write_method=data.data_list_of_notes.write
+    )
+
+

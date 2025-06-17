@@ -19,13 +19,14 @@ class Note(GenericSkipperManObjectWithIds):
     author_volunteer_id: str
     created_datetime: datetime.datetime
     id: str = arg_not_passed
+    assigned_volunteer_id: str = NOT_ASSIGNED_TO_VOLUNTEER_ID
     priority: str = MEDIUM_PRIORITY
     completed: bool = False
-    assigned_volunteer_id: str = NOT_ASSIGNED_TO_VOLUNTEER_ID
 
     @classmethod
     def new_quick_note(cls, text: str, author_volunteer_id: str):
-        return cls(text=text, author_volunteer_id=author_volunteer_id, created_datetime=datetime.datetime.now())
+        return cls(text=text, author_volunteer_id=author_volunteer_id, created_datetime=datetime.datetime.now(),
+                   assigned_volunteer_id=author_volunteer_id)
 
     def mark_complete(self):
         self.completed = True

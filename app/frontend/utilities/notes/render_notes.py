@@ -75,7 +75,7 @@ def row_for_existing_note(interface: abstractInterface, existing_note_with_volun
         ])
 
 def note_text_box(existing_note_with_volunteer: NoteWithVolunteer):
-    return textInput(
+    return textAreaInput(
         input_label='',
         input_name=get_input_name_for_note(existing_note_with_volunteer, TEXT),
         value=existing_note_with_volunteer.text

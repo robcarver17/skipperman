@@ -18,6 +18,33 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 
+def get_patrol_boat_label_at_event(object_store: ObjectStore, event: Event, patrol_boat: PatrolBoat)-> str:
+    dict_of_voluteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    return dict_of_voluteers_at_event_with_patrol_boats.label_for_boat_at_event(patrol_boat)
+
+def get_list_of_unique_labels(object_store: ObjectStore, event: Event)-> List[str]:
+    dict_of_voluteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    return dict_of_voluteers_at_event_with_patrol_boats.list_of_patrol_boat_labels.unique_set_of_labels()
+
+
+def update_patrol_boat_label_at_event(object_store: ObjectStore, event: Event, patrol_boat: PatrolBoat, label: str):
+    dict_of_voluteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    dict_of_voluteers_at_event_with_patrol_boats.update_label_for_boat_at_event(patrol_boat=patrol_boat, label=label)
+    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+        object_store=object_store, dict_of_volunteers_at_event_with_patrol_boats=dict_of_voluteers_at_event_with_patrol_boats
+    )
 
 def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Event):
     dict_of_patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(

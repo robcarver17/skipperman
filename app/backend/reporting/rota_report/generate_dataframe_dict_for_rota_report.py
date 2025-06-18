@@ -6,14 +6,12 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.reporting.rota_report.configuration import (
     BOAT,
-    TEAM_NAME,
     ROLE,
     GROUP,
 )
 from app.backend.reporting.rota_report.teams import (
     Team,
     dataframe_for_team,
-    sort_df_by_power_boat,
 )
 from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
@@ -29,15 +27,12 @@ from app.objects.composed.volunteers_with_all_event_data import (
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 
-RIVER_SAFETY = "River safety"
-LAKE_SAFETY = "Lake safety"
 
 
 def get_df_for_reporting_volunteers_with_flags(
     object_store: ObjectStore,
     event: Event,
     days_to_show: DaySelector,
-    power_boats_only: bool = False,
 ) -> Dict[str, pd.DataFrame]:
     volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
@@ -54,7 +49,6 @@ def get_df_for_reporting_volunteers_with_flags(
                 get_and_transform_df_for_reporting_volunteers_for_day(
                     volunteer_event_data=volunteer_event_data,
                     day=day,
-                    power_boats_only=power_boats_only,
                 ),
             )
             for day in list_of_days
@@ -73,7 +67,6 @@ def get_df_for_reporting_volunteers_with_flags(
 def get_and_transform_df_for_reporting_volunteers_for_day(
     day: Day,
     volunteer_event_data: DictOfAllEventDataForVolunteers,
-    power_boats_only: bool,
 ) -> pd.DataFrame:
     df_for_reporting_volunteers_for_day = get_df_for_reporting_volunteers_for_day(
         day=day, volunteer_event_data=volunteer_event_data
@@ -84,7 +77,6 @@ def get_and_transform_df_for_reporting_volunteers_for_day(
     df_for_reporting_volunteers_for_day = apply_sorts_and_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
         volunteer_event_data=volunteer_event_data,
-        power_boats_only=power_boats_only,
     )
 
     return df_for_reporting_volunteers_for_day
@@ -155,13 +147,7 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
     volunteer_event_data: DictOfAllEventDataForVolunteers,
-    power_boats_only: bool = True,
 ):
-    if power_boats_only:
-        df_for_reporting_volunteers_for_day = transform_df_into_power_boat_only(
-            df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
-            volunteer_event_data=volunteer_event_data,
-        )
 
     df_for_reporting_volunteers_for_day = apply_textual_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day
@@ -169,32 +155,6 @@ def apply_sorts_and_transforms_to_df(
 
     return df_for_reporting_volunteers_for_day
 
-
-def transform_df_into_power_boat_only(
-    df_for_reporting_volunteers_for_day: pd.DataFrame,
-    volunteer_event_data: DictOfAllEventDataForVolunteers,
-) -> pd.DataFrame:
-
-    new_df = sort_df_by_power_boat(
-        df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
-        volunteer_event_data=volunteer_event_data,
-        include_no_power_boat=False,
-    )
-    pseudo_teams = [
-        find_pseudo_power_team_given_row(row) for __, row in new_df.iterrows()
-    ]
-    print(pseudo_teams)
-    new_df[TEAM_NAME] = pseudo_teams
-
-    return new_df
-
-
-def find_pseudo_power_team_given_row(row: pd.Series) -> str:
-    boat = row[BOAT]
-    if "lake" in boat.lower():
-        return LAKE_SAFETY
-    else:
-        return RIVER_SAFETY
 
 
 def apply_textual_transforms_to_df(df_for_reporting_volunteers_for_day: pd.DataFrame):

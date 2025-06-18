@@ -1,14 +1,17 @@
 from dataclasses import dataclass
+from typing import List
 
 from app.objects.utilities.exceptions import (
-    arg_not_passed,
+    arg_not_passed, missing_data,
 )
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
-    get_idx_of_unique_object_with_attr_in_list,
+get_unique_object_with_multiple_attr_in_list,
+    get_idx_of_unique_object_with_attr_in_list, GenericListOfObjects,
+get_subset_of_list_that_matches_multiple_attr
 )
-from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
+from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds, GenericSkipperManObject
 
 NO_BOAT = "NO_BOAT"
 NO_BOAT_ID = str(-9999)
@@ -95,3 +98,63 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
     def check_for_duplicated_names(self):
         list_of_names = self.list_of_names()
         assert len(list_of_names) == len(set(list_of_names))
+
+
+@dataclass
+class PatrolBoatLabelAtEvent(GenericSkipperManObject):
+    event_id: str
+    boat_id: str
+    label: str
+
+class ListOfPatrolBoatLabelsAtEvents(GenericListOfObjects):
+    @property
+    def _object_class_contained(self):
+        return PatrolBoatLabelAtEvent
+
+    def unique_set_of_labels(self) -> List[str]:
+        labels = [boat_label.label for boat_label in self]
+
+        return list(set(labels))
+
+
+    def unique_set_of_labels_at_event(self, event_id) -> List[str]:
+        subset = get_subset_of_list_that_matches_multiple_attr(
+            self, dict(event_id=event_id)
+        )
+        subset_labels = [boat_label.label for boat_label in subset]
+
+        return list(set(subset_labels))
+
+    def add_or_modify(self, event_id, boat_id, label: str):
+        existing_label = self.get_patrol_boat_label(event_id=event_id, boat_id=boat_id, default=missing_data)
+        if existing_label is missing_data:
+            self._add(event_id=event_id, boat_id=boat_id, label=label)
+        else:
+            existing_label.label = label
+
+    def _add(self, event_id, boat_id, label: str):
+        self.append(PatrolBoatLabelAtEvent(event_id=event_id, boat_id=boat_id, label=label))
+
+    def get_label(self, event_id: str, boat_id: str, default="") -> str:
+        patrol_boat_label = self.get_patrol_boat_label(event_id=event_id, boat_id=boat_id, default=missing_data)
+        if patrol_boat_label is missing_data:
+            return default
+        return patrol_boat_label.label
+
+    def get_patrol_boat_label(self, event_id: str, boat_id: str, default) -> PatrolBoatLabelAtEvent:
+        return get_unique_object_with_multiple_attr_in_list(
+            self,
+            dict(event_id=event_id, boat_id=boat_id),
+            default=default
+        )
+
+
+RIVER_SAFETY = "River safety"
+LAKE_SAFETY = "Lake safety"
+
+
+def get_location_for_boat(patrol_boat: PatrolBoat) -> str:
+    if 'lake' in patrol_boat.name.lower():
+        return LAKE_SAFETY
+    else:
+        return RIVER_SAFETY

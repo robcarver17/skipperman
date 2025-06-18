@@ -1,4 +1,4 @@
-from app.objects.patrol_boats import ListOfPatrolBoats
+from app.objects.patrol_boats import ListOfPatrolBoats, ListOfPatrolBoatLabelsAtEvents
 from app.objects.patrol_boats_with_volunteers_with_id import (
     ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
 )
@@ -57,3 +57,13 @@ class DataListOfVolunteersAtEventWithPatrolBoats(object):
         event_id: str,
     ):
         raise NotImplemented
+
+
+
+class DataListOfPatrolBoatLabelsAtEvent(object):
+    def read(self) -> ListOfPatrolBoatLabelsAtEvents:
+        raise NotImplemented
+
+    def write(self, list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents):
+        raise NotImplemented
+

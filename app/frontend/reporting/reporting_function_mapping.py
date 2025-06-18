@@ -8,6 +8,7 @@ from app.frontend.reporting.boats.report_boats import *
 from app.frontend.reporting.rollcall_and_contacts.rollcall_report import *
 from app.frontend.reporting.sailors.ENTRY_report_sailors import *
 from app.frontend.reporting.sailors.qualification_status import *
+from app.frontend.reporting.patrol_boats.report_patrol_boats import *
 from app.frontend.reporting.all_event_data.ENTRY_all_event_data import (
     display_form_for_all_event_data_report,
     post_form_for_for_all_event_data_report,
@@ -64,6 +65,25 @@ reporting_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_
                         (
                             display_form_for_rota_report_print_options,
                             post_form_for_rota_report_print_options,
+                        ): 0,
+                    }
+                },
+                (display_form_report_patrol_boats, post_form_report_patrol_boats): {
+                    (
+                        display_form_for_patrol_boats_all_options,
+                        post_form_for_patrol_boats_report_all_options,
+                    ): {
+                        (
+                            display_form_for_patrol_boats_additional_options,
+                            post_form_for_patrol_boats_report_additional_options,
+                        ): 0,
+                        (
+                            display_form_for_patrol_boats_arrangement_options_report,
+                            post_form_for_group_arrangement_options_patrol_boats_report,
+                        ): 0,
+                        (
+                            display_form_for_patrol_boats_report_print_options,
+                            post_form_for_patrol_boats_report_print_options,
                         ): 0,
                     }
                 },

@@ -5,7 +5,8 @@ from app.objects.utilities.exceptions import UNKNOWN, MISSING_FROM_FORM
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day,
+    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day, get_patrol_boat_label_at_event,
+    get_list_of_unique_labels,
 )
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
@@ -57,7 +58,7 @@ from app.frontend.events.patrol_boats.swapping import (
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     volunteer_boat_role_dropdown,
 )
-from app.objects.abstract_objects.abstract_form import checkboxInput, Link
+from app.objects.abstract_objects.abstract_form import checkboxInput, Link, textInput, listInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -308,3 +309,18 @@ instructions_text = ListOfLines(
         )
     ]
 )
+
+
+def get_boat_label_entry(interface: abstractInterface, event: Event, patrol_boat: PatrolBoat):
+    in_swap_state = is_ready_to_swap(interface)
+    existing_label = get_patrol_boat_label_at_event(object_store=interface.object_store, event=event, patrol_boat=patrol_boat)
+
+    if in_swap_state:
+        return existing_label
+
+    return listInput(input_label='', input_name=get_name_of_boat_label_entry(patrol_boat),default_option=existing_label,
+                     list_of_options=get_list_of_unique_labels(object_store=interface.object_store, event=event))
+
+
+def get_name_of_boat_label_entry(patrol_boat: PatrolBoat):
+    return "boatlabelname_%s" % patrol_boat.id

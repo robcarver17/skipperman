@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import load_list_of_patrol_boats_at_event, \
+    update_patrol_boat_label_at_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -8,6 +10,8 @@ from app.frontend.shared.warnings_table import save_warnings_from_table
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
+from app.objects.events import Event
+from app.objects.patrol_boats import PatrolBoat
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, UNKNOWN
 from app.objects.volunteers import Volunteer
 
@@ -31,7 +35,7 @@ from app.backend.patrol_boats.changes import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
-    is_volunteer_skill_checkbox_ticked,
+    is_volunteer_skill_checkbox_ticked, get_name_of_boat_label_entry,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     TOP_ROW_OF_VOLUNTEER_DROPDOWN,
@@ -73,6 +77,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     if is_ready_to_swap(interface):
         return
 
+    update_boat_labels(interface)
     update_skills_checkbox(interface)
     update_role_dropdowns(interface)
     update_adding_volunteers_to_specific_boats_and_days(
@@ -82,6 +87,20 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
 
     interface.save_cache_to_store_without_clearing()
 
+def update_boat_labels(interface: abstractInterface):
+    event=get_event_from_state(interface)
+    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+        object_store=interface.object_store, event=event
+    )
+    for patrol_boat in list_of_boats_at_event:
+        update_boat_labels_for_specific_boat(interface=interface, event=event, patrol_boat=patrol_boat)
+
+def update_boat_labels_for_specific_boat(interface: abstractInterface, event: Event, patrol_boat: PatrolBoat):
+    label = interface.value_from_form(get_name_of_boat_label_entry(patrol_boat), default=MISSING_FROM_FORM)
+    if label is MISSING_FROM_FORM:
+        return
+
+    update_patrol_boat_label_at_event(object_store=interface.object_store, event=event, patrol_boat=patrol_boat, label=label)
 
 def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInterface):
     event = get_event_from_state(interface)

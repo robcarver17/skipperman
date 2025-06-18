@@ -141,5 +141,5 @@ def welcome_message_for_user():
 def process_logout():
     usernmae = get_username()
     logout_user()
-
+    flash_log("Logged out %s" % usernmae)
     return generate_menu_page_html()

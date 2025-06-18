@@ -4,6 +4,7 @@ from app.frontend.form_handler import initial_state_form
 from app.frontend.reporting.allocations.report_group_allocations import (
     display_form_report_group_allocation,
 )
+from app.frontend.reporting.patrol_boats.report_patrol_boats import display_form_report_patrol_boats
 from app.frontend.reporting.rota.report_rota import display_form_report_rota
 from app.frontend.reporting.boats.report_boats import display_form_report_boat
 from app.frontend.reporting.rollcall_and_contacts.rollcall_report import (
@@ -37,6 +38,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import missing_data
 
 GROUP_ALLOCATION_REPORT_BUTTON_LABEL = "Group allocation for event"
+PATROL_BOATS_REPORT_BUTTON_LABEL = "Patrol boats rota for event"
 ROTA_REPORT_BUTTON_LABEL = "Volunteer rota for event"
 BOATS_REPORT_BUTTON_LABEL = "Spotter sheet for event"
 ROLLCALL_REPORT_BUTTON_LABEL = "Rollcall/health/contacts for event"
@@ -49,6 +51,7 @@ EVENT_DATA_BUTTON_LABEL = "All event data in giant spreadsheet"
 DICT_OF_REPORT_LABELS_AND_STAGES = {
     GROUP_ALLOCATION_REPORT_BUTTON_LABEL: display_form_report_group_allocation,
     ROTA_REPORT_BUTTON_LABEL: display_form_report_rota,
+    PATROL_BOATS_REPORT_BUTTON_LABEL: display_form_report_patrol_boats,
     BOATS_REPORT_BUTTON_LABEL: display_form_report_boat,
     ROLLCALL_REPORT_BUTTON_LABEL: display_form_report_rollcall,
     SAILORS_DATA_REPORT_BUTTON_LABEL: display_form_for_sailors_report,

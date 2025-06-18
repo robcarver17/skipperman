@@ -23,6 +23,12 @@ The first thing we need to do is add a boat. Select a boat from the drop down an
 
 ![boat_added.png](/static/boat_added.png)
 
+## Labelling a boat with a designation
+
+You might want to label boats with a specific designation, eg 'Dedicated safety', 'Coach boat', 'Safety / coach'. Enter the designation, or use the drop down arrow to choose previously used labels. To change a designation just delete it, you will then see the dropdown arrow again, or you can type in any value.
+
+Designation is used to sort boats in the [patrol boat report from the main menu](patrol_boats_rota_report_help.md) and the [quick report](#quick-reports).
+
 ## Removing a boat from the rota
 
 Click on `Remove boat from rota` to remove a boat entirely.  
@@ -148,4 +154,4 @@ You can also move someone on to a different boat without selecting a volunteer t
 
 # Quick reports
 
-If you choose the 'quick report' option in the menu, you can run a [patrol boat only volunteer report](volunteer_rota_report_help.md). This report will run with the printing options currently set up (except it will always generate a .csv file), and they **will not be published to the public**. If you want to publish it, or change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).
+If you choose the 'quick report' option in the menu, you can run a [patrol boat rota report](patrol_boats_rota_report_help.md). This report will run with the default printing options, and it **will not be published to the public**. If you want to publish it, or change the report settings, go to the relevant part of the [reports menu.](reporting_help.md).

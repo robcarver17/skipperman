@@ -34,4 +34,3 @@ def get_specific_parameters_for_rota_report(
 @dataclass
 class AdditionalParametersForVolunteerReport:
     days_to_show: DaySelector
-    power_boats_only: bool = False

@@ -8,7 +8,8 @@ from app.objects.events import Event, ListOfEvents
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat
+from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat, ListOfPatrolBoatLabelsAtEvents, \
+    get_location_for_boat
 
 from app.objects.day_selectors import Day, DaySelector
 
@@ -216,6 +217,7 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         event: Event,
         list_of_all_patrol_boats: ListOfPatrolBoats,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+            list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents
     ):
         super().__init__(raw_dict)
         self._event = event
@@ -223,6 +225,13 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             list_of_volunteers_with_id_at_event_with_patrol_boat_id
         )
         self._list_of_all_patrol_boats = list_of_all_patrol_boats
+        self._list_of_patrol_boat_labels =list_of_patrol_boat_labels
+
+    def get_dict_of_patrol_boats_with_locations(self):
+        all_boats = self.list_of_all_patrol_boats
+        boats_with_locations = dict([(patrol_boat, get_location_for_boat(patrol_boat)) for patrol_boat in all_boats])
+
+        return boats_with_locations
 
     def move_volunteer_into_empty_boat(
         self,
@@ -316,6 +325,15 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         self.list_of_volunteers_with_id_at_event_with_patrol_boat_id.add_unallocated_boat(
             patrol_boat.id
         )
+
+    def label_for_boat_at_event(self, patrol_boat: PatrolBoat) -> str:
+        return self.list_of_patrol_boat_labels.get_label(event_id=self.event.id, boat_id=patrol_boat.id)
+
+    def update_label_for_boat_at_event(self, patrol_boat: PatrolBoat, label:str) -> str:
+        return self.list_of_patrol_boat_labels.add_or_modify(event_id=self.event.id, boat_id=patrol_boat.id, label=label)
+
+    def unique_set_of_labels_at_event(self) -> List[str]:
+        return self.list_of_patrol_boat_labels.unique_set_of_labels_at_event(event_id=self.event.id)
 
     def copy_across_boats_at_event(
         self,
@@ -450,6 +468,9 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     def list_of_patrol_boat_dicts_for_each_volunteer(self) -> List[PatrolBoatByDayDict]:
         return list(self.values())
 
+    @property
+    def list_of_patrol_boat_labels(self) -> ListOfPatrolBoatLabelsAtEvents:
+        return self._list_of_patrol_boat_labels
 
 def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     event_id: str,
@@ -457,6 +478,7 @@ def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     list_of_volunteers: ListOfVolunteers,
     list_of_patrol_boats: ListOfPatrolBoats,
     list_of_volunteers_with_id_at_event_with_patrol_boat_id: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
+    list_of_patrol_boat_labels : ListOfPatrolBoatLabelsAtEvents
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
 
     event = list_of_events.event_with_id(event_id)
@@ -488,4 +510,7 @@ def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
         event=event,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=list_of_volunteers_with_id_at_event_with_patrol_boat_id,
         list_of_all_patrol_boats=list_of_patrol_boats,
+        list_of_patrol_boat_labels=list_of_patrol_boat_labels
     )
+
+

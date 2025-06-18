@@ -232,6 +232,10 @@ class GenericDataApi(object):
     def data_list_of_notes(self) -> DataListOfNotes:
         raise NotImplemented
 
+    @property
+    def data_list_of_patrol_boat_labels(self) -> DataListOfPatrolBoatLabelsAtEvent:
+        raise NotImplemented
+
     ## Specials
 
     def delete_all_master_data(self, are_you_sure: bool = False):

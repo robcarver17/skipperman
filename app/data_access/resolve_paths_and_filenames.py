@@ -67,7 +67,7 @@ def file_from_generic(generic_name_of_file_required):
 
     return filename
 
-
+PATROL_BOAT_LABELS = "patrol_boat_labels"
 ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
 CADETS_AT_EVENT_ID = "cadets_at_event"
@@ -222,5 +222,6 @@ _dict_of_filenames_and_paths = {
     CLUB_BOAT_LIMIT: ("lists", "club_boat_limit.parquet"),
     CLUB_BOAT_LIMIT_CSV: ("lists", "club_boat_limit.csv"),
     ATTENDANCE_FILE_FOR_SPECIFIC_CADET: ("cadet_attendance", "attendance_for_%s"),
+PATROL_BOAT_LABELS: ("lists", "patrol_boat_labels.csv"),
     USERLIST_FILE_ID: ("secure", "userlist.csv"),
 }

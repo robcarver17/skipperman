@@ -443,4 +443,11 @@ def get_data_access_for_list_of_notes(
         write_method=data.data_list_of_notes.write
     )
 
+def get_data_access_for_list_of_patrol_boat_labels(    data: GenericDataApi,
+) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_patrol_boat_labels",
+        read_method=data.data_list_of_patrol_boat_labels.read,
+        write_method=data.data_list_of_patrol_boat_labels.write
+    )
 

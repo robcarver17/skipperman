@@ -1,7 +1,7 @@
-To run a volunteer rota report, from the **main menu** select **Reports**, and **Volunteer rota for event**. Then choose your event.
+To run a patrol boat rota report, from the **main menu** select **Reports**, and **Patrol boats rota for event**. Then choose your event.
 ___
 
-A volunteer rota report shows where volunteers are working. A good workflow is to publish this report about a week before the event (further in advance before Cadet Week).
+A patrol boats rota report shows which volunteers are working on which boat. A good workflow is to publish this report about a week before the event (further in advance before Cadet Week).
 
 It's better to share a link rather than a file, as the former will be automatically updated.
 
@@ -21,14 +21,14 @@ It's recommended you use the following [printing options](general_report_config_
 
 For the normal report:
 
-- output to pdf
+- output to csv
 - output to public
-- A3 landscape (since the report will probably be printed in A3, but landscape is better for busy reports)
-- highlight first name in group - yes (this is the team leader)
-- put group name in header - yes
-- do not include group size or prepend group name
+- highlight first name in group - no
+- put group name in header - no
+- do not include group size, put group name in header, or prepend group name
 
 See [making reports look good](general_report_config_and_printing_help.md#making-the-pdf-report-look-nice) for advice on setting group arrangements and other print options.
+
 
 # Configuring the teams
 

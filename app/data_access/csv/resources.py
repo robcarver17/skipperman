@@ -6,6 +6,7 @@ from app.data_access.resolve_paths_and_filenames import (
     LIST_OF_CLUB_DINGHIES_FILE_ID,
     LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
+PATROL_BOAT_LABELS
 )
 from app.objects.cadet_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
@@ -99,3 +100,16 @@ class CsvDataListOfClubDinghyLimits(GenericCsvData, DataListOfClubDinghyLimits):
 
     def write(self, list_of_boats: ListOfClubDinghyLimits):
         self.write_object(list_of_boats, file_identifier=CLUB_BOAT_LIMIT_CSV)
+
+
+
+
+class CsvDataListOfPatrolBoatLabelsAtEvent(GenericCsvData, DataListOfPatrolBoatLabelsAtEvent):
+    def read(self) -> ListOfPatrolBoatLabelsAtEvents:
+        return self.read_and_return_object_of_type(
+            ListOfPatrolBoatLabelsAtEvents, file_identifier=PATROL_BOAT_LABELS
+        )
+
+    def write(self, list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents):
+        self.write_object(list_of_patrol_boat_labels, file_identifier=PATROL_BOAT_LABELS)
+

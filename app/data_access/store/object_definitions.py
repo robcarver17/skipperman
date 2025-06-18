@@ -351,7 +351,9 @@ object_definition_for_list_of_notes = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_notes
 )
 
-
+object_definition_for_list_of_patrol_boat_labels=UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_patrol_boat_labels
+)
 
 ## ITERABLE
 object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id = IterableObjectDefinition(
@@ -535,6 +537,7 @@ object_definition_for_list_of_notes_with_volunteers = DerivedObjectDefinition(
     )
 )
 
+
 object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups = DerivedObjectDefinition(
     composition_function=compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
     dict_of_arguments_and_underlying_object_definitions=dict(
@@ -571,10 +574,12 @@ object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event = Deriv
         list_of_events=object_definition_for_list_of_events,
         list_of_volunteers=object_definition_for_volunteers,
         list_of_patrol_boats=object_definition_for_list_of_patrol_boats,
+        list_of_patrol_boat_labels =object_definition_for_list_of_patrol_boat_labels,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event
+        list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
+        list_of_patrol_boat_labels=object_definition_for_list_of_patrol_boat_labels
     ),
     required_keys=["event_id"],
 )

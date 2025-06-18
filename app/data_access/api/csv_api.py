@@ -364,6 +364,12 @@ class CsvDataApi(GenericDataApi):
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 
+    @property
+    def data_list_of_patrol_boat_labels(self) -> CsvDataListOfPatrolBoatLabelsAtEvent:
+        return CsvDataListOfPatrolBoatLabelsAtEvent(
+            self.master_data_path, backup_data_path=self.backup_data_path
+        )
+
     #### USERS
 
     @property

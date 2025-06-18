@@ -104,7 +104,7 @@ def get_df_for_reporting_patrol_boats_for_day(
 def get_df_for_location_on_day(
     volunteer_event_data: DictOfAllEventDataForVolunteers, location:str, day: Day
 ) -> pd.DataFrame:
-    boat_designations = unique_list_of_boat_designations_for_event(volunteer_event_data)
+    boat_designations = unique_list_of_boat_designations_for_event_on_day(volunteer_event_data=volunteer_event_data, day=day)
     all_df = [get_df_for_designation_and_location_on_day(volunteer_event_data=volunteer_event_data,
                                                          location=location,
                                                          designation=designation,
@@ -122,7 +122,9 @@ def get_df_for_designation_and_location_on_day(    volunteer_event_data: DictOfA
                                                    day: Day,
                                                    designation: str):
 
-    list_of_relevant_boats = boats_in_location_and_designation(volunteer_event_data=volunteer_event_data, location=location, designation=designation)
+    list_of_relevant_boats = boats_in_location_and_designation(volunteer_event_data=volunteer_event_data,
+                                                               day=day,
+                                                               location=location, designation=designation)
 
     all_df = [get_df_for_designation_and_location_and_boat_on_day(
         volunteer_event_data=volunteer_event_data,
@@ -219,15 +221,16 @@ def get_volunteers_on_boat_on_day( volunteer_event_data: DictOfAllEventDataForVo
     return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.volunteers_assigned_to_boat_on_day(patrol_boat=boat,
                                                                                                           day=day)
 
-def boats_in_location_and_designation(volunteer_event_data: DictOfAllEventDataForVolunteers, location:str, designation: str) -> ListOfPatrolBoats:
-    get_label_function = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.label_for_boat_at_event
+def boats_in_location_and_designation(volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, location:str, designation: str) -> ListOfPatrolBoats:
+    get_label_function = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.label_for_boat_at_event_on_day
     dict_of_boats_and_locations = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_with_locations()
-    list_of_boats = [boat for boat, location_of_boat in dict_of_boats_and_locations.items() if location_of_boat==location and get_label_function(boat)==designation]
+    list_of_boats = [boat for boat, location_of_boat in dict_of_boats_and_locations.items()
+                     if location_of_boat==location and get_label_function(patrol_boat=boat, day=day)==designation]
 
     return ListOfPatrolBoats(list_of_boats)
 
-def unique_list_of_boat_designations_for_event(volunteer_event_data: DictOfAllEventDataForVolunteers):
-    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.unique_set_of_labels_at_event()
+def unique_list_of_boat_designations_for_event_on_day(volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day):
+    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.unique_set_of_labels_at_event(day=day)
 
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,

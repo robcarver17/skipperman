@@ -1,10 +1,11 @@
 from typing import Union
 
+from app.backend.patrol_boats.copying import copy_patrol_boat_labels_across_event
 from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats,
     copy_across_all_boats_and_roles,
     overwrite_allocation_across_all_boats,
-    overwrite_copy_across_all_boats_and_roles,
+    overwrite_copy_across_all_boats_and_roles, copy_and_overwrite_labels, copy_labels,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
@@ -45,6 +46,7 @@ def display_form_patrol_boat_copy_menu(interface: abstractInterface):
             _______________,
             copy_all_boats_and_roles_button,
             _______________,
+            copy_all_designation_button,
             _______________,
             bold(
                 "Warning: These options overwrite existing data. Be careful, consider snapshotting data first. "
@@ -53,6 +55,8 @@ def display_form_patrol_boat_copy_menu(interface: abstractInterface):
             copyover_all_boats_button,
             _______________,
             copyover_all_boats_and_roles_button,
+            _______________,
+            copyover_designation_button
         ]
     ).add_Lines()
 
@@ -75,11 +79,19 @@ def post_form_patrol_boat_copy_menu(
     elif copy_all_boats_and_roles_button.pressed(button_pressed):
         copy_across_all_boats_and_roles(interface)
 
+    elif copy_all_designation_button.pressed(button_pressed):
+        copy_labels(interface)
+
+
     elif copyover_all_boats_button.pressed(button_pressed):
         overwrite_allocation_across_all_boats(interface)
 
     elif copyover_all_boats_and_roles_button.pressed(button_pressed):
         overwrite_copy_across_all_boats_and_roles(interface)
+
+    elif copyover_designation_button.pressed(button_pressed):
+        copy_and_overwrite_labels(interface)
+
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -96,8 +108,12 @@ COPY_ALL_BOATS_BUTTON_LABEL = (
 COPYOVER_ALL_BOATS_BUTTON_LABEL = "Copy and overwrite all other boat allocations from earliest day when allocated: CAREFUL CAN'T BE UNDONE!"
 COPY_BOATS_AND_ROLES_BUTTON_LABEL = "Copy and fill any empty boat allocations, plus roles (and allocated group if relevant) from earliest day when allocated"
 COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL = "Copy and overwrite all other empty boat allocations, plus roles (and allocated group if relevant) from earliest day when allocated: CAREFUL CAN'T BE UNDONE"
+COPY_DESIGNATION_BUTTON_LABEL = "Copy and fill any empty designations from earliest day when labelled"
+COPYOVER_DESIGNATION_BUTTON_LABEL = "Copy and overwrite any empty designations from earliest day when labelled: CAREFUL CAN'T BE UNDONE"
 
 copy_all_boats_button = Button(COPY_ALL_BOATS_BUTTON_LABEL)
 copyover_all_boats_button = Button(COPYOVER_ALL_BOATS_BUTTON_LABEL)
 copy_all_boats_and_roles_button = Button(COPY_BOATS_AND_ROLES_BUTTON_LABEL)
 copyover_all_boats_and_roles_button = Button(COPYOVER_BOATS_AND_ROLES_BUTTON_LABEL)
+copy_all_designation_button = Button(COPY_DESIGNATION_BUTTON_LABEL)
+copyover_designation_button = Button(COPYOVER_DESIGNATION_BUTTON_LABEL)

@@ -10,6 +10,7 @@ from app.frontend.shared.warnings_table import save_warnings_from_table
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
+from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, UNKNOWN
@@ -92,15 +93,16 @@ def update_boat_labels(interface: abstractInterface):
     list_of_boats_at_event = load_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
-    for patrol_boat in list_of_boats_at_event:
-        update_boat_labels_for_specific_boat(interface=interface, event=event, patrol_boat=patrol_boat)
+    for day in event.days_in_event():
+        for patrol_boat in list_of_boats_at_event:
+            update_boat_labels_for_specific_boat_and_day(interface=interface, event=event, day=day, patrol_boat=patrol_boat)
 
-def update_boat_labels_for_specific_boat(interface: abstractInterface, event: Event, patrol_boat: PatrolBoat):
-    label = interface.value_from_form(get_name_of_boat_label_entry(patrol_boat), default=MISSING_FROM_FORM)
+def update_boat_labels_for_specific_boat_and_day(interface: abstractInterface, event: Event, day: Day, patrol_boat: PatrolBoat):
+    label = interface.value_from_form(get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day), default=MISSING_FROM_FORM)
     if label is MISSING_FROM_FORM:
         return
 
-    update_patrol_boat_label_at_event(object_store=interface.object_store, event=event, patrol_boat=patrol_boat, label=label)
+    update_patrol_boat_label_at_event(object_store=interface.object_store, event=event, patrol_boat=patrol_boat, day=day, label=label)
 
 def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInterface):
     event = get_event_from_state(interface)

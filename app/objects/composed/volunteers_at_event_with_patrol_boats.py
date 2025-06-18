@@ -326,14 +326,21 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             patrol_boat.id
         )
 
-    def label_for_boat_at_event(self, patrol_boat: PatrolBoat) -> str:
-        return self.list_of_patrol_boat_labels.get_label(event_id=self.event.id, boat_id=patrol_boat.id)
+    def copy_patrol_boat_labels_across_event(self,  overwrite: bool = False):
+        event = self.event
+        days_in_event = event.days_in_event()
+        self.list_of_patrol_boat_labels.copy_patrol_boat_labels_across_event(event_id=event.id,
+                                                                             days_in_event=days_in_event,
+                                                                             overwrite=overwrite)
 
-    def update_label_for_boat_at_event(self, patrol_boat: PatrolBoat, label:str) -> str:
-        return self.list_of_patrol_boat_labels.add_or_modify(event_id=self.event.id, boat_id=patrol_boat.id, label=label)
+    def label_for_boat_at_event_on_day(self, day: Day, patrol_boat: PatrolBoat) -> str:
+        return self.list_of_patrol_boat_labels.get_label(event_id=self.event.id, boat_id=patrol_boat.id, day=day)
 
-    def unique_set_of_labels_at_event(self) -> List[str]:
-        return self.list_of_patrol_boat_labels.unique_set_of_labels_at_event(event_id=self.event.id)
+    def update_label_for_boat_at_event_on_day(self, day: Day, patrol_boat: PatrolBoat, label:str) -> str:
+        return self.list_of_patrol_boat_labels.add_or_modify(event_id=self.event.id, boat_id=patrol_boat.id, day=day, label=label)
+
+    def unique_set_of_labels_at_event(self, day: Day) -> List[str]:
+        return self.list_of_patrol_boat_labels.unique_set_of_labels_at_event_on_day(event_id=self.event.id, day=day)
 
     def copy_across_boats_at_event(
         self,

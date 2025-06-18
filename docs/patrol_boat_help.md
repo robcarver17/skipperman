@@ -25,7 +25,7 @@ The first thing we need to do is add a boat. Select a boat from the drop down an
 
 ## Labelling a boat with a designation
 
-You might want to label boats with a specific designation, eg 'Dedicated safety', 'Coach boat', 'Safety / coach'. Enter the designation, or use the drop down arrow to choose previously used labels. To change a designation just delete it, you will then see the dropdown arrow again, or you can type in any value.
+You might want to label boats with a specific designation, eg 'Dedicated safety', 'Coach boat', 'Safety / coach'. Enter the designation, or use the drop down arrow to choose previously used labels. Designation needs to be set for each day. To change a designation just delete it, you will then see the dropdown arrow again, or you can type in any value.
 
 Designation is used to sort boats in the [patrol boat report from the main menu](patrol_boats_rota_report_help.md) and the [quick report](#quick-reports).
 

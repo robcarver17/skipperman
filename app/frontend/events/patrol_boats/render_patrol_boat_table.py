@@ -157,8 +157,7 @@ def get_top_row_for_patrol_boat_table(event: Event) -> RowInTable:
 
     return RowInTable(
         [
-            bold("Boat"),
-            'Designation',
+            bold("Boat")
         ]
         + list_of_days_at_event_as_bold_text
     )
@@ -185,7 +184,7 @@ def get_bottom_row_for_patrol_boat_table(
 def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[str]:
     list_of_days_at_event_as_str = event.days_in_event_as_list_of_string()
     number_of_padding_columns = len(list_of_days_at_event_as_str)
-    padding_columns = ["", ""] * number_of_padding_columns
+    padding_columns = [""] * number_of_padding_columns
 
     return padding_columns
 
@@ -218,12 +217,11 @@ def get_row_for_boat_at_event(
     boat_name_and_button_for_first_column = get_boat_name_and_button_for_first_column(
         interface=interface, patrol_boat=patrol_boat
     )
-    boat_label = get_boat_label_entry(interface=interface, patrol_boat=patrol_boat, event=event)
     day_inputs = get_allocation_inputs_for_boat_across_days(
         interface=interface, event=event, patrol_boat=patrol_boat
     )
 
-    return RowInTable([boat_name_and_button_for_first_column, boat_label] + day_inputs)
+    return RowInTable([boat_name_and_button_for_first_column] + day_inputs)
 
 
 def get_boat_name_and_button_for_first_column(
@@ -284,15 +282,21 @@ def get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
                 )
             ]
         )
-    else:
-        return get_add_volunteer_to_patrol_boat_dropdown(
+    dropdown = get_add_volunteer_to_patrol_boat_dropdown(
             interface=interface, patrol_boat=patrol_boat, day=day, event=event
         )
+    label = get_boat_label_entry(interface=interface, patrol_boat=patrol_boat, day=day, event=event)
+
+    return ListOfLines([
+        label,
+        dropdown
+    ])
 
 
 def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
+    label = get_boat_label_entry(interface=interface, patrol_boat=patrol_boat, day=day, event=event)
 
     existing_elements = get_existing_allocation_elements_for_day_and_boat(
         day=day, patrol_boat=patrol_boat, event=event, interface=interface
@@ -308,4 +312,4 @@ def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
             interface=interface, patrol_boat=patrol_boat, day=day, event=event
         )
 
-    return ListOfLines(existing_elements + [last_bit])
+    return ListOfLines([label]+ existing_elements + [last_bit])

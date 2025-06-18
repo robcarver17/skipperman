@@ -1,6 +1,10 @@
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import \
+    get_dict_of_patrol_boats_by_day_for_volunteer_at_event, update_dict_of_patrol_boats_by_day_for_volunteer_at_event
+from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 )
+from app.objects.events import Event
 
 
 def volunteer_has_at_least_one_allocated_role_which_matches_others(
@@ -148,3 +152,16 @@ def is_possible_to_copy_roles(
         return False
     else:
         return True
+
+
+def copy_patrol_boat_labels_across_event(object_store: ObjectStore, event: Event, overwrite: bool = False):
+    dict_of_voluteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
+    )
+
+    dict_of_voluteers_at_event_with_patrol_boats.copy_patrol_boat_labels_across_event(overwrite)
+    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(object_store=object_store,
+                                                              dict_of_volunteers_at_event_with_patrol_boats=dict_of_voluteers_at_event_with_patrol_boats)
+

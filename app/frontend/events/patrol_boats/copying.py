@@ -2,6 +2,7 @@ from app.backend.patrol_boats.changes import (
     copy_across_earliest_allocation_of_boats_at_event,
     copy_across_boats_at_event,
 )
+from app.backend.patrol_boats.copying import copy_patrol_boat_labels_across_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -22,6 +23,14 @@ from app.frontend.shared.buttons import get_type_of_button_pressed
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+
+def copy_and_overwrite_labels(interface: abstractInterface):
+    copy_patrol_boat_labels_across_event(object_store=interface.object_store, event=get_event_from_state(interface),
+                                     overwrite=True)
+
+def copy_labels(interface: abstractInterface):
+    copy_patrol_boat_labels_across_event(object_store=interface.object_store, event=get_event_from_state(interface),
+                                     overwrite=False)
 
 
 def update_if_copy_individual_button_pressed(

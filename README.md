@@ -2,9 +2,9 @@
 
 Blackwater Sailing Club Cadet SKIPPER MANagement system
 
-Version 3.0
+Version 3.1
 
-2025-04-29
+2025-06-19
 
 Author: Robert Carver AKA Skipperman
 

@@ -1,5 +1,9 @@
 
+# Version 3.10
 
+- club dinghies can be allocated to instructors
+- add designation to patrol boats
+- split out patrol boats report
 - added 'notes' app
 - Replace registration data and health on import of replacement manual registration
 - Fixed caching issue

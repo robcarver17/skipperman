@@ -96,6 +96,8 @@ To allocate a club boat, just select the blank dropdown and choose the required 
 
 Skipperman doesn't know how many club boats are available - use the [summary](#seeing-a-summary) tables to see how many you have allocated.
 
+Note this will include boats allocated to instructors and other helpers in the [patrol boat](patrol_boat_help.md#allocating-club-sailing-dinghies-to-instructors) page.
+
 There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), so you can see if they want a club boat. Check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
 
 ## Boat classes and sail numbers

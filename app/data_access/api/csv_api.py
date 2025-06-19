@@ -237,6 +237,8 @@ class CsvDataApi(GenericDataApi):
             backup_data_path=self.backup_data_path,
         )
 
+
+
     @property
     def data_List_of_club_dinghy_limits(self) -> CsvDataListOfClubDinghyLimits:
         return CsvDataListOfClubDinghyLimits(
@@ -270,6 +272,16 @@ class CsvDataApi(GenericDataApi):
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )
+
+    @property
+    def data_list_of_volunteers_at_event_with_club_dinghies(
+        self,
+    ) -> CsvDataListOfVolunteersAtEventWithClubDinghies:
+        return CsvDataListOfVolunteersAtEventWithClubDinghies(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path
+        )
+
 
     @property
     def data_list_of_cadets_with_dinghies_at_event(

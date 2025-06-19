@@ -10,4 +10,5 @@ For a multi day event, people will often be on the same boat and/or doing the sa
 
 Note that the swap button moves roles 'up and down' between volunteers on the same day, whilst the copy button moves them 'left and right' across days for the same volunteer. The overwrite button is thicker, think of it as covering over the existing days.
 
-You can also copy, and possibly overwrite, designations for different days.
+You can also copy, and possibly overwrite, [*designations*](patrol_boat_help.md#labelling-a-boat-with-a-designation) for different days.
+

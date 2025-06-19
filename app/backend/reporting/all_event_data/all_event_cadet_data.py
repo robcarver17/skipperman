@@ -14,7 +14,7 @@ from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
     get_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
 from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-    get_dict_of_cadets_and_club_dinghies_at_event,
+    get_dict_of_people_and_club_dinghies_at_event,
 )
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
@@ -162,14 +162,14 @@ def data_from_cadets_at_event_data_or_empty(
 
 
 def club_dinghy_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
-    dinghy_data = get_dict_of_cadets_and_club_dinghies_at_event(
+    dinghy_data = get_dict_of_people_and_club_dinghies_at_event(
         object_store=object_store, event=event
     )
     day_item_dict = dict(
         [
             (
                 day,
-                dinghy_data.club_dinghys_for_cadet(cadet).dinghy_on_day(day=day).name,
+                dinghy_data.club_dinghys_for_person(cadet).dinghy_on_day(day=day).name,
             )
             for day in event.days_in_event()
         ]

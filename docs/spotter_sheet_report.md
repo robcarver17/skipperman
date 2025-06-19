@@ -3,6 +3,8 @@ ___
 
 A spotter sheet is used by the bridge to ensure all cadets leave and return safely to shore, and to help setup sailwave for racing events. It should be sent to the race officer at least a week before the event.
 
+Spotter sheets also include any club boats allocated to instructors, although their sail numbers will not be known in advance.
+
 # Report specific parameters
 
 The following parameters are recommended:

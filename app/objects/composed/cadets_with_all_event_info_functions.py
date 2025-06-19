@@ -9,8 +9,8 @@ from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_
     CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
     are_partners_equal,
 )
-from app.objects.composed.cadets_at_event_with_club_dinghies import (
-    DictOfCadetsAndClubDinghiesAtEvent,
+from app.objects.composed.people_at_event_with_club_dinghies import (
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DictOfCadetsWithDaysAndGroupsAtEvent,
@@ -150,7 +150,7 @@ class PartnershipChange:
 @dataclass
 class RequiredDictForAllocation:
     dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners
-    dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent
+    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent
     availability_dict: Dict[Cadet, DaySelector]
 
@@ -476,7 +476,7 @@ def update_cadets_own_info_excluding_partner(
     )
 
     required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event.allocate_club_boat_on_day(
-        cadet=cadet, day=day, club_boat=club_boat
+        person=cadet, day=day, club_boat=club_boat
     )
 
     required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners.update_boat_class_and_sail_number_on_day(

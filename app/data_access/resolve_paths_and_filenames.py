@@ -95,6 +95,8 @@ LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID = (
     "list_of_patrol_boats_and_volunteers_at_event"
 )
 LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID = "list_of_club_dinghies_with_cadets_at_event"
+LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID = "list_of_club_dinghies_with_volunteers_at_event"
+
 LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 LIST_OF_VOLUNTEER_SKILLS_FILE_ID = "list_of_volunteer_skills"
 LIST_OF_SKILLS_FILE_ID = "list_of_skills"
@@ -191,6 +193,11 @@ _dict_of_filenames_and_paths = {
         "mapped_events",
         "list_of_club_dinghies_with_cadets_at_event_%s.csv",
     ),
+    LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID: (
+        "mapped_events",
+        "list_of_volunteers_with_club_dinghies_at_event_%s.csv"
+    ),
+
     LIST_OF_DINGHIES_FILE_ID: ("lists", "list_of_dinghies.csv"),
     LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID: (
         "mapped_events",

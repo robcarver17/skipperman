@@ -6,6 +6,10 @@ from app.data_access.store.object_definitions import (
 from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
 from app.objects.utilities.exceptions import arg_not_passed
 
+def get_club_dinghy_from_id(object_store: ObjectStore, club_dinghy_id: str, default = arg_not_passed) -> ClubDinghy:
+    list_of_dinghys = get_list_of_club_dinghies(object_store)
+    return list_of_dinghys.club_dinghy_with_id(club_dinghy_id, default=default)
+
 
 def get_club_dinghy_with_name(
     object_store: ObjectStore, boat_name: str, default=arg_not_passed
@@ -53,3 +57,13 @@ def update_list_of_club_dinghies(
         new_object=updated_list_of_club_dinghies,
         object_definition=object_definition_for_list_of_club_dinghies,
     )
+
+
+def get_list_of_visible_club_dinghies(object_store: ObjectStore):
+    list_of_club_dinghies = get_list_of_club_dinghies(object_store)
+    visible_dinghies = list_of_club_dinghies.visible_only()
+    visible_dinghies = ListOfClubDinghies([
+        dinghy for dinghy in visible_dinghies if len(dinghy.name)>0
+    ])  ##FIXME exists because of weird bug
+
+    return visible_dinghies

@@ -159,6 +159,12 @@ class GenericDataApi(object):
         raise NotImplemented
 
     @property
+    def data_list_of_volunteers_at_event_with_club_dinghies(
+        self,
+    ) -> DataListOfVolunteersAtEventWithClubDinghies:
+        raise NotImplemented
+
+    @property
     def data_list_of_dinghies(self) -> DataListOfDinghies:
         raise NotImplemented
 

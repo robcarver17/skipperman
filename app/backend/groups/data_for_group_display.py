@@ -282,7 +282,7 @@ def get_current_group_name_for_day_with_empty_string_if_unallocated(
 def get_current_club_boat_name_for_day_with_empty_string_if_unallocated(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ):
-    club_boat = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
+    club_boat = dict_of_all_event_data.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_person(
         cadet=cadet
     ).dinghy_on_day(
         day=day, default=no_club_dinghy

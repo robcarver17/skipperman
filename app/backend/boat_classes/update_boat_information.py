@@ -285,7 +285,7 @@ def get_club_dinghy_from_str(
     club_boat_name = update.club_boat_name
     if update.club_boat_name == MISSING_FROM_FORM:
         cadet = update.cadet
-        club_boat = dict_of_all_event_info_for_cadets.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
+        club_boat = dict_of_all_event_info_for_cadets.dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_person(
             cadet
         ).dinghy_on_day(
             day

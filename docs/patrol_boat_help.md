@@ -79,10 +79,11 @@ For every person on a boat, that shows you whether they have PB2 or not. You can
 
 ## Active warnings
 
-There are two types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking ►Warnings.
+There are three types of checks that Skipperman will do, and you can see if there are any resulting warnings by clicking ►Warnings.
 
 - Does every boat have a qualified driver on for every day?
 - Is every volunteer qualified for their role?
+- Is a volunteer allocated to a patrol boat and a club dinghy on the same day?
 
 Warnings appear sorted by priority, and then by category.
 
@@ -90,6 +91,7 @@ You can eithier *clear* warnings, or click on them to be *ignored* (and then pre
 
 - Add a driver where one is missing
 - Set a volunteer qualification in the [qualifications table](#qualifications-table)) or in the [volunteer rota](volunteer_rota_help.md), or [edit volunteer page](view_individual_volunteer_help.md).
+- Remove the volunteer from eithier the [club sailing boat](#allocating-club-sailing-dinghies-to-instructors) or the [patrol boat](#allocating-a-volunteer-to-a-boat).
 
 ## Ignored warnings
 
@@ -151,6 +153,30 @@ Remember by convention a 'helm' is just someone who has the relevant PB2 certifi
 ## Moving boats without swapping
 
 You can also move someone on to a different boat without selecting a volunteer they have to swap with. This is quicker than removing them from one boat and then selecting them on another.
+
+# Allocating club sailing dinghies to instructors
+
+You can also allocate club sailing dinghies to instructors and other helpers. These will appear on the volunteer rota report and the spotter sheet, but not the patrol boat rota report.
+
+Click on  ►Club dinghies - allocate to instructors to start.
+
+## To allocate a club dinghy to an instructor or helper
+
+For the relevant club dinghy row, select the volunteers name on the appropriate day, then click 'Allocate dinghy'. Only volunteers available on that day who aren't already on a club dinghy are shown.
+
+Note: it's possible to put someone on a patrol boat and a club dinghy - you won't be stopped. But it will appear as a [warning](#warnings) if you do so.
+
+## To copy across allocations across days
+
+To save time, if a volunteer is on a club dinghy for multiple days, then click on the &#10234; button next to a volunteer. This will copy the allocated dinghy to all the other days they are available. WARNING: this will overwrite any existing allocations.
+
+## To remove an allocation on a given day
+
+Just click on the 'Remove allocation' button. 
+
+## Seeing a summary of club dinghies allocated
+
+Click on  ►Club dinghies - summary. This will also include dinghies allocated to cadets in the [Sailors, groups and boats](group_allocation_help.md) page. You can change the number of boats available to hire at the event here.
 
 # Quick reports
 

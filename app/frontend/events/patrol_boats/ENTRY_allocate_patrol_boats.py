@@ -31,6 +31,8 @@ from app.frontend.events.patrol_boats.swapping import (
 )
 from app.frontend.reporting.patrol_boats.report_patrol_boats import patrol_boat_report_generator
 from app.frontend.reporting.shared.create_report import create_generic_report
+from app.frontend.shared.club_boats_instructors import is_club_dinghy_instructor_button, \
+    handle_club_dinghy_instructor_allocation_button_pressed
 from app.frontend.shared.warnings_table import (
     save_warnings_from_table,
     is_save_warnings_button_pressed,
@@ -127,6 +129,8 @@ def post_form_view_for_patrol_boat_allocation(
         update_if_swap_button_pressed(
             interface=interface, swap_button=last_button_pressed
         )
+    elif is_club_dinghy_instructor_button(last_button_pressed):
+        handle_club_dinghy_instructor_allocation_button_pressed(interface)
 
     ## exception
     else:

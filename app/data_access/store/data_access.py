@@ -246,6 +246,17 @@ def get_data_access_for_list_of_cadets_at_event_with_club_dinghies(
         event_id=event_id,
     )
 
+def get_data_access_for_list_of_volunteers_at_event_with_club_dinghies(
+    data: GenericDataApi, event_id: str
+) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_volunteers_at_event_with_club_dinghies",
+        read_method=data.data_list_of_volunteers_at_event_with_club_dinghies.read,
+        write_method=data.data_list_of_volunteers_at_event_with_club_dinghies.write,
+        event_id=event_id,
+    )
+
+
 
 def get_data_access_for_list_of_cadets_at_event_with_dinghies(
     data: GenericDataApi, event_id: str

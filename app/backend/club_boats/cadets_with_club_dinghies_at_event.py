@@ -1,14 +1,14 @@
 from typing import List
 
-
+from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_cadets_and_club_dinghies_at_event,
+    object_definition_for_dict_of_people_and_club_dinghies_at_event,
 )
 from app.objects.club_dinghies import no_club_dinghy
-from app.objects.composed.cadets_at_event_with_club_dinghies import (
-    DictOfCadetsAndClubDinghiesAtEvent,
+from app.objects.composed.people_at_event_with_club_dinghies import (
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.day_selectors import Day
 
@@ -16,6 +16,7 @@ from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 from app.backend.club_boats.list_of_club_dinghies import get_club_dinghy_with_name
+from app.objects.volunteers import ListOfVolunteers
 
 
 def is_a_club_dinghy_allocated_for_list_of_cadets_on_any_day_at_event(
@@ -33,33 +34,34 @@ def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
     dict_of_cadets_and_club_dinghies_at_event = (
-        get_dict_of_cadets_and_club_dinghies_at_event(
+        get_dict_of_people_and_club_dinghies_at_event(
             object_store=object_store, event=event
         )
     )
-    boat_allocation = dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_cadet(
+    boat_allocation = dict_of_cadets_and_club_dinghies_at_event.club_dinghys_for_person(
         cadet
     )
 
     return len(boat_allocation) > 0
 
 
-def get_dict_of_cadets_and_club_dinghies_at_event(
+def get_dict_of_people_and_club_dinghies_at_event(
     object_store: ObjectStore, event: Event
-) -> DictOfCadetsAndClubDinghiesAtEvent:
+) -> DictOfPeopleAndClubDinghiesAtEvent:
     return object_store.get(
-        object_definition=object_definition_for_dict_of_cadets_and_club_dinghies_at_event,
+        object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,
         event_id=event.id,
     )
 
 
-def update_dict_of_cadets_and_club_dinghies_at_event(
+def update_dict_of_people_and_club_dinghies_at_event(
     object_store: ObjectStore,
     event: Event,
-    dict_of_cadets_and_club_dinghies_at_event: DictOfCadetsAndClubDinghiesAtEvent,
+    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
 ):
     object_store.update(
-        object_definition=object_definition_for_dict_of_cadets_and_club_dinghies_at_event,
+        object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,
         event_id=event.id,
         new_object=dict_of_cadets_and_club_dinghies_at_event,
     )
+

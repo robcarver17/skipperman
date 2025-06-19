@@ -24,6 +24,8 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     delete_button_for_boat_value,
     DELETE_BOAT_BUTTON_LABEL,
 )
+from app.frontend.shared.club_dinghies import get_club_dinghies_detail
+from app.frontend.shared.club_boats_instructors import get_club_dinghies_detail_instructors
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
 )
@@ -53,18 +55,22 @@ def get_top_material_for_patrol_boat_form(
     patrol_boat_driver_and_crew_qualifications = (
         get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
     )
+    club_dinghies = get_club_dinghies_detail(interface=interface, event=event)
+    club_dinghies_instructors = get_club_dinghies_detail_instructors(interface=interface, event=event)
+
     warnings = update_and_get_warnings_on_all_volunteers_in_patrol_boats(
         interface=interface, event=event
     )
     return ListOfLines(
         [
             _______________,
-            _______________,
             summary_of_boat_allocations,
-            _______________,
             _______________,
             patrol_boat_driver_and_crew_qualifications,
             _______________,
+            club_dinghies,
+            _______________,
+            club_dinghies_instructors,
             _______________,
         ]
         + warnings

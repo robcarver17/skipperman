@@ -6,9 +6,9 @@ from app.data_access.resolve_paths_and_filenames import (
     LIST_OF_CLUB_DINGHIES_FILE_ID,
     LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID,
-PATROL_BOAT_LABELS
+    PATROL_BOAT_LABELS, LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID
 )
-from app.objects.cadet_at_event_with_club_boat_with_ids import (
+from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
 )
 from app.objects.patrol_boats import ListOfPatrolBoats
@@ -86,6 +86,26 @@ class CsvDataListOfCadetAtEventWithClubDinghies(
             additional_file_identifiers=event_id,
         )
 
+
+class CsvDataListOfVolunteersAtEventWithClubDinghies(GenericCsvData, DataListOfVolunteersAtEventWithClubDinghies):
+    def read(self, event_id: str) -> ListOfVolunteerAtEventWithIdAndClubDinghies:
+        return self.read_and_return_object_of_type(
+            ListOfVolunteerAtEventWithIdAndClubDinghies,
+            file_identifier=LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID,
+            additional_file_identifiers=event_id,
+        )
+
+
+    def write(
+        self,
+        list_of_volunteers_at_event_with_club_dinghies: ListOfVolunteerAtEventWithIdAndClubDinghies,
+        event_id: str,
+    ):
+        self.write_object(
+            list_of_volunteers_at_event_with_club_dinghies,
+            file_identifier=LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID,
+            additional_file_identifiers=event_id,
+        )
 
 from app.data_access.resolve_paths_and_filenames import CLUB_BOAT_LIMIT_CSV
 

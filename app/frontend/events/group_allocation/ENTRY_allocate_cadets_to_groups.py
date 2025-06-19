@@ -3,10 +3,9 @@ from typing import Union
 from app.frontend.events.group_allocation.change_sort_order import (
     display_change_sort_order,
 )
-from app.frontend.events.group_allocation.club_boats import (
-    update_limits_button,
-    update_club_boat_limits_for_event_from_form,
-)
+from app.frontend.shared.club_dinghies import update_limits_button, update_club_boat_limits_for_event_from_form
+from app.frontend.shared.club_boats_instructors import is_club_dinghy_instructor_button, \
+    handle_club_dinghy_instructor_allocation_button_pressed
 from app.frontend.events.group_allocation.previous_events import (
     is_event_picker_button,
     save_event_selection_from_form,
@@ -210,7 +209,6 @@ def post_form_allocate_cadets_when_changing_data(
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
         interface.flush_cache_to_store()  ## weird bug
-
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

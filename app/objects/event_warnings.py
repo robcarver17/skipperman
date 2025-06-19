@@ -36,7 +36,7 @@ VOLUNTEER_PREFERENCE = "Volunteer preference"
 VOLUNTEER_GROUP = "Volunteer / Cadet group overlap"
 VOLUNTEER_UNCONNECTED = "Unconnected volunteer"
 MISSING_DRIVER = "Missing driver"
-
+DOUBLE_BOOKED = "On two boats at same time"
 
 class ListOfEventWarnings(GenericListOfObjectsWithIds):
     @property

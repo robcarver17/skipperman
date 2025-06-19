@@ -23,7 +23,8 @@ from app.frontend.events.group_allocation.buttons import (
     get_day_buttons,
     button_to_click_on_cadet,
 )
-from app.frontend.events.group_allocation.club_boats import get_club_dinghies_form
+from app.frontend.shared.club_dinghies import get_club_dinghies_detail
+from app.frontend.shared.club_boats_instructors import get_club_dinghies_detail_instructors
 from app.frontend.events.group_allocation.previous_events import (
     get_previous_event_selection_form,
     get_prior_events_to_show,
@@ -180,18 +181,6 @@ def get_allocations_detail(interface: abstractInterface, event: Event):
         )
 
     return allocations
-
-
-def get_club_dinghies_detail(interface: abstractInterface, event: Event):
-    return DetailListOfLines(
-        ListOfLines(
-            [
-                "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
-                get_club_dinghies_form(interface=interface, event=event),
-            ]
-        ),
-        name="Club boats",
-    )
 
 
 def get_classes_detail(interface: abstractInterface, event: Event):

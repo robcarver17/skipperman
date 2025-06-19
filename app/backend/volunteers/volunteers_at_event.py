@@ -4,7 +4,9 @@ from app.backend.registration_data.volunteer_registration_data import (
 from app.backend.volunteers.relevant_information_for_volunteer import (
     check_any_status_is_unable,
 )
+from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.cadets import ListOfCadets
+from app.objects.club_dinghies import ClubDinghy
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
 )
@@ -13,6 +15,7 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.utils import simplify_and_display
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
@@ -27,6 +30,95 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_all_event_data_for_volunteers,
     object_definition_for_list_of_volunteers_with_ids_at_event,
 )
+
+
+def get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
+        object_store: ObjectStore,
+        event: Event,
+        day: Day,
+        club_dinghy: ClubDinghy
+) -> ListOfVolunteers:
+
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+
+    return all_event_info.list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
+        day=day,
+        club_dinghy=club_dinghy
+    )
+
+def get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(
+        object_store: ObjectStore,
+        event: Event,
+        day: Day
+) -> ListOfVolunteers:
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    volunteers =  all_event_info.get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(
+        day=day
+    )
+    return volunteers.sort_by_firstname()
+
+def allocate_club_dinghy_to_volunteer_on_day(  object_store: ObjectStore,
+        event: Event,
+        day: Day,
+                                               volunteer: Volunteer,
+                                               club_dinghy: ClubDinghy):
+
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+        )
+    all_event_info.allocate_club_dinghy_to_volunteer_on_day(day=day, volunteer=volunteer, club_dinghy=club_dinghy)
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store,
+                                                 dict_of_all_event_data=all_event_info)
+
+def remove_club_dinghy_from_volunteer_on_day(  object_store: ObjectStore,
+        event: Event,
+        day: Day,
+                                               volunteer: Volunteer):
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    all_event_info.remove_club_dinghy_from_volunteer_on_day(day=day, volunteer=volunteer)
+
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store,
+                                                 dict_of_all_event_data=all_event_info)
+
+def copy_club_dinghy_for_instructor_across_all_days(  object_store: ObjectStore,
+        event: Event,
+        day: Day,
+                                      club_dinghy: ClubDinghy,
+                                               volunteer: Volunteer):
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    all_event_info.copy_club_dinghy_for_instructor_across_all_days(day=day, volunteer=volunteer, club_dinghy=club_dinghy)
+
+    update_dict_of_all_event_data_for_volunteers(object_store=object_store,
+                                                 dict_of_all_event_data=all_event_info)
+
+def get_attendance_matrix_for_list_of_volunteers_at_event(
+    object_store: ObjectStore,
+    event: Event,
+    list_of_volunteers: ListOfVolunteers = arg_not_passed,
+) -> DictOfDaySelectors:
+    all_event_info = get_dict_of_all_event_data_for_volunteers(
+        object_store=object_store, event=event
+    )
+    dict_of_availability = {}
+    if list_of_volunteers is arg_not_passed:
+        list_of_volunteers = all_event_info.list_of_volunteers()
+    for volunteer in list_of_volunteers:
+        volunteer_at_event_data = all_event_info.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(volunteer, default=None)
+        if volunteer_at_event_data is None:
+            dict_of_availability[volunteer] = DaySelector()
+        else:
+            dict_of_availability[volunteer] = volunteer_at_event_data.availablity
+
+    return DictOfDaySelectors(dict_of_availability)
+
 
 
 def add_volunteer_at_event(

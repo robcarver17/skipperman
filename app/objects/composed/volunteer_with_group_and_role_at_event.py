@@ -36,6 +36,9 @@ class VolunteerWithRoleGroupAndTeamAtEvent:
     group: Group
     list_of_team_and_index: ListOfTeamsAndIndices
 
+    def in_instructor_team(self):
+        return self.list_of_team_and_index.in_instructor_team()
+
     @classmethod
     def from_volunteer_with_id_in_role_at_event(
         cls,

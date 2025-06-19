@@ -133,7 +133,10 @@ def save_volunteer_targets(interface: abstractInterface):
 def save_volunteer_targets_for_specific_role(
     interface: abstractInterface, event: Event, role_name: str
 ):
-    new_target = get_target_from_form(interface=interface, role_name=role_name)
+    new_target = get_target_from_form(interface=interface, role_name=role_name, default=MISSING_FROM_FORM)
+    if new_target is MISSING_FROM_FORM:
+        return
+
     save_new_volunteer_target(
         object_store=interface.object_store,
         event=event,
@@ -142,8 +145,8 @@ def save_volunteer_targets_for_specific_role(
     )
 
 
-def get_target_from_form(interface: abstractInterface, role_name: str):
-    return interface.value_from_form(get_input_name_for_target_box(role_name))
+def get_target_from_form(interface: abstractInterface, role_name: str, default=MISSING_FROM_FORM):
+    return interface.value_from_form(get_input_name_for_target_box(role_name), default=default)
 
 
 def get_summary_instructor_group_table(interface: abstractInterface, event: Event):

@@ -82,3 +82,5 @@ import_skills_csv: ## names have to correspond to configuration names
     First aid:
       starts_from: 'First Aid (FA)'
       expiry_limit_years: 3
+#
+max_group_size_training_per_instructor: 6

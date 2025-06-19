@@ -28,6 +28,9 @@ class ListOfTeamsAndIndices(List[TeamAndIndex]):
 
         return team in self.list_of_teams
 
+    def in_instructor_team(self):
+        return any([team_and_index.team.is_instructor_team() for team_and_index in self])
+
 
 class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def __init__(

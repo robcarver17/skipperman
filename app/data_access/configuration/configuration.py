@@ -90,3 +90,5 @@ IMPORT_SKILLS_CONFIG = from_skills_dict_in_import_config_to_import_config(
 )
 
 local_timezone = pytz.timezone(configuration["pytz_timezone"])
+
+MAX_GROUP_SIZE_PER_INSTRUCTOR = configuration['max_group_size_training_per_instructor']

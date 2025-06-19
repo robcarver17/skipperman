@@ -13,6 +13,7 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.identified_volunteer_at_event import RowIDAndIndex
+from app.objects.relevant_information_for_volunteers import missing_relevant_information
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -621,12 +622,21 @@ def warning_for_specific_temporary_skip_volunteer_id_at_event(
             event=event,
         )
     )
-    volunteer = get_volunteer_from_relevant_information(relevant_information)
-    warning = "Temporarily skipping volunteer probably called %s in row %s id %d" % (
-        volunteer.name,
-        str(row_id_and_index.row_id),
-        row_id_and_index.volunteer_index,
-    )
+    volunteer = get_volunteer_from_relevant_information(relevant_information, default= missing_relevant_information)
+    if volunteer is missing_relevant_information:
+        warning = "Temporarily skipping volunteer with unknown name in row %s id %d (cadet name %s, registered by %s)" % (
+            str(row_id_and_index.row_id),
+            row_id_and_index.volunteer_index,
+            relevant_information.identify.cadet.name,
+            relevant_information.identify.registered_by_firstname
+        )
+
+    else:
+        warning = "Temporarily skipping volunteer probably called %s in row %s id %d" % (
+            volunteer.name,
+            str(row_id_and_index.row_id),
+            row_id_and_index.volunteer_index,
+        )
 
     return warning
 

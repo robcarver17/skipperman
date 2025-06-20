@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 
 from app.backend.security.list_of_users import get_list_of_users
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_from_list_of_given_str_of_volunteer,
+    get_volunteer_from_list_of_given_str_of_volunteer, get_volunteer_from_id,
 )
 
 from app.backend.security.modify_user import (
@@ -61,7 +62,7 @@ def generate_reset_message_for_user_name(
 
 def add_new_user_if_present(interface: abstractInterface):
     user_values = get_user_values_from_values_in_form(
-        interface=interface, user=new_blank_user, username_field_present=True
+        interface=interface, user=new_blank_user
     )
     if is_user_empty(user_values):
         return
@@ -117,7 +118,7 @@ def save_changes_to_existing_users(interface: abstractInterface):
 
 def save_change_to_user_from_form(interface: abstractInterface, user: SkipperManUser):
     user_values_from_form = get_user_values_from_values_in_form(
-        interface=interface, user=user, username_field_present=False
+        interface=interface, user=user
     )
     modify_password_if_changed(
         interface=interface, user=user, user_values_from_form=user_values_from_form
@@ -186,41 +187,43 @@ def modify_volunteer_if_changed(
 def get_user_values_from_values_in_form(
     interface: abstractInterface,
     user: SkipperManUser,
-    username_field_present: bool = False,
 ) -> SkipperManUserFromForm:
 
-    group_str = interface.value_from_form(
-        name_for_user_and_input_type(user, GROUP), default=""
+    group_name = interface.value_from_form(
+        name_for_user_and_input_type(user, GROUP), default = user.group.name ## valid if user group admin and can't change
     )
-    if group_str == "":
-        ## if single admin user dropdown own't be present and can't change name
-        group = user.group.name
-    else:
-        group = UserGroup[group_str]
+    group = UserGroup[group_name]
 
-    if username_field_present:
-        username = interface.value_from_form(
-            name_for_user_and_input_type(user, USERNAME)
-        )
-    else:
-        username = user.username
-    # email = interface.value_from_form(name_for_user_and_input_type(user, EMAIL))
+    username = interface.value_from_form(
+        name_for_user_and_input_type(user, USERNAME), default = user.username ## valid if not adding user
+    )
 
     volunteer_name = interface.value_from_form(
-        name_for_user_and_input_type(user, VOLUNTEER)
+        name_for_user_and_input_type(user, VOLUNTEER), default = MISSING_FROM_FORM
     )
-    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
-        object_store=interface.object_store, volunteer_as_str=volunteer_name
+    if volunteer_name is MISSING_FROM_FORM:
+        interface.log_error("Weird error can't update volunteer name")
+        volunteer_id = user.volunteer_id
+        volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
+    else:
+        volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
+            object_store=interface.object_store, volunteer_as_str=volunteer_name
+        )
+
+    password=interface.value_from_form(
+        name_for_user_and_input_type(user, PASSWORD), default = MISSING_FROM_FORM
     )
+    confirm_password = interface.value_from_form(
+        name_for_user_and_input_type(user, PASSWORD_CONFIRM), default = MISSING_FROM_FORM
+    )
+    if password is MISSING_FROM_FORM or confirm_password is MISSING_FROM_FORM:
+        interface.log_error("Weird error can't update passwords")
+        password = confirm_password = ''
 
     return SkipperManUserFromForm(
         username=username,
-        password=interface.value_from_form(
-            name_for_user_and_input_type(user, PASSWORD)
-        ),
-        confirm_password=interface.value_from_form(
-            name_for_user_and_input_type(user, PASSWORD_CONFIRM)
-        ),
+        password=password,
+        confirm_password=confirm_password,
         group=group,
         volunteer=volunteer,
     )

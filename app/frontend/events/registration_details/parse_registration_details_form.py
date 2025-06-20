@@ -105,9 +105,10 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(
             DAYS_ATTENDING, cadet_id=cadet.id
         ),
         event=registration_details.event,
+        default=MISSING_FROM_FORM
     )
     if new_attendance is MISSING_FROM_FORM:
-        print("attendance not in form")
+        interface.log_error("attendance not in form for %s" % cadet)
         return
 
     original_attendance = (
@@ -146,15 +147,20 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
         input_name=input_name_from_column_name_and_cadet_id(
             column_name=ROW_STATUS, cadet_id=cadet.id
         ),
+        default=MISSING_FROM_FORM
     )
+
+    if new_status is MISSING_FROM_FORM:
+        interface.log_error("Can't get new status for %s" % cadet)
+        return
+
     original_status = (
         registration_details.registration_data.registration_data_for_cadet(cadet).status
     )
 
-    print("was %s now %s" % (original_status, new_status))
-
     if original_status == new_status:
         return
+
     if new_status.is_cancelled_or_deleted:
         messages = update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
             object_store=interface.object_store,
@@ -193,11 +199,16 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     registration_details: RegistrationDetailsForEvent,
 ):
     new_notes = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id)
+        input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id),
+        default=MISSING_FROM_FORM
     )
+    if new_notes is MISSING_FROM_FORM:
+        return
+
     original_notes = registration_details.registration_data.registration_data_for_cadet(
         cadet
     ).notes
+
     if original_notes == new_notes:
         return
 
@@ -215,8 +226,11 @@ def get_cadet_health_for_row_in_form_and_alter_registration_data(
     registration_details: RegistrationDetailsForEvent,
 ):
     new_health = interface.value_from_form(
-        input_name_from_column_name_and_cadet_id(column_name=HEALTH, cadet_id=cadet.id)
+        input_name_from_column_name_and_cadet_id(column_name=HEALTH, cadet_id=cadet.id),
+        default=MISSING_FROM_FORM
     )
+    if new_health is MISSING_FROM_FORM:
+        return
 
     original_health = (
         registration_details.registration_data.registration_data_for_cadet(cadet).health
@@ -259,7 +273,10 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
         column_name=column_name, cadet_id=cadet.id
     )
 
-    form_value = interface.value_from_form(input_name)
+    form_value = interface.value_from_form(input_name, default=MISSING_FROM_FORM)
+    if form_value is MISSING_FROM_FORM:
+        return
+
     new_value_for_column = typecast_input_of_column(
         column_name=column_name, value=form_value
     )

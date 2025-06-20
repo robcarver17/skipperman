@@ -11,6 +11,8 @@ Skipperman creates a lot of files. The file management menu allows you to manage
 
 Public files are automatically created when Skipperman creates a [report](reporting_help.md), eg [a volunteer rota](volunteer_rota_report_help.md), and the user chooses to share it. Public files can be seen by anyone who has the relevant web link (that is why they aren't suitable for confidential information, and you should be careful about what reports you write to a public file). The full URL is shown for each file to make it easy to share a link to each file.
 
+
+
 ## QR codes for public files
 
 To make it easier to share files, you can generate a QR code for any public file.
@@ -34,3 +36,7 @@ When an event has finished, it's good housekeeping to delete the relevant public
 # Temporary private files- uploads and downloads
 
 Skipperman also creates temporary files when uploading and downloading data; these aren't public so only the filename and not the URL are shown. To save space, it's worth periodically deleting them. Again you can eithier delete all of them, delete one file at a time, or select multiple files to delete. You can't replace these files (except when Skipperman does so by generating a file of the same name), or geerate QR codes for them.  
+
+# Ad hoc QR code
+
+Sometimes you might want to generate a QR code for another web link, eg WhatsApp group. Just type in the relevant box and click generate QR code. 

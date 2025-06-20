@@ -25,6 +25,7 @@ from app.backend.clothing.active_cadets_with_clothing import (
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def save_clothing_data(interface: abstractInterface):
@@ -46,6 +47,10 @@ def save_clothing_data_for_cadet(
     new_size, new_colour = get_size_and_colour_from_form(
         interface=interface, cadet=cadet
     )
+    if MISSING_FROM_FORM in [new_colour, new_size]:
+        interface.log_error("Can't update clothing for %s as missing values" % str(cadet))
+        return
+
     if not new_size == clothing.size:
         change_clothing_size_for_cadet(
             object_store=interface.object_store, event=event, cadet=cadet, size=new_size
@@ -65,8 +70,8 @@ def get_size_and_colour_from_form(
 ) -> Tuple[str, str]:
     cadet_id = cadet.id
 
-    new_size = interface.value_from_form(size_field_name(cadet_id=cadet_id))
-    new_colour = interface.value_from_form(colour_field_name(cadet_id=cadet_id))
+    new_size = interface.value_from_form(size_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM)
+    new_colour = interface.value_from_form(colour_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM)
 
     return new_size, new_colour
 

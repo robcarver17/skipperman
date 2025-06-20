@@ -129,7 +129,7 @@ def update_notes_for_volunteer_at_event_from_form(
     new_notes = interface.value_from_form(
         input_name_for_notes_and_volunteer(volunteer), default=MISSING_FROM_FORM
     )
-    if new_notes == MISSING_FROM_FORM:
+    if new_notes is MISSING_FROM_FORM:
         return
 
     existing_notes = volunteer_at_event_data.registration_data.notes

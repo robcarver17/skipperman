@@ -145,8 +145,12 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
     def change_food_requirements_for_cadet(
         self, cadet_id: str, food_requirements: FoodRequirements
     ):
-        cadet_in_data = self.cadet_with_food_with_cadet_id(cadet_id)
-        cadet_in_data.food_requirements = food_requirements
+
+        cadet_in_data = self.cadet_with_food_with_cadet_id(cadet_id, default=missing_data)
+        if cadet_in_data is missing_data:
+            self.add_new_cadet_with_food_to_event(cadet_id=cadet_id, food_requirements=food_requirements)
+        else:
+            cadet_in_data.food_requirements = food_requirements
 
     def add_new_cadet_with_food_to_event(
         self,

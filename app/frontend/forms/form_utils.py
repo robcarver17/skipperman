@@ -24,6 +24,7 @@ from app.objects.registration_status import (
     all_possible_status_user_can_select,
 )
 from app.objects.composed.volunteers_with_skills import SkillsDict
+from app.objects.utilities.generic_objects import get_list_of_attributes
 
 ALL_AVAILABLE = "Select all"
 
@@ -54,16 +55,16 @@ def get_availability_checkbox(
 
 
 def get_availablity_from_form(
-    interface: abstractInterface, event: Event, input_name: str
+    interface: abstractInterface, event: Event, input_name: str, default=MISSING_FROM_FORM
 ) -> DaySelector:
-    possible_days = event.days_in_event()
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
         input_name, default=MISSING_FROM_FORM
     )
-    day_selector = DaySelector({})
     if list_of_days_ticked_in_form == MISSING_FROM_FORM:
-        return MISSING_FROM_FORM
+        return default
 
+    possible_days = event.days_in_event()
+    day_selector = DaySelector({})
     all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
 
     for day in possible_days:
@@ -137,27 +138,27 @@ def get_food_requirements_input_as_tuple(
 
 
 def get_food_requirements_from_form(
-    interface: abstractInterface, checkbox_input_name: str, other_input_name: str
+    interface: abstractInterface, checkbox_input_name: str, other_input_name: str, default=MISSING_FROM_FORM
 ) -> FoodRequirements:
-    other_food = interface.value_from_form(other_input_name)
+    other_food = interface.value_from_form(other_input_name, default=MISSING_FROM_FORM)
     food_required_as_list = interface.value_of_multiple_options_from_form(
         checkbox_input_name, default=MISSING_FROM_FORM
     )
-    if food_required_as_list is MISSING_FROM_FORM:
-        return MISSING_FROM_FORM
+    if MISSING_FROM_FORM in [other_food, food_required_as_list]:
+        return default
 
-    food_requirements = no_food_requirements
-    possible_fields = list(food_requirements.as_dict().keys())
+    empty_food_requirements_to_populate = FoodRequirements.create_empty()
+    possible_fields = get_list_of_attributes(empty_food_requirements_to_populate)
 
     for key in possible_fields:
         if key == OTHER_IN_FOOD_REQUIRED:
-            setattr(food_requirements, key, other_food)
+            setattr(empty_food_requirements_to_populate, key, other_food)
             continue
         food_requirement_present = key in food_required_as_list
 
-        setattr(food_requirements, key, food_requirement_present)
+        setattr(empty_food_requirements_to_populate, key, food_requirement_present)
 
-    return food_requirements
+    return empty_food_requirements_to_populate
 
 
 all_status_names = [
@@ -197,9 +198,11 @@ def dropdown_input_for_status_change(
 
 
 def get_status_from_form(
-    interface: abstractInterface, input_name: str
+    interface: abstractInterface, input_name: str, default=MISSING_FROM_FORM
 ) -> RegistrationStatus:
-    row_status_as_str = interface.value_from_form(input_name)
+    row_status_as_str = interface.value_from_form(input_name, default=MISSING_FROM_FORM)
+    if row_status_as_str is MISSING_FROM_FORM:
+        return default
     return RegistrationStatus(row_status_as_str)
 
 
@@ -220,14 +223,15 @@ def checked_and_labels_dict_for_skills_form(
 
 
 def get_dict_of_skills_from_form(
-    interface: abstractInterface, field_name: str
+    interface: abstractInterface, field_name: str, default=MISSING_FROM_FORM
 ) -> SkillsDict:
     all_skills = get_list_of_skills(interface.object_store)
     selected_skills_as_list_of_str = interface.value_of_multiple_options_from_form(
         field_name, default=MISSING_FROM_FORM
     )
     if selected_skills_as_list_of_str is MISSING_FROM_FORM:
-        return MISSING_FROM_FORM
+        return default
+
     skills_dict = SkillsDict()
     for skill in all_skills:
         skill_name = skill.name
@@ -251,12 +255,12 @@ def yes_no_radio(
     )
 
 
-def is_radio_yes_or_no(interface: abstractInterface, input_name: str):
+def is_radio_yes_or_no(interface: abstractInterface, input_name: str, default=MISSING_FROM_FORM):
     values_in_form = interface.value_of_multiple_options_from_form(
         input_name, default=MISSING_FROM_FORM
     )
     if values_in_form is MISSING_FROM_FORM:
-        return MISSING_FROM_FORM
+        return default
 
     return YES in values_in_form
 

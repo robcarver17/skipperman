@@ -13,6 +13,7 @@ from app.backend.reporting.options_and_parameters.print_options import (
 from app.backend.reporting.process_stages.create_file_from_list_of_columns import \
     web_pathname_of_public_version_of_local_report_file
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
+from app.frontend.forms.form_utils import is_radio_yes_or_no
 from app.frontend.shared.events_state import get_event_from_state
 from app.backend.reporting.report_generator import ReportGenerator
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -44,7 +45,7 @@ from app.frontend.reporting.shared.constants import (
     IF_HEADER_INCLUDE_SIZE,
     FONT_SIZE,
 )
-from app.objects.utilities.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data, MISSING_FROM_FORM
 
 
 def override_print_options_with_new_values(
@@ -188,23 +189,29 @@ def get_print_options_from_main_option_form_fields(
 ) -> PrintOptions:
     ## doesn't get order or arrangement
     print("Getting print shared")
-    page_alignment = interface.value_from_form(PAGE_ALIGNMENT)
-    output_to = interface.value_from_form(OUTPUT_PDF)
-    font = interface.value_from_form(FONT)
-    font_size = interface.value_from_form(FONT_SIZE)
-    page_size = interface.value_from_form(PAGE_SIZE)
-    equalise_column_widths = interface.true_if_radio_was_yes(EQUALISE_COLUMN_WIDTHS)
-    title = interface.value_from_form(REPORT_TITLE)
-    filename = interface.value_from_form(REPORT_FILENAME)
-    group_name_as_header = interface.true_if_radio_was_yes(GROUP_NAME_AS_HEADER)
-    highlight_first_value_as_key = interface.true_if_radio_was_yes(
-        FIRST_VALUE_IN_GROUP_IS_KEY
+    page_alignment = interface.value_from_form(PAGE_ALIGNMENT, default=MISSING_FROM_FORM)
+    output_to = interface.value_from_form(OUTPUT_PDF, default=MISSING_FROM_FORM)
+    font = interface.value_from_form(FONT, default=MISSING_FROM_FORM)
+    font_size = interface.value_from_form(FONT_SIZE, default=MISSING_FROM_FORM)
+    page_size = interface.value_from_form(PAGE_SIZE, default=MISSING_FROM_FORM)
+    equalise_column_widths =  is_radio_yes_or_no(interface, EQUALISE_COLUMN_WIDTHS, default=MISSING_FROM_FORM)
+    title = interface.value_from_form(REPORT_TITLE, default=MISSING_FROM_FORM)
+    filename = interface.value_from_form(REPORT_FILENAME, default=MISSING_FROM_FORM)
+    group_name_as_header =  is_radio_yes_or_no(interface, GROUP_NAME_AS_HEADER, default=MISSING_FROM_FORM)
+    highlight_first_value_as_key =  is_radio_yes_or_no(interface,
+        FIRST_VALUE_IN_GROUP_IS_KEY, default=MISSING_FROM_FORM
     )
-    prepend_group_name = interface.true_if_radio_was_yes(PREPEND_GROUP_NAME)
-    include_size_of_group_if_header = interface.true_if_radio_was_yes(
-        IF_HEADER_INCLUDE_SIZE
+    prepend_group_name =  is_radio_yes_or_no(interface, PREPEND_GROUP_NAME, default=MISSING_FROM_FORM)
+    include_size_of_group_if_header =  is_radio_yes_or_no(interface,
+        IF_HEADER_INCLUDE_SIZE, default=MISSING_FROM_FORM
     )
-    public = interface.true_if_radio_was_yes(PUBLIC)
+    public = is_radio_yes_or_no(interface, PUBLIC, default=MISSING_FROM_FORM)
+
+    if MISSING_FROM_FORM in [page_alignment, output_to, font, font_size, page_size, equalise_column_widths,
+                             title, filename, group_name_as_header, highlight_first_value_as_key,
+                             prepend_group_name, include_size_of_group_if_header, public]:
+        return MISSING_FROM_FORM
+
 
     print_options = PrintOptions()
 
@@ -224,6 +231,7 @@ def get_print_options_from_main_option_form_fields(
 
     print("Print shared from form %s" % str(print_options))
     return print_options
+
 
 
 def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOfLines:
@@ -363,6 +371,9 @@ def save_print_options_from_form(
     )
 
     print_options = get_print_options_from_main_option_form_fields(interface)
+    if print_options is MISSING_FROM_FORM:
+        interface.log_error("Couldn't get print options from form")
+        return
 
     save_print_options(
         report_type=specific_parameters_for_type_of_report.report_type,

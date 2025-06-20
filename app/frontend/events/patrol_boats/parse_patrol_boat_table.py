@@ -150,7 +150,7 @@ def get_boat_day_volunteer_for_dropdown_name_or_none(
 
     if selected_dropdown == TOP_ROW_OF_VOLUNTEER_DROPDOWN:
         return NO_ADDITION_TO_MAKE
-    if selected_dropdown == MISSING_FROM_FORM:
+    elif selected_dropdown == MISSING_FROM_FORM:
         return NO_ADDITION_TO_MAKE
 
     boat, day = from_allocation_dropdown_input_name_to_boat_and_day(
@@ -238,8 +238,11 @@ def update_role_dropdown_for_volunteer_on_day(
     role_selected = which_volunteer_role_selected_in_boat_allocation(
         interface=interface, volunteer_id=volunteer_id, day=day
     )
-    current_role = volunteer_on_boat.role_and_group.role
+    if role_selected is MISSING_FROM_FORM:
+        interface.log_error("Missing role dropdown for %s" % volunteer_on_boat.volunteer)
+        return
 
+    current_role = volunteer_on_boat.role_and_group.role
     if role_selected == current_role:
         return
 
@@ -255,9 +258,11 @@ def update_role_dropdown_for_volunteer_on_day(
 
 def update_adding_boat(interface: abstractInterface):
     event = get_event_from_state(interface)
-    name_of_boat_added = interface.value_from_form(ADD_BOAT_DROPDOWN)
+    name_of_boat_added = interface.value_from_form(ADD_BOAT_DROPDOWN, default=MISSING_FROM_FORM)
 
     try:
+        if name_of_boat_added is MISSING_FROM_FORM:
+            raise "Form value missing for boat"
         add_named_boat_to_event_with_no_allocation(
             object_store=interface.object_store,
             name_of_boat_added=name_of_boat_added,

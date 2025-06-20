@@ -6,6 +6,7 @@ from app.data_access.configuration.field_list import (
     RESPONSIBLE_ADULT_NAME,
     CADET_DOUBLE_HANDED_PARTNER,
 )
+from app.data_access.configuration.field_list_groups import FIELDS_TO_EDIT_IN_EDIT_VIEW, FIELDS_VIEW_ONLY_IN_EDIT_VIEW
 from app.objects.utilities.utils import flatten
 
 from app.objects.utilities.exceptions import MissingData, arg_not_passed, missing_data
@@ -215,7 +216,10 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
     def list_of_registration_fields(self):
         all_fields = [reg_data.data_fields for reg_data in list(self.values())]
         all_fields = flatten(all_fields)
-        return list(set(all_fields))
+        list_of_fields =  list(set(all_fields))
+
+        return get_ordered_list_of_columns_excluding_special_fields(list_of_fields)
+
 
     def get_emergency_contact_for_list_of_cadets_at_event(
         self, list_of_cadets: ListOfCadets
@@ -283,6 +287,7 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         return self._list_of_cadets_with_id_at_event
 
 
+
 def compose_dict_of_cadets_with_event_data(
     list_of_cadets: ListOfCadets,
     list_of_events: ListOfEvents,
@@ -317,3 +322,33 @@ def compose_raw_dict_of_cadets_with_event_data(
             for cadet_with_id_at_event in list_of_cadets_with_id_at_event
         ]
     )
+
+
+
+def get_ordered_list_of_columns_excluding_special_fields(
+    field_names: List[str],
+) -> list:
+    all_columns = get_columns_to_edit(field_names) + get_columns_to_view(field_names)
+
+    return all_columns
+
+def get_columns_to_edit(all_columns: List[str]) -> list:
+
+    columns_to_edit = [
+        column_name
+        for column_name in FIELDS_TO_EDIT_IN_EDIT_VIEW
+        if column_name in all_columns
+    ]  ## preserve order
+
+    return columns_to_edit
+
+
+def get_columns_to_view(all_columns: List[str]) -> list:
+
+    columns_to_view = [
+        column_name
+        for column_name in FIELDS_VIEW_ONLY_IN_EDIT_VIEW
+        if column_name in all_columns
+    ]  ## preserve order
+
+    return columns_to_view

@@ -36,7 +36,7 @@ from app.objects.cadets import ListOfCadets
 from app.objects.abstract_objects.abstract_buttons import back_menu_button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
-from app.objects.utilities.exceptions import CadetNotSelected
+from app.objects.utilities.exceptions import CadetNotSelected, MissingData
 from app.backend.volunteers.connected_cadets import (
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
 )
@@ -162,6 +162,10 @@ def add_cadet_connection_from_form(interface: abstractInterface):
             "You have to select a cadet from the dropdown before adding"
         )
         return
+    except MissingData:
+        interface.log_error("Cadet not found in form")
+        return
+
     volunteer = get_volunteer_from_state(interface)
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         object_store=interface.object_store,

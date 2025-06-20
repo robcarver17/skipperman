@@ -172,11 +172,13 @@ def get_cadet_from_button_pressed(interface: abstractInterface) -> Cadet:
     return cadet
 
 
-from app.objects.utilities.exceptions import CadetNotSelected
+from app.objects.utilities.exceptions import CadetNotSelected, MISSING_FROM_FORM
 
 
 def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:
-    selected_cadet_id = interface.value_from_form(CONNECTION)
+    selected_cadet_id = interface.value_from_form(CONNECTION, default=MISSING_FROM_FORM)
+    if selected_cadet_id is MISSING_FROM_FORM:
+        raise "Can't get cadet from form"
 
     selected_cadet = get_cadet_from_id(
         object_store=interface.object_store, cadet_id=selected_cadet_id

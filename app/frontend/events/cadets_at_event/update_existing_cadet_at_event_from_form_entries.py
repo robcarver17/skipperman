@@ -115,17 +115,15 @@ def status_and_attendance_from_form_entries(
 ) -> Tuple[RegistrationStatus, DaySelector]:
 
     attendance = get_availablity_from_form(
-        interface=interface, event=event, input_name=ATTENDANCE
+        interface=interface, event=event, input_name=ATTENDANCE,
+        default=MISSING_FROM_FORM
     )
-    if attendance is MISSING_FROM_FORM:
-        attendance = cadet_at_event.availability
-        print("Attendance not included in form")
 
-    try:
-        status = get_status_from_form(interface=interface, input_name=ROW_STATUS)
-    except:
+    status = get_status_from_form(interface=interface, input_name=ROW_STATUS, default=MISSING_FROM_FORM)
+    if MISSING_FROM_FORM in [attendance, status]:
+        interface.log_error("Attendance or status update missing from form for cadet#%s" % cadet_at_event.cadet_id)
         status = cadet_at_event.status
-        print("Attendance not included in form")
+        attendance = cadet_at_event.availability
 
     return (status, attendance)
 

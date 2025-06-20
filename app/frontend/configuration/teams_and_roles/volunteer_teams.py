@@ -4,7 +4,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable
 
 from app.objects.abstract_objects.abstract_lines import Line
 
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 from app.objects.roles_and_teams import (
     ListOfTeams,
@@ -157,8 +157,12 @@ NEW_LOCATION_FIELD_NAME = "new_location"
 def get_team_from_form(
     interface: abstractInterface, existing_object, **kwargs_ignored
 ) -> Team:
-    new_team_name = interface.value_from_form(text_box_name(existing_object))
-    new_location = interface.value_from_form(location_box_name(existing_object))
+    new_team_name = interface.value_from_form(text_box_name(existing_object), default=MISSING_FROM_FORM)
+    new_location = interface.value_from_form(location_box_name(existing_object), default=MISSING_FROM_FORM)
+    if MISSING_FROM_FORM in [new_location, new_team_name]:
+        interface.log_error("Can't update team %s as form error" % str(existing_object))
+        return existing_object
+
     new_team = Team(
         name=new_team_name, location_for_cadet_warning=new_location, protected=False
     )

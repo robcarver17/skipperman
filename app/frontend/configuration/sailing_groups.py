@@ -125,14 +125,14 @@ LOCATION_FIELD_NAME = "location"
 def get_group_from_form(
     interface: abstractInterface, existing_object, **kwargs_ignored
 ) -> Group:
-    new_group_name = interface.value_from_form(text_box_name(existing_object))
-    new_location = interface.value_from_form(location_box_name(existing_object))
+    new_group_name = interface.value_from_form(text_box_name(existing_object), default=MISSING_FROM_FORM)
+    new_location = interface.value_from_form(location_box_name(existing_object), default=MISSING_FROM_FORM)
     is_hidden = is_radio_yes_or_no(
-        interface=interface, input_name=hidden_box_name(existing_object)
+        interface=interface, input_name=hidden_box_name(existing_object), default=MISSING_FROM_FORM
     )
-    if is_hidden is MISSING_FROM_FORM:
-        print("hidden missing for %s" % str(existing_object))
-        is_hidden = existing_object.hidden
+    if MISSING_FROM_FORM in [new_location, new_group_name, is_hidden]:
+        interface.log_error("Can't update %s" % str(existing_object))
+        return existing_object
 
     new_group = Group(
         name=new_group_name, location=new_location, protected=False, hidden=is_hidden

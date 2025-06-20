@@ -23,6 +23,7 @@ from app.frontend.shared.add_edit_cadet_form import (
     form_fields_for_add_cadet,
     get_cadet_from_form,
 )
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 QUALIFICATIONS = "Qualifications"
 
@@ -88,6 +89,9 @@ def previous_form(interface: abstractInterface):
 def modify_cadet_given_form_contents(interface: abstractInterface):
     existing_cadet = get_cadet_from_state(interface)
     new_cadet = get_cadet_from_form(interface)
+    if new_cadet is MISSING_FROM_FORM:
+        interface.log_error("Can't find cadet details in form")
+        return
     modify_cadet(
         object_store=interface.object_store,
         existing_cadet=existing_cadet,

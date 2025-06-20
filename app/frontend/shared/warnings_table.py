@@ -223,7 +223,7 @@ def process_warning_with_id_from_table(
 ):
     field_name = get_field_for_warning(warning_id)
     checkboxvalue_list = interface.value_of_multiple_options_from_form(
-        field_name, MISSING_FROM_FORM
+        field_name, default=MISSING_FROM_FORM
     )
     if checkboxvalue_list is MISSING_FROM_FORM:
         # not all warnings are visible, might be on wrong page

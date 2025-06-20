@@ -31,6 +31,7 @@ from app.objects.composed.volunteers_with_all_event_data import AllEventDataForV
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 
@@ -221,7 +222,9 @@ def which_volunteer_role_selected_in_boat_allocation(
     dropdown_field = get_dropdown_field_name_for_volunteer_role(
         volunteer_id=volunteer_id, day=day
     )
-    role_name = interface.value_from_form(dropdown_field)
+    role_name = interface.value_from_form(dropdown_field, default=MISSING_FROM_FORM)
+    if role_name is MISSING_FROM_FORM:
+        return MISSING_FROM_FORM
 
     all_roles = get_list_of_roles_with_skills(interface.object_store)
 

@@ -30,7 +30,7 @@ from app.backend.volunteers.connected_cadets import (
 )
 
 from app.frontend.shared.volunteer_state import get_volunteer_from_state
-from app.objects.utilities.exceptions import CadetNotSelected
+from app.objects.utilities.exceptions import CadetNotSelected, MissingData
 
 
 def display_form_edit_cadet_volunteer_connections(
@@ -139,6 +139,9 @@ def add_connection_from_form(interface: abstractInterface):
         interface.log_error(
             "You have to select a cadet from the dropdown before adding"
         )
+        return
+    except MissingData:
+        interface.log_error("Cadet missing from form")
         return
 
     volunteer = get_volunteer_from_state(interface)

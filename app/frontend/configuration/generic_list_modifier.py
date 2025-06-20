@@ -80,21 +80,31 @@ def get_row_for_existing_entry(entry, include_edit_button: bool = False) -> RowI
 
 
 def get_object_from_form(interface: abstractInterface, existing_object):
-    new_name = interface.value_from_form(text_box_name(existing_object))
-
     object_class = existing_object.__class__
     if has_hidden_attribute(existing_object):
-        is_hidden = is_radio_yes_or_no(
-            interface=interface, input_name=hidden_box_name(existing_object)
-        )
+        return get_object_from_form_with_hidden_attribute(interface=interface, existing_object=existing_object)
 
-        if is_hidden is MISSING_FROM_FORM:
-            print("hidden missing frrom form for %s" % str(existing_object))
-            is_hidden = existing_object.hidden
+    new_name = interface.value_from_form(text_box_name(existing_object), default=MISSING_FROM_FORM)
+    if new_name is MISSING_FROM_FORM:
+        interface.log_error("Can't modify object something went wrong")
+        return existing_object
 
-        return object_class(name=new_name, hidden=is_hidden)
-    else:
-        return object_class(new_name)
+    return object_class(new_name)
+
+
+def get_object_from_form_with_hidden_attribute(interface: abstractInterface, existing_object):
+    new_name = interface.value_from_form(text_box_name(existing_object), default=MISSING_FROM_FORM)
+
+    is_hidden = is_radio_yes_or_no(
+        interface=interface, input_name=hidden_box_name(existing_object), default=MISSING_FROM_FORM
+    )
+    if MISSING_FROM_FORM in [new_name, is_hidden]:
+        interface.log_error("Can't modify object something went wrong")
+        return existing_object
+
+    object_class = existing_object.__class__
+    return object_class(name=new_name, hidden=is_hidden)
+
 
 
 BACK_BUTTON_PRESSED = object()
@@ -287,7 +297,11 @@ def get_list_of_arrow_buttons(existing_list: list):
 
 
 def add_new_entry_from_form(interface: abstractInterface, adding_function: Callable):
-    name_of_entry_to_add = interface.value_from_form(ADD_ENTRY_TEXT_FIELD)
+    name_of_entry_to_add = interface.value_from_form(ADD_ENTRY_TEXT_FIELD, default=MISSING_FROM_FORM)
+    if name_of_entry_to_add is MISSING_FROM_FORM:
+        interface.log_error("Can't add new entry - something went wrong")
+        return
+
     if len(name_of_entry_to_add) > 0:
         ## functions need to take string and return new list of objects_OLD
         try:

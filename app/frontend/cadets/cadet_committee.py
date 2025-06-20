@@ -45,6 +45,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def display_form_cadet_committee(
@@ -243,12 +244,16 @@ def previous_form(interface: abstractInterface):
 
 ## Add new
 def add_new_cadet_to_committee_from_form(interface: abstractInterface):
-    cadet_selected_as_str = interface.value_from_form(NEW_COMMITTEE_MEMBER_DROPDOWN)
+    cadet_selected_as_str = interface.value_from_form(NEW_COMMITTEE_MEMBER_DROPDOWN, default=MISSING_FROM_FORM)
+    date_term_starts = interface.value_from_form(DATE_TERM_STARTS, default=MISSING_FROM_FORM, value_is_date=True)
+    date_term_ends = interface.value_from_form(DATE_TERM_END, default=MISSING_FROM_FORM, value_is_date=True)
+
+    if MISSING_FROM_FORM in [cadet_selected_as_str, date_term_ends, date_term_starts]:
+        interface.log_error("Something went wrong adding new cadet to committee")
+
     cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
         object_store=interface.object_store, cadet_selected=cadet_selected_as_str
     )
-    date_term_starts = interface.value_from_form(DATE_TERM_STARTS, value_is_date=True)
-    date_term_ends = interface.value_from_form(DATE_TERM_END, value_is_date=True)
 
     add_new_cadet_to_committee(
         object_store=interface.object_store,

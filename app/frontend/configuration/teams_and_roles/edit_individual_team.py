@@ -36,6 +36,7 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, dropDownIn
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.team_state import get_team_from_state
 from app.backend.volunteers.roles_and_teams import get_dict_of_teams_and_roles
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def display_form_edit_individual_team_page(interface: abstractInterface) -> Form:
@@ -161,12 +162,15 @@ def reorder_ordered_list_of_roles(
 
 
 def add_new_role_to_team(interface: abstractInterface, team: Team):
-    new_role_name = interface.value_from_form(NEW_ENTRY_ROLE)
-    # try:
+    new_role_name = interface.value_from_form(NEW_ENTRY_ROLE, default=MISSING_FROM_FORM)
 
-    add_new_named_role_to_team(
-        object_store=interface.object_store, team=team, new_role_name=new_role_name
-    )
-    # except Exception as e:
-    #    interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))
-    #    interface.clear_cache()
+    try:
+        if new_role_name is MISSING_FROM_FORM:
+            raise "Role name missing from form"
+
+        add_new_named_role_to_team(
+            object_store=interface.object_store, team=team, new_role_name=new_role_name
+        )
+    except Exception as e:
+        interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))
+        interface.clear_cache()

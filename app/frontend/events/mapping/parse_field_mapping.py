@@ -14,6 +14,7 @@ from app.frontend.events.mapping.template_field_mapping import (
 from app.frontend.events.mapping.mapping_table import *
 from app.objects.abstract_objects.abstract_form import NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def template_mapping_form(interface: abstractInterface) -> NewForm:
@@ -79,13 +80,13 @@ def add_WA_and_skipperman_field_to_mapping(interface: abstractInterface):
 
 def get_wa_field_mapping_from_form(interface: abstractInterface):
     wa_field_text_input = interface.value_from_form(
-        ADD_WA_FIELD_INPUT_FIELD_NAME, default=""
+        ADD_WA_FIELD_INPUT_FIELD_NAME, default=MISSING_FROM_FORM
     )
     wa_field_dropdown = interface.value_from_form(
         ADD_WA_FIELD_DROPDOWN_NAME, default=ADD_WA_FIELD_DROPDOWN_EMPTY
     )
 
-    if wa_field_text_input == "":
+    if wa_field_text_input is MISSING_FROM_FORM:
         return wa_field_dropdown
     else:
         return wa_field_text_input

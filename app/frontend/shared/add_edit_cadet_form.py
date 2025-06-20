@@ -42,7 +42,7 @@ from app.objects.membership_status import (
     all_status_description_as_dict_for_user_input,
     none_member,
 )
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM, MissingData
 
 
 @dataclass
@@ -187,6 +187,8 @@ def verify_form_with_cadet_details(
 ) -> CadetAndVerificationText:
     try:
         cadet = get_cadet_from_form(interface)
+        if cadet is MISSING_FROM_FORM:
+            raise "Can't get cadet from form"
         verify_text = verify_cadet_and_return_warnings(
             cadet=cadet, object_store=interface.object_store
         )
@@ -222,15 +224,19 @@ check_details_button = Button(CHECK_BUTTON_LABEL, nav_button=True)
 
 
 def get_cadet_from_form(interface: abstractInterface) -> Cadet:
-    first_name = interface.value_from_form(FIRST_NAME).strip().title()
-    surname = interface.value_from_form(SURNAME).strip().title()
-    date_of_birth = interface.value_from_form(DOB, value_is_date=True)
-    dob_status = interface.value_from_form(DOB_UNSURE_FIELD)
+    first_name = interface.value_from_form(FIRST_NAME, default=MISSING_FROM_FORM)
+    surname = interface.value_from_form(SURNAME, default=MISSING_FROM_FORM)
+    date_of_birth = interface.value_from_form(DOB, default=MISSING_FROM_FORM, value_is_date=True)
+    dob_status = interface.value_from_form(DOB_UNSURE_FIELD, default=MISSING_FROM_FORM)
+
+    if MISSING_FROM_FORM in [first_name, surname, dob_status, date_of_birth]:
+        return MISSING_FROM_FORM
+
     membership_status = MembershipStatus[interface.value_from_form(MEMBERSHIP_STATUS)]
 
     return Cadet.new(
-        first_name=first_name,
-        surname=surname,
+        first_name=first_name.strip().title(),
+        surname=surname.strip().title(),
         date_of_birth=date_of_birth,
         membership_status=membership_status,
         dob_status=dob_status,
@@ -239,6 +245,8 @@ def get_cadet_from_form(interface: abstractInterface) -> Cadet:
 
 def add_cadet_from_form_to_data(interface: abstractInterface) -> Cadet:
     cadet = get_cadet_from_form(interface)
+    if cadet is MISSING_FROM_FORM:
+        raise MissingData("Can't get cadet from form")
     cadet = add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
 
     return cadet

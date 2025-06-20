@@ -8,10 +8,7 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 from app.backend.reporting.all_event_data.all_event_cadet_data import (
     get_df_for_cadets_event_data_dump,
 )
-from app.backend.reporting.all_event_data.all_event_clothing_and_food_data import (
-    get_df_for_food_event_data_dump,
-    get_df_for_clothing_event_data_dump,
-)
+
 from app.backend.reporting.all_event_data.all_event_volunteer_data import (
     get_df_for_volunteers_event_data_dump,
 )
@@ -31,7 +28,7 @@ from app.backend.reporting.process_stages.create_file_from_list_of_columns impor
 
 def create_csv_event_report_and_return_filename(
     object_store: ObjectStore, event: Event
-):
+) -> str:
     dict_of_df = {}
     dict_of_df["Raw data"] = get_raw_event_data(object_store=object_store, event=event)
     dict_of_df["Cadets"] = get_df_for_cadets_event_data_dump(
@@ -56,7 +53,7 @@ def create_csv_event_report_and_return_filename(
         )
     )
 
-    return path_and_filename_with_extension
+    return path_and_filename_with_extension.full_path_and_name
 
 
 def clear_empty_df_in_dict(dict_of_df: Dict[str, pd.DataFrame]):

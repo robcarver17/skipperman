@@ -32,7 +32,7 @@ def download_food_data_and_return_filename(
         )
     )
 
-    return path_and_filename_with_extension
+    return path_and_filename_with_extension.full_path_and_name
 
 
 def get_food_data_for_download(
@@ -242,8 +242,9 @@ def row_for_cadet_in_table(
 
 def pseudo_reporting_options_for_food_data_export(event: Event) -> PrintOptions:
     print_options = PrintOptions(
-        filename="food_data_%s" % event.event_name,
         publish_to_public=False,
         output_pdf=False,
     )
+    print_options.filename = "food_data_%s.csv" % event.event_name
+
     return print_options

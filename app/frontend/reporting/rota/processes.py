@@ -56,10 +56,11 @@ def get_rota_report_additional_parameters_from_form(
 ) -> AdditionalParametersForVolunteerReport:
     event = get_event_from_state(interface)
     days_to_show = get_availablity_from_form(
-        event=event, interface=interface, input_name=DAYS_TO_SHOW
+        event=event, interface=interface, input_name=DAYS_TO_SHOW,
+        default=MISSING_FROM_FORM
     )
     if days_to_show is MISSING_FROM_FORM:
-        print("Days to show missing from form")
+        interface.log_error("Days to show missing from form")
         days_to_show = event.day_selector_for_days_in_event()
 
     return AdditionalParametersForVolunteerReport(

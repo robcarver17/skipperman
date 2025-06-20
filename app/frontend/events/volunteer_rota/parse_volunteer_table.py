@@ -62,7 +62,7 @@ from app.frontend.shared.volunteer_state import (
     get_volunteer_from_state,
 )
 from app.objects.abstract_objects.abstract_form import NewForm
-from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM, MissingData
 
 
 def save_all_information_in_rota_page(interface: abstractInterface):
@@ -280,7 +280,8 @@ def update_filters(interface: abstractInterface):
 
 def update_volunteer_skills_filter(interface: abstractInterface):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface, field_name=SKILLS_FILTER
+        interface=interface, field_name=SKILLS_FILTER,
+        default=MISSING_FROM_FORM
     )
     if dict_of_skills is MISSING_FROM_FORM:
         print("missing from form")
@@ -291,15 +292,13 @@ def update_volunteer_skills_filter(interface: abstractInterface):
 
 def update_volunteer_availability_filter(interface: abstractInterface):
     event = get_event_from_state(interface)
-    availabilty_filter_dict = dict(
-        [
-            (
-                day.name,
-                update_volunteer_availability_for_day(interface=interface, day=day),
-            )
-            for day in event.days_in_event()
-        ]
-    )
+    availabilty_filter_dict = dict()
+    for day in event.days_in_event():
+        try:
+            availabilty_filter_dict[day.name] =  update_volunteer_availability_for_day(interface=interface, day=day)
+        except MissingData:
+            interface.log_error("Issue pulling in availability filter on %s " % day.name)
+            return
 
     save_availablity_filter_to_state(
         interface=interface, availability_filter_dict=availabilty_filter_dict
@@ -310,6 +309,8 @@ def update_volunteer_availability_for_day(
     interface: abstractInterface, day: Day
 ) -> str:
     form_entry_name = get_available_filter_name_for_day(day)
-    form_value = interface.value_from_form(form_entry_name)
+    form_value = interface.value_from_form(form_entry_name, default=MISSING_FROM_FORM)
+    if form_value is MISSING_FROM_FORM:
+        raise MissingData
     option_chosen = from_filter_entry_to_option(form_value)
     return option_chosen

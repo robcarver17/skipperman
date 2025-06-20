@@ -142,9 +142,10 @@ def update_attendance_data_for_cadet_in_form(
             ATTENDANCE, cadet_id=cadet.id
         ),
         event=event,
+        default=MISSING_FROM_FORM
     )
     if new_availability is MISSING_FROM_FORM:
-        print("Availability missing from form")
+        interface.log_error("Availability missing from form for %s" % cadet)
         return
 
     list_of_messages = (

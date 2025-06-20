@@ -1,4 +1,7 @@
 
+- adhoc QR code generator
+- on uploading file without extension, will guess extension
+
 # Version 3.10
 
 - club dinghies can be allocated to instructors

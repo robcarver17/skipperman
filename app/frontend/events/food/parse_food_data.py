@@ -37,6 +37,7 @@ from app.frontend.forms.form_utils import get_food_requirements_from_form
 
 def save_food_data_in_form(interface: abstractInterface):
     save_cadet_food_data_in_form(interface)
+
     save_volunteer_food_data_in_form(interface)
 
 
@@ -57,6 +58,7 @@ def save_cadet_food_data_in_form(interface: abstractInterface):
         )
 
 
+
 def save_cadet_food_data_for_cadet(
     interface: abstractInterface,
     event: Event,
@@ -70,28 +72,13 @@ def save_cadet_food_data_for_cadet(
         interface=interface,
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
+        default=MISSING_FROM_FORM
     )
     if new_food_requirements is MISSING_FROM_FORM:
-        print("food for %s missing" % cadet.name)
-
-    update_cadet_food_data_if_changed(
-        interface=interface,
-        cadet=cadet,
-        existing_food_requirements=existing_food_requirements,
-        new_food_requirements=new_food_requirements,
-        event=event,
-    )
-
-
-def update_cadet_food_data_if_changed(
-    interface: abstractInterface,
-    cadet: Cadet,
-    existing_food_requirements: FoodRequirements,
-    new_food_requirements: FoodRequirements,
-    event: Event,
-):
-    if existing_food_requirements == new_food_requirements:
+        interface.log_error("Food for %s missing from form" % cadet.name)
         return
+
+    print("vol food for %s %s" % (cadet, new_food_requirements))
 
     update_cadet_food_data(
         object_store=interface.object_store,
@@ -101,6 +88,7 @@ def update_cadet_food_data_if_changed(
     )
 
 
+
 def save_volunteer_food_data_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)
     volunteers_with_food_at_event = (
@@ -108,7 +96,6 @@ def save_volunteer_food_data_in_form(interface: abstractInterface):
             object_store=interface.object_store, event=event
         )
     )
-
     for volunteer, existing_food_requirements in volunteers_with_food_at_event.items():
         save_volunteer_food_data_for_volunteer(
             interface=interface,
@@ -135,30 +122,13 @@ def save_volunteer_food_data_for_volunteer(
         interface=interface,
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
+        default=MISSING_FROM_FORM
     )
 
     if new_food_requirements is MISSING_FROM_FORM:
-        print("food for %s missing" % volunteer.name)
-
-    update_volunteer_food_data_if_changed(
-        interface=interface,
-        event=event,
-        volunteer=volunteer,
-        existing_food_requirements=existing_food_requirements,
-        new_food_requirements=new_food_requirements,
-    )
-
-
-def update_volunteer_food_data_if_changed(
-    interface: abstractInterface,
-    event: Event,
-    volunteer: Volunteer,
-    existing_food_requirements: FoodRequirements,
-    new_food_requirements: FoodRequirements,
-):
-    if existing_food_requirements == new_food_requirements:
+        interface.log_error("food for %s missing from form" % volunteer.name)
         return
-
+    print("vol food for %s %s" % (volunteer, new_food_requirements))
     update_volunteer_food_data(
         object_store=interface.object_store,
         volunteer=volunteer,

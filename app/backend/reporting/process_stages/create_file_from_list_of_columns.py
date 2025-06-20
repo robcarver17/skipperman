@@ -69,7 +69,7 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
 def create_csv_report_from_list_of_columns_and_return_filename(
     list_of_pages_with_columns: ListOfPagesWithColumns,
     reporting_options: ReportingOptions,
-):
+) -> PathAndFilename:
     dict_of_df = convert_list_of_pages_with_columns_to_dict_of_df(
         list_of_pages_with_columns
     )
@@ -85,7 +85,7 @@ def create_csv_report_from_list_of_columns_and_return_filename(
 def create_csv_report_from_dict_of_df_and_return_filename(
     dict_of_df: Dict[str, pd.DataFrame],
     print_options: PrintOptions,
-):
+) -> PathAndFilename:
     path_and_filename_no_extension = get_download_path_and_filename_for_report(
         print_options, use_extension=""
     )

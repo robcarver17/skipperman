@@ -23,7 +23,7 @@ from app.objects.abstract_objects.abstract_interface import (
     get_file_from_interface,
 )
 from app.data_access.file_access import web_pathname_of_public_version_of_local_file_without_extension
-from app.objects.utilities.exceptions import MissingData
+from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM
 
 empty_name = ""
 FILE_NAME = "filename"
@@ -107,7 +107,9 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
 
 
 def get_extension_and_filename_from_form(interface: abstractInterface) -> PathAndFilename:
-    filename = interface.value_from_form(FILE_NAME)
+    filename = interface.value_from_form(FILE_NAME, default=MISSING_FROM_FORM)
+    if filename is MISSING_FROM_FORM:
+        raise Exception("Problem with form")
     if len(filename) == 0:
         raise Exception("You need to enter the filename")
 

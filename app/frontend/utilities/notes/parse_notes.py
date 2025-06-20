@@ -14,7 +14,11 @@ def save_all_notes(interface: abstractInterface):
     interface.flush_cache_to_store()
 
 def save_quick_note(interface: abstractInterface):
-    text = interface.value_from_form(quick_note_text)
+    text = interface.value_from_form(quick_note_text, default=MISSING_FROM_FORM)
+    if text is MISSING_FROM_FORM:
+        interface.log_error("Problem with quick note form")
+        return
+
     if len(text)==0:
         return
 

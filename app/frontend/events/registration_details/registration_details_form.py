@@ -91,14 +91,6 @@ def get_registration_data(
     )
 
 
-def get_list_of_columns_excluding_special_fields(
-    registration_data: DictOfCadetsWithRegistrationData,
-) -> list:
-    field_names = registration_data.list_of_registration_fields()
-    all_columns = get_columns_to_edit(field_names) + get_columns_to_view(field_names)
-
-    return all_columns
-
 
 def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTable:
     return RowInTable(["Cadet", "Status", "Attending", "Health", "Notes"] + all_columns)
@@ -152,26 +144,6 @@ def get_list_of_column_forms_excluding_reserved_fields(
     return column_form_entries
 
 
-def get_columns_to_edit(all_columns: List[str]) -> list:
-
-    columns_to_edit = [
-        column_name
-        for column_name in FIELDS_TO_EDIT_IN_EDIT_VIEW
-        if column_name in all_columns
-    ]  ## preserve order
-
-    return columns_to_edit
-
-
-def get_columns_to_view(all_columns: List[str]) -> list:
-
-    columns_to_view = [
-        column_name
-        for column_name in FIELDS_VIEW_ONLY_IN_EDIT_VIEW
-        if column_name in all_columns
-    ]  ## preserve order
-
-    return columns_to_view
 
 
 def get_status_button(

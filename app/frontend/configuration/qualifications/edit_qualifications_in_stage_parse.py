@@ -23,13 +23,16 @@ from app.frontend.configuration.qualifications.edit_qualifications_in_detail_for
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.substages import TickSubStage, TickSheetItem, ListOfTickSheetItems
 from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def add_new_substage_to_qualification_from_form(interface: abstractInterface):
     qualification = get_qualification_from_state(interface)
-    new_substage_name = interface.value_from_form(FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX)
+    new_substage_name = interface.value_from_form(FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX, default=MISSING_FROM_FORM)
 
     try:
+        if new_substage_name is MISSING_FROM_FORM:
+            raise "Form missing new name entry for %s" % qualification.name
         add_new_substage_to_qualification(
             object_store=interface.object_store,
             qualification=qualification,
@@ -50,9 +53,11 @@ def add_new_tick_list_item_from_form(interface: abstractInterface, button_presse
     )
 
     fieldname = fieldname_for_new_item_in_substage_name(substage)
-    new_tick_list_name = interface.value_from_form(fieldname)
+    new_tick_list_name = interface.value_from_form(fieldname, default=MISSING_FROM_FORM)
 
     try:
+        if new_tick_list_name is MISSING_FROM_FORM:
+            raise "Can't add new tick list name for %s %s because form value missing" % (qualification.name, substage)
         add_new_ticklistitem_to_qualification(
             object_store=interface.object_store,
             qualification=qualification,
@@ -100,12 +105,14 @@ def save_edited_substage_name_in_qualifications_form_for_substage(
     interface: abstractInterface, qualification: Qualification, substage: TickSubStage
 ):
     field_name = name_of_edit_substage_field(substage=substage)
-    edited_name = interface.value_from_form(field_name)
+    edited_name = interface.value_from_form(field_name, default=MISSING_FROM_FORM)
 
     if edited_name == substage.name:
         return
 
     try:
+        if edited_name is MISSING_FROM_FORM:
+            raise "Can't edit substage name for %s %s %s because form value missing" % (qualification.name, substage.name, field_name)
         modify_substage_name(
             object_store=interface.object_store,
             qualification=qualification,
@@ -133,13 +140,19 @@ def save_edited_ticklist_itemnames_in_qualifications_form_for_tick_item(
     interface: abstractInterface, tick_item: TickSheetItem
 ):
     fieldname = name_of_edit_tickitem_field(tick_item)
-    new_item_name = interface.value_from_form(fieldname)
+    new_item_name = interface.value_from_form(fieldname, default=MISSING_FROM_FORM)
 
     if new_item_name == tick_item.name:
         return
 
-    modify_ticksheet_item_name(
-        object_store=interface.object_store,
-        existing_tick_item=tick_item,
-        new_item_name=new_item_name,
-    )
+    try:
+        if new_item_name is MISSING_FROM_FORM:
+            raise "Field entry name missing"
+
+        modify_ticksheet_item_name(
+            object_store=interface.object_store,
+            existing_tick_item=tick_item,
+            new_item_name=new_item_name,
+        )
+    except Exception as e:
+        interface.log_error("Can't modify ticksheet name for %s because %s" % (fieldname, str(e)))

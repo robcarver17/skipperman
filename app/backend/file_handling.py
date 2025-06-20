@@ -82,6 +82,15 @@ def generate_qr_code_for_file_in_public_path(filename_without_extension: str) ->
     path_and_filename = PathAndFilename(path="", extension="", filename_without_extension=filename_without_extension)
     web_path = web_pathname_of_public_version_of_local_file_without_extension(path_and_filename,webserver_url=HOMEPAGE,
                                                                               public_path=PUBLIC_REPORTING_SUBDIRECTORY)
+    return generate_qr_code_for_file_with_web_path(
+        web_path=web_path, filename_without_extension=filename_without_extension
+    )
+
+
+def generate_qr_code_for_file_with_web_path(web_path: str, filename_without_extension:str = arg_not_passed) -> File:
+    if filename_without_extension is arg_not_passed:
+        filename_without_extension = web_path
+
     img = qrcode.make(web_path)
     qr_code_filename = temp_qr_code_file_name(filename_without_extension)
     with open(qr_code_filename, "wb") as qr:

@@ -18,7 +18,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
     HelpButton,
 )
-from app.objects.abstract_objects.abstract_form import checkboxInput, Link
+from app.objects.abstract_objects.abstract_form import checkboxInput, Link, textInput
+from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable, DetailTable
 from app.frontend.shared.buttons import (
     get_attributes_from_button_pressed_of_known_type,
@@ -37,6 +38,8 @@ def list_of_all_public_files_with_options() -> Union[DetailTable, str]:
         include_web_path=True,
     )
 
+def adhoc_qr_generator():
+    return Line([qr_form_entry, qr_button])
 
 
 def list_of_all_private_download_files_with_options() -> Union[DetailTable, str]:
@@ -229,6 +232,12 @@ CLEAR_STAGING_BUTTON_LABEL = "Delete all temporary uploaded files"  ## STAGING
 CLEAR_PUBLIC_BUTTON_LABEL = "Delete all public file(s)"  # PUBLIC_REPORTING_SUBDIRECTORY
 UPLOAD_PUBLIC_FILE = "Upload new public file"
 DELETE_SELECTED_FILES = "Delete selected files"
+QR_GENERIC_BUTTON_TYPE = "qr_generic_buttons"
+QR_FORM_VALUE = "qr_form_Value"
+
+qr_button_value = get_button_value_given_type_and_attributes(QR, QR_GENERIC_BUTTON_TYPE)
+qr_button = Button(label="Generate QR code", value=qr_button_value)
+qr_form_entry = textInput(input_label="Enter a URL to generate a QR code for", input_name=QR_FORM_VALUE)
 
 
 upload_public_file_button = Button(UPLOAD_PUBLIC_FILE, nav_button=True)
@@ -250,3 +259,4 @@ downloads_file_header = ButtonBar(
 uploads_file_hedaer = ButtonBar(
     [clear_staging_files_button, delete_selected_files_button]
 )
+

@@ -35,6 +35,7 @@ from app.frontend.utilities.files.render_files import (
 
 
 def display_form_file_management(interface: abstractInterface) -> Form:
+    qr_generator= adhoc_qr_generator()
     public_files = list_of_all_public_files_with_options()
     private_files = list_of_all_private_download_files_with_options()
     upload_files = list_of_all_upload_files_with_options()
@@ -43,6 +44,8 @@ def display_form_file_management(interface: abstractInterface) -> Form:
         [
             nav_buttons,
             Heading("File Management"),
+            _______________,
+            qr_generator,
             _______________,
             public_file_header,
             public_files,
@@ -72,7 +75,7 @@ def post_form_file_management(
         )
 
     elif is_qr_button(button_pressed):
-        return generate_qr_code(button_pressed)
+        return generate_qr_code(interface)
 
     elif is_replace_button(button_pressed):
         return replace_button_pressed(interface)

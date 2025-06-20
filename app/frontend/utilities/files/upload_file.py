@@ -40,7 +40,7 @@ def display_form_for_upload_public_file(interface: abstractInterface):
 
     list_of_lines = ListOfLines(
         [
-            Line("Choose file to upload which will be publically accesible"),
+            Line("Choose file to upload which will be publicly accesible"),
             Line(template_name_field),
             Line(file_select_field),
             buttons,
@@ -71,11 +71,16 @@ def post_form_for_upload_public_file(interface: abstractInterface):
 
 
 def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
+
+    file_object = get_file_from_interface(FILE_FIELD, interface=interface)
+
     try:
         output_path_and_filename = get_extension_and_filename_from_form(interface)
     except Exception as e:
         interface.log_error(str(e))
         return display_form_for_upload_public_file(interface)
+
+    output_path_and_filename = add_extension_if_missing(interface=interface, path_and_filename=output_path_and_filename, file_object=file_object)
 
     original_raw_filename = copy(output_path_and_filename.filename_without_extension)
     web_path = web_pathname_of_public_version_of_local_file_without_extension(PathAndFilename(original_raw_filename),
@@ -88,7 +93,6 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Form:
     full_filename = output_path_and_filename.full_path_and_name
 
     try:
-        file_object = get_file_from_interface(FILE_FIELD, interface=interface)
         file_object.save(full_filename)
     except Exception as e:
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
@@ -117,3 +121,17 @@ def get_extension_and_filename_from_form(interface: abstractInterface) -> PathAn
     return PathAndFilename(filename_without_extension=filename_without_extension,
                                extension=extension)
 
+def add_extension_if_missing(interface: abstractInterface, path_and_filename: PathAndFilename, file_object) -> PathAndFilename:
+    if len(path_and_filename.extension)>0:
+        return path_and_filename
+
+    filename_without_extension, extension = get_filename_and_extension(file_object.filename)
+
+    if len(extension)==0:
+        interface.log_error("No extension on uploaded file -may cause weird behaviour")
+    else:
+        interface.log_error("No extension provided in filename, using %s from file" % extension)
+
+    path_and_filename.extension = extension
+
+    return path_and_filename

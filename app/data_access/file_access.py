@@ -33,7 +33,7 @@ def get_filename_and_extension(filename:str):
     filename_without_extension = filename.split(".")[0]
     if len(filename_and_extension)==1:
         return filename_without_extension, ""
-    extension = filename.split(".")[1]
+    extension = filename.split(".")[-1]
 
     return filename_without_extension, extension
 

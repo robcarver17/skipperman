@@ -8,7 +8,12 @@ from app.backend.cadets.list_of_cadets import (
     get_list_of_cadets,
     update_list_of_cadets,
 )
-from app.objects.cadets import Cadet, is_cadet_age_surprising, cadet_seems_too_old, cadet_seems_too_young
+from app.objects.cadets import (
+    Cadet,
+    is_cadet_age_surprising,
+    cadet_seems_too_old,
+    cadet_seems_too_young,
+)
 
 
 def add_new_verified_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
@@ -51,7 +56,9 @@ def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) ->
     if cadet.has_default_date_of_birth:
         warn_text += "Date of birth not available - using default. "
     elif cadet_seems_too_old(cadet):
-        warn_text += "Sailor is too old to be a cadet: OK if event is a junior race series. "
+        warn_text += (
+            "Sailor is too old to be a cadet: OK if event is a junior race series. "
+        )
     elif cadet_seems_too_young(cadet):
         warn_text += "** SAILOR IS TOO YOUNG TO BE A CADET MEMBER **"
 

@@ -8,8 +8,13 @@ from app.objects.events import Event, ListOfEvents
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
-from app.objects.patrol_boats import PatrolBoat, ListOfPatrolBoats, no_patrol_boat, ListOfPatrolBoatLabelsAtEvents, \
-    get_location_for_boat
+from app.objects.patrol_boats import (
+    PatrolBoat,
+    ListOfPatrolBoats,
+    no_patrol_boat,
+    ListOfPatrolBoatLabelsAtEvents,
+    get_location_for_boat,
+)
 
 from app.objects.day_selectors import Day, DaySelector
 
@@ -217,7 +222,7 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         event: Event,
         list_of_all_patrol_boats: ListOfPatrolBoats,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
-            list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents
+        list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents,
     ):
         super().__init__(raw_dict)
         self._event = event
@@ -225,11 +230,16 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             list_of_volunteers_with_id_at_event_with_patrol_boat_id
         )
         self._list_of_all_patrol_boats = list_of_all_patrol_boats
-        self._list_of_patrol_boat_labels =list_of_patrol_boat_labels
+        self._list_of_patrol_boat_labels = list_of_patrol_boat_labels
 
     def get_dict_of_patrol_boats_with_locations(self):
         all_boats = self.list_of_all_patrol_boats
-        boats_with_locations = dict([(patrol_boat, get_location_for_boat(patrol_boat)) for patrol_boat in all_boats])
+        boats_with_locations = dict(
+            [
+                (patrol_boat, get_location_for_boat(patrol_boat))
+                for patrol_boat in all_boats
+            ]
+        )
 
         return boats_with_locations
 
@@ -259,7 +269,6 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         day_to_swap_with: Day,
         volunteer_to_swap_with: Volunteer,
     ):
-
         dict_of_patrol_boat_for_original_volunteer = self.patrol_boats_for_volunteer(
             original_volunteer
         )
@@ -326,21 +335,29 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             patrol_boat.id
         )
 
-    def copy_patrol_boat_labels_across_event(self,  overwrite: bool = False):
+    def copy_patrol_boat_labels_across_event(self, overwrite: bool = False):
         event = self.event
         days_in_event = event.days_in_event()
-        self.list_of_patrol_boat_labels.copy_patrol_boat_labels_across_event(event_id=event.id,
-                                                                             days_in_event=days_in_event,
-                                                                             overwrite=overwrite)
+        self.list_of_patrol_boat_labels.copy_patrol_boat_labels_across_event(
+            event_id=event.id, days_in_event=days_in_event, overwrite=overwrite
+        )
 
     def label_for_boat_at_event_on_day(self, day: Day, patrol_boat: PatrolBoat) -> str:
-        return self.list_of_patrol_boat_labels.get_label(event_id=self.event.id, boat_id=patrol_boat.id, day=day)
+        return self.list_of_patrol_boat_labels.get_label(
+            event_id=self.event.id, boat_id=patrol_boat.id, day=day
+        )
 
-    def update_label_for_boat_at_event_on_day(self, day: Day, patrol_boat: PatrolBoat, label:str) -> str:
-        return self.list_of_patrol_boat_labels.add_or_modify(event_id=self.event.id, boat_id=patrol_boat.id, day=day, label=label)
+    def update_label_for_boat_at_event_on_day(
+        self, day: Day, patrol_boat: PatrolBoat, label: str
+    ) -> str:
+        return self.list_of_patrol_boat_labels.add_or_modify(
+            event_id=self.event.id, boat_id=patrol_boat.id, day=day, label=label
+        )
 
     def unique_set_of_labels_at_event(self, day: Day) -> List[str]:
-        return self.list_of_patrol_boat_labels.unique_set_of_labels_at_event_on_day(event_id=self.event.id, day=day)
+        return self.list_of_patrol_boat_labels.unique_set_of_labels_at_event_on_day(
+            event_id=self.event.id, day=day
+        )
 
     def copy_across_boats_at_event(
         self,
@@ -418,7 +435,6 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
             return []
 
     def _drop_volunteer_underlying_data(self, volunteer: Volunteer):
-
         underlying_list_of_volunteers_with_id_at_event_with_patrol_boat_id = (
             self.list_of_volunteers_with_id_at_event_with_patrol_boat_id
         )
@@ -479,15 +495,15 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
     def list_of_patrol_boat_labels(self) -> ListOfPatrolBoatLabelsAtEvents:
         return self._list_of_patrol_boat_labels
 
+
 def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     event_id: str,
     list_of_events: ListOfEvents,
     list_of_volunteers: ListOfVolunteers,
     list_of_patrol_boats: ListOfPatrolBoats,
     list_of_volunteers_with_id_at_event_with_patrol_boat_id: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
-    list_of_patrol_boat_labels : ListOfPatrolBoatLabelsAtEvents
+    list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents,
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
-
     event = list_of_events.event_with_id(event_id)
 
     list_of_volunteer_patrol_boat_days = ListOfVolunteerPatrolBoatDays.from_list_of_volunteer_id_and_patrol_boat_id_at_event(
@@ -517,7 +533,5 @@ def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
         event=event,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=list_of_volunteers_with_id_at_event_with_patrol_boat_id,
         list_of_all_patrol_boats=list_of_patrol_boats,
-        list_of_patrol_boat_labels=list_of_patrol_boat_labels
+        list_of_patrol_boat_labels=list_of_patrol_boat_labels,
     )
-
-

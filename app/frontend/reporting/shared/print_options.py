@@ -10,8 +10,9 @@ from app.backend.reporting.options_and_parameters.print_options import (
     default_report_title_and_filename,
     get_default_filename_for_report,
 )
-from app.backend.reporting.process_stages.create_file_from_list_of_columns import \
-    web_pathname_of_public_version_of_local_report_file
+from app.backend.reporting.process_stages.create_file_from_list_of_columns import (
+    web_pathname_of_public_version_of_local_report_file,
+)
 from app.data_access.configuration.fixed import ALL_PAGESIZE, ALL_FONTS
 from app.frontend.forms.form_utils import is_radio_yes_or_no
 from app.frontend.shared.events_state import get_event_from_state
@@ -21,7 +22,8 @@ from app.objects.abstract_objects.abstract_form import (
     yes_no_radio,
     textInput,
     radioInput,
-    intInput, Link,
+    intInput,
+    Link,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -59,18 +61,24 @@ def override_print_options_with_new_values(
 
 
 def get_saved_print_options(
-    report_type: str, interface: abstractInterface,
-    ignore_stored_values_and_use_default: bool = False
+    report_type: str,
+    interface: abstractInterface,
+    ignore_stored_values_and_use_default: bool = False,
 ) -> PrintOptions:
     print_options = get_print_options(
-        object_store=interface.object_store, report_name=report_type,
-        ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
+        object_store=interface.object_store,
+        report_name=report_type,
+        ignore_stored_values_and_use_default=ignore_stored_values_and_use_default,
     )
     print_options.title_str = get_report_title_from_storage_or_use_default(
-        report_type=report_type, interface=interface, ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
+        report_type=report_type,
+        interface=interface,
+        ignore_stored_values_and_use_default=ignore_stored_values_and_use_default,
     )
     print_options.filename = get_report_filename_from_storage_or_use_default(
-        report_title=print_options.title_str, interface=interface, ignore_stored_values_and_use_default=ignore_stored_values_and_use_default
+        report_title=print_options.title_str,
+        interface=interface,
+        ignore_stored_values_and_use_default=ignore_stored_values_and_use_default,
     )
 
     print("Loaded saved print shared %s" % str(print_options))
@@ -78,9 +86,9 @@ def get_saved_print_options(
 
 
 def get_report_title_from_storage_or_use_default(
-    report_type: str, interface: abstractInterface,
-        ignore_stored_values_and_use_default: bool = False
-
+    report_type: str,
+    interface: abstractInterface,
+    ignore_stored_values_and_use_default: bool = False,
 ) -> str:
     title = interface.get_persistent_value(REPORT_TITLE)
     if title is missing_data or ignore_stored_values_and_use_default:
@@ -92,9 +100,9 @@ def get_report_title_from_storage_or_use_default(
 
 
 def get_report_filename_from_storage_or_use_default(
-    report_title: str, interface: abstractInterface,
-        ignore_stored_values_and_use_default: bool = False
-
+    report_title: str,
+    interface: abstractInterface,
+    ignore_stored_values_and_use_default: bool = False,
 ) -> str:
     filename = interface.get_persistent_value(REPORT_FILENAME)
     if filename is missing_data or ignore_stored_values_and_use_default:
@@ -165,19 +173,28 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
 
     return output.add_Lines()
 
+
 def get_url_or_keep_private(print_options: PrintOptions):
     publish_to_public = print_options.publish_to_public
     if publish_to_public:
-        web_path_of_file = web_pathname_of_public_version_of_local_report_file(print_options)
+        web_path_of_file = web_pathname_of_public_version_of_local_report_file(
+            print_options
+        )
 
-        text =         "Output to public directory with shareable web link: "
-        return Line([text, Link(
-            url=web_path_of_file,
-            string=web_path_of_file,
-            open_new_window=True,
-        )])
+        text = "Output to public directory with shareable web link: "
+        return Line(
+            [
+                text,
+                Link(
+                    url=web_path_of_file,
+                    string=web_path_of_file,
+                    open_new_window=True,
+                ),
+            ]
+        )
     else:
         return "Save in private directory"
+
 
 qr_button = Button(
     "Get QR code for report",
@@ -189,29 +206,48 @@ def get_print_options_from_main_option_form_fields(
 ) -> PrintOptions:
     ## doesn't get order or arrangement
     print("Getting print shared")
-    page_alignment = interface.value_from_form(PAGE_ALIGNMENT, default=MISSING_FROM_FORM)
+    page_alignment = interface.value_from_form(
+        PAGE_ALIGNMENT, default=MISSING_FROM_FORM
+    )
     output_to = interface.value_from_form(OUTPUT_PDF, default=MISSING_FROM_FORM)
     font = interface.value_from_form(FONT, default=MISSING_FROM_FORM)
     font_size = interface.value_from_form(FONT_SIZE, default=MISSING_FROM_FORM)
     page_size = interface.value_from_form(PAGE_SIZE, default=MISSING_FROM_FORM)
-    equalise_column_widths =  is_radio_yes_or_no(interface, EQUALISE_COLUMN_WIDTHS, default=MISSING_FROM_FORM)
+    equalise_column_widths = is_radio_yes_or_no(
+        interface, EQUALISE_COLUMN_WIDTHS, default=MISSING_FROM_FORM
+    )
     title = interface.value_from_form(REPORT_TITLE, default=MISSING_FROM_FORM)
     filename = interface.value_from_form(REPORT_FILENAME, default=MISSING_FROM_FORM)
-    group_name_as_header =  is_radio_yes_or_no(interface, GROUP_NAME_AS_HEADER, default=MISSING_FROM_FORM)
-    highlight_first_value_as_key =  is_radio_yes_or_no(interface,
-        FIRST_VALUE_IN_GROUP_IS_KEY, default=MISSING_FROM_FORM
+    group_name_as_header = is_radio_yes_or_no(
+        interface, GROUP_NAME_AS_HEADER, default=MISSING_FROM_FORM
     )
-    prepend_group_name =  is_radio_yes_or_no(interface, PREPEND_GROUP_NAME, default=MISSING_FROM_FORM)
-    include_size_of_group_if_header =  is_radio_yes_or_no(interface,
-        IF_HEADER_INCLUDE_SIZE, default=MISSING_FROM_FORM
+    highlight_first_value_as_key = is_radio_yes_or_no(
+        interface, FIRST_VALUE_IN_GROUP_IS_KEY, default=MISSING_FROM_FORM
+    )
+    prepend_group_name = is_radio_yes_or_no(
+        interface, PREPEND_GROUP_NAME, default=MISSING_FROM_FORM
+    )
+    include_size_of_group_if_header = is_radio_yes_or_no(
+        interface, IF_HEADER_INCLUDE_SIZE, default=MISSING_FROM_FORM
     )
     public = is_radio_yes_or_no(interface, PUBLIC, default=MISSING_FROM_FORM)
 
-    if MISSING_FROM_FORM in [page_alignment, output_to, font, font_size, page_size, equalise_column_widths,
-                             title, filename, group_name_as_header, highlight_first_value_as_key,
-                             prepend_group_name, include_size_of_group_if_header, public]:
+    if MISSING_FROM_FORM in [
+        page_alignment,
+        output_to,
+        font,
+        font_size,
+        page_size,
+        equalise_column_widths,
+        title,
+        filename,
+        group_name_as_header,
+        highlight_first_value_as_key,
+        prepend_group_name,
+        include_size_of_group_if_header,
+        public,
+    ]:
         return MISSING_FROM_FORM
-
 
     print_options = PrintOptions()
 
@@ -231,7 +267,6 @@ def get_print_options_from_main_option_form_fields(
 
     print("Print shared from form %s" % str(print_options))
     return print_options
-
 
 
 def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOfLines:
@@ -381,5 +416,3 @@ def save_print_options_from_form(
         interface=interface,
     )
     interface.flush_cache_to_store()
-
-

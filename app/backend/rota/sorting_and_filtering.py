@@ -49,7 +49,6 @@ def get_sorted_and_filtered_dict_of_volunteers_at_event(
     event: Event,
     sorts_and_filters: RotaSortsAndFilters,
 ) -> DictOfAllEventDataForVolunteers:
-
     dict_of_all_event_data_for_volunteers = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
@@ -71,7 +70,6 @@ def filter_dict_of_volunteers_at_event(
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
     sorts_and_filters: RotaSortsAndFilters,
 ) -> DictOfAllEventDataForVolunteers:
-
     skills_filter = sorts_and_filters.skills_filter
     availability_filter_dict = sorts_and_filters.availability_filter
 
@@ -298,7 +296,6 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
     sort_by_day: Day,
 ) -> ListOfVolunteers:
-
     tuple_of_volunteers_at_event_and_roles = [
         (
             volunteer,

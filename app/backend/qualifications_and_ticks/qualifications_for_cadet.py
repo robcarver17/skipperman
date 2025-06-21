@@ -14,14 +14,16 @@ from app.objects.qualifications import Qualification
 
 
 def apply_qualification_to_cadet(
-    object_store: ObjectStore, cadet: Cadet, qualification: Qualification, awarded_by: str
+    object_store: ObjectStore,
+    cadet: Cadet,
+    qualification: Qualification,
+    awarded_by: str,
 ):
     dict_of_qualifications_for_all_cadets = get_dict_of_qualifications_for_all_cadets(
         object_store
     )
     dict_of_qualifications_for_all_cadets.apply_qualification_to_cadet(
-        cadet=cadet, qualification=qualification,
-        awarded_by=awarded_by
+        cadet=cadet, qualification=qualification, awarded_by=awarded_by
     )
     update_dict_of_qualifications_for_all_cadets(
         object_store=object_store,
@@ -45,7 +47,6 @@ def remove_qualification_from_cadet(
 
 
 class NoQualifications:
-
     def name(self):
         return "No qualification"
 

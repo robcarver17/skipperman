@@ -46,7 +46,6 @@ def get_list_of_relevant_information_for_volunteer_in_registration_data(
 def list_of_identified_volunteers_with_volunteer_id(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> ListOfIdentifiedVolunteersAtEvent:
-
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
@@ -69,7 +68,6 @@ def get_list_of_unique_volunteer_ids_identified_in_registration_data(
 def mark_volunteer_as_skipped_permanently(
     object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
 ):
-
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
@@ -86,7 +84,6 @@ def mark_volunteer_as_skipped_permanently(
 def mark_volunteer_as_skipped_for_now(
     object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
 ):
-
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )
@@ -146,7 +143,6 @@ def get_relevant_information_for_volunteer_in_event_at_row_and_index(
 def volunteer_for_this_row_and_index_already_identified_or_permanently_skipped(
     object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
 ) -> bool:
-
     list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
         object_store=object_store, event=event
     )

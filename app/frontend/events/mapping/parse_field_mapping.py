@@ -93,7 +93,6 @@ def get_wa_field_mapping_from_form(interface: abstractInterface):
 
 
 def valid_inputs_for_mapping(skipperman_field: str, wa_field: str):
-
     if skipperman_field == ADD_SKIPPERMAN_FIELD_DROPDOWN_EMPTY:
         return False
 

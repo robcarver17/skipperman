@@ -15,7 +15,7 @@ from app.web.flask.security import (
     get_username,
     get_access_group_for_current_user,
 )
-from app.web.menus.menu_pages import generate_menu_page_html
+from app.web.end_points.menu_pages import generate_menu_page_html
 
 
 # If using template these need to match

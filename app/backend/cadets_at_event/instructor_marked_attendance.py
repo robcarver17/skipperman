@@ -107,7 +107,6 @@ def get_current_attendance_at_event_on_day(
     event: Event,
     day: Day,
 ) -> Dict[Cadet, AttendanceOnDay]:
-
     return dict(
         [
             (
@@ -124,7 +123,6 @@ def get_current_attendance_at_event_on_day(
 def are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late(
     object_store: ObjectStore, event: Event, group: Group, day: Day
 ) -> bool:
-
     attendance = get_current_attendance_on_day_for_cadets_in_group(
         object_store, event, group, day
     )

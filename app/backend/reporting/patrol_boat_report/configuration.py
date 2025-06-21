@@ -15,6 +15,7 @@ DESIGNATION = "Designation"
 
 LOCATIONS = [RIVER_SAFETY, LAKE_SAFETY]
 
+
 def get_specific_parameters_for_patrol_boat_report(
     object_store: ObjectStore,
 ) -> SpecificParametersForTypeOfReport:

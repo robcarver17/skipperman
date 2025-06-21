@@ -91,7 +91,6 @@ def add_availablity_conflict_to_issues_list(
     volunteer_name: str,
     issues: list,
 ):
-
     list_of_availability = [
         relevant_information.availability.volunteer_availablity
         for relevant_information in list_of_relevant_information

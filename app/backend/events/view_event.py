@@ -57,21 +57,21 @@ def summarise_registrations_for_event(
     list_of_identified_cadets = get_list_of_identified_cadets_at_event(
         object_store, event=event
     )
-    summary_data["(A) Total processed rows for all imports"] = (
-        list_of_identified_cadets.count_of_identified_rows()
-    )
-    summary_data["(B) Rows marked as test - permanent skip"] = (
-        list_of_identified_cadets.count_of_permanent_skip_rows()
-    )
-    summary_data["(C) Rows marked as skip for now"] = (
-        list_of_identified_cadets.count_of_temporary_skip_rows()
-    )
-    summary_data["(D) Rows identified as cadets = A-B-C"] = (
-        list_of_identified_cadets.count_of_rows_identified_as_cadets()
-    )
-    summary_data["(E) Number of cadets identified"] = (
-        list_of_identified_cadets.count_of_cadets_in_rows()
-    )
+    summary_data[
+        "(A) Total processed rows for all imports"
+    ] = list_of_identified_cadets.count_of_identified_rows()
+    summary_data[
+        "(B) Rows marked as test - permanent skip"
+    ] = list_of_identified_cadets.count_of_permanent_skip_rows()
+    summary_data[
+        "(C) Rows marked as skip for now"
+    ] = list_of_identified_cadets.count_of_temporary_skip_rows()
+    summary_data[
+        "(D) Rows identified as cadets = A-B-C"
+    ] = list_of_identified_cadets.count_of_rows_identified_as_cadets()
+    summary_data[
+        "(E) Number of cadets identified"
+    ] = list_of_identified_cadets.count_of_cadets_in_rows()
     summary_data["(F) Probably duplicates = D-E"] = (
         list_of_identified_cadets.count_of_rows_identified_as_cadets()
         - list_of_identified_cadets.count_of_cadets_in_rows()
@@ -125,9 +125,9 @@ def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
         object_store=object_store, event=event
     )
 
-    summary_data["(A) Unique cadet registrations in last import file"] = (
-        list_of_identified_cadets.count_of_cadets_in_rows()
-    )
+    summary_data[
+        "(A) Unique cadet registrations in last import file"
+    ] = list_of_identified_cadets.count_of_cadets_in_rows()
     summary_data[
         "(B) Maximum theoretical volunteers available %d fields per row"
         % MAX_CONFIGURABLE_VOLUNTEERS
@@ -136,21 +136,23 @@ def summarise_volunteers_for_event(object_store: ObjectStore, event: Event):
         * list_of_identified_cadets.count_of_cadets_in_rows()
     )
 
-    summary_data["(C) Total processed volunteer fields for all imports"] = (
+    summary_data[
+        "(C) Total processed volunteer fields for all imports"
+    ] = (
         list_of_identified_volunteers.count_of_identified_row_and_index_including_skipped()
     )
-    summary_data["(D) Fields marked as permanent skip"] = (
-        list_of_identified_volunteers.count_of_permanent_skip_row_and_index()
-    )
-    summary_data["(E) Fields marked as skip for now"] = (
-        list_of_identified_volunteers.count_of_temporary_skip_row_and_index()
-    )
-    summary_data["(F) Fields identified as volunteers = C - D -E"] = (
-        list_of_identified_volunteers.count_of_row_and_index_identified_as_volunteer()
-    )
-    summary_data["(G) Number of unique volunteers identified"] = (
-        list_of_identified_volunteers.number_of_unique_volunteers_identified()
-    )
+    summary_data[
+        "(D) Fields marked as permanent skip"
+    ] = list_of_identified_volunteers.count_of_permanent_skip_row_and_index()
+    summary_data[
+        "(E) Fields marked as skip for now"
+    ] = list_of_identified_volunteers.count_of_temporary_skip_row_and_index()
+    summary_data[
+        "(F) Fields identified as volunteers = C - D -E"
+    ] = list_of_identified_volunteers.count_of_row_and_index_identified_as_volunteer()
+    summary_data[
+        "(G) Number of unique volunteers identified"
+    ] = list_of_identified_volunteers.number_of_unique_volunteers_identified()
     summary_data["(H) Probably duplicates = F-G"] = (
         list_of_identified_volunteers.count_of_row_and_index_identified_as_volunteer()
         - list_of_identified_volunteers.number_of_unique_volunteers_identified()

@@ -1,4 +1,3 @@
-
 from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )

@@ -105,7 +105,7 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(
             DAYS_ATTENDING, cadet_id=cadet.id
         ),
         event=registration_details.event,
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if new_attendance is MISSING_FROM_FORM:
         interface.log_error("attendance not in form for %s" % cadet)
@@ -147,7 +147,7 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
         input_name=input_name_from_column_name_and_cadet_id(
             column_name=ROW_STATUS, cadet_id=cadet.id
         ),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
 
     if new_status is MISSING_FROM_FORM:
@@ -200,7 +200,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
 ):
     new_notes = interface.value_from_form(
         input_name_from_column_name_and_cadet_id(column_name=NOTES, cadet_id=cadet.id),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if new_notes is MISSING_FROM_FORM:
         return
@@ -227,7 +227,7 @@ def get_cadet_health_for_row_in_form_and_alter_registration_data(
 ):
     new_health = interface.value_from_form(
         input_name_from_column_name_and_cadet_id(column_name=HEALTH, cadet_id=cadet.id),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if new_health is MISSING_FROM_FORM:
         return

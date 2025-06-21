@@ -22,7 +22,6 @@ def explain_additional_parameters_for_boat_report(
     interface: abstractInterface,  ## always passed even if not used
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> ListOfLines:
-
     lake_text = (
         "Exclude lake groups"
         if additional_parameters.exclude_lake_groups

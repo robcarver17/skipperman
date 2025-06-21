@@ -95,7 +95,6 @@ def sort_volunteer_data_by_role_on_day_and_skills_and_then_name(
 def move_volunteers_from_list_to_sorted_list(
     sorted_list_of_volunteers: ListOfVolunteers, volunteers_to_move: ListOfVolunteers
 ) -> ListOfVolunteers:
-
     for volunteer in volunteers_to_move:
         if volunteer not in sorted_list_of_volunteers:
             sorted_list_of_volunteers.append(volunteer)

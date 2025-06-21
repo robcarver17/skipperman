@@ -63,7 +63,6 @@ def display_form_event_field_mapping_existing_mapping(
     interface: abstractInterface,
     event: Event,
 ) -> Union[Form, NewForm]:
-
     nav_bar = mapping_buttons()
     warning_text = warning_text_for_mapping(interface=interface, event=event)
     mapping_table = get_mapping_table(interface=interface, event=event)
@@ -124,7 +123,6 @@ def display_form_event_field_mapping_no_existing_mapping() -> Union[Form, NewFor
 
 
 def mapping_buttons() -> ButtonBar:
-
     return ButtonBar(
         [
             main_menu_button,

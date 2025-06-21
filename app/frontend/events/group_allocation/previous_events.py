@@ -26,7 +26,6 @@ DEFAULT_EVENT_COUNT = 3
 def get_previous_event_selection_form(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-
     return ListOfLines(
         [
             _______________,

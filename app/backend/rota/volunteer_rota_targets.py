@@ -76,13 +76,12 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     targets_at_event: DictOfTargetsForRolesAtEvent,
 ) -> RowInTableWithActualAndTargetsForRole:
-
     daily_counts = {}
     for day in event.days_in_event():
-        daily_counts[day] = (
-            volunteers_in_roles_at_event.count_of_volunteers_in_role_on_day(
-                day=day, role=role
-            )
+        daily_counts[
+            day
+        ] = volunteers_in_roles_at_event.count_of_volunteers_in_role_on_day(
+            day=day, role=role
         )
 
     min_count = min(daily_counts.values())

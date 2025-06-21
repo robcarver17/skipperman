@@ -70,7 +70,6 @@ class ListOfVolunteersWithIdAtEventWithPatrolBoatsId(GenericListOfObjectsWithIds
     def update_volunteer_on_boat(
         self, day: Day, volunteer_id: str, new_patrol_boat_id: str
     ):
-
         self.remove_volunteer_from_patrol_boat_on_day_at_event(
             volunteer_id=volunteer_id, day=day
         )

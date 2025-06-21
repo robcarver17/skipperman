@@ -55,7 +55,6 @@ def get_table_of_cadets_with_food(interface: abstractInterface) -> Table:
 def get_row_in_table_of_cadets_with_food(
     cadet: Cadet, food_requirements: FoodRequirements
 ) -> RowInTable:
-
     checkbox, other_input = get_food_requirements_input_as_tuple(
         existing_food_requirements=food_requirements,
         other_input_name=get_input_name_other_food_for_cadet(cadet_id=cadet.id),
@@ -95,7 +94,6 @@ def get_table_of_volunteers_with_food(interface: abstractInterface) -> Table:
 def get_row_in_table_of_volunteers_with_food(
     volunteer: Volunteer, food_requirements: FoodRequirements
 ) -> RowInTable:
-
     checkbox, other_input = get_food_requirements_input_as_tuple(
         existing_food_requirements=food_requirements,
         other_input_name=get_input_name_other_food_for_volunteer(

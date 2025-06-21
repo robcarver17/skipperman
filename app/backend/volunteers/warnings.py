@@ -58,7 +58,12 @@ from app.objects.event_warnings import (
     VOLUNTEER_IDENTITY,
     VOLUNTEER_PREFERENCE,
 )
-from app.data_access.configuration.fixed import LOWEST_PRIORITY, LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
+from app.data_access.configuration.fixed import (
+    LOWEST_PRIORITY,
+    LOW_PRIORITY,
+    MEDIUM_PRIORITY,
+    HIGH_PRIORITY,
+)
 from app.backend.events.event_warnings import (
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
     process_warnings_into_warning_list,
@@ -191,7 +196,6 @@ def warn_about_single_volunteer_with_qualifications(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,  ## not used, ditto
 ) -> str:
-
     dict_of_skills = volunteer_event_data.volunteer_skills
     list_of_volunteer_roles = volunteer_event_data.roles_and_groups.list_of_roles()
 
@@ -262,7 +266,6 @@ def warn_about_single_volunteer_availablity_at_event_missing_volunteer(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,
 ) -> str:
-
     active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
         object_store=object_store, event=event, volunteer=volunteer
     )
@@ -285,7 +288,6 @@ def warn_about_single_volunteer_availablity_at_event_missing_sailor(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,
 ) -> str:
-
     active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
         object_store=object_store, event=event, volunteer=volunteer
     )
@@ -447,7 +449,6 @@ def add_notes_to_warnings_on_availability(
     volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
     warnings: List[str],
 ) -> str:
-
     notes = copy(volunteer_registration_data.notes)
     if len(notes) > 0:
         notes = "(Notes: %s)" % notes
@@ -622,20 +623,28 @@ def warning_for_specific_temporary_skip_volunteer_id_at_event(
             event=event,
         )
     )
-    volunteer = get_volunteer_from_relevant_information(relevant_information, default= missing_relevant_information)
+    volunteer = get_volunteer_from_relevant_information(
+        relevant_information, default=missing_relevant_information
+    )
     if volunteer is missing_relevant_information:
-        warning = "Temporarily skipping volunteer with unknown name in row %s id %d (cadet name %s, registered by %s)" % (
-            str(row_id_and_index.row_id),
-            row_id_and_index.volunteer_index,
-            relevant_information.identify.cadet.name,
-            relevant_information.identify.registered_by_firstname
+        warning = (
+            "Temporarily skipping volunteer with unknown name in row %s id %d (cadet name %s, registered by %s)"
+            % (
+                str(row_id_and_index.row_id),
+                row_id_and_index.volunteer_index,
+                relevant_information.identify.cadet.name,
+                relevant_information.identify.registered_by_firstname,
+            )
         )
 
     else:
-        warning = "Temporarily skipping volunteer probably called %s in row %s id %d" % (
-            volunteer.name,
-            str(row_id_and_index.row_id),
-            row_id_and_index.volunteer_index,
+        warning = (
+            "Temporarily skipping volunteer probably called %s in row %s id %d"
+            % (
+                volunteer.name,
+                str(row_id_and_index.row_id),
+                row_id_and_index.volunteer_index,
+            )
         )
 
     return warning

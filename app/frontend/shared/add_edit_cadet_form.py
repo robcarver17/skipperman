@@ -42,7 +42,11 @@ from app.objects.membership_status import (
     all_status_description_as_dict_for_user_input,
     none_member,
 )
-from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM, MissingData
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    MISSING_FROM_FORM,
+    MissingData,
+)
 
 
 @dataclass
@@ -226,7 +230,9 @@ check_details_button = Button(CHECK_BUTTON_LABEL, nav_button=True)
 def get_cadet_from_form(interface: abstractInterface) -> Cadet:
     first_name = interface.value_from_form(FIRST_NAME, default=MISSING_FROM_FORM)
     surname = interface.value_from_form(SURNAME, default=MISSING_FROM_FORM)
-    date_of_birth = interface.value_from_form(DOB, default=MISSING_FROM_FORM, value_is_date=True)
+    date_of_birth = interface.value_from_form(
+        DOB, default=MISSING_FROM_FORM, value_is_date=True
+    )
     dob_status = interface.value_from_form(DOB_UNSURE_FIELD, default=MISSING_FROM_FORM)
 
     if MISSING_FROM_FORM in [first_name, surname, dob_status, date_of_birth]:

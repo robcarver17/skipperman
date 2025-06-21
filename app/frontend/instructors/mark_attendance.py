@@ -78,7 +78,6 @@ nav_bar = ButtonBar(
 def get_save_buttons(
     interface: abstractInterface, event: Event, group: Group, day: Day
 ):
-
     not_initial_registration = is_not_initial_registration(interface, event, group, day)
     if not_initial_registration:
         list_of_buttons = [save_returned_ticks_button]
@@ -127,7 +126,6 @@ def post_instructor_attendance(interface: abstractInterface):
 def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     interface: abstractInterface, last_button: str
 ):
-
     if initial_mark_all_as_attending_or_absence_button.pressed(last_button):
         final_save_of_initial_registration(interface)
 
@@ -146,7 +144,6 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
 def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     interface: abstractInterface, last_button: str
 ):
-
     if is_button_cadet_selection(last_button):
         cadet_button_pressed(interface, last_button)
 
@@ -229,7 +226,6 @@ def save_any_changes_to_ticks(
     initial_stage: bool,
     force_mark_to_present: bool = False,
 ):
-
     event = get_event_from_state(interface)
     day = day_given_current_day_and_event(interface=interface, event=event)
     attendance_across_events = get_attendance_across_events_from_state(interface)
@@ -258,7 +254,6 @@ def save_any_changes_to_ticks_passing_information(
     initial_stage: bool,
     force_mark_to_present: bool,
 ):
-
     for cadet in attendance_across_events.list_of_cadets:
         save_ticks_for_cadet(
             interface=interface,
@@ -280,7 +275,6 @@ def save_ticks_for_cadet(
     initial_stage: bool,
     force_mark_to_present: bool,
 ):
-
     if initial_stage:
         save_ticks_for_cadet_in_initial_stage(
             interface=interface,
@@ -308,7 +302,6 @@ def save_ticks_for_cadet_in_initial_stage(
     cadet: Cadet,
     force_mark_to_present: bool = False,
 ):
-
     if should_we_tick_cadet_as_present(
         interface=interface,
         attendance_across_events=attendance_across_events,
@@ -334,7 +327,6 @@ def save_ticks_for_cadet_after_initial_stage(
     day: Day,
     cadet: Cadet,
 ):
-
     if cadet_has_tick_for_returned(interface=interface, cadet=cadet):
         attendance_across_events.update_attendance_for_cadet_on_day_at_event(
             event=event, cadet=cadet, day=day, new_attendance=returned
@@ -349,7 +341,6 @@ def should_we_tick_cadet_as_present(
     cadet: Cadet,
     force_mark_to_present: bool = False,
 ):
-
     if force_mark_to_present:
         current_attendance = (
             attendance_across_events.attendance_for_cadet_across_days_and_events(cadet)
@@ -382,7 +373,6 @@ def update_attendance_for_cadet_given_button(
     type_of_button: str,
     new_attendance: Attendance,
 ):
-
     cadet = get_cadet_given_button_pressed(
         button_value=value_of_button, button_type=type_of_button, interface=interface
     )

@@ -20,10 +20,10 @@ def summarise_clothing(object_store: ObjectStore, event: Event) -> PandasDFTable
     for size in sizes:
         clothing_for_size = {}
         for colour in colours:
-            clothing_for_size[colour] = (
-                list_of_cadets_with_clothing.count_of_size_and_colour(
-                    size=size, colour=colour
-                )
+            clothing_for_size[
+                colour
+            ] = list_of_cadets_with_clothing.count_of_size_and_colour(
+                size=size, colour=colour
             )
 
         all_clothing[size] = clothing_for_size

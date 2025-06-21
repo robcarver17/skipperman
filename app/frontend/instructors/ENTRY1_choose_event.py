@@ -165,9 +165,13 @@ def post_form_main_instructors_page(
 
 
 def get_file_given_button_pressed(button_pressed: str) -> File:
-    filename_without_suffix_or_extension = filename_without_suffix_or_extension_from_pressed_button(button_pressed)
-    filename = get_newest_file_matching_filename(filename=filename_without_suffix_or_extension,
-                                                 pathname=public_reporting_directory)
+    filename_without_suffix_or_extension = (
+        filename_without_suffix_or_extension_from_pressed_button(button_pressed)
+    )
+    filename = get_newest_file_matching_filename(
+        filename=filename_without_suffix_or_extension,
+        pathname=public_reporting_directory,
+    )
     return File(filename)
 
 
@@ -194,7 +198,9 @@ def get_event_buttons(interface: abstractInterface, sort_by: str) -> Line:
 
 
 def list_of_all_files_in_public_directory_with_clickable_buttons() -> ListOfLines:
-    all_files = get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(public_reporting_directory)
+    all_files = get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(
+        public_reporting_directory
+    )
 
     return ListOfLines(
         [line_for_file_in_directory(filename=filename) for filename in all_files]
@@ -218,7 +224,9 @@ def is_filename_button_pressed(value_of_button: str):
     )
 
 
-def filename_without_suffix_or_extension_from_pressed_button(value_of_button: str) -> str:
+def filename_without_suffix_or_extension_from_pressed_button(
+    value_of_button: str,
+) -> str:
     return get_attributes_from_button_pressed_of_known_type(
         value_of_button_pressed=value_of_button, type_to_check=select_file
     )

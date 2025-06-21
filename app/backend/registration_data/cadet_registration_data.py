@@ -37,7 +37,6 @@ from app.objects.registration_data import (
 def add_empty_row_to_raw_registration_data_and_return_row(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> RowInRegistrationData:
-
     registration_data = get_raw_mapped_registration_data(
         object_store=object_store,
         event=event,
@@ -58,7 +57,6 @@ def add_empty_row_to_raw_registration_data_and_return_row(
 def create_empty_row_given_existing_registration_data(
     registration_data: RegistrationDataForEvent, cadet: Cadet
 ) -> RowInRegistrationData:
-
     ## get current fields, or none
     current_fields_in_data = registration_data.list_of_fields()
     row_id = registration_data.new_unique_row_id()
@@ -145,7 +143,6 @@ def add_new_cadet_to_event(
     event: Event,
     cadet_at_event: CadetWithIdAtEvent,
 ):
-
     list_of_cadets_with_id_at_event = (
         get_list_of_cadets_with_id_and_registration_data_at_event(
             object_store=object_store, event=event

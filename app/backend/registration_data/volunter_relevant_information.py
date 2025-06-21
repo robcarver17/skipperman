@@ -162,7 +162,6 @@ def get_availability_for_volunteer(
             day_available_text, days_in_event=days_in_event
         )
     else:
-
         return DaySelector.create_empty()
 
 
@@ -185,7 +184,7 @@ no_volunteer_in_position_at_form = object()
 
 def get_volunteer_from_relevant_information(
     relevant_information_for_volunteer: RelevantInformationForVolunteer,
-        default = missing_relevant_information
+    default=missing_relevant_information,
 ) -> Volunteer:
     if relevant_information_for_volunteer is missing_relevant_information:
         print("Relevant information was missing")

@@ -19,7 +19,6 @@ from app.objects.wa_field_mapping import WAFieldMap
 
 
 def get_mapping_table(interface: abstractInterface, event: Event) -> Table:
-
     top_row = top_row_in_mapping_table()
     adding_row = add_fields_row_in_mapping_table(interface=interface, event=event)
     rows_in_mapping = body_of_mapping_table(interface=interface, event=event)

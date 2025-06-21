@@ -197,7 +197,6 @@ def update_if_make_unavailable_across_days_button_pressed(
 def update_if_make_unavailable_on_specific_day_button_pressed(
     interface: abstractInterface, unavailable_button: str
 ):
-
     volunteer, day = volunteer_and_day_from_make_unavailable_on_specific_day_button(
         object_store=interface.object_store, button=unavailable_button
     )
@@ -227,7 +226,6 @@ def update_if_remove_role_button_pressed(
 def update_if_remove_role_button_pressed_on_specific_day(
     interface: abstractInterface, remove_button: str
 ):
-
     volunteer, day = volunteer_and_day_from_remove_role_on_specific_day_button(
         object_store=interface.object_store, button=remove_button
     )
@@ -244,7 +242,6 @@ def update_if_remove_role_button_pressed_on_specific_day(
 def update_if_remove_role_button_pressed_across_days(
     interface: abstractInterface, remove_button: str
 ):
-
     volunteer = volunteer_from_remove_role_across_days_button(
         object_store=interface.object_store, button=remove_button
     )
@@ -280,8 +277,7 @@ def update_filters(interface: abstractInterface):
 
 def update_volunteer_skills_filter(interface: abstractInterface):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface, field_name=SKILLS_FILTER,
-        default=MISSING_FROM_FORM
+        interface=interface, field_name=SKILLS_FILTER, default=MISSING_FROM_FORM
     )
     if dict_of_skills is MISSING_FROM_FORM:
         print("missing from form")
@@ -295,9 +291,13 @@ def update_volunteer_availability_filter(interface: abstractInterface):
     availabilty_filter_dict = dict()
     for day in event.days_in_event():
         try:
-            availabilty_filter_dict[day.name] =  update_volunteer_availability_for_day(interface=interface, day=day)
+            availabilty_filter_dict[day.name] = update_volunteer_availability_for_day(
+                interface=interface, day=day
+            )
         except MissingData:
-            interface.log_error("Issue pulling in availability filter on %s " % day.name)
+            interface.log_error(
+                "Issue pulling in availability filter on %s " % day.name
+            )
             return
 
     save_availablity_filter_to_state(

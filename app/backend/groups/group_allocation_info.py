@@ -98,7 +98,6 @@ def get_dict_of_dicts_of_group_allocation_fields(
 def get_dict_of_value_by_cadet(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, field_key: str
 ) -> Dict[Cadet, str]:
-
     dict_of_cadet_id_and_values = dict(
         [
             (

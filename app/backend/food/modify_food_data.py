@@ -46,7 +46,6 @@ def add_new_cadet_with_food_to_event(
 def remove_food_requirements_for_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ):
-
     food_data = get_dict_of_cadets_with_food_requirements_at_event(
         object_store=object_store, event=event
     )
@@ -61,7 +60,6 @@ def remove_food_requirements_for_cadet_at_event(
 def is_volunteer_with_already_at_event_with_food(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> bool:
-
     volunteers_with_food = get_dict_of_volunteers_with_food_requirements_at_event(
         object_store=object_store, event=event
     )

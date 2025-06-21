@@ -308,7 +308,6 @@ def get_raw_list_of_roles_with_skills(
 def empty_if_qualified_for_role_else_warnings(
     role: RoleWithSkills, dict_of_skills: SkillsDict
 ) -> str:
-
     skills_required = role.skills_dict
     missing_skills = []
     for skill, skill_needed in skills_required.items():

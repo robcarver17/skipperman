@@ -102,7 +102,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
 
     def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
-
         messages = []
         messages += self.dict_of_cadets_with_days_and_groups.delete_cadet_from_event_and_return_messages(
             cadet
@@ -288,7 +287,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         cadet: Cadet,
         new_availabilty: DaySelector,
     ) -> List[str]:
-
         existing_availablity = copy(
             self.dict_of_cadets_with_registration_data.registration_data_for_cadet(
                 cadet
@@ -322,7 +320,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def remove_availability_of_existing_cadet_on_day_and_return_messages(
         self, cadet: Cadet, day: Day
     ) -> List[str]:
-
         self.dict_of_cadets_with_registration_data.make_cadet_unavailable_on_day(
             cadet=cadet, day=day
         )
@@ -343,11 +340,11 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return [message]
 
-    def update_registration_data_for_existing_cadet(self, cadet: Cadet,
-        row_in_registration_data: RowInRegistrationData):
+    def update_registration_data_for_existing_cadet(
+        self, cadet: Cadet, row_in_registration_data: RowInRegistrationData
+    ):
         self.dict_of_cadets_with_registration_data.update_registration_data_for_existing_cadet(
-            cadet=cadet,
-            row_in_registration_data=row_in_registration_data
+            cadet=cadet, row_in_registration_data=row_in_registration_data
         )
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
@@ -364,7 +361,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
         self, cadet: Cadet, new_status: RegistrationStatus
     ) -> List[str]:
-
         assert new_status.is_cancelled_or_deleted
         self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
             cadet=cadet, new_status=new_status

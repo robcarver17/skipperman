@@ -67,7 +67,6 @@ def dataframe_for_team_leaders(
     team: Team,
     volunteers_in_team_leader_roles: List[VolunteerWithRoleGroupAndTeamAtEvent],
 ):
-
     df_for_team_leaders = [
         df_row_for_volunteer_in_role_at_event(
             volunteer_event_data=volunteer_event_data,
@@ -88,7 +87,6 @@ def get_sorted_df_for_rest_of_team(
     ],
     include_no_power_boat: bool = True,
 ) -> pd.DataFrame:
-
     list_of_volunteers = flatten(
         [
             volunteers_for_role
@@ -220,7 +218,6 @@ def sort_df_by_group(
     volunteer_event_data: DictOfAllEventDataForVolunteers,
     include_no_group: bool = True,
 ) -> pd.DataFrame:
-
     all_groups = (
         volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_groups
     )

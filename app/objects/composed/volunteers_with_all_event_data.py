@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from typing import Dict
 
 from app.objects.club_dinghies import ClubDinghy
-from app.objects.composed.people_at_event_with_club_dinghies import DictOfPeopleAndClubDinghiesAtEvent
+from app.objects.composed.people_at_event_with_club_dinghies import (
+    DictOfPeopleAndClubDinghiesAtEvent,
+)
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.day_selectors import Day
 
@@ -40,7 +42,10 @@ from app.objects.composed.food_at_event import (
     FoodRequirements,
 )
 
-from app.objects.composed.people_at_event_with_club_dinghies import DictOfDaysAndClubDinghiesAtEventForPerson
+from app.objects.composed.people_at_event_with_club_dinghies import (
+    DictOfDaysAndClubDinghiesAtEventForPerson,
+)
+
 
 @dataclass
 class AllEventDataForVolunteer:
@@ -58,7 +63,6 @@ class AllEventDataForVolunteer:
         return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
 
 
-
 class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer]):
     def __init__(
         self,
@@ -70,7 +74,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
         dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
         dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-        dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
+        dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     ):
         super().__init__(raw_dict)
         self._dict_of_registration_data_for_volunteers_at_event = (
@@ -89,45 +93,63 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self._dict_of_volunteers_with_food_at_event = (
             dict_of_volunteers_with_food_at_event
         )
-        self._dict_of_people_and_club_dinghies_at_event = dict_of_people_and_club_dinghies_at_event
+        self._dict_of_people_and_club_dinghies_at_event = (
+            dict_of_people_and_club_dinghies_at_event
+        )
         self._event = event
 
-    def copy_club_dinghy_for_instructor_across_all_days(self, day: Day, volunteer: Volunteer, club_dinghy: ClubDinghy):
-        days_available = self.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(volunteer).availablity.days_available()
+    def copy_club_dinghy_for_instructor_across_all_days(
+        self, day: Day, volunteer: Volunteer, club_dinghy: ClubDinghy
+    ):
+        days_available = self.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(
+            volunteer
+        ).availablity.days_available()
         self.dict_of_people_and_club_dinghies_at_event.copy_club_dinghy_for_instructor_across_all_days(
-            volunteer=volunteer,
-            days_available=days_available,
-            club_dinghy=club_dinghy
+            volunteer=volunteer, days_available=days_available, club_dinghy=club_dinghy
         )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(self, day: Day, club_dinghy: ClubDinghy) -> ListOfVolunteers:
+    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
+        self, day: Day, club_dinghy: ClubDinghy
+    ) -> ListOfVolunteers:
         return self.dict_of_people_and_club_dinghies_at_event.list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
-            day=day,
-            club_dinghy=club_dinghy
+            day=day, club_dinghy=club_dinghy
         )
 
-    def allocate_club_dinghy_to_volunteer_on_day(self,
-                                                 day: Day,
-                                                 volunteer: Volunteer,
-                                                 club_dinghy: ClubDinghy):
-
-        self.dict_of_people_and_club_dinghies_at_event.allocate_club_boat_on_day(person=volunteer,
-                                                                                 club_boat=club_dinghy,
-                                                                                 day=day)
+    def allocate_club_dinghy_to_volunteer_on_day(
+        self, day: Day, volunteer: Volunteer, club_dinghy: ClubDinghy
+    ):
+        self.dict_of_people_and_club_dinghies_at_event.allocate_club_boat_on_day(
+            person=volunteer, club_boat=club_dinghy, day=day
+        )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def remove_club_dinghy_from_volunteer_on_day(self,
-                                                 day: Day,
-                                                 volunteer: Volunteer):
-        self.dict_of_people_and_club_dinghies_at_event.remove_persons_club_boat_allocation_on_day(person=volunteer, day=day)
+    def remove_club_dinghy_from_volunteer_on_day(self, day: Day, volunteer: Volunteer):
+        self.dict_of_people_and_club_dinghies_at_event.remove_persons_club_boat_allocation_on_day(
+            person=volunteer, day=day
+        )
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
-    def get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(self, day: Day) -> ListOfVolunteers:
-        all_volunteers = self.dict_of_registration_data_for_volunteers_at_event.list_of_volunteers_at_event()
-        all_volunteers = [volunteer for volunteer in all_volunteers
-                          if self.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(volunteer).availablity.available_on_day(day) and \
-                          not self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(volunteer).has_any_dinghy_on_specific_day(day)]
+    def get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(
+        self, day: Day
+    ) -> ListOfVolunteers:
+        all_volunteers = (
+            self.dict_of_registration_data_for_volunteers_at_event.list_of_volunteers_at_event()
+        )
+        all_volunteers = [
+            volunteer
+            for volunteer in all_volunteers
+            if self.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(
+                volunteer
+            ).availablity.available_on_day(
+                day
+            )
+            and not self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
+                volunteer
+            ).has_any_dinghy_on_specific_day(
+                day
+            )
+        ]
 
         return ListOfVolunteers(all_volunteers)
 
@@ -169,7 +191,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     def remove_patrol_boat_and_all_associated_volunteers_from_event(
         self, patrol_boat: PatrolBoat
     ):
-
         affected_volunteers = self.dict_of_volunteers_at_event_with_patrol_boats.remove_patrol_boat_and_all_associated_volunteers_from_event_and_return_volunteers(
             patrol_boat=patrol_boat
         )
@@ -181,7 +202,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     def copy_across_boats_at_event(
         self, volunteer: Volunteer, day: Day, allow_overwrite: bool
     ):
-
         volunteer_availablility_at_event = self.get_data_for_volunteer(
             volunteer
         ).registration_data.availablity
@@ -242,7 +262,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         volunteer: Volunteer,
         registration_data: RegistrationDataForVolunteerAtEvent,
     ):
-
         self.dict_of_registration_data_for_volunteers_at_event.add_new_volunteer(
             volunteer=volunteer, registration_data=registration_data
         )
@@ -267,7 +286,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
         self, volunteer: Volunteer, day: Day, allow_replacement: bool
     ):
-
         registration_data_for_volunteers_at_event = (
             self.dict_of_registration_data_for_volunteers_at_event
         )
@@ -318,7 +336,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def delete_volunteer_from_event(self, volunteer: Volunteer):
-
         try:
             self.pop(volunteer)
         except:
@@ -342,7 +359,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         messages += food_data.drop_volunteer(volunteer)
 
         club_boats = self.dict_of_people_and_club_dinghies_at_event
-        messages+=club_boats.remove_person_from_event(volunteer)
+        messages += club_boats.remove_person_from_event(volunteer)
 
         return messages
 
@@ -356,7 +373,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
     def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
-
         volunteer_registration_data = (
             self.dict_of_registration_data_for_volunteers_at_event
         )
@@ -374,8 +390,10 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             day=day, volunteer=volunteer
         )
 
-        club_boat_data =self.dict_of_people_and_club_dinghies_at_event
-        club_boat_data.remove_persons_club_boat_allocation_on_day(day=day, person=volunteer)
+        club_boat_data = self.dict_of_people_and_club_dinghies_at_event
+        club_boat_data.remove_persons_club_boat_allocation_on_day(
+            day=day, person=volunteer
+        )
 
         self.refresh_data_for_volunteer_from_underlying(volunteer)
 
@@ -426,7 +444,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             food_requirements=self.dict_of_volunteers_with_food_at_event.food_for_volunteer(
                 volunteer, default=no_food_requirements
             ),
-            club_boats=self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(volunteer),
+            club_boats=self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
+                volunteer
+            ),
             event=self.event,
         )
 
@@ -441,7 +461,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         return self._dict_of_volunteers_with_skills
 
     @property
-    def dict_of_people_and_club_dinghies_at_event(self) -> DictOfPeopleAndClubDinghiesAtEvent:
+    def dict_of_people_and_club_dinghies_at_event(
+        self,
+    ) -> DictOfPeopleAndClubDinghiesAtEvent:
         return self._dict_of_people_and_club_dinghies_at_event
 
     @property
@@ -485,7 +507,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
+    dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> DictOfAllEventDataForVolunteers:
     event = list_of_events.event_with_id(event_id)
 
@@ -509,7 +531,7 @@ dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
         dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
         dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
-        dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event
+        dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
     )
 
 
@@ -520,7 +542,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-        dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     event: Event,
 ) -> Dict[Volunteer, AllEventDataForVolunteer]:
     ## THis construction means if we delete from registration data they won't be seen elsewhere
@@ -552,7 +574,9 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                     food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
                         volunteer, default=no_food_requirements
                     ),
-                    club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(volunteer),
+                    club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
+                        volunteer
+                    ),
                     event=event,
                 ),
             )

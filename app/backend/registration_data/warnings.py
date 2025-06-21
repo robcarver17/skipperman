@@ -15,7 +15,11 @@ from app.objects.event_warnings import (
     CADET_MANUALLY_ADDED,
     CADET_SKIPPED_TEMPORARY,
 )
-from app.data_access.configuration.fixed import LOW_PRIORITY, MEDIUM_PRIORITY, HIGH_PRIORITY
+from app.data_access.configuration.fixed import (
+    LOW_PRIORITY,
+    MEDIUM_PRIORITY,
+    HIGH_PRIORITY,
+)
 from app.backend.events.event_warnings import (
     add_or_update_list_of_new_event_warnings_clearing_any_missing,
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
@@ -71,8 +75,7 @@ def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Eve
             warnings.append(
                 "Cadet %s has unknown date of birth - needs confirming" % cadet
             )
-        #elif cadet_seems_too_young(cadet):
-
+        # elif cadet_seems_too_young(cadet):
 
     process_warnings_into_warning_list(
         object_store=object_store,
@@ -91,17 +94,14 @@ def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
     warnings = []
     for cadet in active_cadets:
         if cadet_seems_too_young(cadet):
-            warnings.append(
-                "Sailor %s is too young to be a member " % cadet
-            )
-
+            warnings.append("Sailor %s is too young to be a member " % cadet)
 
     process_warnings_into_warning_list(
         object_store=object_store,
         event=event,
         list_of_warnings=warnings,
         category=CADET_DOB,
-        priority=HIGH_PRIORITY
+        priority=HIGH_PRIORITY,
     )
 
 

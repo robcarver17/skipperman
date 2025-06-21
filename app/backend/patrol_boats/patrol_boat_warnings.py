@@ -1,6 +1,8 @@
 from typing import List
 
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import get_dict_of_people_and_club_dinghies_at_event
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
+    get_dict_of_people_and_club_dinghies_at_event,
+)
 from app.backend.events.event_warnings import (
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
     process_warnings_into_warning_list,
@@ -9,7 +11,7 @@ from app.objects.event_warnings import (
     ListOfEventWarnings,
     VOLUNTEER_QUALIFICATION,
     MISSING_DRIVER,
-DOUBLE_BOOKED
+    DOUBLE_BOOKED,
 )
 from app.data_access.configuration.fixed import HIGH_PRIORITY
 from app.objects.volunteers import ListOfVolunteers
@@ -33,7 +35,6 @@ from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunt
 
 
 def process_all_warnings_for_patrol_boats(object_store: ObjectStore, event: Event):
-
     warn_on_volunteer_qualifications(object_store=object_store, event=event)
     warn_on_pb2_drivers(object_store=object_store, event=event)
     warn_on_double_booking(object_store=object_store, event=event)
@@ -42,7 +43,7 @@ def process_all_warnings_for_patrol_boats(object_store: ObjectStore, event: Even
 def warn_on_double_booking(object_store: ObjectStore, event: Event):
     list_of_warnings = []
     for day in event.days_in_event():
-        list_of_warnings+=warn_on_double_booking_on_day(object_store, event, day)
+        list_of_warnings += warn_on_double_booking_on_day(object_store, event, day)
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
@@ -55,7 +56,9 @@ def warn_on_double_booking(object_store: ObjectStore, event: Event):
     )
 
 
-def warn_on_double_booking_on_day(object_store: ObjectStore, event: Event, day: Day) -> List[str]:
+def warn_on_double_booking_on_day(
+    object_store: ObjectStore, event: Event, day: Day
+) -> List[str]:
     dict_of_people_with_club_dinghies = get_dict_of_people_and_club_dinghies_at_event(
         object_store=object_store, event=event
     )
@@ -64,19 +67,24 @@ def warn_on_double_booking_on_day(object_store: ObjectStore, event: Event, day: 
             object_store=object_store, event=event
         )
     )
-    volunteers_assigned_to_boat_and_day = (
-        dict_of_voluteers_at_event_with_patrol_boats.volunteers_assigned_to_any_boat_on_given_day(
-            day=day
-        )
+    volunteers_assigned_to_boat_and_day = dict_of_voluteers_at_event_with_patrol_boats.volunteers_assigned_to_any_boat_on_given_day(
+        day=day
     )
     warnings = []
     for volunteer in volunteers_assigned_to_boat_and_day:
-        if dict_of_people_with_club_dinghies.club_dinghys_for_person(volunteer).has_any_dinghy_on_specific_day(day):
-            warnings.append("On %s, %s is rostered on a club sailing dinghy and a patrol boat" % (day.name,
-                                                                                                  volunteer.name,
-                                                                                                  ))
+        if dict_of_people_with_club_dinghies.club_dinghys_for_person(
+            volunteer
+        ).has_any_dinghy_on_specific_day(day):
+            warnings.append(
+                "On %s, %s is rostered on a club sailing dinghy and a patrol boat"
+                % (
+                    day.name,
+                    volunteer.name,
+                )
+            )
 
     return warnings
+
 
 def warn_on_pb2_drivers(object_store: ObjectStore, event: Event):
     list_of_boats_at_event = load_list_of_patrol_boats_at_event(

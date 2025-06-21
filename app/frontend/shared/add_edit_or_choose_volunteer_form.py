@@ -167,8 +167,7 @@ def get_and_save_volunteer_skills_from_form(
     interface: abstractInterface, volunteer: Volunteer
 ):
     dict_of_skills = get_dict_of_skills_from_form(
-        interface=interface, field_name=SKILLS,
-        default=MISSING_FROM_FORM
+        interface=interface, field_name=SKILLS, default=MISSING_FROM_FORM
     )
     if dict_of_skills is MISSING_FROM_FORM:
         print("skills dict not in form")

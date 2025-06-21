@@ -66,7 +66,6 @@ def update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets
     volunteer: Volunteer,
     list_of_cadets_to_connect: ListOfCadets,
 ):
-
     currently_connected_cadets = get_list_of_cadets_associated_with_volunteer(
         object_store=object_store, volunteer=volunteer
     )
@@ -85,7 +84,6 @@ def update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets
 def get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> ListOfCadets:
-
     unique_list_of_all_cadet_ids_for_volunteer = (
         get_unique_list_of_cadet_ids_in_registration_data_given_identified_volunteer(
             object_store=object_store, event=event, volunteer=volunteer
@@ -107,7 +105,6 @@ def get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_v
 def get_unique_list_of_cadet_ids_in_registration_data_given_identified_volunteer(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> List[str]:
-
     relevant_identified_volunteers = list_of_identified_volunteers_with_volunteer_id(
         object_store=object_store, event=event, volunteer=volunteer
     )
@@ -192,7 +189,6 @@ def get_list_of_cadets_associated_with_volunteer_at_event_given_event_data(
     dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> ListOfCadets:
-
     cadets_at_event = dict_of_all_cadet_event_data.list_of_cadets
     asssociated_with_volunteer = volunteer_data_at_event.associated_cadets
 
@@ -214,7 +210,6 @@ def list_of_cadet_groups_associated_with_volunteer(
     dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     list_of_cadets_at_event_and_associated: ListOfCadets,
 ) -> Union[List[Group], object]:
-
     list_of_groups = []
     for cadet in list_of_cadets_at_event_and_associated:
         list_of_groups += dict_of_all_cadet_event_data.dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(

@@ -3,8 +3,9 @@ from typing import Dict, Callable
 
 import pandas as pd
 
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    apply_override_additional_options
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    apply_override_additional_options,
+)
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
@@ -119,13 +120,14 @@ def clear_additional_parameters_for_allocation_report(
 
 
 def get_dict_of_df_for_reporting_allocations(
-    interface: abstractInterface,
-    override_additional_options: dict = arg_not_passed
+    interface: abstractInterface, override_additional_options: dict = arg_not_passed
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_allocation_report(interface)
     if override_additional_options is not arg_not_passed:
-        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
+        additional_parameters = apply_override_additional_options(
+            additional_parameters, **override_additional_options
+        )
     dict_of_df = get_dict_of_df_for_reporting_allocations_given_event_and_state(
         interface=interface, event=event, additional_parameters=additional_parameters
     )
@@ -138,7 +140,6 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(
     event: Event,
     additional_parameters: AdditionalParametersForAllocationReport,
 ) -> Dict[str, pd.DataFrame]:
-
     dict_of_df = get_dict_of_df_for_reporting_allocations_with_flags(
         object_store=interface.object_store,
         event=event,

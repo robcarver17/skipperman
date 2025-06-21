@@ -91,7 +91,6 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewForm]:
     try:
-
         create_temp_file_with_list_of_cadets(interface, file_marker_name=FILENAME)
     except Exception as e:
         interface.log_error(

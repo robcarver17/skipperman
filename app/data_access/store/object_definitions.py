@@ -41,7 +41,9 @@ from app.objects.composed.food_at_event import (
 from app.objects.composed.notes_for_groups import (
     compose_dict_of_notes_for_groups_at_event,
 )
-from app.objects.composed.notes_with_volunteers import compose_list_of_notes_with_volunteers_from_list_of_notes
+from app.objects.composed.notes_with_volunteers import (
+    compose_list_of_notes_with_volunteers_from_list_of_notes,
+)
 from app.objects.composed.roles_and_teams import compose_dict_of_teams_with_roles
 from app.objects.composed.ticks_in_dicts import (
     create_qualifications_and_tick_items_as_dict_from_underyling,
@@ -203,7 +205,6 @@ object_definition_for_volunteers_with_ids_and_club_dinghies_at_event = Underlyin
 )
 
 
-
 object_definition_for_volunteers = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_volunteers
 )
@@ -358,7 +359,7 @@ object_definition_for_list_of_notes = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_notes
 )
 
-object_definition_for_list_of_patrol_boat_labels=UnderlyingObjectDefinition(
+object_definition_for_list_of_patrol_boat_labels = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_patrol_boat_labels
 )
 
@@ -375,8 +376,6 @@ object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_i
     required_key_for_iteration="list_of_cadet_ids",
     key_for_underlying_object="cadet_id",
 )
-
-
 
 
 ## DERIVED
@@ -515,11 +514,11 @@ object_definition_for_dict_of_people_and_club_dinghies_at_event = DerivedObjectD
         list_of_club_dinghies=object_definition_for_list_of_club_dinghies,
         list_of_cadets_at_event_with_id_and_club_dinghy=object_definition_for_cadets_with_ids_and_club_dinghies_at_event,
         list_of_volunteers_with_ids_and_club_dinghies_at_event=object_definition_for_volunteers_with_ids_and_club_dinghies_at_event,
-        list_of_volunteers = object_definition_for_volunteers
+        list_of_volunteers=object_definition_for_volunteers,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_cadets_at_event_with_id_and_club_dinghy=object_definition_for_cadets_with_ids_and_club_dinghies_at_event,
-    list_of_volunteers_with_ids_and_club_dinghies_at_event=object_definition_for_volunteers_with_ids_and_club_dinghies_at_event
+        list_of_volunteers_with_ids_and_club_dinghies_at_event=object_definition_for_volunteers_with_ids_and_club_dinghies_at_event,
     ),
     required_keys=["event_id"],
 )
@@ -539,12 +538,12 @@ object_definition_for_club_dinghy_limits = DerivedObjectDefinition(
 object_definition_for_list_of_notes_with_volunteers = DerivedObjectDefinition(
     composition_function=compose_list_of_notes_with_volunteers_from_list_of_notes,
     dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_notes = object_definition_for_list_of_notes,
-        list_of_volunteers = object_definition_for_volunteers
+        list_of_notes=object_definition_for_list_of_notes,
+        list_of_volunteers=object_definition_for_volunteers,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_notes = object_definition_for_list_of_notes
-    )
+        list_of_notes=object_definition_for_list_of_notes
+    ),
 )
 
 
@@ -584,12 +583,12 @@ object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event = Deriv
         list_of_events=object_definition_for_list_of_events,
         list_of_volunteers=object_definition_for_volunteers,
         list_of_patrol_boats=object_definition_for_list_of_patrol_boats,
-        list_of_patrol_boat_labels =object_definition_for_list_of_patrol_boat_labels,
+        list_of_patrol_boat_labels=object_definition_for_list_of_patrol_boat_labels,
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_volunteers_with_id_at_event_with_patrol_boat_id=object_definition_for_list_of_volunteers_with_ids_and_patrol_boats_at_event,
-        list_of_patrol_boat_labels=object_definition_for_list_of_patrol_boat_labels
+        list_of_patrol_boat_labels=object_definition_for_list_of_patrol_boat_labels,
     ),
     required_keys=["event_id"],
 )
@@ -747,14 +746,14 @@ object_definition_for_dict_of_all_event_data_for_volunteers = DerivedObjectDefin
         dict_of_volunteers_at_event_with_patrol_boats=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         dict_of_cadets_associated_with_volunteers=object_definition_for_dict_of_cadets_associated_with_volunteers,
         dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event,
-dict_of_people_and_club_dinghies_at_event =object_definition_for_dict_of_people_and_club_dinghies_at_event
+        dict_of_people_and_club_dinghies_at_event=object_definition_for_dict_of_people_and_club_dinghies_at_event,
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         dict_of_registration_data_for_volunteers_at_event=object_definition_for_dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
         dict_of_volunteers_at_event_with_patrol_boats=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event,
-dict_of_people_and_club_dinghies_at_event =object_definition_for_dict_of_people_and_club_dinghies_at_event
+        dict_of_people_and_club_dinghies_at_event=object_definition_for_dict_of_people_and_club_dinghies_at_event,
     ),
     required_keys=["event_id"],
 )

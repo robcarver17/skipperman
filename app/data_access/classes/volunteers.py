@@ -133,8 +133,5 @@ class DataListOfNotes(object):
     def read(self) -> ListOfNotes:
         raise NotImplemented
 
-    def write(
-        self,
-        list_of_notes: ListOfNotes
-    ):
+    def write(self, list_of_notes: ListOfNotes):
         raise NotImplemented

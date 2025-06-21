@@ -32,6 +32,7 @@ def get_volunteer_name_for_logged_in_user(
 
     return volunteer.name
 
+
 def get_loggged_in_volunteer(interface: abstractInterface) -> Volunteer:
     user = get_logged_in_skipperman_user(interface)
 
@@ -40,6 +41,7 @@ def get_loggged_in_volunteer(interface: abstractInterface) -> Volunteer:
     )
 
     return volunteer
+
 
 def get_logged_in_skipperman_user(interface: abstractInterface) -> SkipperManUser:
     username = interface.get_current_logged_in_username()

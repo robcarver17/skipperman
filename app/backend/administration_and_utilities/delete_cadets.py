@@ -24,7 +24,6 @@ from app.backend.events.list_of_events import get_list_of_events
 def delete_cadet_in_data_and_return_warnings(
     object_store: ObjectStore, cadet_to_delete: Cadet
 ) -> list:
-
     messages = []
 
     ## list of cadets on committee - just delete

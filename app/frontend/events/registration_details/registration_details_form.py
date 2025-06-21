@@ -91,7 +91,6 @@ def get_registration_data(
     )
 
 
-
 def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTable:
     return RowInTable(["Cadet", "Status", "Attending", "Health", "Notes"] + all_columns)
 
@@ -99,7 +98,6 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 def row_for_cadet_in_event(
     cadet: Cadet, registration_details: RegistrationDetailsForEvent
 ) -> RowInTable:
-
     registration_details_for_cadet = registration_details.registration_data[cadet]
     status_button = get_status_button(
         registration_details_for_cadet.status, cadet_id=cadet.id
@@ -142,8 +140,6 @@ def get_list_of_column_forms_excluding_reserved_fields(
     ]
 
     return column_form_entries
-
-
 
 
 def get_status_button(

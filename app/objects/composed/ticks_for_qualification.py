@@ -109,12 +109,12 @@ class TicksForQualification(Dict[TickSubStage, DictOfTickSheetItemsAndTicksForCa
     ):
         raw_dict = {}
         for tick_sub_stage, list_of_tick_sheet_items in tick_substages_as_dict.items():
-            raw_dict[tick_sub_stage] = (
-                DictOfTickSheetItemsAndTicksForCadet.from_dict_of_ticks_and_qualifications(
-                    dict_of_ticks_with_items=dict_of_ticks_with_items,
-                    list_of_tick_sheet_items=list_of_tick_sheet_items,
-                    already_qualified=already_qualified,
-                )
+            raw_dict[
+                tick_sub_stage
+            ] = DictOfTickSheetItemsAndTicksForCadet.from_dict_of_ticks_and_qualifications(
+                dict_of_ticks_with_items=dict_of_ticks_with_items,
+                list_of_tick_sheet_items=list_of_tick_sheet_items,
+                already_qualified=already_qualified,
             )
 
         return cls(

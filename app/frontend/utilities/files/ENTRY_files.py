@@ -1,4 +1,3 @@
-
 from app.frontend.utilities.files.delete_files import (
     delete_selected_files,
     delete_public_files,
@@ -35,7 +34,7 @@ from app.frontend.utilities.files.render_files import (
 
 
 def display_form_file_management(interface: abstractInterface) -> Form:
-    qr_generator= adhoc_qr_generator()
+    qr_generator = adhoc_qr_generator()
     public_files = list_of_all_public_files_with_options()
     private_files = list_of_all_private_download_files_with_options()
     upload_files = list_of_all_upload_files_with_options()

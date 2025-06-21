@@ -5,9 +5,9 @@ from werkzeug.middleware.profiler import ProfilerMiddleware
 
 from app.data_access.configuration.fixed import MEGABYTE
 from app.data_access.init_data import home_directory
-from app.web.documentation.documentation_pages import generate_help_page_html
+from app.web.end_points.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
-from app.web.flask.get_file import get_file_given_location
+from app.web.end_points.get_file import get_file_given_location
 from app.web.flask.session_data_for_action import (
     clear_all_action_state_data_from_session,
 )
@@ -18,7 +18,7 @@ from flask_login import login_required, LoginManager
 from werkzeug import Request
 
 from app.web.flask.security import get_all_flask_users, authenticated_user
-from app.web.flask.login_and_out_pages import (
+from app.web.end_points.login_and_out_pages import (
     login_page,
     process_logout,
     login_link_page,
@@ -27,8 +27,8 @@ from app.web.flask.login_and_out_pages import (
 from app.web.html.login_and_out import is_admin_user
 from app.web.html.make_backup import make_backup_from_menu
 from app.web.html.read_only import toggle_read_only_local, toggle_read_only_global
-from app.web.menus.menu_pages import generate_menu_page_html
-from app.web.actions.action_pages import generate_action_page_html
+from app.web.end_points.menu_pages import generate_menu_page_html
+from app.web.end_points.action_pages import generate_action_page_html
 from app.web.html.url_define import (
     INDEX_URL,
     ACTION_PREFIX,
@@ -40,9 +40,14 @@ from app.web.html.url_define import (
     MAKE_BACKUP,
     MAIN_MENU_URL,
     TOGGLE_READ_ONLY_GLOBAL,
-    LINK_LOGIN, ACTION_WITH_STATE
+    LINK_LOGIN,
+    ACTION_WITH_STATE,
 )
-from app.data_access.configuration.configuration import MAX_FILE_SIZE, SUPPORT_EMAIL, PUBLIC_REPORTING_SUBDIRECTORY
+from app.data_access.configuration.configuration import (
+    MAX_FILE_SIZE,
+    SUPPORT_EMAIL,
+    PUBLIC_REPORTING_SUBDIRECTORY,
+)
 
 
 ## Do not move these functions out of this file or things break
@@ -175,6 +180,7 @@ def action(action_option):
         return generate_menu_page_html()
     else:
         return generate_action_page_html(action_option)
+
 
 @app.route("/%s/<action_option>/<state>" % ACTION_WITH_STATE, methods=["GET", "POST"])
 def action_with_state(action_option, state):

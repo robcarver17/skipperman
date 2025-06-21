@@ -53,7 +53,6 @@ def post_deleting_cadets_process(interface: abstractInterface):
 def delete_cadet_in_data_but_do_not_save_cache_and_return_warnings(
     interface: abstractInterface, cadet_to_delete: Cadet
 ) -> ListOfLines:
-
     warnings = delete_cadet_in_data_and_return_warnings(
         interface.object_store, cadet_to_delete=cadet_to_delete
     )

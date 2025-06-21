@@ -246,6 +246,7 @@ def get_data_access_for_list_of_cadets_at_event_with_club_dinghies(
         event_id=event_id,
     )
 
+
 def get_data_access_for_list_of_volunteers_at_event_with_club_dinghies(
     data: GenericDataApi, event_id: str
 ) -> DataAccessMethod:
@@ -255,7 +256,6 @@ def get_data_access_for_list_of_volunteers_at_event_with_club_dinghies(
         write_method=data.data_list_of_volunteers_at_event_with_club_dinghies.write,
         event_id=event_id,
     )
-
 
 
 def get_data_access_for_list_of_cadets_at_event_with_dinghies(
@@ -445,20 +445,22 @@ def get_data_access_for_list_of_notes_for_groups(
         write_method=data.data_list_of_group_notes_at_event.write_notes,
     )
 
+
 def get_data_access_for_list_of_notes(
     data: GenericDataApi,
 ) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_notes",
         read_method=data.data_list_of_notes.read,
-        write_method=data.data_list_of_notes.write
+        write_method=data.data_list_of_notes.write,
     )
 
-def get_data_access_for_list_of_patrol_boat_labels(    data: GenericDataApi,
+
+def get_data_access_for_list_of_patrol_boat_labels(
+    data: GenericDataApi,
 ) -> DataAccessMethod:
     return DataAccessMethod(
         "list_of_patrol_boat_labels",
         read_method=data.data_list_of_patrol_boat_labels.read,
-        write_method=data.data_list_of_patrol_boat_labels.write
+        write_method=data.data_list_of_patrol_boat_labels.write,
     )
-

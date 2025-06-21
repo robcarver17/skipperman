@@ -13,7 +13,7 @@ from app.data_access.resolve_paths_and_filenames import (
     VOLUNTEER_ROLES_FILE_ID,
     VOLUNTEER_TEAMS_FILE_ID,
     VOLUNTEER_ROLE_AND_TEAMS_FILE_ID,
-NOTES_FILE_ID
+    NOTES_FILE_ID,
 )
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
@@ -223,11 +223,5 @@ class CsvDataListOfNotes(DataListOfNotes, GenericCsvData):
             file_identifier=NOTES_FILE_ID,
         )
 
-    def write(
-        self,
-        list_of_notes: ListOfNotes
-    ):
-        self.write_object(
-            list_of_notes,
-            file_identifier=NOTES_FILE_ID
-        )
+    def write(self, list_of_notes: ListOfNotes):
+        self.write_object(list_of_notes, file_identifier=NOTES_FILE_ID)

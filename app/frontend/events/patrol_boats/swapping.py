@@ -204,7 +204,6 @@ def get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper(
     swapping_boat: PatrolBoat,
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> Union[Button, str]:
-
     if swapping_both:
         return (
             get_swap_button_when_ready_to_swap_and_this_is_a_potential_swapper_of_both(
@@ -514,10 +513,11 @@ def get_swap_data_for_normal_swap_with_two_volunters(
 def get_swap_data_for_move_into_empty_boat(
     interface: abstractInterface, swap_button: str
 ) -> SwapData:
-    day_to_swap_with, patrol_boat_to_swap_into = (
-        get_day_and_patrol_boat_given_button_of_type(
-            button_name=swap_button, interface=interface, button_type=MOVE_INTO_EMPTY
-        )
+    (
+        day_to_swap_with,
+        patrol_boat_to_swap_into,
+    ) = get_day_and_patrol_boat_given_button_of_type(
+        button_name=swap_button, interface=interface, button_type=MOVE_INTO_EMPTY
     )
 
     (

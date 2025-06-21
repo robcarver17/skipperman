@@ -167,7 +167,6 @@ def remove_empty_groups_from_group_order_and_arrangement(
 def add_unallocated_group_to_group_order_and_arrangement(
     interface: abstractInterface, reporting_options: ReportingOptions
 ):
-
     unallocated_group = reporting_options.specific_parameters.unallocated_group
     add_groups_to_group_order_and_arrangement(
         interface=interface,

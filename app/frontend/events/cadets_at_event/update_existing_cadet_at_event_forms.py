@@ -96,7 +96,6 @@ help_button_bar = ButtonBar([HelpButton("resolve_changes_to_registration")])
 
 
 def buttons_for_update_row() -> Line:
-
     return Line(
         [use_original_data_button, use_data_in_form_button, use_new_data_button]
     )

@@ -126,14 +126,12 @@ class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
             str, ListOfRawAttendanceItemsForSpecificCadet
         ],
     ):
-
         super().__init__(raw_dict)
         self._dict_of_raw_attendance = dict_of_list_of_raw_attendance
 
     def mark_unknown_cadets_as_not_attending_or_unregistered(
         self, day: Day, event: Event, availability_dict: Dict[Cadet, DaySelector]
     ):
-
         for cadet in self.list_of_cadets:
             attending = availability_dict.get(cadet).available_on_day(day)
             attendance = registration_not_taken if attending else not_attending
@@ -221,7 +219,6 @@ def compose_dict_of_attendance_across_events(
     list_of_events: ListOfEvents,
     list_of_cadets: ListOfCadets,
 ) -> DictOfAttendanceAcrossEvents:
-
     list_of_cadets = ListOfCadets(
         [list_of_cadets.cadet_with_id(cadet_id) for cadet_id in list_of_cadet_ids]
     )
@@ -242,7 +239,6 @@ def create_raw_dict_of_attendance_at_events(
     list_of_events: ListOfEvents,
     list_of_cadets: ListOfCadets,
 ) -> Dict[Cadet, AttendanceAcrossDaysAndEvents]:
-
     raw_dict = dict(
         [
             (
@@ -287,7 +283,6 @@ def attendance_for_cadet_at_event(
     event: Event,
     dict_of_list_of_raw_attendance: Dict[str, ListOfRawAttendanceItemsForSpecificCadet],
 ) -> AttendanceAcrossDays:
-
     list_of_raw_attendance = dict_of_list_of_raw_attendance.get(
         cadet.id, ListOfRawAttendanceItemsForSpecificCadet([])
     )
@@ -311,7 +306,6 @@ def attendance_on_day_for_cadet_at_event(
     day: Day,
     list_of_raw_attendance: ListOfRawAttendanceItemsForSpecificCadet,
 ) -> AttendanceOnDay:
-
     subset_of_attendance = list_of_raw_attendance.subset_for_cadet_at_event_on_day(
         day=day, event_id=event.id
     )

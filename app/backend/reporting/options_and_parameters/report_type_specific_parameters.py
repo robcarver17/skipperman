@@ -9,8 +9,9 @@ class SpecificParametersForTypeOfReport:
     report_type: str
     unallocated_group: str
 
+
 def apply_override_additional_options(additional_parameters, **kwargs):
-    for key,value in kwargs.items():
+    for key, value in kwargs.items():
         setattr(additional_parameters, key, value)
 
     return additional_parameters

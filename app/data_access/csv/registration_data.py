@@ -23,7 +23,6 @@ class CsvDataMappedRegistrationData(GenericCsvData, DataMappedRegistrationData):
         return registration_data
 
     def write(self, mapped_wa_event: RegistrationDataForEvent, event_id: str):
-
         self.write_object(
             mapped_wa_event,
             file_identifier=MAPPED_REGISTRATION_DATA_FILE_ID,

@@ -210,7 +210,6 @@ def add_passed_volunteer_at_event(
 def add_passed_volunteer_if_very_similar_or_display_form_if_not(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
-
     very_similar_volunteer = single_very_similar_volunteer_or_missing_data(
         interface.object_store, volunteer=volunteer
     )

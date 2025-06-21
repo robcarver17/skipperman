@@ -31,10 +31,9 @@ class PrintOptions(GenericSkipperManObject):
     include_size_of_group_if_header: bool = False
     font_size: int = AUTO_FONT_SIZE
 
-
     @property
     def filename(self) -> str:
-        return getattr(self, '_filename', '')
+        return getattr(self, "_filename", "")
 
     @filename.setter
     def filename(self, filename: str):

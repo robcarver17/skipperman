@@ -151,7 +151,6 @@ def get_boat_class_from_str(
     update: CadetWithDinghySailNumberBoatClassAndPartner,
     day: Day,
 ) -> BoatClass:
-
     if update.boat_class_name == MISSING_FROM_FORM:
         current_boat_class_partner_on_day = (
             get_current_boat_class_partner_on_day_for_update(
@@ -196,7 +195,6 @@ def get_two_handed_partner_from_str(
     update: CadetWithDinghySailNumberBoatClassAndPartner,
     day: Day,
 ) -> Cadet:
-
     two_handed_partner_cadet_as_str = update.two_handed_partner_cadet_as_str
 
     if two_handed_partner_cadet_as_str == MISSING_FROM_FORM:
@@ -221,7 +219,6 @@ def get_two_handed_partner_from_str(
 def get_two_handed_partner_from_str_in_form_not_missing(
     object_store: ObjectStore, two_handed_partner_cadet_as_str: str
 ) -> Cadet:
-
     if no_partnership_given_partner_cadet_as_str(two_handed_partner_cadet_as_str):
         return no_partnership_object_given_str(two_handed_partner_cadet_as_str)
     else:
@@ -235,7 +232,6 @@ def get_sail_number_from_str(
     update: CadetWithDinghySailNumberBoatClassAndPartner,
     day: Day,
 ) -> str:
-
     if update.sail_number == MISSING_FROM_FORM:
         current_boat_class_partner_on_day = (
             get_current_boat_class_partner_on_day_for_update(
@@ -302,7 +298,6 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
     new_list: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
     existing_list: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ):
-
     updated_list = ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay([])
     for potentially_updated_cadet_at_event_with_info in new_list:
         cadet_in_existing_list = existing_list.element_on_day_for_cadet(

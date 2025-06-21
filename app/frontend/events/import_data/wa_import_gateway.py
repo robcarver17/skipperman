@@ -116,7 +116,6 @@ def get_buttons_depending_on_event_status(
 def get_buttons_if_field_mapping_set_up(
     interface: abstractInterface, event: Event
 ) -> List[Button]:
-
     event_mapping_set_up = is_event_mapped_with_wa_id(
         object_store=interface.object_store, event=event
     )

@@ -66,8 +66,7 @@ utilities_function_mapping = (
                         display_form_for_event_cleaning,
                         post_form_view_of_event_data_cleaning,
                     ): 0,
-                    (display_form_notes,
-                     post_form_notes):0
+                    (display_form_notes, post_form_notes): 0,
                 },
             }
         )

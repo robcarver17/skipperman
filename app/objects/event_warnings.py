@@ -38,6 +38,7 @@ VOLUNTEER_UNCONNECTED = "Unconnected volunteer"
 MISSING_DRIVER = "Missing driver"
 DOUBLE_BOOKED = "On two boats at same time"
 
+
 class ListOfEventWarnings(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -68,7 +69,6 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
     def add_or_update_list_of_new_event_warnings_clearing_any_missing(
         self, list_of_warnings: List[str], category: str, priority: str
     ):
-
         self._update_list_of_new_event_warnings_clearing_any_missing(
             list_of_warnings=list_of_warnings, category=category, priority=priority
         )
@@ -80,7 +80,6 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
     def _update_list_of_new_event_warnings_clearing_any_missing(
         self, list_of_warnings: List[str], category: str, priority: str
     ):
-
         all_existing_warnings_of_this_category_and_priority = (
             self.all_existing_warnings_of_this_category_and_priority(
                 category=category, priority=priority
@@ -96,7 +95,6 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
     def _add_list_of_potentially_new_event_warnings(
         self, list_of_warnings: List[str], category: str, priority: str
     ):
-
         for potentially_new_warning in list_of_warnings:
             self.add_new_event_warning_checking_for_duplicate_from_components(  ## if duplicated will skip anyway
                 warning=potentially_new_warning,

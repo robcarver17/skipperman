@@ -29,7 +29,9 @@ class ListOfTeamsAndIndices(List[TeamAndIndex]):
         return team in self.list_of_teams
 
     def in_instructor_team(self):
-        return any([team_and_index.team.is_instructor_team() for team_and_index in self])
+        return any(
+            [team_and_index.team.is_instructor_team() for team_and_index in self]
+        )
 
 
 class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
@@ -143,7 +145,6 @@ def compose_dict_of_teams_with_roles(
     list_of_teams: ListOfTeams,
     list_of_roles_with_skills: ListOfRolesWithSkills,
 ) -> DictOfTeamsWithRoles:
-
     raw_dict = compose_raw_dict_of_teams_with_roles(
         list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
         list_of_teams=list_of_teams,

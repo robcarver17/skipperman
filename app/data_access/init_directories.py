@@ -14,7 +14,6 @@ skipperman_directory = os.path.join(home_directory, "skipperman")
 docs_directory = os.path.join(skipperman_directory, "docs")
 
 
-
 def temp_file_name_in_download_directory(filename="temp_file", extension=".csv") -> str:
     return os.path.join(download_directory, filename + extension)
 

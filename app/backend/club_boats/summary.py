@@ -2,7 +2,9 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.backend.volunteers.volunteers_at_event import get_attendance_matrix_for_list_of_volunteers_at_event
+from app.backend.volunteers.volunteers_at_event import (
+    get_attendance_matrix_for_list_of_volunteers_at_event,
+)
 from app.objects.cadets import Cadet
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
@@ -35,11 +37,10 @@ def summarise_club_boat_allocations_for_event(
         event=event,
     )
     df_volunteers = summarise_club_boat_allocations_for_volunteers_at_event(
-        object_store=object_store,
-        event=event
+        object_store=object_store, event=event
     )
 
-    return df_cadets+df_volunteers
+    return df_cadets + df_volunteers
 
 
 def summarise_club_boat_allocations_for_cadets_at_event(
@@ -93,7 +94,6 @@ def get_relevant_cadets_for_club_dinghy(
     return result_dict
 
 
-
 def summarise_club_boat_allocations_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
@@ -121,6 +121,7 @@ def summarise_club_boat_allocations_for_volunteers_at_event(
     )
 
     return df
+
 
 def get_relevant_volunteers_for_club_dinghy(
     group: ClubDinghy,

@@ -142,7 +142,7 @@ def update_attendance_data_for_cadet_in_form(
             ATTENDANCE, cadet_id=cadet.id
         ),
         event=event,
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if new_availability is MISSING_FROM_FORM:
         interface.log_error("Availability missing from form for %s" % cadet)
@@ -288,7 +288,6 @@ def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_
     list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner],
     list_of_days: List[Day],
 ):
-
     for day in list_of_days:
         update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
             object_store=interface.object_store,

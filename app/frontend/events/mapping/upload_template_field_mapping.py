@@ -66,7 +66,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     if last_button == cancel_menu_button.name:
         return previous_form
 
-    template_name = interface.value_from_form(TEMPLATE_NAME, default='')
+    template_name = interface.value_from_form(TEMPLATE_NAME, default="")
     if len(template_name) < 4:
         interface.log_error("Template name needs to be longer")
         return display_form_for_upload_template_field_mapping(interface)

@@ -112,7 +112,6 @@ def write_mapping_to_temp_csv_file_and_return_filename(
 def delete_mapping_given_skipperman_field(
     object_store: ObjectStore, event: Event, skipperman_field: str
 ):
-
     mapping = get_field_mapping_for_event(object_store=object_store, event=event)
     mapping.delete_mapping(skipperman_field)
     save_field_mapping_for_event(

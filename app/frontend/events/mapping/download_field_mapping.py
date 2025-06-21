@@ -35,7 +35,6 @@ from app.objects.events import Event
 
 
 def display_form_for_download_field_mapping(interface: abstractInterface):
-
     list_of_templates_with_buttons = display_list_of_templates_with_buttons(interface)
     list_of_events_with_buttons = (
         display_list_of_other_events_with_buttons_except_this_one(interface)

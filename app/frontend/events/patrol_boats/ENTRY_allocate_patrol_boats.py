@@ -29,10 +29,14 @@ from app.frontend.events.patrol_boats.swapping import (
     update_if_swap_button_pressed,
     is_swap_button,
 )
-from app.frontend.reporting.patrol_boats.report_patrol_boats import patrol_boat_report_generator
+from app.frontend.reporting.patrol_boats.report_patrol_boats import (
+    patrol_boat_report_generator,
+)
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.frontend.shared.club_boats_instructors import is_club_dinghy_instructor_button, \
-    handle_club_dinghy_instructor_allocation_button_pressed
+from app.frontend.shared.club_boats_instructors import (
+    is_club_dinghy_instructor_button,
+    handle_club_dinghy_instructor_allocation_button_pressed,
+)
 from app.frontend.shared.warnings_table import (
     save_warnings_from_table,
     is_save_warnings_button_pressed,
@@ -159,7 +163,8 @@ def create_quick_report(interface: abstractInterface) -> File:
         "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
     )
     return create_generic_report(
-        report_generator=report_generator_with_specific_parameters, interface=interface,
+        report_generator=report_generator_with_specific_parameters,
+        interface=interface,
         override_print_options=dict(publish_to_public=False),
-        ignore_stored_print_option_values_and_use_default=True
+        ignore_stored_print_option_values_and_use_default=True,
     )

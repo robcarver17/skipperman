@@ -180,19 +180,30 @@ def get_modified_role_from_form(
 ) -> RoleWithSkills:
     existing_role = existing_object
 
-    new_role_name = interface.value_from_form(name_of_text_box_for_role(existing_role), default=MISSING_FROM_FORM)
+    new_role_name = interface.value_from_form(
+        name_of_text_box_for_role(existing_role), default=MISSING_FROM_FORM
+    )
     new_associated_or_not = is_radio_yes_or_no(
-        interface=interface, input_name=name_of_associate_group_for_role(existing_role),
-        default=MISSING_FROM_FORM
+        interface=interface,
+        input_name=name_of_associate_group_for_role(existing_role),
+        default=MISSING_FROM_FORM,
     )
     new_skills_dict = get_dict_of_skills_from_form(
-        interface=interface, field_name=name_of_skills_checkbox_for_role(existing_role),
-        default=MISSING_FROM_FORM
+        interface=interface,
+        field_name=name_of_skills_checkbox_for_role(existing_role),
+        default=MISSING_FROM_FORM,
     )
     new_hidden = is_radio_yes_or_no(
-        interface=interface, input_name=hidden_box_name(existing_role), default=MISSING_FROM_FORM
+        interface=interface,
+        input_name=hidden_box_name(existing_role),
+        default=MISSING_FROM_FORM,
     )
-    if MISSING_FROM_FORM in [new_role_name, new_associated_or_not, new_skills_dict, new_hidden]:
+    if MISSING_FROM_FORM in [
+        new_role_name,
+        new_associated_or_not,
+        new_skills_dict,
+        new_hidden,
+    ]:
         interface.log_error("Issue updated existing role %s" % str(existing_object))
         return existing_role
 

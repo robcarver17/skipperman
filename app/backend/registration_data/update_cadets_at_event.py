@@ -49,6 +49,7 @@ def registration_replacing_manual(
 
     return False
 
+
 NO_STATUS_CHANGE = object()
 
 

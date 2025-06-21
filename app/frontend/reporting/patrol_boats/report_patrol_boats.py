@@ -1,14 +1,14 @@
 from typing import Union
 
 from app.frontend.reporting.patrol_boats.forms import (
-reporting_options_form_for_patrol_boats_additional_parameters,
+    reporting_options_form_for_patrol_boats_additional_parameters,
     explain_additional_parameters_for_patrol_boats_report,
 )
 from app.frontend.reporting.patrol_boats.processes import (
     get_dict_of_df_for_reporting_patrol_boats,
     load_additional_parameters_for_patrol_boats_report,
     clear_additional_parameters_for_patrol_boats_report,
-get_patrol_boats_report_additional_parameters_from_form_and_save
+    get_patrol_boats_report_additional_parameters_from_form_and_save,
 )
 
 
@@ -29,7 +29,7 @@ from app.backend.reporting.report_generator import (
 )
 
 from app.backend.reporting.patrol_boat_report.configuration import (
-get_specific_parameters_for_patrol_boat_report
+    get_specific_parameters_for_patrol_boat_report,
 )
 
 from app.objects.abstract_objects.abstract_form import (

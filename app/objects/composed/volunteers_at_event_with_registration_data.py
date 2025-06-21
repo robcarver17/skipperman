@@ -70,7 +70,6 @@ class DictOfRegistrationDataForVolunteerAtEvent(
         volunteer: Volunteer,
         registration_data: RegistrationDataForVolunteerAtEvent,
     ):
-
         volunteer_at_event_with_id = VolunteerAtEventWithId(
             volunteer_id=volunteer.id,
             availablity=registration_data.availablity,

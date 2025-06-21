@@ -66,10 +66,7 @@ def process_form_when_cadet_verified(
         cadet = add_cadet_from_form_to_data(interface)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
-        interface.log_error(
-            "Can't add this sailor, error code %s, try again"
-            % str(e)
-        )
+        interface.log_error("Can't add this sailor, error code %s, try again" % str(e))
         return initial_state_form
 
     interface.flush_cache_to_store()

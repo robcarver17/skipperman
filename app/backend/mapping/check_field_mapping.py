@@ -92,7 +92,6 @@ def list_of_warnings_about_fields(
     event: Event,
     fields_in_wa_file: List[str],
 ) -> ListOfLines:
-
     # Set up WA event mapping fields
     wa_field_mapping = get_field_mapping_for_event(
         event=event, object_store=object_store
@@ -181,7 +180,6 @@ def list_of_warnings_about_fields(
 def get_list_of_unused_skipperman_fields_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[str]:
-
     mapping = get_field_mapping_for_event(object_store=object_store, event=event)
     expected_not_in_mapping = in_x_not_in_y(
         ALL_FIELDS_EXPECTED_IN_WA_FILE_MAPPING,

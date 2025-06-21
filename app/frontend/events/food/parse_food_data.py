@@ -58,7 +58,6 @@ def save_cadet_food_data_in_form(interface: abstractInterface):
         )
 
 
-
 def save_cadet_food_data_for_cadet(
     interface: abstractInterface,
     event: Event,
@@ -72,7 +71,7 @@ def save_cadet_food_data_for_cadet(
         interface=interface,
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if new_food_requirements is MISSING_FROM_FORM:
         interface.log_error("Food for %s missing from form" % cadet.name)
@@ -86,7 +85,6 @@ def save_cadet_food_data_for_cadet(
         cadet=cadet,
         new_food_requirements=new_food_requirements,
     )
-
 
 
 def save_volunteer_food_data_in_form(interface: abstractInterface):
@@ -122,7 +120,7 @@ def save_volunteer_food_data_for_volunteer(
         interface=interface,
         other_input_name=other_input_name,
         checkbox_input_name=checkbox_input_name,
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
 
     if new_food_requirements is MISSING_FROM_FORM:

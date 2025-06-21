@@ -3,9 +3,14 @@ from typing import Union
 from app.frontend.events.group_allocation.change_sort_order import (
     display_change_sort_order,
 )
-from app.frontend.shared.club_dinghies import update_limits_button, update_club_boat_limits_for_event_from_form
-from app.frontend.shared.club_boats_instructors import is_club_dinghy_instructor_button, \
-    handle_club_dinghy_instructor_allocation_button_pressed
+from app.frontend.shared.club_dinghies import (
+    update_limits_button,
+    update_club_boat_limits_for_event_from_form,
+)
+from app.frontend.shared.club_boats_instructors import (
+    is_club_dinghy_instructor_button,
+    handle_club_dinghy_instructor_allocation_button_pressed,
+)
 from app.frontend.events.group_allocation.previous_events import (
     is_event_picker_button,
     save_event_selection_from_form,
@@ -156,7 +161,6 @@ def post_form_allocate_cadets_returns_new_form(
         return interface.get_new_form_given_function(display_add_cadet_partner)
 
     elif sort_order_change_button.pressed(last_button):
-
         return interface.get_new_form_given_function(display_change_sort_order)
 
     elif quick_group_report_button.pressed(last_button):
@@ -172,7 +176,6 @@ def post_form_allocate_cadets_returns_new_form(
 def post_form_allocate_cadets_when_changing_state(
     interface: abstractInterface, last_button: str
 ) -> Union[Form, NewForm, File]:
-
     if is_button_cadet_selection(last_button):
         cadet_button_clicked(interface)
 
@@ -265,9 +268,10 @@ def create_quick_group_report(interface: abstractInterface) -> File:
         "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
     )
     return create_generic_report(
-        report_generator=report_generator_with_specific_parameters, interface=interface,
+        report_generator=report_generator_with_specific_parameters,
+        interface=interface,
         override_print_options=dict(publish_to_public=False),
-        ignore_stored_print_option_values_and_use_default=True
+        ignore_stored_print_option_values_and_use_default=True,
     )
 
 
@@ -281,7 +285,8 @@ def create_quick_spotters_report(interface: abstractInterface) -> File:
         "Quick reports are generated with current report parameters: do not get published to web. To publish or change parameters to go Reporting menu option."
     )
     return create_generic_report(
-        report_generator=report_generator_with_specific_parameters, interface=interface,
+        report_generator=report_generator_with_specific_parameters,
+        interface=interface,
         override_print_options=dict(publish_to_public=False),
-        ignore_stored_print_option_values_and_use_default=True
+        ignore_stored_print_option_values_and_use_default=True,
     )

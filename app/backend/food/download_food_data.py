@@ -230,7 +230,6 @@ def get_list_of_cadets_with_food_as_df(
 def row_for_cadet_in_table(
     cadet: Cadet, food_requirements: FoodRequirements
 ) -> pd.Series:
-
     return pd.Series(
         dict(
             name=cadet.name,

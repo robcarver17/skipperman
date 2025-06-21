@@ -155,7 +155,6 @@ class RoleAndGroupAndTeam:
     def update_role_and_group(
         self, new_role: RoleWithSkills, new_group: Group = arg_not_passed
     ):
-
         self.role = new_role
 
         new_group_provided = not new_group is arg_not_passed
@@ -222,7 +221,6 @@ class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
         new_role: RoleWithSkills,
         new_group: Group = arg_not_passed,  ### if not passed, no change
     ):
-
         existing_role_group_and_team = self.role_and_group_and_team_on_day(day)
         existing_role_group_and_team.update_role_and_group(
             new_role=new_role, new_group=new_group
@@ -417,12 +415,12 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
             )
         )
 
-        days_and_roles_for_original_volunteer[original_day] = (
-            volunteer_to_swap_with_role_and_group
-        )
-        days_and_roles_for_swap_volunteer[day_to_swap_with] = (
-            original_volunteer_role_and_group
-        )
+        days_and_roles_for_original_volunteer[
+            original_day
+        ] = volunteer_to_swap_with_role_and_group
+        days_and_roles_for_swap_volunteer[
+            day_to_swap_with
+        ] = original_volunteer_role_and_group
 
         self[original_volunteer] = days_and_roles_for_original_volunteer
         self[volunteer_to_swap_with] = days_and_roles_for_swap_volunteer

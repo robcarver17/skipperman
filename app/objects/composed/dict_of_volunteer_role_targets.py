@@ -56,7 +56,6 @@ def compose_raw_dict_of_targets_for_roles_at_event(
     list_of_targets_with_role_ids: ListOfTargetForRoleWithIdAtEvent,
     list_of_roles_and_skills: ListOfRolesWithSkills,
 ) -> Dict[RoleWithSkills, int]:
-
     raw_dict = dict(
         [
             (

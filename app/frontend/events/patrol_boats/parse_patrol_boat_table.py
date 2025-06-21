@@ -1,7 +1,9 @@
 from typing import Union
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import load_list_of_patrol_boats_at_event, \
-    update_patrol_boat_label_at_event
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    load_list_of_patrol_boats_at_event,
+    update_patrol_boat_label_at_event,
+)
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -36,7 +38,8 @@ from app.backend.patrol_boats.changes import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
-    is_volunteer_skill_checkbox_ticked, get_name_of_boat_label_entry,
+    is_volunteer_skill_checkbox_ticked,
+    get_name_of_boat_label_entry,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     TOP_ROW_OF_VOLUNTEER_DROPDOWN,
@@ -88,21 +91,37 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
 
     interface.save_cache_to_store_without_clearing()
 
+
 def update_boat_labels(interface: abstractInterface):
-    event=get_event_from_state(interface)
+    event = get_event_from_state(interface)
     list_of_boats_at_event = load_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
     for day in event.days_in_event():
         for patrol_boat in list_of_boats_at_event:
-            update_boat_labels_for_specific_boat_and_day(interface=interface, event=event, day=day, patrol_boat=patrol_boat)
+            update_boat_labels_for_specific_boat_and_day(
+                interface=interface, event=event, day=day, patrol_boat=patrol_boat
+            )
 
-def update_boat_labels_for_specific_boat_and_day(interface: abstractInterface, event: Event, day: Day, patrol_boat: PatrolBoat):
-    label = interface.value_from_form(get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day), default=MISSING_FROM_FORM)
+
+def update_boat_labels_for_specific_boat_and_day(
+    interface: abstractInterface, event: Event, day: Day, patrol_boat: PatrolBoat
+):
+    label = interface.value_from_form(
+        get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day),
+        default=MISSING_FROM_FORM,
+    )
     if label is MISSING_FROM_FORM:
         return
 
-    update_patrol_boat_label_at_event(object_store=interface.object_store, event=event, patrol_boat=patrol_boat, day=day, label=label)
+    update_patrol_boat_label_at_event(
+        object_store=interface.object_store,
+        event=event,
+        patrol_boat=patrol_boat,
+        day=day,
+        label=label,
+    )
+
 
 def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -239,7 +258,9 @@ def update_role_dropdown_for_volunteer_on_day(
         interface=interface, volunteer_id=volunteer_id, day=day
     )
     if role_selected is MISSING_FROM_FORM:
-        interface.log_error("Missing role dropdown for %s" % volunteer_on_boat.volunteer)
+        interface.log_error(
+            "Missing role dropdown for %s" % volunteer_on_boat.volunteer
+        )
         return
 
     current_role = volunteer_on_boat.role_and_group.role
@@ -258,7 +279,9 @@ def update_role_dropdown_for_volunteer_on_day(
 
 def update_adding_boat(interface: abstractInterface):
     event = get_event_from_state(interface)
-    name_of_boat_added = interface.value_from_form(ADD_BOAT_DROPDOWN, default=MISSING_FROM_FORM)
+    name_of_boat_added = interface.value_from_form(
+        ADD_BOAT_DROPDOWN, default=MISSING_FROM_FORM
+    )
 
     try:
         if name_of_boat_added is MISSING_FROM_FORM:

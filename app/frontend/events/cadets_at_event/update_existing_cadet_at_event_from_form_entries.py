@@ -7,7 +7,8 @@ from app.frontend.forms.form_utils import (
     get_status_from_form,
 )
 from app.backend.registration_data.update_cadets_at_event import (
-    replace_existing_cadet_at_event_where_original_cadet_was_inactive, registration_replacing_manual,
+    replace_existing_cadet_at_event_where_original_cadet_was_inactive,
+    registration_replacing_manual,
 )
 from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
     update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages,
@@ -113,15 +114,21 @@ def update_cadet_at_event_with_form_data(
 def status_and_attendance_from_form_entries(
     interface: abstractInterface, cadet_at_event: CadetWithIdAtEvent, event: Event
 ) -> Tuple[RegistrationStatus, DaySelector]:
-
     attendance = get_availablity_from_form(
-        interface=interface, event=event, input_name=ATTENDANCE,
-        default=MISSING_FROM_FORM
+        interface=interface,
+        event=event,
+        input_name=ATTENDANCE,
+        default=MISSING_FROM_FORM,
     )
 
-    status = get_status_from_form(interface=interface, input_name=ROW_STATUS, default=MISSING_FROM_FORM)
+    status = get_status_from_form(
+        interface=interface, input_name=ROW_STATUS, default=MISSING_FROM_FORM
+    )
     if MISSING_FROM_FORM in [attendance, status]:
-        interface.log_error("Attendance or status update missing from form for cadet#%s" % cadet_at_event.cadet_id)
+        interface.log_error(
+            "Attendance or status update missing from form for cadet#%s"
+            % cadet_at_event.cadet_id
+        )
         status = cadet_at_event.status
         attendance = cadet_at_event.availability
 
@@ -164,16 +171,15 @@ def update_comparing_new_and_existing_cadet_at_event(
     existing_cadet_at_event: CadetWithIdAtEvent,
     new_cadet_at_event: CadetWithIdAtEvent,
 ):
-
     reg_status_change = interpret_status_change(
         existing_cadet_at_event=existing_cadet_at_event,
         new_cadet_at_event=new_cadet_at_event,
     )
 
-    registration_replaces_manual_reg =         registration_replacing_manual(new_cadet_at_event_data=new_cadet_at_event,
-                                       existing_cadet_at_event_data=existing_cadet_at_event,
-                                       )
-
+    registration_replaces_manual_reg = registration_replacing_manual(
+        new_cadet_at_event_data=new_cadet_at_event,
+        existing_cadet_at_event_data=existing_cadet_at_event,
+    )
 
     if reg_status_change == status_unchanged:
         ## Must be an availability change
@@ -216,9 +222,11 @@ def update_comparing_new_and_existing_cadet_at_event(
                 event=event,
                 cadet=cadet,
                 row_in_registration_data=new_cadet_at_event.data_in_row,
-
             )
-            interface.log_error("Cadet %s was manually registered; imported details from registration form and updated health information. " % cadet)
+            interface.log_error(
+                "Cadet %s was manually registered; imported details from registration form and updated health information. "
+                % cadet
+            )
 
     else:
         interface.log_error(

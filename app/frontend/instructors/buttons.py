@@ -280,7 +280,6 @@ def get_axis_tick_type_id_from_button_name(button_name: str) -> Tuple[str, str, 
 
 
 def is_generic_tick_button_pressed(button_name: str):
-
     return is_button_of_type(
         type_to_check=generic_tick_button_type, value_of_button_pressed=button_name
     )

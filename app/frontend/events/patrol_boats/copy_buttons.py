@@ -107,7 +107,6 @@ def get_copy_buttons_for_boat_allocation(
 def get_copy_buttons_for_boat_copy_in_boat_rota(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> List[Union[Button, str]]:
-
     any_copy_possible = is_possible_to_copy_boat_allocation(volunteer_at_event_on_boat)
 
     if not any_copy_possible:
@@ -151,7 +150,6 @@ def get_copy_buttons_for_boat_copy_in_boat_rota(
 def get_copy_buttons_for_role_in_boat_rota(
     volunteer_at_event_on_boat: VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> List[Union[Button, str]]:
-
     any_copy_possible = is_possible_to_copy_roles(
         volunteer_at_event_on_boat=volunteer_at_event_on_boat
     )

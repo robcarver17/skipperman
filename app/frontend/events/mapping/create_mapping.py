@@ -31,7 +31,9 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 
 from app.data_access.init_directories import skipperman_directory
+
 static_files_directory = os.path.join(skipperman_directory, "static")
+
 
 def display_form_for_create_custom_field_mapping(interface: abstractInterface):
     event = get_event_from_state(interface)
@@ -44,7 +46,6 @@ def display_form_for_create_custom_field_mapping(interface: abstractInterface):
 
 
 def get_buttons_for_custom_mapping(interface: abstractInterface):
-
     wa_field_button = get_wa_field_download_button(interface)
 
     bar = [

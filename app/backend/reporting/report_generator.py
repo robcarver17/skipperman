@@ -58,8 +58,8 @@ class ReportGeneratorWithoutSpecificParameters:
     help_page: str
 
     def add_specific_parameters_for_type_of_report(
-        self, object_store: ObjectStore,
-
+        self,
+        object_store: ObjectStore,
     ) -> ReportGenerator:
         specific_parameters = self.specific_parameters_for_type_of_report_function(
             object_store

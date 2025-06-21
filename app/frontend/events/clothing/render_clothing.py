@@ -48,7 +48,6 @@ EXPORT_COLOURS = "Download spreadsheet of colour teams"
 
 
 def get_button_bar_for_clothing(interface: abstractInterface) -> ButtonBar:
-
     if are_we_showing_only_committee(interface):
         filter_button = filter_all_button
         export_buttons = [export_committee_button]

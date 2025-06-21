@@ -145,10 +145,13 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
     def change_food_requirements_for_cadet(
         self, cadet_id: str, food_requirements: FoodRequirements
     ):
-
-        cadet_in_data = self.cadet_with_food_with_cadet_id(cadet_id, default=missing_data)
+        cadet_in_data = self.cadet_with_food_with_cadet_id(
+            cadet_id, default=missing_data
+        )
         if cadet_in_data is missing_data:
-            self.add_new_cadet_with_food_to_event(cadet_id=cadet_id, food_requirements=food_requirements)
+            self.add_new_cadet_with_food_to_event(
+                cadet_id=cadet_id, food_requirements=food_requirements
+            )
         else:
             cadet_in_data.food_requirements = food_requirements
 
@@ -225,7 +228,6 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
     def change_food_requirements_for_volunteer(
         self, volunteer_id: str, food_requirements: FoodRequirements
     ):
-
         if self.volunteer_has_food_already(volunteer_id):
             volunteer_in_data = self.volunteer_with_food_with_volunteer_id(volunteer_id)
             volunteer_in_data.food_requirements = food_requirements

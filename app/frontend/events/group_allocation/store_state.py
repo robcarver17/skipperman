@@ -32,5 +32,4 @@ def save_new_sort_order(interface: abstractInterface, new_sort_order: list):
 
 
 def get_current_sort_order(interface: abstractInterface) -> list:
-
     return interface.get_persistent_value(SORT_ORDER, default=DEFAULT_SORT_ORDER)

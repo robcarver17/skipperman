@@ -95,7 +95,6 @@ def post_form_add_cadet_partner(
 def process_form_when_cadet_chosen_as_partner(
     interface: abstractInterface, cadet: Cadet
 ) -> NewForm:
-
     check_if_registered = is_cadet_already_registered(
         interface=interface, new_cadet=cadet
     )
@@ -114,7 +113,6 @@ def process_form_when_cadet_chosen_as_partner(
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet
 ) -> NewForm:
-
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
     add_unregistered_partner_cadet(

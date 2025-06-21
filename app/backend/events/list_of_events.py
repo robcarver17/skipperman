@@ -77,7 +77,6 @@ def get_list_of_last_N_events(
     only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
-
     list_of_events = copy(get_list_of_events(object_store))
     list_of_events = remove_event_and_possibly_past_events_and_sort(
         list_of_events,
@@ -122,7 +121,6 @@ def get_N_most_recent_events_newest_last(
     list_of_events: ListOfEvents,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
-
     list_of_events_sorted_by_date_desc = (
         list_of_events.sort_by_start_date_asc()
     )  ## newest last

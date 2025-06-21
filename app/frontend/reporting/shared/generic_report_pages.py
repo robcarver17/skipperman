@@ -447,8 +447,6 @@ def display_form_for_generic_report_arrangement_options(
     interface: abstractInterface,
     report_generator: ReportGeneratorWithoutSpecificParameters,
 ) -> Form:
-
-
     dict_of_df = report_generator.get_dict_of_df(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(

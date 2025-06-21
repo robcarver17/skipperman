@@ -1,11 +1,12 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 from app.frontend.shared.warnings_table import display_warnings_tables
-from app.objects.utilities.exceptions import  MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day, get_patrol_boat_label_at_event_on_day,
+    get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day,
+    get_patrol_boat_label_at_event_on_day,
     get_list_of_unique_labels,
 )
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
@@ -218,7 +219,6 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     interface: abstractInterface,
     event: Event,
 ) -> Union[ListOfLines, str]:
-
     if is_ready_to_swap(interface):
         return ListOfLines([""])
 
@@ -311,18 +311,34 @@ instructions_text = ListOfLines(
 )
 
 
-def get_boat_label_entry(interface: abstractInterface, event: Event, patrol_boat: PatrolBoat, day: Day) -> Line:
+def get_boat_label_entry(
+    interface: abstractInterface, event: Event, patrol_boat: PatrolBoat, day: Day
+) -> Line:
     in_swap_state = is_ready_to_swap(interface)
-    existing_label = get_patrol_boat_label_at_event_on_day(object_store=interface.object_store, event=event, patrol_boat=patrol_boat,
-                                                           day=day)
+    existing_label = get_patrol_boat_label_at_event_on_day(
+        object_store=interface.object_store,
+        event=event,
+        patrol_boat=patrol_boat,
+        day=day,
+    )
 
     if in_swap_state:
         return Line([existing_label])
-    input_name = get_name_of_boat_label_entry(patrol_boat=patrol_boat,day=day)
-    list_of_options = get_list_of_unique_labels(object_store=interface.object_store, event=event)
+    input_name = get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day)
+    list_of_options = get_list_of_unique_labels(
+        object_store=interface.object_store, event=event
+    )
 
-    return Line([listInput(input_label='Designation:', input_name=input_name,default_option=existing_label,
-                     list_of_options=list_of_options)])
+    return Line(
+        [
+            listInput(
+                input_label="Designation:",
+                input_name=input_name,
+                default_option=existing_label,
+                list_of_options=list_of_options,
+            )
+        ]
+    )
 
 
 def get_name_of_boat_label_entry(patrol_boat: PatrolBoat, day: Day):

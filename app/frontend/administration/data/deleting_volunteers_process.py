@@ -54,7 +54,6 @@ def post_deleting_volunteers_process(interface: abstractInterface):
 def delete_volunteer_in_data_but_do_not_save_cache_and_return_warnings(
     interface: abstractInterface, volunteer_to_delete: Volunteer
 ) -> ListOfLines:
-
     warnings = delete_volunteer_in_data_and_return_warnings(
         interface.object_store, volunteer_to_delete=volunteer_to_delete
     )

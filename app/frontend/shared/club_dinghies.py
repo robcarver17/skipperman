@@ -2,9 +2,14 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.backend.club_boats.club_boat_limits import get_dict_of_club_dinghy_limits, \
-    update_limit_for_club_dinghy_at_event
-from app.backend.club_boats.list_of_club_dinghies import get_list_of_club_dinghies, get_list_of_visible_club_dinghies
+from app.backend.club_boats.club_boat_limits import (
+    get_dict_of_club_dinghy_limits,
+    update_limit_for_club_dinghy_at_event,
+)
+from app.backend.club_boats.list_of_club_dinghies import (
+    get_list_of_club_dinghies,
+    get_list_of_visible_club_dinghies,
+)
 from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -22,7 +27,7 @@ def get_club_dinghies_detail(interface: abstractInterface, event: Event):
             [
                 "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
                 get_club_dinghies_form(interface=interface, event=event),
-                "Includes volunteers allocated to dinghies - see patrol boat rota"
+                "Includes volunteers allocated to dinghies - see patrol boat rota",
             ]
         ),
         name="Club dinghies - summary",
@@ -141,7 +146,6 @@ def get_bottom_row_in_club_dinghy_form(event: Event) -> RowInTable:
 
 
 def update_club_boat_limits_for_event_from_form(interface: abstractInterface):
-
     event = get_event_from_state(interface)
     list_of_club_dinghies = get_list_of_club_dinghies(interface.object_store)
 
@@ -172,4 +176,3 @@ def get_limit_for_boat_from_form(
     limit = interface.value_from_form(cell_name, default=0)
 
     return limit
-

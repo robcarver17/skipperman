@@ -28,7 +28,9 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 def add_new_substage_to_qualification_from_form(interface: abstractInterface):
     qualification = get_qualification_from_state(interface)
-    new_substage_name = interface.value_from_form(FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX, default=MISSING_FROM_FORM)
+    new_substage_name = interface.value_from_form(
+        FIELDNAME_FOR_NEW_SUBSTAGE_TEXT_BOX, default=MISSING_FROM_FORM
+    )
 
     try:
         if new_substage_name is MISSING_FROM_FORM:
@@ -57,7 +59,10 @@ def add_new_tick_list_item_from_form(interface: abstractInterface, button_presse
 
     try:
         if new_tick_list_name is MISSING_FROM_FORM:
-            raise "Can't add new tick list name for %s %s because form value missing" % (qualification.name, substage)
+            raise "Can't add new tick list name for %s %s because form value missing" % (
+                qualification.name,
+                substage,
+            )
         add_new_ticklistitem_to_qualification(
             object_store=interface.object_store,
             qualification=qualification,
@@ -112,7 +117,11 @@ def save_edited_substage_name_in_qualifications_form_for_substage(
 
     try:
         if edited_name is MISSING_FROM_FORM:
-            raise "Can't edit substage name for %s %s %s because form value missing" % (qualification.name, substage.name, field_name)
+            raise "Can't edit substage name for %s %s %s because form value missing" % (
+                qualification.name,
+                substage.name,
+                field_name,
+            )
         modify_substage_name(
             object_store=interface.object_store,
             qualification=qualification,
@@ -155,4 +164,6 @@ def save_edited_ticklist_itemnames_in_qualifications_form_for_tick_item(
             new_item_name=new_item_name,
         )
     except Exception as e:
-        interface.log_error("Can't modify ticksheet name for %s because %s" % (fieldname, str(e)))
+        interface.log_error(
+            "Can't modify ticksheet name for %s because %s" % (fieldname, str(e))
+        )

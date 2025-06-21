@@ -68,7 +68,6 @@ def return_to_controller(interface: abstractInterface) -> NewForm:
 def process_identified_volunteer_at_event(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-
     volunteer = get_current_volunteer_at_event(interface)
     event = get_event_from_state(interface)
     all_cancelled = are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_deleted(
@@ -89,7 +88,6 @@ def process_identified_volunteer_at_event(
 def process_identified_volunteer_at_event_with_valid_registered_cadets(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
-
     already_added = is_volunteer_already_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )

@@ -81,7 +81,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
     def allocate_partner_for_cadet_on_day(
         self, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
     ):
-
         boat_class_and_partner_on_day = self.boat_class_and_partner_on_day(day)
         boat_class_and_partner_on_day.partner_cadet = cadet_partner
 
@@ -172,7 +171,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 class ListOfCadetBoatClassAndPartnerAtEventOnDay(
     List[CadetBoatClassAndPartnerAtEventOnDay]
 ):
-
     @classmethod
     def from_list_of_cadets_at_event_with_boat_class_and_partner_with_ids(
         cls,
@@ -295,7 +293,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         self.unallocate_partner_for_cadet_on_day(cadet=partner_cadet, day=day)
 
     def unallocate_partner_for_cadet_on_day(self, cadet: Cadet, day: Day):
-
         self.allocate_partner_for_cadet_on_day(
             cadet=cadet, day=day, cadet_partner=no_partner_allocated
         )
@@ -303,7 +300,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
     def allocate_partner_for_cadet_on_day(
         self, cadet: Cadet, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
     ):
-
         print(
             "Partnering %s with %s on %s" % (cadet.name, cadet_partner.name, day.name)
         )

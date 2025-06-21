@@ -11,13 +11,13 @@ from app.objects.day_selectors import Day
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
-    CadetAtEventWithClubDinghyWithId, VolunteerAtEventWithClubDinghyWithId,
+    CadetAtEventWithClubDinghyWithId,
+    VolunteerAtEventWithClubDinghyWithId,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import \
-    ListOfVolunteerAtEventWithIdAndClubDinghies
-
-
+from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import (
+    ListOfVolunteerAtEventWithIdAndClubDinghies,
+)
 
 
 @dataclass
@@ -149,7 +149,7 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
                     list_of_volunteers=list_of_volunteers,
                     list_of_club_dinghies=list_of_club_dinghies,
                 )
-                for volunteer_at_event_with_club_dinghy_and_id in  list_of_volunteers_at_event_with_id_and_club_dinghy
+                for volunteer_at_event_with_club_dinghy_and_id in list_of_volunteers_at_event_with_id_and_club_dinghy
             ]
         )
 
@@ -173,12 +173,16 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
 
     def subset_for_person(self, person: Union[Cadet, Volunteer]):
         return ListOfClubDinghysAtEventOnDayForPeople(
-            [cadet_and_boat for cadet_and_boat in self if cadet_and_boat.person==person]
+            [
+                cadet_and_boat
+                for cadet_and_boat in self
+                if cadet_and_boat.person == person
+            ]
         )
 
 
 class DictOfPeopleAndClubDinghiesAtEvent(
-    Dict[Union[Cadet,Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
+    Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
 ):
     def __init__(
         self,
@@ -186,7 +190,7 @@ class DictOfPeopleAndClubDinghiesAtEvent(
         event: Event,
         list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
         list_of_club_dinghies: ListOfClubDinghies,
-            list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies
+        list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
     ):
         super().__init__(raw_dict)
 
@@ -195,19 +199,33 @@ class DictOfPeopleAndClubDinghiesAtEvent(
         )
         self._list_of_club_dinghies = list_of_club_dinghies
         self._event = event
-        self._list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event
+        self._list_of_volunteers_with_ids_and_club_dinghies_at_event = (
+            list_of_volunteers_with_ids_and_club_dinghies_at_event
+        )
 
-    def copy_club_dinghy_for_instructor_across_all_days(self, days_available: List[Day], volunteer: Volunteer, club_dinghy: ClubDinghy):
+    def copy_club_dinghy_for_instructor_across_all_days(
+        self, days_available: List[Day], volunteer: Volunteer, club_dinghy: ClubDinghy
+    ):
         for day in days_available:
             self.allocate_club_boat_on_day(volunteer, day, club_dinghy)
 
-    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(self, day: Day, club_dinghy: ClubDinghy) -> ListOfVolunteers:
+    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
+        self, day: Day, club_dinghy: ClubDinghy
+    ) -> ListOfVolunteers:
         list_of_volunteers = self.list_of_volunteers
-        list_of_volunteers = [volunteer for volunteer in list_of_volunteers if self.club_dinghys_for_person(volunteer).has_specific_dinghy_on_day(day=day, dinghy=club_dinghy)]
+        list_of_volunteers = [
+            volunteer
+            for volunteer in list_of_volunteers
+            if self.club_dinghys_for_person(volunteer).has_specific_dinghy_on_day(
+                day=day, dinghy=club_dinghy
+            )
+        ]
 
         return ListOfVolunteers(list_of_volunteers)
 
-    def allocate_club_boat_on_day(self, person: Union[Cadet,Volunteer], day: Day, club_boat: ClubDinghy):
+    def allocate_club_boat_on_day(
+        self, person: Union[Cadet, Volunteer], day: Day, club_boat: ClubDinghy
+    ):
         boats_for_person = self.club_dinghys_for_person(person)
         boats_for_person.allocate_club_boat_on_day(day=day, club_boat=club_boat)
         self[person] = boats_for_person
@@ -239,7 +257,7 @@ class DictOfPeopleAndClubDinghiesAtEvent(
 
         return ListOfClubDinghies(sorted_list)
 
-    def remove_person_from_event(self, person: Union[Cadet,Volunteer]):
+    def remove_person_from_event(self, person: Union[Cadet, Volunteer]):
         current_allocation = self.club_dinghys_for_person(person)
         if len(current_allocation) == 0:
             return []
@@ -253,7 +271,9 @@ class DictOfPeopleAndClubDinghiesAtEvent(
 
         return [" - removed club boat allocation %s" % str(current_allocation)]
 
-    def remove_persons_club_boat_allocation_on_day(self, person: Union[Cadet,Volunteer], day: Day):
+    def remove_persons_club_boat_allocation_on_day(
+        self, person: Union[Cadet, Volunteer], day: Day
+    ):
         current_allocation = self.club_dinghys_for_person(person)
         current_allocation.remove_club_boat_for_person_from_event_on_day(day)
         self[person] = current_allocation
@@ -269,9 +289,9 @@ class DictOfPeopleAndClubDinghiesAtEvent(
         else:
             raise "Unknown type %s" % type(person)
 
-
     def club_dinghys_for_person(
-        self, person: Union[Cadet,Volunteer],
+        self,
+        person: Union[Cadet, Volunteer],
     ) -> DictOfDaysAndClubDinghiesAtEventForPerson:
         return self.get(person, DictOfDaysAndClubDinghiesAtEventForPerson())
 
@@ -291,17 +311,24 @@ class DictOfPeopleAndClubDinghiesAtEvent(
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
-        list_of_people= [person for person in list(self.keys()) if type(person) is Cadet]
+        list_of_people = [
+            person for person in list(self.keys()) if type(person) is Cadet
+        ]
         return ListOfCadets(list_of_people)
 
     @property
     def list_of_volunteers(self) -> ListOfVolunteers:
-        list_of_people= [person for person in list(self.keys()) if type(person) is Volunteer]
+        list_of_people = [
+            person for person in list(self.keys()) if type(person) is Volunteer
+        ]
         return ListOfVolunteers(list_of_people)
 
     @property
-    def list_of_volunteers_with_ids_and_club_dinghies_at_event(self)-> ListOfVolunteerAtEventWithIdAndClubDinghies:
+    def list_of_volunteers_with_ids_and_club_dinghies_at_event(
+        self,
+    ) -> ListOfVolunteerAtEventWithIdAndClubDinghies:
         return self._list_of_volunteers_with_ids_and_club_dinghies_at_event
+
 
 def compose_dict_of_people_and_club_dinghies_at_event(
     event_id: str,
@@ -309,8 +336,8 @@ def compose_dict_of_people_and_club_dinghies_at_event(
     list_of_cadets: ListOfCadets,
     list_of_club_dinghies: ListOfClubDinghies,
     list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
-list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
-        list_of_volunteers: ListOfVolunteers,
+    list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
+    list_of_volunteers: ListOfVolunteers,
 ) -> DictOfPeopleAndClubDinghiesAtEvent:
     event = list_of_events.event_with_id(event_id)
     raw_dict_cadets = compose_raw_dict_of_cadets_and_club_dinghies_at_event(
@@ -321,7 +348,7 @@ list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWi
     raw_dict_volunteers = compose_raw_dict_of_volunteers_and_club_dinghies_at_event(
         list_of_volunteers=list_of_volunteers,
         list_of_club_dinghies=list_of_club_dinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event
+        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event,
     )
     raw_dict = {}
     raw_dict.update(raw_dict_cadets)
@@ -332,7 +359,7 @@ list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWi
         event=event,
         list_of_cadets_at_event_with_id_and_club_dinghy=list_of_cadets_at_event_with_id_and_club_dinghy,
         list_of_club_dinghies=list_of_club_dinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event
+        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event,
     )
 
 
@@ -340,7 +367,6 @@ def compose_raw_dict_of_cadets_and_club_dinghies_at_event(
     list_of_cadets: ListOfCadets,
     list_of_club_dinghies: ListOfClubDinghies,
     list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
-
 ) -> Dict[Cadet, DictOfDaysAndClubDinghiesAtEventForPerson]:
     list_of_club_dinghies_at_event_on_day_for_cadet = ListOfClubDinghysAtEventOnDayForPeople.from_list_of_cadets_at_event_with_id_and_club_dinghy(
         list_of_club_dinghies=list_of_club_dinghies,
@@ -366,16 +392,14 @@ def compose_raw_dict_of_cadets_and_club_dinghies_at_event(
 
 
 def compose_raw_dict_of_volunteers_and_club_dinghies_at_event(
-        list_of_volunteers: ListOfVolunteers,
-
-        list_of_club_dinghies: ListOfClubDinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
-
+    list_of_volunteers: ListOfVolunteers,
+    list_of_club_dinghies: ListOfClubDinghies,
+    list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
 ) -> Dict[Volunteer, DictOfDaysAndClubDinghiesAtEventForPerson]:
     list_of_club_dinghies_at_event_on_day_for_volunteer = ListOfClubDinghysAtEventOnDayForPeople.from_list_of_volunteers_at_event_with_id_and_club_dinghy(
         list_of_club_dinghies=list_of_club_dinghies,
-list_of_volunteers=list_of_volunteers,
-        list_of_volunteers_at_event_with_id_and_club_dinghy=list_of_volunteers_with_ids_and_club_dinghies_at_event
+        list_of_volunteers=list_of_volunteers,
+        list_of_volunteers_at_event_with_id_and_club_dinghy=list_of_volunteers_with_ids_and_club_dinghies_at_event,
     )
 
     volunteers_at_event = (

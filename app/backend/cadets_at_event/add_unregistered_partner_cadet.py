@@ -55,7 +55,6 @@ def from_partner_name_to_cadet(partner_name: str) -> Cadet:
 def get_registered_two_handed_partner_name_for_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
-
     cadets_at_event_data = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )

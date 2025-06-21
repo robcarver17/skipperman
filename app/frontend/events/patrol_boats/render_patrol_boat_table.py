@@ -14,7 +14,8 @@ from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_list_of_volunteers_for_skills_checkboxes,
     update_and_get_warnings_on_all_volunteers_in_patrol_boats,
     instructions_qual_table,
-    instructions_text, get_boat_label_entry,
+    instructions_text,
+    get_boat_label_entry,
 )
 from app.frontend.events.patrol_boats.patrol_boat_dropdowns import (
     get_add_boat_dropdown,
@@ -25,7 +26,9 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     DELETE_BOAT_BUTTON_LABEL,
 )
 from app.frontend.shared.club_dinghies import get_club_dinghies_detail
-from app.frontend.shared.club_boats_instructors import get_club_dinghies_detail_instructors
+from app.frontend.shared.club_boats_instructors import (
+    get_club_dinghies_detail_instructors,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
 )
@@ -55,7 +58,9 @@ def get_top_material_for_patrol_boat_form(
     patrol_boat_driver_and_crew_qualifications = (
         get_patrol_boat_driver_and_crew_qualifications(interface=interface, event=event)
     )
-    club_dinghies_instructors = get_club_dinghies_detail_instructors(interface=interface, event=event)
+    club_dinghies_instructors = get_club_dinghies_detail_instructors(
+        interface=interface, event=event
+    )
 
     warnings = update_and_get_warnings_on_all_volunteers_in_patrol_boats(
         interface=interface, event=event
@@ -100,7 +105,6 @@ def get_patrol_boat_summary(
 def get_patrol_boat_driver_and_crew_qualifications(
     interface: abstractInterface, event: Event
 ) -> Union[DetailListOfLines, str]:
-
     patrol_boat_driver_and_crew_qualifications_table = (
         get_patrol_boat_driver_and_crew_qualifications_table(
             interface=interface, event=event
@@ -158,12 +162,7 @@ def get_top_row_for_patrol_boat_table(event: Event) -> RowInTable:
         bold(text) for text in list_of_days_at_event_as_str
     ]
 
-    return RowInTable(
-        [
-            bold("Boat")
-        ]
-        + list_of_days_at_event_as_bold_text
-    )
+    return RowInTable([bold("Boat")] + list_of_days_at_event_as_bold_text)
 
 
 def get_bottom_row_for_patrol_boat_table(
@@ -194,7 +193,8 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     load_list_of_patrol_boats_at_event,
-    is_boat_empty, )
+    is_boat_empty,
+)
 
 
 def get_body_of_patrol_boat_table_at_event(
@@ -286,20 +286,21 @@ def get_allocation_inputs_for_day_and_boat_if_boat_is_empty(
             ]
         )
     dropdown = get_add_volunteer_to_patrol_boat_dropdown(
-            interface=interface, patrol_boat=patrol_boat, day=day, event=event
-        )
-    label = get_boat_label_entry(interface=interface, patrol_boat=patrol_boat, day=day, event=event)
+        interface=interface, patrol_boat=patrol_boat, day=day, event=event
+    )
+    label = get_boat_label_entry(
+        interface=interface, patrol_boat=patrol_boat, day=day, event=event
+    )
 
-    return ListOfLines([
-        label,
-        dropdown
-    ])
+    return ListOfLines([label, dropdown])
 
 
 def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
-    label = get_boat_label_entry(interface=interface, patrol_boat=patrol_boat, day=day, event=event)
+    label = get_boat_label_entry(
+        interface=interface, patrol_boat=patrol_boat, day=day, event=event
+    )
 
     existing_elements = get_existing_allocation_elements_for_day_and_boat(
         day=day, patrol_boat=patrol_boat, event=event, interface=interface
@@ -315,4 +316,4 @@ def get_allocation_inputs_for_day_and_boat_if_boat_contains_volunteers(
             interface=interface, patrol_boat=patrol_boat, day=day, event=event
         )
 
-    return ListOfLines([label]+ existing_elements + [last_bit])
+    return ListOfLines([label] + existing_elements + [last_bit])

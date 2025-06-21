@@ -94,7 +94,6 @@ def get_order_of_indices_even_sizing(
 def get_order_of_indices_even_sizing_with_parameters(
     group_count: int, landscape: bool = True
 ) -> ArrangementOfColumns:
-
     number_of_columns = get_number_of_columns(
         group_count=group_count, landscape=landscape
     )
@@ -132,7 +131,6 @@ def get_number_of_columns(group_count: int, landscape: bool = True) -> int:
 def _potentially_truncated_list(
     column_number: int, column_length: int, group_count: int
 ):
-
     full_list = range(
         column_number * column_length, (column_number + 1) * column_length
     )

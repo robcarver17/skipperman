@@ -291,7 +291,6 @@ def get_days_attending_column_for_list_of_cadets(
 def get_days_attending_column_for_single_cadets(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets, group: Group, cadet: Cadet
 ):
-
     all_days_for_cadet = get_days_attending_and_in_group_for_cadet(
         cadet=cadet, group=group, all_event_info_for_cadets=all_event_info_for_cadets
     )

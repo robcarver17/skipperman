@@ -25,14 +25,15 @@ class QualificationAndDate:
 
 
 class QualificationsForCadet(List[QualificationAndDate]):
-    def apply_qualification(self, qualification: Qualification, awarded_by:str):
+    def apply_qualification(self, qualification: Qualification, awarded_by: str):
         if self.is_cadet_qualified(qualification):
             return
 
         self.append(
             QualificationAndDate(
-                qualification=qualification, date_achieved=datetime.date.today(),
-                awarded_by=awarded_by
+                qualification=qualification,
+                date_achieved=datetime.date.today(),
+                awarded_by=awarded_by,
             )
         )
 
@@ -66,9 +67,13 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
         )
         super().__init__(dict_of_qualifications)
 
-    def apply_qualification_to_cadet(self, cadet: Cadet, qualification: Qualification, awarded_by: str):
+    def apply_qualification_to_cadet(
+        self, cadet: Cadet, qualification: Qualification, awarded_by: str
+    ):
         qualifications_for_cadet = self.qualifications_for_cadet(cadet)
-        qualifications_for_cadet.apply_qualification(qualification, awarded_by=awarded_by)
+        qualifications_for_cadet.apply_qualification(
+            qualification, awarded_by=awarded_by
+        )
         self.list_of_cadets_with_ids_and_qualifications.apply_qualification_to_cadet(
             cadet_id=cadet.id, qualification_id=qualification.id, awarded_by=awarded_by
         )
@@ -117,7 +122,7 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
                         cadet,
                         qualification_and_date.qualification,
                         qualification_and_date.date_achieved,
-                        qualification_and_date.awarded_by
+                        qualification_and_date.awarded_by,
                     )
                 )
 
@@ -160,14 +165,15 @@ def update_dict_of_qualifications_for_cadets(
     )
     date_achieved = cadet_with_id_and_qualification.date
     qualification_and_date = QualificationAndDate(
-        qualification=qualification, date_achieved=date_achieved,
-        awarded_by=cadet_with_id_and_qualification.awarded_by
+        qualification=qualification,
+        date_achieved=date_achieved,
+        awarded_by=cadet_with_id_and_qualification.awarded_by,
     )
 
     list_of_qualifications_and_dates_for_cadet.append(qualification_and_date)
-    dict_of_qualifications_for_cadets[cadet] = (
-        list_of_qualifications_and_dates_for_cadet
-    )
+    dict_of_qualifications_for_cadets[
+        cadet
+    ] = list_of_qualifications_and_dates_for_cadet
 
 
 ### USED FOR WRITE TO CSV ONLY
@@ -202,7 +208,7 @@ class ListOfNamedCadetsWithQualifications(GenericListOfObjects):
                     cadet_name=cadet_qualification_date[0].name,
                     qualification_name=cadet_qualification_date[1].name,
                     date=cadet_qualification_date[2],
-                    awarded_by=cadet_qualification_date[3]
+                    awarded_by=cadet_qualification_date[3],
                 )
                 for cadet_qualification_date in list_of_cadets_and_qualifications_and_dates
             ]

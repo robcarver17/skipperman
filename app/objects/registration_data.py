@@ -114,7 +114,9 @@ class RowInRegistrationData(GenericSkipperManObject, dict):
         return row_as_dict
 
     def as_dict_excluding_special_keys(self) -> dict:
-        row_as_dict = dict([(key, self[key]) for key in self.list_of_keys_excluding_special_keys()])
+        row_as_dict = dict(
+            [(key, self[key]) for key in self.list_of_keys_excluding_special_keys()]
+        )
 
         return row_as_dict
 

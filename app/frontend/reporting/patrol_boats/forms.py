@@ -1,4 +1,3 @@
-
 from app.backend.reporting.patrol_boat_report.configuration import (
     AdditionalParametersForPatrolBoatReport,
 )
@@ -11,14 +10,14 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 from app.frontend.reporting.patrol_boats.processes import (
-load_additional_parameters_for_patrol_boats_report
+    load_additional_parameters_for_patrol_boats_report,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 
 
 def explain_additional_parameters_for_patrol_boats_report(
     interface: abstractInterface,  ## required by default but not used
-    additional_parameters: AdditionalParametersForPatrolBoatReport
+    additional_parameters: AdditionalParametersForPatrolBoatReport,
 ) -> ListOfLines:
     days = "Report covers the following days: %s" % str(
         additional_parameters.days_to_show.days_available_as_str()
@@ -30,7 +29,9 @@ def explain_additional_parameters_for_patrol_boats_report(
 def reporting_options_form_for_patrol_boats_additional_parameters(
     interface: abstractInterface,
 ) -> ListOfLines:
-    additional_parameters = load_additional_parameters_for_patrol_boats_report(interface)
+    additional_parameters = load_additional_parameters_for_patrol_boats_report(
+        interface
+    )
     event = get_event_from_state(interface)
     choose_days = get_availability_checkbox(
         input_name=DAYS_TO_SHOW,

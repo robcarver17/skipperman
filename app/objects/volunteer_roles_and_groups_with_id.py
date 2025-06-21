@@ -74,7 +74,6 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
         role_requires_group: bool,
         group_id: str = arg_not_passed,
     ):
-
         self.update_volunteer_in_role_on_day(
             volunteer=volunteer, day=day, new_role_id=role_id
         )

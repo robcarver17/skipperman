@@ -34,7 +34,6 @@ nav_buttons = ButtonBar([back_menu_button])
 
 
 def display_form_data(interface: abstractInterface) -> Union[Form, NewForm]:
-
     lines_inside_form = ListOfLines([nav_buttons, option_buttons])
 
     return Form(lines_inside_form)

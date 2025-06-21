@@ -108,7 +108,7 @@ def export_clothing_colours(interface: abstractInterface) -> File:
         colour_dict[colour] = pd.Series(list_of_names)
 
     filename = temp_file_name()
-    if len(colour_dict)==0:
+    if len(colour_dict) == 0:
         df = pd.DataFrame(["No colours"])
     else:
         df = pd.concat(colour_dict, axis=1)

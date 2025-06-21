@@ -135,7 +135,6 @@ def create_list_of_cadet_volunteer_associations_from_underlying_data(
     list_of_volunteers: ListOfVolunteers,
     list_of_cadet_volunteer_associations_with_ids: ListOfCadetVolunteerAssociationsWithIds,
 ) -> ListOfCadetVolunteerAssociations:
-
     raw_list_of_associations = create_raw_list_of_cadet_volunteer_associations_from_underlying_data(
         list_of_cadets=list_of_cadets,
         list_of_volunteers=list_of_volunteers,

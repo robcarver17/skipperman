@@ -37,7 +37,6 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         )
 
     def remove_food_requirements_for_cadet_at_event(self, cadet: Cadet):
-
         try:
             self.pop(cadet)
             self.list_of_cadets_with_ids_and_food_requirements.remove_food_requirements_for_cadet_at_event(
@@ -126,7 +125,6 @@ def compose_dict_of_cadets_with_food_requirements_at_event(
     list_of_events: ListOfEvents,
     event_id: str,
 ) -> DictOfCadetsWithFoodRequirementsAtEvent:
-
     event = list_of_events.event_with_id(event_id)
 
     raw_dict = dict(
@@ -210,7 +208,6 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         volunteer: Volunteer,
         new_food_requirements: FoodRequirements,
     ):
-
         self[volunteer] = new_food_requirements
         self.list_of_volunteers_with_ids_and_food_requirements.change_food_requirements_for_volunteer(
             volunteer_id=volunteer.id, food_requirements=new_food_requirements

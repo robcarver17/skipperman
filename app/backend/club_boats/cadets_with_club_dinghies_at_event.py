@@ -64,4 +64,3 @@ def update_dict_of_people_and_club_dinghies_at_event(
         event_id=event.id,
         new_object=dict_of_cadets_and_club_dinghies_at_event,
     )
-

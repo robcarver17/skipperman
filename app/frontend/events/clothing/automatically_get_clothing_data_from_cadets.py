@@ -31,7 +31,6 @@ from app.frontend.form_handler import initial_state_form
 def display_call_to_update_cadet_clothing_at_event_during_import(
     interface: abstractInterface,
 ) -> NewForm:
-
     event = get_event_from_state(interface)
     dict_of_cadets_at_event_with_registration_data = (
         get_dict_of_cadets_with_registration_data(
@@ -120,7 +119,6 @@ def process_update_to_cadet_new_to_event_with_clothing(
     cadet: Cadet,
     registration_data: CadetRegistrationData,
 ):
-
     clothing_size_from_registration = registration_data.data_in_row.get_item(
         CADET_T_SHIRT_SIZE, None
     )

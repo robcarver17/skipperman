@@ -11,9 +11,15 @@ def get_default_print_options(
     )
 
 
-def get_print_options(object_store: ObjectStore, report_name: str, ignore_stored_values_and_use_default: bool) -> PrintOptions:
+def get_print_options(
+    object_store: ObjectStore,
+    report_name: str,
+    ignore_stored_values_and_use_default: bool,
+) -> PrintOptions:
     if ignore_stored_values_and_use_default:
-        return get_default_print_options(object_store=object_store, report_name=report_name)
+        return get_default_print_options(
+            object_store=object_store, report_name=report_name
+        )
 
     return object_store.get(
         object_definition_for_print_options, report_name=report_name

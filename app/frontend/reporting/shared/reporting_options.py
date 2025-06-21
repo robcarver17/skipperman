@@ -76,8 +76,7 @@ def get_reporting_options(
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
     dict_of_df: Dict[str, pd.DataFrame],
     ignore_stored_print_option_values_and_use_default: bool = False,
-    override_print_options: dict = arg_not_passed
-
+    override_print_options: dict = arg_not_passed,
 ) -> ReportingOptions:
     arrangement_options_and_group_order = get_arrangement_options_and_group_order_from_stored_or_defaults(
         object_store=interface.object_store,
@@ -88,7 +87,7 @@ def get_reporting_options(
     print_options = get_saved_print_options(
         interface=interface,
         report_type=specific_parameters_for_type_of_report.report_type,
-        ignore_stored_values_and_use_default=ignore_stored_print_option_values_and_use_default
+        ignore_stored_values_and_use_default=ignore_stored_print_option_values_and_use_default,
     )
 
     if not override_print_options is arg_not_passed:

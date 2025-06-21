@@ -76,7 +76,6 @@ def sort_list_of_volunteers_for_day_and_event_by_role(
     object_store: ObjectStore,
     volunteers_on_boat_on_day: ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
 ) -> ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday:
-
     volunteer_roles = get_list_of_roles_with_skills(object_store)
     new_list = ListOfVolunteersAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday()
     for role in volunteer_roles:

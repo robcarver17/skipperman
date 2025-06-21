@@ -86,7 +86,6 @@ def get_list_of_cadets_with_those_with_name_similar_to_volunteer_with_listed_fir
 def get_list_of_cadets_with_names_similar_to_volunteer(
     volunteer: Volunteer, from_list_of_cadets: ListOfCadets
 ) -> ListOfCadets:
-
     similar_cadets = get_list_of_cadets_with_similar_surname(
         from_list_of_cadets, surname=volunteer.surname
     )
@@ -125,7 +124,6 @@ def get_list_of_cadets_associated_with_volunteer(
 def get_list_of_volunteers_associated_with_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> ListOfVolunteers:
-
     list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
         object_store
     )

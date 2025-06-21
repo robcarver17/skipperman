@@ -78,7 +78,12 @@ def post_form_AN_EXAMPLE(interface: abstractInterface) -> Union[Form, NewForm]:
         interface.log_error("You pressed cancel")
         interface.flush_cache_to_store()
     elif save_button.pressed(button_pressed):
-        interface.log_error("you entered %s" % interface.value_from_form(input_name, "no_value found in form which means error"))
+        interface.log_error(
+            "you entered %s"
+            % interface.value_from_form(
+                input_name, "no_value found in form which means error"
+            )
+        )
         return interface.get_new_form_given_function(
             display_form_AN_EXAMPLE
         )  ## could equally be any function 'below'

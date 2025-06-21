@@ -56,7 +56,6 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-
     volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(
         object_store=object_store, event=event
     )
@@ -101,7 +100,6 @@ def get_summary_of_roles_and_groups_for_events_on_day(
     sorted_roles_at_event: ListOfRolesWithSkills,
     sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:
-
     list_of_roles_and_groups = (
         volunteers_in_roles_at_event.list_of_all_roles_and_groups_for_day(day)
     )
@@ -278,13 +276,21 @@ def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
 
     return sorted_teams_at_event
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
+
 
 def get_sorted_list_of_groups_at_event(
     object_store: ObjectStore, event: Event, include_unallocated: bool = True
 ):
-    cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    all_groups_at_event = cadet_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
+    cadet_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
+    all_groups_at_event = (
+        cadet_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
+    )
 
     all_groups = get_list_of_groups(object_store)
     sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(

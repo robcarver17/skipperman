@@ -34,7 +34,6 @@ def sorted_active_cadets(
     day_or_none: Day = None,
     sort_order: list = arg_not_passed,
 ) -> ListOfCadets:
-
     if sort_order is arg_not_passed:
         return dict_of_all_event_data.list_of_cadets
 

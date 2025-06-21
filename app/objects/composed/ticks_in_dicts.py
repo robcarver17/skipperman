@@ -87,7 +87,6 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
         )
 
         if only_this_qualification_has_this_substage:
-
             self.modify_name_of_substage_unique_to_qualification(
                 qualification=qualification,
                 existing_substage=existing_substage,

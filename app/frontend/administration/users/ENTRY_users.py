@@ -29,7 +29,6 @@ def display_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
 
 def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
-
     last_button = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button):

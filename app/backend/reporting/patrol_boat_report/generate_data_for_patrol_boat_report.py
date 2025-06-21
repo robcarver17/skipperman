@@ -7,7 +7,11 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.reporting.patrol_boat_report.configuration import (
     BOAT,
-    GROUP, LOCATIONS, LOCATION, DESIGNATION, VOLUNTEER
+    GROUP,
+    LOCATIONS,
+    LOCATION,
+    DESIGNATION,
+    VOLUNTEER,
 )
 from app.backend.reporting.rota_report.configuration import ROLE
 from app.backend.volunteers.volunteers_at_event import (
@@ -93,7 +97,7 @@ def get_df_for_reporting_patrol_boats_for_day(
 
         list_of_team_df.append(team_df)
 
-    if len(list_of_team_df)==0:
+    if len(list_of_team_df) == 0:
         return pd.DataFrame()
 
     concat_df = pd.concat(list_of_team_df, axis=0)
@@ -102,109 +106,136 @@ def get_df_for_reporting_patrol_boats_for_day(
 
 
 def get_df_for_location_on_day(
-    volunteer_event_data: DictOfAllEventDataForVolunteers, location:str, day: Day
+    volunteer_event_data: DictOfAllEventDataForVolunteers, location: str, day: Day
 ) -> pd.DataFrame:
-    boat_designations = unique_list_of_boat_designations_for_event_on_day(volunteer_event_data=volunteer_event_data, day=day)
-    all_df = [get_df_for_designation_and_location_on_day(volunteer_event_data=volunteer_event_data,
-                                                         location=location,
-                                                         designation=designation,
-                                                         day=day) for designation in boat_designations]
-
-    if len(all_df)==0:
-        return pd.DataFrame()
-
-    df = pd.concat(all_df, axis=0)
-
-    return df
-
-def get_df_for_designation_and_location_on_day(    volunteer_event_data: DictOfAllEventDataForVolunteers,
-                                                   location:str,
-                                                   day: Day,
-                                                   designation: str):
-
-    list_of_relevant_boats = boats_in_location_and_designation(volunteer_event_data=volunteer_event_data,
-                                                               day=day,
-                                                               location=location, designation=designation)
-
-    all_df = [get_df_for_designation_and_location_and_boat_on_day(
-        volunteer_event_data=volunteer_event_data,
-        day=day,
-        boat=boat,
-        location=location,
-        designation=designation
-    ) for boat in list_of_relevant_boats]
-
-    if len(all_df)==0:
-        return pd.DataFrame()
-
-    df = pd.concat(all_df, axis=0)
-
-    return df
-
-def get_df_for_designation_and_location_and_boat_on_day(    volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, boat: PatrolBoat,
-                                                            location: str, designation: str):
-    list_of_volunteers_with_roles_and_groups = get_list_of_volunteers_with_roles_and_groups(
-        volunteer_event_data=volunteer_event_data,
-        day=day,
-        boat=boat
+    boat_designations = unique_list_of_boat_designations_for_event_on_day(
+        volunteer_event_data=volunteer_event_data, day=day
     )
-    all_rows = [get_row_for_volunteer_on_boat_on_day(
-        volunteer=volunteer,
-        role_and_group=role_and_group,
-        boat=boat,
-        location=location,
-        designation=designation
-    ) for volunteer, role_and_group in list_of_volunteers_with_roles_and_groups]
+    all_df = [
+        get_df_for_designation_and_location_on_day(
+            volunteer_event_data=volunteer_event_data,
+            location=location,
+            designation=designation,
+            day=day,
+        )
+        for designation in boat_designations
+    ]
 
-    as_df= pd.DataFrame(all_rows)
-    if len(as_df)==0:
+    if len(all_df) == 0:
+        return pd.DataFrame()
+
+    df = pd.concat(all_df, axis=0)
+
+    return df
+
+
+def get_df_for_designation_and_location_on_day(
+    volunteer_event_data: DictOfAllEventDataForVolunteers,
+    location: str,
+    day: Day,
+    designation: str,
+):
+    list_of_relevant_boats = boats_in_location_and_designation(
+        volunteer_event_data=volunteer_event_data,
+        day=day,
+        location=location,
+        designation=designation,
+    )
+
+    all_df = [
+        get_df_for_designation_and_location_and_boat_on_day(
+            volunteer_event_data=volunteer_event_data,
+            day=day,
+            boat=boat,
+            location=location,
+            designation=designation,
+        )
+        for boat in list_of_relevant_boats
+    ]
+
+    if len(all_df) == 0:
+        return pd.DataFrame()
+
+    df = pd.concat(all_df, axis=0)
+
+    return df
+
+
+def get_df_for_designation_and_location_and_boat_on_day(
+    volunteer_event_data: DictOfAllEventDataForVolunteers,
+    day: Day,
+    boat: PatrolBoat,
+    location: str,
+    designation: str,
+):
+    list_of_volunteers_with_roles_and_groups = (
+        get_list_of_volunteers_with_roles_and_groups(
+            volunteer_event_data=volunteer_event_data, day=day, boat=boat
+        )
+    )
+    all_rows = [
+        get_row_for_volunteer_on_boat_on_day(
+            volunteer=volunteer,
+            role_and_group=role_and_group,
+            boat=boat,
+            location=location,
+            designation=designation,
+        )
+        for volunteer, role_and_group in list_of_volunteers_with_roles_and_groups
+    ]
+
+    as_df = pd.DataFrame(all_rows)
+    if len(as_df) == 0:
         return pd.DataFrame()
 
     as_df = sort_df_by_role(
         df_for_reporting_volunteers_for_day=as_df,
         volunteer_event_data=volunteer_event_data,
-
     )
-
 
     return as_df
 
 
-def get_list_of_volunteers_with_roles_and_groups(volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, boat: PatrolBoat)\
-        -> List[Tuple[Volunteer, RoleAndGroupAndTeam]]:
+def get_list_of_volunteers_with_roles_and_groups(
+    volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, boat: PatrolBoat
+) -> List[Tuple[Volunteer, RoleAndGroupAndTeam]]:
     list_of_volunteers = get_volunteers_on_boat_on_day(
-        volunteer_event_data=volunteer_event_data,
-        day=day,
-        boat=boat
+        volunteer_event_data=volunteer_event_data, day=day, boat=boat
     )
 
-    list_of_volunteers_with_roles_and_groups = [(volunteer,
-                                                 volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(volunteer).role_and_group_and_team_on_day(day))
-                                                for volunteer in list_of_volunteers]
+    list_of_volunteers_with_roles_and_groups = [
+        (
+            volunteer,
+            volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.days_and_roles_for_volunteer(
+                volunteer
+            ).role_and_group_and_team_on_day(
+                day
+            ),
+        )
+        for volunteer in list_of_volunteers
+    ]
 
     return list_of_volunteers_with_roles_and_groups
 
-def get_row_for_volunteer_on_boat_on_day(    volunteer: Volunteer,
-                                             role_and_group: RoleAndGroupAndTeam,
-                                             boat: PatrolBoat,
-                                             location: str, designation: str
-                                             ):
+
+def get_row_for_volunteer_on_boat_on_day(
+    volunteer: Volunteer,
+    role_and_group: RoleAndGroupAndTeam,
+    boat: PatrolBoat,
+    location: str,
+    designation: str,
+):
     return {
         LOCATION: location,
         DESIGNATION: designation,
         BOAT: boat.name,
         VOLUNTEER: volunteer.name,
         ROLE: role_and_group.role.name,
-        GROUP: get_group_string(role_and_group)
+        GROUP: get_group_string(role_and_group),
     }
 
 
-
-
-def get_group_string(
-    role_and_group: RoleAndGroupAndTeam
-) -> str:
-
+def get_group_string(role_and_group: RoleAndGroupAndTeam) -> str:
     requires_group = role_and_group.role.associate_sailing_group
     if not requires_group:
         return ""
@@ -216,32 +247,52 @@ def get_group_string(
     return group.name
 
 
+def get_volunteers_on_boat_on_day(
+    volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, boat: PatrolBoat
+) -> ListOfVolunteers:
+    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.volunteers_assigned_to_boat_on_day(
+        patrol_boat=boat, day=day
+    )
 
-def get_volunteers_on_boat_on_day( volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, boat: PatrolBoat) -> ListOfVolunteers:
-    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.volunteers_assigned_to_boat_on_day(patrol_boat=boat,
-                                                                                                          day=day)
 
-def boats_in_location_and_designation(volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day, location:str, designation: str) -> ListOfPatrolBoats:
-    get_label_function = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.label_for_boat_at_event_on_day
-    dict_of_boats_and_locations = volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_with_locations()
-    list_of_boats = [boat for boat, location_of_boat in dict_of_boats_and_locations.items()
-                     if location_of_boat==location and get_label_function(patrol_boat=boat, day=day)==designation]
+def boats_in_location_and_designation(
+    volunteer_event_data: DictOfAllEventDataForVolunteers,
+    day: Day,
+    location: str,
+    designation: str,
+) -> ListOfPatrolBoats:
+    get_label_function = (
+        volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.label_for_boat_at_event_on_day
+    )
+    dict_of_boats_and_locations = (
+        volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_with_locations()
+    )
+    list_of_boats = [
+        boat
+        for boat, location_of_boat in dict_of_boats_and_locations.items()
+        if location_of_boat == location
+        and get_label_function(patrol_boat=boat, day=day) == designation
+    ]
 
     return ListOfPatrolBoats(list_of_boats)
 
-def unique_list_of_boat_designations_for_event_on_day(volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day):
-    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.unique_set_of_labels_at_event(day=day)
+
+def unique_list_of_boat_designations_for_event_on_day(
+    volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day
+):
+    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.unique_set_of_labels_at_event(
+        day=day
+    )
+
 
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
 ):
-
     df_for_reporting_volunteers_for_day = apply_textual_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day
     )
 
     return df_for_reporting_volunteers_for_day
-
 
 
 def apply_textual_transforms_to_df(df_for_reporting_volunteers_for_day: pd.DataFrame):
@@ -265,4 +316,3 @@ def text_given_group(group: str) -> str:
     if len(group) == 0:
         return ""
     return "- %s" % group
-

@@ -344,7 +344,6 @@ def response_requires_new_form(interface: abstractInterface):
 def generic_post_response_to_add_or_select_when_returning_new_form(
     interface: abstractInterface, parameters: ParametersForGetOrSelectCadetForm
 ) -> ResultFromAddOrSelect():
-
     last_button_pressed = interface.last_button_pressed()
     if is_button_a_sort_button(last_button_pressed):
         print("Sorting by %s" % last_button_pressed)

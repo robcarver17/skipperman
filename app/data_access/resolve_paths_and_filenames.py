@@ -67,6 +67,7 @@ def file_from_generic(generic_name_of_file_required):
 
     return filename
 
+
 PATROL_BOAT_LABELS = "patrol_boat_labels"
 ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
@@ -95,7 +96,9 @@ LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID = (
     "list_of_patrol_boats_and_volunteers_at_event"
 )
 LIST_OF_CLUB_DINGHIES_AND_CADETS_FILE_ID = "list_of_club_dinghies_with_cadets_at_event"
-LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID = "list_of_club_dinghies_with_volunteers_at_event"
+LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID = (
+    "list_of_club_dinghies_with_volunteers_at_event"
+)
 
 LIST_OF_VOLUNTEERS_FILE_ID = "list_of_volunteers"
 LIST_OF_VOLUNTEER_SKILLS_FILE_ID = "list_of_volunteer_skills"
@@ -195,9 +198,8 @@ _dict_of_filenames_and_paths = {
     ),
     LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID: (
         "mapped_events",
-        "list_of_volunteers_with_club_dinghies_at_event_%s.csv"
+        "list_of_volunteers_with_club_dinghies_at_event_%s.csv",
     ),
-
     LIST_OF_DINGHIES_FILE_ID: ("lists", "list_of_dinghies.csv"),
     LIST_OF_CADETS_WITH_DINGHIES_AT_EVENT_FILE_ID: (
         "mapped_events",
@@ -229,6 +231,6 @@ _dict_of_filenames_and_paths = {
     CLUB_BOAT_LIMIT: ("lists", "club_boat_limit.parquet"),
     CLUB_BOAT_LIMIT_CSV: ("lists", "club_boat_limit.csv"),
     ATTENDANCE_FILE_FOR_SPECIFIC_CADET: ("cadet_attendance", "attendance_for_%s"),
-PATROL_BOAT_LABELS: ("lists", "patrol_boat_labels.csv"),
+    PATROL_BOAT_LABELS: ("lists", "patrol_boat_labels.csv"),
     USERLIST_FILE_ID: ("secure", "userlist.csv"),
 }

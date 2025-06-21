@@ -1,5 +1,5 @@
 from typing import Union
-from app.web.actions.site_actions import get_abstract_form_for_specific_action
+from app.web.end_points.site_actions import get_abstract_form_for_specific_action
 from app.objects.abstract_objects.abstract_form import File, Form
 from app.web.html.html_components import (
     Html,

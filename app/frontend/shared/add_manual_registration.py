@@ -23,7 +23,6 @@ from app.objects.utilities.exceptions import missing_data
 def display_add_unregistered_form(
     interface: abstractInterface,
 ) -> Form:
-
     return get_add_or_select_existing_cadet_form(
         interface=interface, cadet=default_cadet, parameters=get_or_select_parameters
     )
@@ -56,7 +55,6 @@ def post_form_add_unregistered_cadet(
 def add_cadet_to_event_if_unregistered_and_return_form(
     interface: abstractInterface, cadet: Cadet, calling_function: Callable
 ) -> NewForm:
-
     check_if_registered = is_cadet_already_registered(
         interface=interface, new_cadet=cadet
     )
@@ -77,7 +75,6 @@ def add_cadet_to_event_if_unregistered_and_return_form(
 def add_cadet_to_event_and_return_form(
     interface: abstractInterface, cadet: Cadet, calling_function: Callable
 ) -> NewForm:
-
     event = get_event_from_state(interface)
 
     add_new_cadet_manually_to_event(
@@ -106,7 +103,6 @@ def is_cadet_already_registered(interface: abstractInterface, new_cadet: Cadet):
 def return_to_allocation_pages(
     interface: abstractInterface, calling_function: Callable
 ) -> NewForm:
-
     return interface.get_new_display_form_for_parent_of_function(calling_function)
 
 

@@ -135,7 +135,6 @@ def get_input_fields_for_cadet_on_day_when_unavailable(cadet: Cadet) -> list:
 def get_input_fields_for_cadet_on_day_when_available(
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> list:
-
     group_allocation_field = get_dropdown_input_for_group_allocation_on_day(
         cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
     )
@@ -476,7 +475,6 @@ def get_input_for_partner_allocation(
     current_partner_name: str,
     potential_partner_to_be_added_or_missing_data: str,
 ) -> ListOfLines:
-
     drop_down_input_field = get_dropdown_field_for_partner_allocation(
         list_of_other_cadets=list_of_other_cadets,
         current_partner_name=current_partner_name,

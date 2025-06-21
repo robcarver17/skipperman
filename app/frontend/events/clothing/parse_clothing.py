@@ -48,7 +48,9 @@ def save_clothing_data_for_cadet(
         interface=interface, cadet=cadet
     )
     if MISSING_FROM_FORM in [new_colour, new_size]:
-        interface.log_error("Can't update clothing for %s as missing values" % str(cadet))
+        interface.log_error(
+            "Can't update clothing for %s as missing values" % str(cadet)
+        )
         return
 
     if not new_size == clothing.size:
@@ -70,8 +72,12 @@ def get_size_and_colour_from_form(
 ) -> Tuple[str, str]:
     cadet_id = cadet.id
 
-    new_size = interface.value_from_form(size_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM)
-    new_colour = interface.value_from_form(colour_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM)
+    new_size = interface.value_from_form(
+        size_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM
+    )
+    new_colour = interface.value_from_form(
+        colour_field_name(cadet_id=cadet_id), default=MISSING_FROM_FORM
+    )
 
     return new_size, new_colour
 

@@ -152,7 +152,6 @@ class DictOfClubDinghyLimits(Dict[Event, DictOfClubDinghyLimitsForEvent]):
     def get_limits_for_event(
         self, event: Union[Event, object]
     ) -> DictOfClubDinghyLimitsForEvent:
-
         limits = self.get(event, missing_data)
         if limits is missing_data:
             self[event] = limits = DictOfClubDinghyLimitsForEvent.create_empty()

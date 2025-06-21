@@ -59,7 +59,6 @@ def get_volunteer_string(
 def get_group_string(
     volunteer_with_role_and_group_and_team: VolunteerWithRoleGroupAndTeamAtEvent,
 ) -> str:
-
     requires_group = volunteer_with_role_and_group_and_team.role.associate_sailing_group
     if not requires_group:
         return ""
@@ -75,14 +74,20 @@ def get_boat_string(
     volunteer_with_role_and_group_and_team: VolunteerWithRoleGroupAndTeamAtEvent,
     volunteer_event_data: DictOfAllEventDataForVolunteers,
 ) -> str:
-    patrol_boat = get_patrol_boat_string(volunteer_event_data=volunteer_event_data, volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team)
-    club_dinghy = get_club_dinghy_string(volunteer_event_data=volunteer_event_data, volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team)
+    patrol_boat = get_patrol_boat_string(
+        volunteer_event_data=volunteer_event_data,
+        volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team,
+    )
+    club_dinghy = get_club_dinghy_string(
+        volunteer_event_data=volunteer_event_data,
+        volunteer_with_role_and_group_and_team=volunteer_with_role_and_group_and_team,
+    )
 
-    if len(patrol_boat)>0 and len(club_dinghy)>0:
+    if len(patrol_boat) > 0 and len(club_dinghy) > 0:
         return "%s / %s" % (patrol_boat, club_dinghy)
-    elif len(patrol_boat)>0:
+    elif len(patrol_boat) > 0:
         return patrol_boat
-    elif len(club_dinghy)>0:
+    elif len(club_dinghy) > 0:
         return club_dinghy
     else:
         return ""
@@ -104,6 +109,7 @@ def get_patrol_boat_string(
         return ""
 
     return boat_on_day.name
+
 
 def get_club_dinghy_string(
     volunteer_with_role_and_group_and_team: VolunteerWithRoleGroupAndTeamAtEvent,

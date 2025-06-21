@@ -40,7 +40,6 @@ def display_warnings_tables(list_of_warnings: ListOfEventWarnings) -> ListOfLine
 def display_active_warnings_table(
     list_of_warnings: ListOfEventWarnings, detail_name: str, active: bool
 ) -> Union[ListOfLines, DetailListOfLines]:
-
     if len(list_of_warnings) == 0:
         return ListOfLines([""])
 

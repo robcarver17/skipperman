@@ -24,13 +24,21 @@ from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
+
 def copy_and_overwrite_labels(interface: abstractInterface):
-    copy_patrol_boat_labels_across_event(object_store=interface.object_store, event=get_event_from_state(interface),
-                                     overwrite=True)
+    copy_patrol_boat_labels_across_event(
+        object_store=interface.object_store,
+        event=get_event_from_state(interface),
+        overwrite=True,
+    )
+
 
 def copy_labels(interface: abstractInterface):
-    copy_patrol_boat_labels_across_event(object_store=interface.object_store, event=get_event_from_state(interface),
-                                     overwrite=False)
+    copy_patrol_boat_labels_across_event(
+        object_store=interface.object_store,
+        event=get_event_from_state(interface),
+        overwrite=False,
+    )
 
 
 def update_if_copy_individual_button_pressed(

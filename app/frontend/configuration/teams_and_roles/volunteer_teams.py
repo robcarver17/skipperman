@@ -157,8 +157,12 @@ NEW_LOCATION_FIELD_NAME = "new_location"
 def get_team_from_form(
     interface: abstractInterface, existing_object, **kwargs_ignored
 ) -> Team:
-    new_team_name = interface.value_from_form(text_box_name(existing_object), default=MISSING_FROM_FORM)
-    new_location = interface.value_from_form(location_box_name(existing_object), default=MISSING_FROM_FORM)
+    new_team_name = interface.value_from_form(
+        text_box_name(existing_object), default=MISSING_FROM_FORM
+    )
+    new_location = interface.value_from_form(
+        location_box_name(existing_object), default=MISSING_FROM_FORM
+    )
     if MISSING_FROM_FORM in [new_location, new_team_name]:
         interface.log_error("Can't update team %s as form error" % str(existing_object))
         return existing_object

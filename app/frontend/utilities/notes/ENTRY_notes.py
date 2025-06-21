@@ -2,9 +2,17 @@ from typing import Union
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.utilities.notes.parse_notes import save_all_notes, update_sort_status
-from app.frontend.utilities.notes.render_notes import help_button, get_existing_incomplete_notes, \
-    get_existing_complete_notes, save_quick_note_button, get_quick_note_form, save_button, save_table_entries, \
-    sort_buttons, get_sorted_list_of_volunteer_notes
+from app.frontend.utilities.notes.render_notes import (
+    help_button,
+    get_existing_incomplete_notes,
+    get_existing_complete_notes,
+    save_quick_note_button,
+    get_quick_note_form,
+    save_button,
+    save_table_entries,
+    sort_buttons,
+    get_sorted_list_of_volunteer_notes,
+)
 
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -13,11 +21,10 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     ButtonBar,
-    cancel_menu_button, check_if_button_in_list_was_pressed, )
-from app.objects.abstract_objects.abstract_lines import (
-    ListOfLines,
-    _______________
+    cancel_menu_button,
+    check_if_button_in_list_was_pressed,
 )
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -36,7 +43,9 @@ def display_form_notes(interface: abstractInterface):
     list_of_notes = get_sorted_list_of_volunteer_notes(interface)
 
     quick_note_form = get_quick_note_form()
-    incomplete_table =             get_existing_incomplete_notes(interface, list_of_notes=list_of_notes)
+    incomplete_table = get_existing_incomplete_notes(
+        interface, list_of_notes=list_of_notes
+    )
     complete_table = get_existing_complete_notes(interface, list_of_notes=list_of_notes)
 
     contents_of_form = ListOfLines(
@@ -59,8 +68,7 @@ def display_form_notes(interface: abstractInterface):
             Heading("Completed notes", size=3, centred=True),
             _______________,
             complete_table,
-            save_table_entries
-
+            save_table_entries,
         ]
     )
 
@@ -73,9 +81,7 @@ def post_form_notes(interface: abstractInterface) -> Union[Form, NewForm]:
 
     if cancel_menu_button.pressed(button_pressed):
         interface.flush_cache_to_store()
-        return interface.get_new_display_form_for_parent_of_function(
-            display_form_notes
-        )
+        return interface.get_new_display_form_for_parent_of_function(display_form_notes)
     elif was_sort_button(interface):
         update_sort_status(interface)
         save_all_notes(interface)
@@ -93,7 +99,13 @@ def post_form_notes(interface: abstractInterface) -> Union[Form, NewForm]:
 
 
 def was_sort_button(inteface: abstractInterface):
-    return check_if_button_in_list_was_pressed(inteface.last_button_pressed(), sort_buttons)
+    return check_if_button_in_list_was_pressed(
+        inteface.last_button_pressed(), sort_buttons
+    )
+
 
 def was_save_button(interface: abstractInterface):
-    return check_if_button_in_list_was_pressed(interface.last_button_pressed(), [save_button, save_quick_note_button, save_table_entries])
+    return check_if_button_in_list_was_pressed(
+        interface.last_button_pressed(),
+        [save_button, save_quick_note_button, save_table_entries],
+    )

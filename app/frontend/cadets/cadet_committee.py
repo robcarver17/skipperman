@@ -244,9 +244,15 @@ def previous_form(interface: abstractInterface):
 
 ## Add new
 def add_new_cadet_to_committee_from_form(interface: abstractInterface):
-    cadet_selected_as_str = interface.value_from_form(NEW_COMMITTEE_MEMBER_DROPDOWN, default=MISSING_FROM_FORM)
-    date_term_starts = interface.value_from_form(DATE_TERM_STARTS, default=MISSING_FROM_FORM, value_is_date=True)
-    date_term_ends = interface.value_from_form(DATE_TERM_END, default=MISSING_FROM_FORM, value_is_date=True)
+    cadet_selected_as_str = interface.value_from_form(
+        NEW_COMMITTEE_MEMBER_DROPDOWN, default=MISSING_FROM_FORM
+    )
+    date_term_starts = interface.value_from_form(
+        DATE_TERM_STARTS, default=MISSING_FROM_FORM, value_is_date=True
+    )
+    date_term_ends = interface.value_from_form(
+        DATE_TERM_END, default=MISSING_FROM_FORM, value_is_date=True
+    )
 
     if MISSING_FROM_FORM in [cadet_selected_as_str, date_term_ends, date_term_starts]:
         interface.log_error("Something went wrong adding new cadet to committee")

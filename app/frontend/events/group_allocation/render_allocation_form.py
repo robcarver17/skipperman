@@ -24,7 +24,9 @@ from app.frontend.events.group_allocation.buttons import (
     button_to_click_on_cadet,
 )
 from app.frontend.shared.club_dinghies import get_club_dinghies_detail
-from app.frontend.shared.club_boats_instructors import get_club_dinghies_detail_instructors
+from app.frontend.shared.club_boats_instructors import (
+    get_club_dinghies_detail_instructors,
+)
 from app.frontend.events.group_allocation.previous_events import (
     get_previous_event_selection_form,
     get_prior_events_to_show,
@@ -81,7 +83,6 @@ from app.objects.events import (
 def display_form_allocate_cadets_at_event(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Union[Form, NewForm]:
-
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
@@ -145,7 +146,6 @@ nav_bar_bottom = ButtonBar(
 def get_allocations_and_classes_detail(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-
     allocations = get_allocations_detail(interface=interface, event=event)
     club_dinghies = get_club_dinghies_detail(interface=interface, event=event)
     classes = get_classes_detail(interface=interface, event=event)
@@ -289,7 +289,6 @@ def get_top_row(
 
 
 def get_daily_input_field_headings(interface: abstractInterface) -> list:
-
     if no_day_set_in_state(interface):
         return get_input_field_headings_for_day("All days")
     else:
@@ -298,7 +297,6 @@ def get_daily_input_field_headings(interface: abstractInterface) -> list:
 
 
 def get_input_field_headings_for_day(day_name: str) -> list:
-
     input_field_names = [
         "Allocate: group (%s)" % day_name,
         "Allocate: Club boat(%s)" % day_name,

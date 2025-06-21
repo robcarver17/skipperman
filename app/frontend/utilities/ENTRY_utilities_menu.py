@@ -35,8 +35,7 @@ DICT_OF_MENU_OPTIONS = {
     DATA_AND_BACKUP: display_form_data_and_backups,
     DATA_CLEAN: display_form_for_event_cleaning,
     FILES: display_form_file_management,
-    NOTES: display_form_notes
-
+    NOTES: display_form_notes,
 }
 
 list_of_menu_labels = list(DICT_OF_MENU_OPTIONS.keys())

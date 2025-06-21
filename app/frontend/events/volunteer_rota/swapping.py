@@ -88,7 +88,6 @@ def has_role_on_day(
     volunteer_data_at_event: AllEventDataForVolunteer,
     current_day: Day,
 ) -> bool:
-
     return not volunteer_data_at_event.roles_and_groups.role_and_group_on_day(
         day=current_day
     ).role.is_no_role_set()
@@ -173,9 +172,10 @@ def update_if_swap_button_pressed_and_ready_to_swap_but_not_cancel_button(
     original_volunteer_id, original_day = from_known_button_to_volunteer_id_and_day(
         swap_button, button_type=swap_button_type
     )
-    day_to_swap_with, volunteer_id_to_swap_with = (
-        get_day_and_volunteer_id_from_swap_state(interface)
-    )
+    (
+        day_to_swap_with,
+        volunteer_id_to_swap_with,
+    ) = get_day_and_volunteer_id_from_swap_state(interface)
     original_volunteer = get_volunteer_from_id(
         object_store=interface.object_store, volunteer_id=original_volunteer_id
     )

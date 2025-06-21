@@ -49,7 +49,6 @@ def get_arrangement_options_from_df_and_specific_parameters(
     specific_parameters_for_type_of_report: SpecificParametersForTypeOfReport,
     dict_of_df: Dict[str, pd.DataFrame],
 ) -> ArrangementOptionsAndGroupOrder:
-
     filtered_group_order = get_group_order_excluding_missing_groups(
         dict_of_df=dict_of_df,
         specific_parameters_for_type_of_report=specific_parameters_for_type_of_report,

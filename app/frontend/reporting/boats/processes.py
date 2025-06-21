@@ -6,8 +6,9 @@ from app.backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,
 )
 from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_report
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    apply_override_additional_options
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    apply_override_additional_options,
+)
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
@@ -120,7 +121,6 @@ def have_group_exclusion_parameters_changed(
 def load_additional_parameters_for_boat_report(
     interface: abstractInterface,
 ) -> AdditionalParametersForBoatReport:
-
     display_full_names = interface.get_persistent_value(DISPLAY_FULL_NAMES, True)
 
     include_in_out = interface.get_persistent_value(INCLUDE_IN_OUT, True)
@@ -156,14 +156,14 @@ def clear_additional_parameters_for_boat_report(
 
 
 def get_dict_of_df_for_reporting_boats(
-    interface: abstractInterface,
-        override_additional_options: dict = arg_not_passed
-
+    interface: abstractInterface, override_additional_options: dict = arg_not_passed
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_boat_report(interface)
     if override_additional_options is not arg_not_passed:
-        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
+        additional_parameters = apply_override_additional_options(
+            additional_parameters, **override_additional_options
+        )
 
     dict_of_df = get_dict_of_df_for_boat_report(
         object_store=interface.object_store,

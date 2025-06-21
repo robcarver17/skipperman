@@ -152,18 +152,18 @@ def get_modified_dinghy_and_limit_from_form(
     existing_dinghy_and_limit = existing_object
 
     new_dinghy_name = interface.value_from_form(
-        name_of_text_box_for_boat(existing_dinghy_and_limit),
-        default=MISSING_FROM_FORM
+        name_of_text_box_for_boat(existing_dinghy_and_limit), default=MISSING_FROM_FORM
     )
 
     new_limit = interface.value_from_form(
         get_cell_name_for_boat_limits(existing_dinghy_and_limit),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
 
     new_hidden = is_radio_yes_or_no(
-        interface=interface, input_name=hidden_box_name(existing_dinghy_and_limit),
-        default=MISSING_FROM_FORM
+        interface=interface,
+        input_name=hidden_box_name(existing_dinghy_and_limit),
+        default=MISSING_FROM_FORM,
     )
     if MISSING_FROM_FORM in [new_hidden, new_dinghy_name, new_limit]:
         interface.log_error("Something went wrong, can't change dinghy")

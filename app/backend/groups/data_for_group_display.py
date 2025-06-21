@@ -315,7 +315,6 @@ def get_current_sail_number_across_days_or_none_if_different(
 def get_string_describing_different_sail_numbers_across_days(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
 ):
-
     all_numbers = get_sail_numbers_across_days(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
@@ -439,7 +438,6 @@ def get_two_handed_partner_as_str_for_cadet_on_day(
 def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-
     partner = get_two_handed_partner_for_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     )
@@ -459,7 +457,6 @@ def get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
 def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
 ) -> Union[None, str]:
-
     current_partner_name = (
         get_two_handed_partner_name_for_cadet_across_days_or_none_if_different(
             dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
@@ -484,7 +481,6 @@ def get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
 def get_two_handed_partner_for_cadet_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> Union[Cadet, object]:
-
     partner = dict_of_all_event_data.event_data_for_cadet(
         cadet
     ).days_and_boat_class.partner_on_day(day)
@@ -507,7 +503,6 @@ def get_list_of_cadet_names_including_asterix_marks_at_event_with_matching_sched
     cadet: Cadet,
     available_on_specific_day: Day = arg_not_passed,
 ) -> List[str]:
-
     cadets_at_event = (
         dict_of_all_event_data.dict_of_cadets_with_registration_data.list_of_active_cadets()
     )
@@ -541,7 +536,6 @@ def get_cadet_name_or_none_given_schedule_status(
     other_cadet: Cadet,
     specific_day: Day = arg_not_passed,
 ):
-
     if no_partnership_given_partner_cadet(other_cadet):
         return from_partner_cadet_to_id_or_string(other_cadet)
 
@@ -572,7 +566,6 @@ def get_schedule_status_for_two_cadets(
     other_cadet: Cadet,
     specific_day: Day = arg_not_passed,
 ) -> Schedule:
-
     if cadet == other_cadet:
         return same_cadet
     this_cadet_availability = cadet_availability_at_event(

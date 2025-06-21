@@ -146,7 +146,6 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
     remove_unallocated: bool = False,
     only_events_before_excluded_event: bool = True,
 ) -> Dict[Event, Group]:
-
     list_of_events = get_list_of_last_N_events(
         object_store=object_store,
         N_events=N_events,
@@ -170,7 +169,6 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet_given_list_
     remove_unallocated: bool = False,
     pad: bool = False,
 ) -> Dict[Event, Group]:
-
     previous_allocations_as_dict = (
         get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
             object_store=object_store, list_of_events=list_of_events
@@ -236,7 +234,6 @@ def most_common_allocation_for_cadet_in_previous_events(
     previous_allocations_as_dict: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
     pad: bool = False,
 ) -> Dict[Event, Group]:
-
     dict_of_allocations = dict(
         [
             (

@@ -72,10 +72,10 @@ def summarise_food_data_by_day_for_volunteers(
                 )
             ]
             summary_dict[day.name] = sum(list_to_count)
-        summary_dict["Total over event"] = (
-            count_number_of_volunteers_meeting_days_required_target(
-                availability_dict=availability_dict, days_required=days_required
-            )
+        summary_dict[
+            "Total over event"
+        ] = count_number_of_volunteers_meeting_days_required_target(
+            availability_dict=availability_dict, days_required=days_required
         )
 
         summary_over_required["%d day volunteer" % days_required] = summary_dict
@@ -86,7 +86,6 @@ def summarise_food_data_by_day_for_volunteers(
 def summarise_food_data_by_day_for_cadets(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-
     cadets_with_food_requirements = (
         get_dict_of_active_cadets_with_food_requirements_at_event(
             object_store=object_store, event=event
@@ -118,9 +117,9 @@ def summarise_food_data_by_day_for_cadets(
             age_window=age_window,
         )
 
-        summary_over_age_brackets["Cadet %s" % bracket_to_str(age_window)] = (
-            summary_dict
-        )
+        summary_over_age_brackets[
+            "Cadet %s" % bracket_to_str(age_window)
+        ] = summary_dict
 
     return pd.DataFrame(summary_over_age_brackets).transpose()
 

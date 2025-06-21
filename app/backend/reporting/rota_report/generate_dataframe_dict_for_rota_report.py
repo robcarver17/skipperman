@@ -28,7 +28,6 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.events import Event
 
 
-
 def get_df_for_reporting_volunteers_with_flags(
     object_store: ObjectStore,
     event: Event,
@@ -127,7 +126,6 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
     volunteer_event_data: DictOfAllEventDataForVolunteers,
     team: Team,
 ) -> Dict[RoleWithSkills, List[VolunteerWithRoleGroupAndTeamAtEvent]]:
-
     dict_of_volunteers_and_roles_this_team = {}
     all_roles_in_team = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.roles_for_team(
         team
@@ -137,9 +135,9 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
         list_of_volunteers_doing_roles_this_role = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
             day=day, role=role
         )
-        dict_of_volunteers_and_roles_this_team[role] = (
-            list_of_volunteers_doing_roles_this_role
-        )
+        dict_of_volunteers_and_roles_this_team[
+            role
+        ] = list_of_volunteers_doing_roles_this_role
 
     return dict_of_volunteers_and_roles_this_team
 
@@ -148,13 +146,11 @@ def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
     volunteer_event_data: DictOfAllEventDataForVolunteers,
 ):
-
     df_for_reporting_volunteers_for_day = apply_textual_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day
     )
 
     return df_for_reporting_volunteers_for_day
-
 
 
 def apply_textual_transforms_to_df(df_for_reporting_volunteers_for_day: pd.DataFrame):

@@ -92,7 +92,6 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
         self,
         cadet: Cadet,
     ):
-
         try:
             self.pop(cadet)
             self.list_of_cadets_with_clothing_and_ids.remove_clothing_for_cadet_at_event(

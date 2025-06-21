@@ -50,9 +50,9 @@ def get_help_text_as_html_from_markdown(help_page_name: str) -> str:
     try:
         html = md.convert(text)
     except Exception as e:
-        return (
-            "Error %s when processing markdown help file %s"
-            % full_helper_file_with_path
+        return "Error %s when processing markdown help file %s" % (
+            str(e),
+            full_helper_file_with_path,
         )
 
     return html

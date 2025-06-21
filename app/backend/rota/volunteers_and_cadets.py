@@ -20,7 +20,6 @@ def list_of_cadet_groups_associated_with_volunteer(
     event: Event,
     volunteer: Volunteer,
 ) -> ListOfGroups:
-
     group_data = get_dict_of_cadets_with_groups_at_event(
         object_store=object_store, event=event
     )

@@ -99,7 +99,6 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
         )
 
 
-
 class ListOfVolunteerAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -122,7 +121,9 @@ class ListOfVolunteerAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     ):
         item = self.item_for_volunteer_id_on_day(volunteer_id=volunteer_id, day=day)
         if club_dinghy_id == no_club_dinghy_id:
-            self.delete_allocation_for_volunteer_on_day(volunteer_id=volunteer_id, day=day)
+            self.delete_allocation_for_volunteer_on_day(
+                volunteer_id=volunteer_id, day=day
+            )
             return
 
         item.club_dinghy_id = club_dinghy_id
@@ -169,6 +170,6 @@ class ListOfVolunteerAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     ) -> VolunteerAtEventWithClubDinghyWithId:
         return get_unique_object_with_multiple_attr_in_list(
             some_list=self,
-            dict_of_attributes={"volunteer_id":volunteer_id, "day": day},
+            dict_of_attributes={"volunteer_id": volunteer_id, "day": day},
             default=default,
         )

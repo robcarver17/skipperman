@@ -85,7 +85,7 @@ It might be worth quickly running through what happens when a specific action pa
 
 1- The flask server goes to `flask_app.py` and works out what to do depending on the URL that is passed, eg `/action/view_master_list_of_cadets`
 2- This code `@app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])` indicates that if `/action/` (which is ACTION_PREFIX) is at the start of the URL path, then we call the following function, passing the tail of the URL as the argument `action_option` (which will be `view_master_list_of_cadets` in this case) as a variable
-3- The function `action(action_option)` is called, which calls [`generate_action_page_html(action_option)`](/app/web/actions/action_pages.py) after a security check
+3- The function `action(action_option)` is called, which calls [`generate_action_page_html(action_option)`](/app/web/end_points/action_pages.py) after a security check
 4- We call `get_abstract_form_for_specific_action` to get the abstract objects to convert to an HTML form
   - We get a `FormHandler` for the specific action
     - We create a `FlaskInterface`, including the default data access option

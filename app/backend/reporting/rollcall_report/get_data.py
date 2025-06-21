@@ -49,7 +49,6 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
     include_emergency_contacts: bool,
     include_health_data: bool,
 ) -> Dict[str, pd.DataFrame]:
-
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
     )
@@ -86,7 +85,6 @@ def get_block_of_df_for_group_at_event(
     include_emergency_contacts: bool,
     include_health_data: bool,
 ) -> pd.DataFrame:
-
     list_of_cadets_in_group = dict_of_all_event_data.cadets_in_group_during_event(group)
     list_of_cadets_in_group = list_of_cadets_in_group.sort_by_name()
     df = get_names_and_groups_block_of_df_for_group_at_event(
@@ -121,7 +119,6 @@ def get_names_and_groups_block_of_df_for_group_at_event(
     display_full_names: bool,
     add_asterix_for_club_boats: bool,
 ) -> pd.DataFrame:
-
     names_as_series = get_names_as_series_group_at_event(
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_cadets_in_group=list_of_cadets_in_group,
@@ -141,7 +138,6 @@ def get_names_as_series_group_at_event(
     display_full_names: bool,
     add_asterix_for_club_boats: bool,
 ) -> pd.Series:
-
     if add_asterix_for_club_boats:
         list_of_cadets_in_group_for_names = add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
             list_of_cadets=list_of_cadets_in_group,
@@ -198,7 +194,6 @@ def add_attendance_to_rollcall_df(
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
     list_of_cadets_in_group: ListOfCadets,
 ) -> pd.DataFrame:
-
     attendance = (
         get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
             all_event_info=dict_of_all_event_data,
@@ -220,7 +215,6 @@ def add_extra_to_reporting_df(
     include_emergency_contacts: bool = True,
     include_health_data: bool = True,
 ) -> pd.DataFrame:
-
     ## add emergency contacts
     if include_emergency_contacts:
         contact_list = dict_of_all_event_data.dict_of_cadets_with_registration_data.get_emergency_contact_for_list_of_cadets_at_event(

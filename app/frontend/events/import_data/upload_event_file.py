@@ -61,7 +61,6 @@ def get_upload_buttons():
 def post_form_upload_event_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-
     button_pressed = interface.last_button_pressed()
 
     if upload_button.pressed(button_pressed):

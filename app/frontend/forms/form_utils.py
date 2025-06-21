@@ -55,7 +55,10 @@ def get_availability_checkbox(
 
 
 def get_availablity_from_form(
-    interface: abstractInterface, event: Event, input_name: str, default=MISSING_FROM_FORM
+    interface: abstractInterface,
+    event: Event,
+    input_name: str,
+    default=MISSING_FROM_FORM,
 ) -> DaySelector:
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
         input_name, default=MISSING_FROM_FORM
@@ -138,7 +141,10 @@ def get_food_requirements_input_as_tuple(
 
 
 def get_food_requirements_from_form(
-    interface: abstractInterface, checkbox_input_name: str, other_input_name: str, default=MISSING_FROM_FORM
+    interface: abstractInterface,
+    checkbox_input_name: str,
+    other_input_name: str,
+    default=MISSING_FROM_FORM,
 ) -> FoodRequirements:
     other_food = interface.value_from_form(other_input_name, default=MISSING_FROM_FORM)
     food_required_as_list = interface.value_of_multiple_options_from_form(
@@ -255,7 +261,9 @@ def yes_no_radio(
     )
 
 
-def is_radio_yes_or_no(interface: abstractInterface, input_name: str, default=MISSING_FROM_FORM):
+def is_radio_yes_or_no(
+    interface: abstractInterface, input_name: str, default=MISSING_FROM_FORM
+):
     values_in_form = interface.value_of_multiple_options_from_form(
         input_name, default=MISSING_FROM_FORM
     )

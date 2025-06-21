@@ -92,7 +92,6 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(
     day: Day,
     ready_to_swap: bool,
 ) -> ListOfLines:
-
     role_and_group = volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
     group_and_role_inputs = get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_available(
         volunteer=volunteer_data_at_event.volunteer,

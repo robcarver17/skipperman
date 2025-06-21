@@ -45,7 +45,6 @@ def get_row_in_registration_data_for_cadet_both_cancelled_and_active(
     cadet: Cadet,
     raise_error_on_duplicate: bool = True,
 ) -> RowInRegistrationData:
-
     all_rows = get_all_rows_in_registration_data_which_have_been_identified_for_a_specific_cadet(
         event=event, cadet=cadet, object_store=object_store
     )
@@ -72,7 +71,6 @@ def get_row_in_registration_data_for_cadet_both_cancelled_and_active(
 def get_all_rows_in_registration_data_which_have_been_identified_for_a_specific_cadet(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> RegistrationDataForEvent:
-
     identified_cadets_data = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
@@ -121,7 +119,6 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 def identified_cadet_ids_in_raw_registration_data(
     object_store: ObjectStore, event: Event
 ) -> list:
-
     raw_registration_data = get_raw_mapped_registration_data(
         object_store=object_store, event=event
     )
@@ -229,7 +226,6 @@ def update_list_of_identified_cadets_at_event(
     event: Event,
     identified_cadets_at_event: ListOfIdentifiedCadetsAtEvent,
 ):
-
     object_store.update(
         new_object=identified_cadets_at_event,
         object_definition=object_definition_for_identified_cadets_at_event,

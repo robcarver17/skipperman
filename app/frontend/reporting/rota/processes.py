@@ -1,8 +1,9 @@
 import pandas as pd
 from typing import Dict, Callable
 
-from app.backend.reporting.options_and_parameters.report_type_specific_parameters import \
-    apply_override_additional_options
+from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
+    apply_override_additional_options,
+)
 from app.backend.reporting.rota_report.configuration import (
     AdditionalParametersForVolunteerReport,
 )
@@ -32,9 +33,7 @@ def load_additional_parameters_for_rota_report(
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 
-    return AdditionalParametersForVolunteerReport(
-        days_to_show=days_to_show
-    )
+    return AdditionalParametersForVolunteerReport(days_to_show=days_to_show)
 
 
 def clear_additional_parameters_for_rota_report(
@@ -56,16 +55,16 @@ def get_rota_report_additional_parameters_from_form(
 ) -> AdditionalParametersForVolunteerReport:
     event = get_event_from_state(interface)
     days_to_show = get_availablity_from_form(
-        event=event, interface=interface, input_name=DAYS_TO_SHOW,
-        default=MISSING_FROM_FORM
+        event=event,
+        interface=interface,
+        input_name=DAYS_TO_SHOW,
+        default=MISSING_FROM_FORM,
     )
     if days_to_show is MISSING_FROM_FORM:
         interface.log_error("Days to show missing from form")
         days_to_show = event.day_selector_for_days_in_event()
 
-    return AdditionalParametersForVolunteerReport(
-        days_to_show=days_to_show
-    )
+    return AdditionalParametersForVolunteerReport(days_to_show=days_to_show)
 
 
 def save_additional_parameters_for_rota(
@@ -76,14 +75,14 @@ def save_additional_parameters_for_rota(
 
 
 def get_dict_of_df_for_reporting_rota(
-    interface: abstractInterface,
-        override_additional_options: dict = arg_not_passed
-
+    interface: abstractInterface, override_additional_options: dict = arg_not_passed
 ) -> Dict[str, pd.DataFrame]:
     event = get_event_from_state(interface)
     additional_parameters = load_additional_parameters_for_rota_report(interface)
     if override_additional_options is not arg_not_passed:
-        additional_parameters=apply_override_additional_options(additional_parameters, **override_additional_options)
+        additional_parameters = apply_override_additional_options(
+            additional_parameters, **override_additional_options
+        )
 
     dict_of_df = get_dict_of_df_for_reporting_rota_given_event_and_state(
         event=event, additional_parameters=additional_parameters, interface=interface
@@ -104,4 +103,3 @@ def get_dict_of_df_for_reporting_rota_given_event_and_state(
     )
 
     return dict_of_df
-

@@ -49,7 +49,6 @@ class AdditionalParametersForAllocationReport:
     add_asterix_for_club_boats: bool
 
 
-
 def add_club_boat_asterix(
     object_store: ObjectStore,
     list_of_cadets_with_groups: ListOfCadetsWithGroupOnDay,
@@ -96,7 +95,6 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True,
 ) -> Dict[str, pd.DataFrame]:
-
     all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event, active_only=True
     )

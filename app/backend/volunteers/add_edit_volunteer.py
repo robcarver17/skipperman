@@ -86,5 +86,4 @@ def verify_volunteer_and_warn(
 
 
 def volunteer_name_is_similar_to_cadet_name(cadet: Cadet, volunteer: Volunteer) -> bool:
-
     return similar(volunteer.name, cadet.name) > SIMILARITY_LEVEL_TO_WARN_NAME

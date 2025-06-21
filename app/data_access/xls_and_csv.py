@@ -34,7 +34,7 @@ def load_spreadsheet_file(filename: str) -> pd.DataFrame:
 
 def save_dict_of_df_as_spreadsheet_file(
     dict_of_df: Dict[str, pd.DataFrame],
-    path_and_filename_no_extension:PathAndFilename,
+    path_and_filename_no_extension: PathAndFilename,
     write_index: bool = False,
 ) -> PathAndFilename:
     try:

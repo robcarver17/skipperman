@@ -21,8 +21,6 @@ def get_username():
     return current_user.username
 
 
-no_user = ""
-
 
 def authenticated_user():
     try:
@@ -71,8 +69,6 @@ def get_all_flask_users():
 
     return all_flask_users
 
-
-all_flask_users = ""
 
 
 def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:

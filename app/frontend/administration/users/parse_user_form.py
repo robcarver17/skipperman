@@ -6,7 +6,8 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_from_list_of_given_str_of_volunteer, get_volunteer_from_id,
+    get_volunteer_from_list_of_given_str_of_volunteer,
+    get_volunteer_from_id,
 )
 
 from app.backend.security.modify_user import (
@@ -188,37 +189,40 @@ def get_user_values_from_values_in_form(
     interface: abstractInterface,
     user: SkipperManUser,
 ) -> SkipperManUserFromForm:
-
     group_name = interface.value_from_form(
-        name_for_user_and_input_type(user, GROUP), default = user.group.name ## valid if user group admin and can't change
+        name_for_user_and_input_type(user, GROUP),
+        default=user.group.name,  ## valid if user group admin and can't change
     )
     group = UserGroup[group_name]
 
     username = interface.value_from_form(
-        name_for_user_and_input_type(user, USERNAME), default = user.username ## valid if not adding user
+        name_for_user_and_input_type(user, USERNAME),
+        default=user.username,  ## valid if not adding user
     )
 
     volunteer_name = interface.value_from_form(
-        name_for_user_and_input_type(user, VOLUNTEER), default = MISSING_FROM_FORM
+        name_for_user_and_input_type(user, VOLUNTEER), default=MISSING_FROM_FORM
     )
     if volunteer_name is MISSING_FROM_FORM:
         interface.log_error("Weird error can't update volunteer name")
         volunteer_id = user.volunteer_id
-        volunteer = get_volunteer_from_id(object_store=interface.object_store, volunteer_id=volunteer_id)
+        volunteer = get_volunteer_from_id(
+            object_store=interface.object_store, volunteer_id=volunteer_id
+        )
     else:
         volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
             object_store=interface.object_store, volunteer_as_str=volunteer_name
         )
 
-    password=interface.value_from_form(
-        name_for_user_and_input_type(user, PASSWORD), default = MISSING_FROM_FORM
+    password = interface.value_from_form(
+        name_for_user_and_input_type(user, PASSWORD), default=MISSING_FROM_FORM
     )
     confirm_password = interface.value_from_form(
-        name_for_user_and_input_type(user, PASSWORD_CONFIRM), default = MISSING_FROM_FORM
+        name_for_user_and_input_type(user, PASSWORD_CONFIRM), default=MISSING_FROM_FORM
     )
     if password is MISSING_FROM_FORM or confirm_password is MISSING_FROM_FORM:
         interface.log_error("Weird error can't update passwords")
-        password = confirm_password = ''
+        password = confirm_password = ""
 
     return SkipperManUserFromForm(
         username=username,

@@ -83,7 +83,6 @@ def get_dict_of_group_name_for_cadet_across_events(
     cadet: Cadet,
     list_of_events: ListOfEvents,
 ) -> Dict[str, str]:
-
     dict_of_names = dict(
         [
             (

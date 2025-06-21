@@ -40,7 +40,6 @@ def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
     volunteer: Volunteer,
     new_role_and_group: RoleAndGroupAndTeam,
 ):
-
     dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )
@@ -67,7 +66,6 @@ def swap_roles_and_groups_for_volunteers_in_allocation(
     day_to_swap_with: Day,
     volunteer_to_swap_with: Volunteer,
 ):
-
     dict_of_volunteers_at_event = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )

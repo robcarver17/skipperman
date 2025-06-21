@@ -87,13 +87,13 @@ class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification])
             already_qualified = qualifications_for_cadet.is_cadet_qualified(
                 qualification
             )
-            raw_dict[qualification] = (
-                TicksForQualification.from_dict_of_ticks_and_qualifications(
-                    tick_substages_as_dict=tick_substages_as_dict,
-                    dict_of_ticks_with_items=dict_of_ticks_with_items,
-                    already_qualified=already_qualified,
-                    qualification=qualification,
-                )
+            raw_dict[
+                qualification
+            ] = TicksForQualification.from_dict_of_ticks_and_qualifications(
+                tick_substages_as_dict=tick_substages_as_dict,
+                dict_of_ticks_with_items=dict_of_ticks_with_items,
+                already_qualified=already_qualified,
+                qualification=qualification,
             )
 
         return cls(raw_dict)
@@ -193,7 +193,6 @@ def compose_dict_of_cadets_with_qualifications_and_ticks(
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
     dict_of_qualifications_for_all_cadets: DictOfQualificationsForCadets,
 ) -> DictOfCadetsWithQualificationsAndTicks:
-
     ## Because the underlying is iterable, it won't automatically be of the right class
     dict_of_cadet_ids_with_tick_list_items_for_cadet_id = (
         DictOfCadetIdsWithTickListItemsForCadetId(

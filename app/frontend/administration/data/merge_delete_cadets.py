@@ -154,7 +154,6 @@ def launch_merge_cadet_process(interface: abstractInterface) -> Union[Form, NewF
 
 
 def launch_delete_cadet_process(interface: abstractInterface):
-
     ## get warnings
     ## confirm ok
     ## if not okay, clear cache without saving

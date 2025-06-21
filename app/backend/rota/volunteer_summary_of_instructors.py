@@ -85,9 +85,16 @@ def get_summary_row_of_instructors_for_group_at_event(
     group: Group,
     list_of_instructor_type_roles_at_event_sorted_by_seniority: list,
 ) -> RowInTable:
-    cadet_count_for_group_over_days_as_dict = get_cadet_count_for_group_over_days_as_dict(        object_store=object_store, event=volunteers_in_roles_at_event.event, group=group)
-    cadet_count_for_group_over_days = get_cadet_count_for_group_over_days(cadet_count_for_group_over_days_as_dict,
-                                                                          group=group)
+    cadet_count_for_group_over_days_as_dict = (
+        get_cadet_count_for_group_over_days_as_dict(
+            object_store=object_store,
+            event=volunteers_in_roles_at_event.event,
+            group=group,
+        )
+    )
+    cadet_count_for_group_over_days = get_cadet_count_for_group_over_days(
+        cadet_count_for_group_over_days_as_dict, group=group
+    )
 
     instructor_names = [
         get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(
@@ -97,10 +104,11 @@ def get_summary_row_of_instructors_for_group_at_event(
         )
         for role in list_of_instructor_type_roles_at_event_sorted_by_seniority
     ]
-    instructor_count_allocated_to_group_as_dict = get_instructor_count_allocated_to_group_as_dict(
-        volunteers_in_roles_at_event=volunteers_in_roles_at_event,
-        group=group,
-
+    instructor_count_allocated_to_group_as_dict = (
+        get_instructor_count_allocated_to_group_as_dict(
+            volunteers_in_roles_at_event=volunteers_in_roles_at_event,
+            group=group,
+        )
     )
     instructor_count = get_instructor_count_allocated_to_group_with_day_annotation(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event,
@@ -110,7 +118,10 @@ def get_summary_row_of_instructors_for_group_at_event(
         object_store=object_store, event=volunteers_in_roles_at_event.event, group=group
     )
 
-    warning = display_warning(cadet_count_for_group_over_days_as_dict=cadet_count_for_group_over_days_as_dict, instructor_count_allocated_to_group_as_dict=instructor_count_allocated_to_group_as_dict)
+    warning = display_warning(
+        cadet_count_for_group_over_days_as_dict=cadet_count_for_group_over_days_as_dict,
+        instructor_count_allocated_to_group_as_dict=instructor_count_allocated_to_group_as_dict,
+    )
 
     return RowInTable(
         [group.name]
@@ -119,21 +130,24 @@ def get_summary_row_of_instructors_for_group_at_event(
         + [group_notes, instructor_count, warning]
     )
 
-def display_warning(cadet_count_for_group_over_days_as_dict: Dict[str,int],
-                    instructor_count_allocated_to_group_as_dict: Dict[str,int]):
 
+def display_warning(
+    cadet_count_for_group_over_days_as_dict: Dict[str, int],
+    instructor_count_allocated_to_group_as_dict: Dict[str, int],
+):
     list_of_warnings = []
     for day in cadet_count_for_group_over_days_as_dict.keys():
         cadets = cadet_count_for_group_over_days_as_dict[day]
         instructors = instructor_count_allocated_to_group_as_dict[day]
         spare = (instructors * MAX_GROUP_SIZE_PER_INSTRUCTOR) - cadets
 
-        if spare<0:
+        if spare < 0:
             list_of_warnings.append("%s: %d OVER RATIO!" % (day[:3], -spare))
         else:
             list_of_warnings.append("%s: space for %d" % (day[:3], spare))
 
     return ", ".join(list_of_warnings)
+
 
 def get_group_notes_for_group(
     object_store: ObjectStore, event: Event, group: Group
@@ -200,10 +214,16 @@ def check_all_instructors_same_across_days(
 ):
     return check_all_equal(list(dict_of_instructors_by_day.values()))
 
+
 def check_count_of_instructors_same_across_days(
     dict_of_instructors_by_day: Dict[Day, List[str]]
 ):
-    return check_all_equal([len(instructors_on_day) for instructors_on_day in list(dict_of_instructors_by_day.values())])
+    return check_all_equal(
+        [
+            len(instructors_on_day)
+            for instructors_on_day in list(dict_of_instructors_by_day.values())
+        ]
+    )
 
 
 def check_all_equal(some_list: list):
@@ -267,7 +287,9 @@ def get_instructor_count_allocated_to_group_with_day_annotation(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event, group=group
     )
 
-    if check_count_of_instructors_same_across_days(dict_of_instructors_by_day_for_group):
+    if check_count_of_instructors_same_across_days(
+        dict_of_instructors_by_day_for_group
+    ):
         instructors_on_first_day = list(dict_of_instructors_by_day_for_group.values())[
             0
         ]
@@ -277,12 +299,10 @@ def get_instructor_count_allocated_to_group_with_day_annotation(
         return annotate_count_across_days(dict_of_instructors_by_day_for_group)
 
 
-
 def get_instructor_count_allocated_to_group_as_dict(
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
-) -> Dict[str,int]:
-
+) -> Dict[str, int]:
     dict_of_instructors_by_day_for_group = get_dict_of_instructors_by_day_for_group(
         volunteers_in_roles_at_event=volunteers_in_roles_at_event, group=group
     )
@@ -306,13 +326,13 @@ def get_dict_of_instructors_by_day_for_group(
         )
         list_of_volunteers = [
             volunteer_with_group.volunteer.name
-            for volunteer_with_group in list_of_volunteers if volunteer_with_group.in_instructor_team()
+            for volunteer_with_group in list_of_volunteers
+            if volunteer_with_group.in_instructor_team()
         ]
         list_of_volunteers.sort()
         dict_of_instructors_by_day[day] = list_of_volunteers
 
     return dict_of_instructors_by_day
-
 
 
 def annotate_count_across_days(
@@ -342,7 +362,7 @@ def get_list_of_instructor_type_roles_at_event_sorted_by_seniority(
 
 
 def get_cadet_count_for_group_over_days(
-   count_as_dict: Dict[Day,int], group: Group
+    count_as_dict: Dict[Day, int], group: Group
 ) -> list:
     results = []
     for count in count_as_dict.items():
@@ -366,14 +386,12 @@ def get_cadet_count_for_group_over_days_as_dict(
     results = {}
     for day in cadets_at_event_data.event.days_in_event():
         if group.is_unallocated:
-            results[day.name]=0
+            results[day.name] = 0
         else:
-            results[day.name]=\
-                len(
-                    dict_of_cadets_with_days_and_groups.list_of_cadets_in_group_on_day(
-                        day=day, group=group
-                    )
+            results[day.name] = len(
+                dict_of_cadets_with_days_and_groups.list_of_cadets_in_group_on_day(
+                    day=day, group=group
                 )
-
+            )
 
     return results

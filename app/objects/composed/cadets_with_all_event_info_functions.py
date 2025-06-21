@@ -57,7 +57,6 @@ def cadets_not_allocated_to_group_on_at_least_one_day_attending(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> ListOfCadets:
-
     list_of_cadets = []
     for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
         inactive = (
@@ -83,7 +82,6 @@ def cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> bool:
-
     availability = dict_of_cadets_with_registration_data.registration_data_for_cadet(
         cadet
     ).availability
@@ -178,7 +176,6 @@ def update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> RequiredDictForAllocation:
-
     if availability_is_bad_for_sailor_or_partner(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
@@ -232,7 +229,6 @@ def update_partnership_info_for_updated_cadet_at_event(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> RequiredDictForAllocation:
-
     how_changed = how_has_partnership_changed(
         dict_of_cadets_and_boat_class_and_partners=required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
@@ -276,7 +272,6 @@ def how_has_partnership_changed(
     dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> PartnershipChange:
-
     cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.cadet
     day = cadet_boat_class_group_club_dinghy_and_partner_on_day.day
 
@@ -314,7 +309,6 @@ def modify_no_partnership_status_for_existing_cadet(
     required_dict_for_allocation: RequiredDictForAllocation,
     how_changed: PartnershipChange,
 ):
-
     cadet = how_changed.cadet
     day = how_changed.day
     new_partner_status = how_changed.new_partner
@@ -331,7 +325,6 @@ def break_up_existing_partnership(
     required_dict_for_allocation: RequiredDictForAllocation,
     how_changed: PartnershipChange,
 ) -> RequiredDictForAllocation:
-
     cadet = how_changed.cadet
     day = how_changed.day
     partner_cadet = how_changed.original_partner
@@ -351,7 +344,6 @@ def create_partnership(
     how_changed: PartnershipChange,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ):
-
     required_dict_for_allocation = (
         if_new_partner_had_partner_remove_them_and_return_removed_partner_in_list(
             required_dict_for_allocation=required_dict_for_allocation,
@@ -378,7 +370,6 @@ def if_new_partner_had_partner_remove_them_and_return_removed_partner_in_list(
     required_dict_for_allocation: RequiredDictForAllocation,
     how_changed: PartnershipChange,
 ) -> RequiredDictForAllocation:
-
     did_new_partner_have_partner = how_changed.new_partner_had_partner
 
     if did_new_partner_have_partner:
@@ -399,7 +390,6 @@ def if_cadet_had_existing_partner_remove_them_and_return_affected_cadets_in_list
     required_dict_for_allocation: RequiredDictForAllocation,
     how_changed: PartnershipChange,
 ) -> RequiredDictForAllocation:
-
     did_cadet_have_existing_partner = how_changed.did_have_partner
 
     if did_cadet_have_existing_partner:
@@ -420,7 +410,6 @@ def create_fresh_two_handed_partnership(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> RequiredDictForAllocation:
-
     cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.cadet
     partner_cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.partner_cadet
     day = cadet_boat_class_group_club_dinghy_and_partner_on_day.day
@@ -444,7 +433,6 @@ def clone_cadet_group_club_dinghy_boat_class_sail_number_to_partner(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> RequiredDictForAllocation:
-
     cadet_boat_class_group_club_dinghy_and_partner_on_day_with_partner_as_cadet = (
         cadet_boat_class_group_club_dinghy_and_partner_on_day.switch_partner()
     )
@@ -463,7 +451,6 @@ def update_cadets_own_info_excluding_partner(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> RequiredDictForAllocation:
-
     cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.cadet
     day = cadet_boat_class_group_club_dinghy_and_partner_on_day.day
     group = cadet_boat_class_group_club_dinghy_and_partner_on_day.group

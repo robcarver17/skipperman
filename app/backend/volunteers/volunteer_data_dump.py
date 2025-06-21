@@ -25,7 +25,6 @@ from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
 
 
 def get_volunteer_data_dump(object_store: ObjectStore) -> pd.DataFrame:
-
     list_of_all_volunteers = get_list_of_volunteers(object_store)
     list_of_all_volunteers = list_of_all_volunteers.sort_by_surname()
     list_of_all_row_data = ListOfVolunteerRowData(

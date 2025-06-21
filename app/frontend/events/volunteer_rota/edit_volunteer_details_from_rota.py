@@ -69,7 +69,7 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
         interface=interface,
         event=event,
         input_name=input_name_for_volunteer_availability(volunteer),
-        default=MISSING_FROM_FORM
+        default=MISSING_FROM_FORM,
     )
     if availability is MISSING_FROM_FORM:
         interface.log_error("Availability not in form for %s" % volunteer)

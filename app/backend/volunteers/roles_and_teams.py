@@ -26,7 +26,6 @@ from app.objects.groups import unallocated_group
 def reorder_tuple_of_item_and_role_and_group(
     object_store: ObjectStore, list_of_tuples: List[Tuple[object, RoleAndGroup]]
 ) -> List[Tuple[object, RoleAndGroup]]:
-
     list_of_roles = get_list_of_roles(object_store)
     list_of_roles.append(no_role_allocated)
     list_of_groups = get_list_of_groups(object_store)

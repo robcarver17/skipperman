@@ -55,7 +55,6 @@ class Cadet(GenericSkipperManObjectWithIds):
         dob_status: str = DOB_SURE,
         id: str = arg_not_passed,
     ):
-
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),
@@ -166,7 +165,6 @@ class Cadet(GenericSkipperManObjectWithIds):
 
 
 def dob_from_passed_dob(date_of_birth: datetime.date, dob_status: str):
-
     if dob_status == DOB_SURE:
         use_date_of_birth = transform_str_or_datetime_into_date(date_of_birth)
     elif dob_status == DOB_IRRELEVANT:
@@ -322,10 +320,13 @@ def is_cadet_age_surprising(cadet: Cadet):
 
     return too_old or too_young
 
+
 def cant_check_dob(cadet: Cadet):
-    return cadet.has_default_date_of_birth or \
-         cadet.has_unknown_date_of_birth or \
-        cadet.has_irrelevant_date_of_birth
+    return (
+        cadet.has_default_date_of_birth
+        or cadet.has_unknown_date_of_birth
+        or cadet.has_irrelevant_date_of_birth
+    )
 
 
 def cadet_seems_too_old(cadet: Cadet):
@@ -334,11 +335,14 @@ def cadet_seems_too_old(cadet: Cadet):
 
     date_of_birth = cadet.date_of_birth
     appropriate_year = get_appropriate_year_for_cadet_start_point()
-    cut_off_date = datetime.date(year= appropriate_year- MAX_CADET_AGE-1,
-                                 month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
-                                 day=1)
+    cut_off_date = datetime.date(
+        year=appropriate_year - MAX_CADET_AGE - 1,
+        month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+        day=1,
+    )
 
-    return date_of_birth<cut_off_date
+    return date_of_birth < cut_off_date
+
 
 def cadet_seems_too_young(cadet: Cadet):
     if cant_check_dob(cadet):
@@ -346,15 +350,19 @@ def cadet_seems_too_young(cadet: Cadet):
 
     date_of_birth = cadet.date_of_birth
     appropriate_year = get_appropriate_year_for_cadet_start_point()
-    cut_off_date = datetime.date(year=appropriate_year - MIN_CADET_AGE-1,
-                                 month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
-                                 day=1)
+    cut_off_date = datetime.date(
+        year=appropriate_year - MIN_CADET_AGE - 1,
+        month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+        day=1,
+    )
 
-    return date_of_birth>=cut_off_date
+    return date_of_birth >= cut_off_date
+
 
 def how_old(date_of_birth: datetime.date):
     diff = datetime.date.today() - date_of_birth
-    return diff.total_seconds()/(60*60*24*365.25)
+    return diff.total_seconds() / (60 * 60 * 24 * 365.25)
+
 
 def get_appropriate_year_for_cadet_start_point():
     today = datetime.date.today()
@@ -362,8 +370,6 @@ def get_appropriate_year_for_cadet_start_point():
         return today.year
     else:
         return today.year + 1
-
-
 
 
 PERMANENT_SKIP_TEST_CADET_ID = str(-9999)

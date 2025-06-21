@@ -162,7 +162,6 @@ from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
 def get_role_group(
     object_store: ObjectStore, volunteer: Volunteer, event: Event, default=""
 ):
-
     role_dict = dict(
         [
             (

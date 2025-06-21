@@ -116,7 +116,6 @@ def process_update_to_cadet_food_data_if_already_at_event(
     cadet: Cadet,
     registration_data: CadetRegistrationData,
 ):
-
     cadet_active_at_event = registration_data.active
     if cadet_active_at_event:
         return
@@ -132,7 +131,6 @@ def process_update_to_cadet_food_data_if_new_to_event(
     cadet: Cadet,
     registration_data: CadetRegistrationData,
 ):
-
     food_from_registration = registration_data.data_in_row.get_item(
         CADET_FOOD_PREFERENCE, None
     )

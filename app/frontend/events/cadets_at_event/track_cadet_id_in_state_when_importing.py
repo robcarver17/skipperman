@@ -21,7 +21,6 @@ def percentage_of_cadets_processed_at_event(interface: abstractInterface):
 
 
 def get_and_save_next_cadet_in_event_data(interface: abstractInterface) -> Cadet:
-
     next_id = get_and_save_next_cadet_id_in_event_data(interface=interface)
     return get_cadet_from_id(object_store=interface.object_store, cadet_id=next_id)
 

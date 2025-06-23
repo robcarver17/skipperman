@@ -24,7 +24,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 
 from app.objects.food import guess_food_requirements_from_food_field
 
-from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE
+from app.data_access.configuration.field_list import CADET_FOOD_PREFERENCE, CADET_FOOD_ALLERGY
 
 from app.backend.food.modify_food_data import (
     is_cadet_with_already_at_event_with_food,
@@ -132,12 +132,18 @@ def process_update_to_cadet_food_data_if_new_to_event(
     registration_data: CadetRegistrationData,
 ):
     food_from_registration = registration_data.data_in_row.get_item(
-        CADET_FOOD_PREFERENCE, None
+        CADET_FOOD_PREFERENCE, ""
     )
-    if food_from_registration is None:
+    allergy_from_registration = registration_data.data_in_row.get_item(
+        CADET_FOOD_ALLERGY, default=""
+    )
+
+    both_food_and_allergies = food_from_registration+" "+allergy_from_registration
+
+    if len(both_food_and_allergies)==0:
         return
 
-    food_requirements = guess_food_requirements_from_food_field(food_from_registration)
+    food_requirements = guess_food_requirements_from_food_field(both_food_and_allergies)
     add_new_cadet_with_food_to_event(
         object_store=interface.object_store,
         event=event,

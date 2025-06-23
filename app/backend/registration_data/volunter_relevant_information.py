@@ -24,7 +24,7 @@ from app.data_access.configuration.field_list_groups import (
     DUTIES_KEY_IN_VOLUNTEER_FIELDS_DICT,
     SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT,
     FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT,
-    LIST_OF_VOLUNTEER_FIELDS,
+    LIST_OF_VOLUNTEER_FIELDS, FOOD_ALLERGY_KEY_IN_VOLUNTEER_FIELDS_DICT,
 )
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.relevant_information_for_volunteers import (
@@ -172,9 +172,17 @@ def get_details_information_for_volunteer(
     food_preference_key = dict_of_fields_for_volunteer[
         FOOD_PREFERENCE_KEY_IN_VOLUNTEER_FIELDS_DICT
     ]
+    food_allergy_key = dict_of_fields_for_volunteer[FOOD_ALLERGY_KEY_IN_VOLUNTEER_FIELDS_DICT]
+    food_preference = row_in_mapped_event.get_item(food_preference_key, "")
+    food_allergy = row_in_mapped_event.get_item(food_allergy_key, "")
+
+    if len(food_preference)==0 and len(food_allergy)==0:
+        both_foods = ""
+    else:
+        both_foods = food_preference+" "+ food_allergy
 
     return RelevantInformationForVolunteerDetails(
-        food_preference=row_in_mapped_event.get_item(food_preference_key, ""),
+        food_preference=both_foods,
         any_other_information=row_in_mapped_event.get_item(ANY_OTHER_INFORMATION, ""),
     )
 

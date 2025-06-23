@@ -43,7 +43,7 @@ CADET_HIGHEST_QUALIFICATION = "Highest qualification"
 CADET_PREVIOUS_EXPERIENCE = "Previous experience"
 CADET_HEALTH = "Cadet Health"
 CADET_FOOD_PREFERENCE = "Cadet food preference"
-
+CADET_FOOD_ALLERGY = "Cadet food allergy"
 
 CADET_T_SHIRT_SIZE = "Cadet t-shirt size"
 
@@ -51,17 +51,20 @@ VOLUNTEER_STATUS = "Volunteer status"
 
 VOLUNTEER1_AVAILABILITY = "Volunteer 1 availability"
 VOLUNTEER1_WEEKEND_AVAILABILITY = "Volunteer 1 weekend availability"
-
 VOLUNTEER1_NAME = "Volunteer 1 name"
 VOLUNTEER1_DUTIES = "Volunteer 1 duties"
 VOLUNTEER1_SAME_OR_VARIED = "Volunteer 1 same/varied"
 VOLUNTEER1_FOOD_PREFERENCE = "Volunteer 1 food preference"
+VOLUNTEER1_FOOD_ALLERGY = "Volunteer 1 food allergy"
+
 VOLUNTEER2_AVAILABILITY = "Volunteer 2 availability"
 VOLUNTEER2_WEEKEND_AVAILABILITY = "Volunteer 2 weekend availability"
 VOLUNTEER2_NAME = "Volunteer 2 name"
 VOLUNTEER2_DUTIES = "Volunteer 2 duties"
 VOLUNTEER2_SAME_OR_VARIED = "Volunteer 2 same/varied"
 VOLUNTEER2_FOOD_PREFERENCE = "Volunteer 2 food preference"
+VOLUNTEER2_FOOD_ALLERGY = "Volunteer 2 food allergy"
+
 REGISTRATION_TOTAL_FEE = "Total fee"
 REGISTRATION_INTERNAL_NOTES = "Internal notes"
 REGISTERED_BY_MEMBER = "Registered by member"

@@ -161,6 +161,11 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         )
         self._event = event
 
+    def remove_empty_food_required(self):
+        for food_required in self.values():
+            food_required.clear_other_field_if_empty()
+
+
     def drop_volunteer(self, volunteer: Volunteer):
         try:
             existing = self.food_for_volunteer(volunteer)

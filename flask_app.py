@@ -25,24 +25,11 @@ from app.web.end_points.login_and_out_pages import (
     change_password_page,
 )
 from app.web.html.login_and_out import is_admin_user
-from app.web.html.make_backup import make_backup_from_menu
-from app.web.html.read_only import toggle_read_only_local, toggle_read_only_global
+from app.web.end_points.make_backup import make_backup_from_menu
+from app.web.end_points.read_only import toggle_read_only_local, toggle_read_only_global
 from app.web.end_points.menu_pages import generate_menu_page_html
 from app.web.end_points.action_pages import generate_action_page_html
-from app.web.html.url_define import (
-    INDEX_URL,
-    ACTION_PREFIX,
-    LOGIN_URL,
-    LOGOUT_URL,
-    CHANGE_PASSWORD,
-    TOGGLE_READ_ONLY,
-    HELP_PREFIX,
-    MAKE_BACKUP,
-    MAIN_MENU_URL,
-    TOGGLE_READ_ONLY_GLOBAL,
-    LINK_LOGIN,
-    ACTION_WITH_STATE,
-)
+from app.web.html.url_define import *
 from app.data_access.configuration.configuration import (
     MAX_FILE_SIZE,
     SUPPORT_EMAIL,
@@ -182,14 +169,6 @@ def action(action_option):
         return generate_action_page_html(action_option)
 
 
-@app.route("/%s/<action_option>/<state>" % ACTION_WITH_STATE, methods=["GET", "POST"])
-def action_with_state(action_option, state):
-    if not authenticated_user():
-        print("USER NOT LOGGED IN")
-        return generate_menu_page_html()
-    else:
-        print("%s %s" % (action_option, state))
-        return generate_action_page_html(action_option)
 
 
 @app.route(MAIN_MENU_URL, methods=["GET", "POST"])

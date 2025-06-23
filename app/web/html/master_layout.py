@@ -1,14 +1,6 @@
 from app.web.html.heading import get_html_header, get_flash_block
-from app.web.html.html_components import (
-    ListOfHtml,
-)
-from app.web.html.page import (
-    HtmlPage,
-    HtmlHead,
-    SingleMetaElement,
-    ListOfHtmlElements,
-    SingleStyleLink,
-)
+from app.web.html.html_components import *
+from app.web.html.page import *
 
 
 def get_master_layout(

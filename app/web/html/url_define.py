@@ -1,10 +1,8 @@
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 from app.objects.utilities.exceptions import arg_not_passed
 
-HOME = "Home"
 INDEX_URL = "/"
 ACTION_PREFIX = "action"
-ACTION_WITH_STATE = "submenu"
 HELP_PREFIX = "help"
 FILE_URL = "file"
 LOGIN_URL = "login"

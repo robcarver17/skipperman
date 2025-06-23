@@ -1,44 +1,51 @@
-from app.objects.abstract_objects.abstract_buttons import (
-    ActionOptionButton,
-    MainMenuNavButton,
-    HelpButton,
-)
-from app.objects.abstract_objects.abstract_form import Image, Link
-from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
-from app.objects.abstract_objects.abstract_lines import DetailLine, ProgressBar
-from app.objects.abstract_objects.abstract_text import (
-    Heading,
-    Arrow,
-    up_arrow,
-    down_arrow,
-    right_arrow,
-    left_arrow,
-    up_down_arrow,
-    left_right_arrow,
-    outline_left_right_arrow,
-    Pointer,
-    up_pointer,
-    down_pointer,
-    left_pointer,
-    right_pointer,
-    Symbol,
-    copyright_symbol,
-    reg_tm_symbol,
-    lightning_symbol,
-    circle_up_arrow_symbol,
-    umbrella_symbol,
-    at_symbol,
-    Text,
-)
-from app.objects.utilities.exceptions import arg_not_passed
-from app.web.html.html_components import (
-    html_container_wrapper,
-    Html,
-    html_bold_wrapper,
-    html_link,
-    get_detail_wrapper,
-)
+from app.objects.abstract_objects.abstract_buttons import *
+from app.objects.abstract_objects.abstract_form import *
+from app.objects.abstract_objects.abstract_lines import *
+from app.objects.abstract_objects.abstract_tables import *
+from app.objects.abstract_objects.abstract_text import *
+from app.web.html.forms import *
+from app.web.html.html_components import *
 from app.web.html.url_define import get_help_url, MAIN_MENU_URL
+
+
+def get_html_for_simple_element_in_line(
+        ## Non recursive elements
+    element_in_line: Union[
+        Arrow,
+        DetailLine,
+        Heading,
+        HelpLink,
+        HorizontalLine,
+        Image,
+        Link,
+        PandasDFTable,
+        ProgressBar,
+        dateInput,
+        emailInput,
+        fileInput,
+        int,
+        intInput,
+        passwordInput,
+        radioInput,
+        str,
+        textInput,
+    ],
+) -> Html:
+
+    try:
+        function_to_call = dict_of_html_to_function_mappings[type(element_in_line)]
+    except KeyError:
+        raise Exception(
+            "Type %s of object %s not recognised!"
+            % (type(element_in_line), str(element_in_line))
+        )
+
+    return function_to_call(element_in_line)
+
+
+def html_string_int_or_float(element: Union[str,int, float]):
+    return Html(str(element))
+
 
 
 def get_html_for_heading(heading: Heading):
@@ -61,13 +68,8 @@ def get_html_for_heading(heading: Heading):
     return html_container_wrapper.wrap_around(heading_text)
 
 
-def get_html_image(image: Image, urls_of_interest: UrlsOfInterest):
-    return html_image_given_components(
-        image_directory=urls_of_interest.image_directory, image=image
-    )
-
-
-def html_image_given_components(image_directory: str, image: Image):
+def get_html_image(image: Image):
+    image_directory=image.image_directory
     passed_height_width = image.px_height_width is not arg_not_passed
     passed_ratio_size = image.ratio_size is not arg_not_passed
 
@@ -230,37 +232,34 @@ def get_html_for_help_button(help_button: HelpButton) -> Html:
 
 
 def arrow_text(arrow: Arrow) -> str:
-    if arrow == up_arrow:
-        return "&uarr;"
-    elif arrow == down_arrow:
-        return "&darr;"
-    elif arrow == right_arrow:
-        return "&rarr;"
-    elif arrow == left_arrow:
-        return "&larr;"
-    elif arrow == up_down_arrow:
-        return "&#8693;"
-    elif arrow == left_right_arrow:
-        return "&#8646;"
-    elif arrow == outline_left_right_arrow:
-        return "&#10234;"
-
-    else:
+    try:
+        return Html(arrow_dict[arrow])
+    except KeyError:
         raise Exception("arrow %s not known" % str(arrow))
 
 
+arrow_dict = {
+up_arrow: "&uarr;",
+down_arrow: "&darr;",
+right_arrow: "&rarr;",
+left_arrow: "&larr;",
+up_down_arrow: "&#8693;",
+left_right_arrow: "&#8646;",
+    outline_left_right_arrow: "&#10234;"
+
+}
+
 def pointer_text(pointer: Pointer) -> str:
-    if pointer == up_pointer:
-        return "&#9757;"
-    elif pointer == down_pointer:
-        return "&#9759;"
-    elif pointer == left_pointer:
-        return "&#9754;"
-    elif pointer == right_pointer:
-        return "&#9755;"
-    else:
+    try:
+        return Html(pointer_dict[pointer])
+    except KeyError:
         raise Exception("pointer %s not known" % str(pointer))
 
+pointer_dict = { up_pointer:"&#9757;",
+    down_pointer: "&#9759;",
+ left_pointer: "&#9754;",
+ right_pointer:"&#9755;"
+}
 
 def symbol_text(symbol: Symbol) -> str:
     if symbol == copyright_symbol:
@@ -305,3 +304,37 @@ def get_html_for_progress_bar(progress_bar: ProgressBar) -> Html:
         '<label for="progress_bar">%s:</label> <progress id="progress_bar" value="%d"  max="100" >  </progress>'
         % (progress_bar.label, progress_bar.percentage)
     )
+
+
+dict_of_html_to_function_mappings = {
+    ActionOptionButton: get_html_for_action_option_button,
+    Arrow: arrow_text,
+    DetailLine: get_html_for_detail_line,
+    Heading: get_html_for_heading,
+    HelpButton: get_html_for_help_button,
+    HorizontalLine: html_for_horizontal_line,
+    Link: get_html_for_link,
+    MainMenuNavButton: get_html_for_main_menu_nav_button,
+    PandasDFTable: html_from_pandas_table,
+    Pointer: pointer_text,
+    ProgressBar: get_html_for_progress_bar,
+    Symbol: symbol_text,
+    Text: get_html_for_text,
+    checkboxInput: html_checkbox_input,
+    dateInput: html_date_input,
+    dropDownInput: html_dropdown_input,
+    emailInput: html_form_email_input,
+    fileInput: html_file_input,
+    float: html_string_int_or_float,
+    int: html_string_int_or_float,
+    intInput: html_int_input,
+    listInput: html_list_input,
+    passwordInput: html_form_password_input,
+    radioInput: html_radio_input,
+    str: html_string_int_or_float,
+    textAreaInput: html_form_text_area_input,
+    textInput: html_form_text_input,
+}
+
+
+

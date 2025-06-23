@@ -2,6 +2,8 @@ import datetime
 
 import numpy as np
 
+from app.objects.abstract_objects.abstract_form import textInput, textAreaInput, emailInput, passwordInput, dateInput, \
+    intInput, fileInput, radioInput, dropDownInput, listInput, checkboxInput
 from app.web.html.html_components import Html, HtmlWrapper
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -19,8 +21,12 @@ def form_html_wrapper(current_url: str):
 
 
 def html_form_text_input(
-    input_label: str, input_name: str, value: str = arg_not_passed
+    element: textInput
 ):
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is not arg_not_passed:
         value_html = 'value="%s"' % value
         size = min(10, int(len(value_html)))
@@ -35,8 +41,13 @@ def html_form_text_input(
 
 
 def html_form_text_area_input(
-    input_label: str, input_name: str, value: str = arg_not_passed
+    element: textAreaInput
+
 ):
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is arg_not_passed:
         value = ""
 
@@ -54,8 +65,12 @@ def html_form_text_area_input(
 
 
 def html_form_email_input(
-    input_label: str, input_name: str, value: str = arg_not_passed
+    element: emailInput
 ):
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is not arg_not_passed:
         value_html = 'value="%s"' % value
     else:
@@ -68,8 +83,13 @@ def html_form_email_input(
 
 
 def html_form_password_input(
-    input_label: str, input_name: str, value: str = arg_not_passed
+    element: passwordInput
 ):
+
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is not arg_not_passed:
         value_html = 'value="%s"' % value
     else:
@@ -82,10 +102,12 @@ def html_form_password_input(
 
 
 def html_date_input(
-    input_label: str,
-    input_name: str,
-    value: datetime.date = arg_not_passed,
+    element: dateInput
 ):
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is not arg_not_passed:
         value_html = 'value="%s"' % date_as_html(value)
     else:
@@ -111,12 +133,14 @@ DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 
 
 def html_list_input(
-    input_label: str,
-    input_name: str,
-    list_of_options: list,
-    list_name: str = arg_not_passed,
-    default_option: str = "",
+    element_in_line: listInput
 ):
+    input_label = element_in_line.input_label
+    input_name = element_in_line.input_name
+    list_of_options = element_in_line.list_of_options
+    default_option = element_in_line.default_option
+    list_name = element_in_line.list_name
+
     if list_name is arg_not_passed:
         list_name = input_name
 
@@ -138,11 +162,13 @@ def html_list_input(
 
 
 def html_dropdown_input(
-    input_label: str,
-    input_name: str,
-    dict_of_options: dict,
-    default_label: str = DEFAULT_LABEL,
+    element: dropDownInput
 ):
+    default_label = element.default_label
+    input_label = element.input_label
+    input_name = element.input_name
+    dict_of_options = element.dict_of_options
+
     options_str_as_list = [
         html_single_dropdown_option(
             option_label=option_label,
@@ -176,12 +202,14 @@ def html_single_dropdown_option(
 
 
 def html_radio_input(
-    input_label: str,
-    input_name: str,
-    dict_of_options: dict,
-    include_line_break: bool = True,
-    default_label: str = DEFAULT_LABEL,
+    element: radioInput
 ):
+    default_label = element.default_label
+    input_label = element.input_label
+    input_name = element.input_name
+    dict_of_options = element.dict_of_options
+    include_line_break = element.include_line_break
+
     options_str_as_list = [
         html_single_radio_button(
             input_name=input_name,
@@ -219,12 +247,13 @@ def html_single_radio_button(
 
 
 def html_checkbox_input(
-    input_name: str,
-    dict_of_labels: dict,
-    dict_of_checked: dict,
-    line_break: bool = False,
-    input_label: str = "",
-):
+    element_in_line: checkboxInput):
+    input_name = element_in_line.input_name
+    dict_of_labels = element_in_line.dict_of_labels
+    dict_of_checked = element_in_line.dict_of_checked
+    input_label = element_in_line.input_label
+    line_break = element_in_line.line_break
+
     all_html = [
         html_single_checkbox_entry(
             name_for_all_checks_in_group=input_name,
@@ -273,10 +302,12 @@ def html_single_checkbox_entry(
 
 
 def html_int_input(
-    input_label: str,
-    input_name: str,
-    value: int = arg_not_passed,
+    element: intInput
 ):
+    value = element.value
+    input_label = element.input_label
+    input_name = element.input_name
+
     if value is not arg_not_passed:
         value_html = 'value="%d"' % value
     else:
@@ -288,7 +319,9 @@ def html_int_input(
     )
 
 
-def html_file_input(input_name: str = "file", accept: str = arg_not_passed):
+def html_file_input(element: fileInput):
+    accept = element.accept
+    input_name = element.input_name
     # accept can be eg '.doc' or '.doc, .csv'
     if accept is not arg_not_passed:
         accept_html = 'accept="%s">' % accept

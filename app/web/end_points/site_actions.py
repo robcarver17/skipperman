@@ -53,9 +53,7 @@ def get_form_handler_for_specific_action(action_name) -> FormHandler:
 def get_functions_mapping_for_action_name(
     action_name: str,
 ) -> DisplayAndPostFormFunctionMaps:
-    ## TO ADD NEW ACTIONS SUBMIT A NEW METHOD HERE
-    ## These are values from the dict in menu_define
-    ## ALL METHODS MUST TAKE web and only that as an argument
+    ## TO ADD NEW ACTIONS (SUB WEB PAGES) SUBMIT A NEW METHOD HERE
     function_mapping_dict = dict(
         view_master_list_of_cadets=cadet_function_mapping,
         view_list_of_events=event_function_mapping,

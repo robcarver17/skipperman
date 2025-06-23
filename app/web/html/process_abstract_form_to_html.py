@@ -23,7 +23,7 @@ def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) 
 def process_abstract_objects_to_html(
     list_of_abstract_objects, urls_of_interest: UrlsOfInterest
 ) -> Html:
-    ## Called by menu endpoint, as don't want to wrap with HTML Form
+
     return_html = ""
     for element in list_of_abstract_objects:
         html_this_element = get_html_for_element_in_form(

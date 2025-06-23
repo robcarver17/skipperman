@@ -38,7 +38,7 @@ class Image:
     filename: str
     px_height_width: Tuple[int, int] = arg_not_passed
     ratio_size: int = arg_not_passed
-
+    image_directory: str = arg_not_passed
 
 @dataclass
 class NewForm:

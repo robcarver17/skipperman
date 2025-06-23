@@ -1,4 +1,4 @@
-from app.web.html.read_only import is_read_only, is_local_read_only, is_global_read_only
+from app.web.end_points.read_only import is_read_only, is_local_read_only, is_global_read_only
 
 from app.web.html.url_define import (
     LOGIN_URL,
@@ -18,7 +18,7 @@ def get_login_link_html_code():
     )
 
 
-from app.objects.users_and_security import UserGroup, ADMIN_GROUP
+from app.objects.users_and_security import ADMIN_GROUP
 
 
 def get_read_write_logout_and_change_password_link_html_code(

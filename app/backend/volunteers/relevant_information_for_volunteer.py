@@ -112,7 +112,8 @@ def add_availablity_conflict_to_issues_list(
                         [
                             available.days_available_as_str()
                             for available in list_of_availability
-                        ]
+                        ],
+                        linker="; "
                     ),
                 ),
             )
@@ -138,7 +139,7 @@ def add_preferred_conflict_to_list_of_isses(
                 category=VOLUNTEER_PREFERENCE,
                 auto_refreshed=False,
                 warning="Inconsistency on preferred duties across registrations for volunteer %s: %s "
-                % (volunteer_name, simplify_and_display(list_of_preferred)),
+                % (volunteer_name, simplify_and_display(list_of_preferred, linker="; ")),
             )
         )
 
@@ -165,7 +166,7 @@ def add_same_or_different_conflict_to_list_of_issues(
                 category=VOLUNTEER_PREFERENCE,
                 auto_refreshed=False,
                 warning="Inconsistency on same/different duties across registrations for volunteer %s: %s "
-                % (volunteer_name, simplify_and_display(list_of_same_or_different)),
+                % (volunteer_name, simplify_and_display(list_of_same_or_different, linker="; ")),
             )
         )
 

@@ -1,3 +1,4 @@
+from copy import copy
 from dataclasses import dataclass
 from typing import List
 
@@ -68,36 +69,36 @@ class FoodRequirements(GenericSkipperManObject):
 
 no_food_requirements = FoodRequirements.create_empty()
 
+def convert_food_required_from_str_to_bool(food_requirements: FoodRequirements, list_of_str_to_check_for: List[str],
+                                           attribute_to_modify: str, drop_from_text: bool = False):
+    for str_to_check in list_of_str_to_check_for:
+        if str_to_check in food_requirements.other:
+            setattr(food_requirements, attribute_to_modify, True)
+            if drop_from_text:
+                food_requirements.other = food_requirements.other.replace(str_to_check, '')
 
-def guess_food_requirements_from_food_field(food_field_str: str) -> FoodRequirements:
+    return food_requirements
+
+def guess_food_requirements_from_food_field(raw_food_field_str: str) -> FoodRequirements:
+    food_field_str = copy(raw_food_field_str)
     food_field_str_lower = food_field_str.lower()
-    vegetarian = (
-        "vegetarian" in food_field_str_lower or "veggie" in food_field_str_lower
-    )
-    vegan = "vegan" in food_field_str_lower
-    pescatarian = "pescatarian" in food_field_str_lower
-    nut_allergy = "nut" in food_field_str_lower
-    lactose_intolerant = "lactose" in food_field_str_lower
-    gluten_intolerant = (
-        "gluten" in food_field_str_lower or "coeliac" in food_field_str_lower
-    )
-    kosher = "kosher" in food_field_str_lower
-    halal = "halal" in food_field_str_lower
+    for null_fields in ["just tasty food -", "none", "na", "n/a", "no", "no allergies"]:
+        food_field_str_lower = food_field_str_lower.replace(null_fields,'')
 
-    if food_field_str_lower in ["none", "na", "n/a", "no", "no allergies"]:
-        food_field_str = ""
+    food_required = FoodRequirements(
+        other=food_field_str_lower)
 
-    return FoodRequirements(
-        other=food_field_str,
-        vegetarian=vegetarian,
-        vegan=vegan,
-        pescatarian=pescatarian,
-        nut_allergy=nut_allergy,
-        lactose_intolerant=lactose_intolerant,
-        gluten_intolerant=gluten_intolerant,
-        kosher=kosher,
-        halal=halal,
-    )
+    convert_food_required_from_str_to_bool(food_required, ["vegetarian", "veggie"], 'vegetarian')
+    convert_food_required_from_str_to_bool(food_required, ["vegan"], 'vegan')
+    convert_food_required_from_str_to_bool(food_required, ["pescatarian"], 'pescatarian' )
+    convert_food_required_from_str_to_bool(food_required, ["kohser", "kosher"], 'kosher' )
+    convert_food_required_from_str_to_bool(food_required, ["halal"], 'halal')
+
+    convert_food_required_from_str_to_bool(food_required, ["lactose"], 'lactose', False)
+    convert_food_required_from_str_to_bool(food_required, ["gluten", "coeliac"], 'gluten', False)
+    convert_food_required_from_str_to_bool(food_required, ["nut"], 'nut_allergy',drop_from_text=False )
+
+    return food_required
 
 
 CADET_ID = "cadet_id"

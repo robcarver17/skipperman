@@ -124,7 +124,7 @@ def status_and_attendance_from_form_entries(
     status = get_status_from_form(
         interface=interface, input_name=ROW_STATUS, default=MISSING_FROM_FORM
     )
-    if MISSING_FROM_FORM in [attendance, status]:
+    if attendance is MISSING_FROM_FORM or status is MISSING_FROM_FORM:
         interface.log_error(
             "Attendance or status update missing from form for cadet#%s"
             % cadet_at_event.cadet_id

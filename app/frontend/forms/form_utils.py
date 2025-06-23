@@ -150,7 +150,7 @@ def get_food_requirements_from_form(
     food_required_as_list = interface.value_of_multiple_options_from_form(
         checkbox_input_name, default=MISSING_FROM_FORM
     )
-    if MISSING_FROM_FORM in [other_food, food_required_as_list]:
+    if other_food is MISSING_FROM_FORM or food_required_as_list is MISSING_FROM_FORM:
         return default
 
     empty_food_requirements_to_populate = FoodRequirements.create_empty()

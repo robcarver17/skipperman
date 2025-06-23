@@ -11,7 +11,7 @@ from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
-from app.objects.utilities.utils import all_spaces
+from app.objects.utilities.utils import all_spaces_or_commas
 
 OTHER_IN_FOOD_REQUIRED = "other"
 
@@ -49,6 +49,8 @@ class FoodRequirements(GenericSkipperManObject):
         for key in food_keys:
             if not getattr(self, key) == getattr(other, key):
                 return False
+        if not self.other == other.other:
+            return False
 
         return True
 
@@ -56,8 +58,15 @@ class FoodRequirements(GenericSkipperManObject):
     def create_empty(cls):
         return cls()
 
+    def is_empty(self):
+        self.clear_other_field_if_empty()
+        no_flags_set =all([not getattr(self, key) for key in food_keys])
+        no_free_text = len(self.other)==0
+
+        return no_flags_set and no_free_text
+
     def clear_other_field_if_empty(self):
-        if all_spaces(self.other):
+        if all_spaces_or_commas(self.other):
             self.other = ""
 
     def describe(self):

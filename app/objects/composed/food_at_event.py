@@ -70,10 +70,13 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         )
 
     def unique_list_of_food_requirements(self) -> List[FoodRequirements]:
-        if len(self) == 0:
+        unique_list = list(set(self.values()))
+        unique_list = [item for item in unique_list if not item.is_empty()]
+
+        if len(unique_list) == 0:
             return no_food_requirements
 
-        return list(set(self.values()))
+        return unique_list
 
     def update_cadet_food_data(
         self,
@@ -207,10 +210,13 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         )
 
     def unique_list_of_food_requirements(self) -> List[FoodRequirements]:
-        if len(self) == 0:
+        unique_list = list(set(self.values()))
+        unique_list = [item for item in unique_list if not item.is_empty()]
+
+        if len(unique_list) == 0:
             return no_food_requirements
 
-        return list(set(self.values()))
+        return unique_list
 
     def update_volunteer_food_data(
         self,

@@ -273,7 +273,8 @@ def simplify_and_display(some_list, linker=", "):
     return linker.join(unique_list)
 
 
-def all_spaces(x: str):
-    xx = x.replace(" ", "")
+def all_spaces_or_commas(x: str):
+    xx = x.replace(",", "")
+    xx = xx.replace(" ", "")
     if len(xx)==0:
         return True

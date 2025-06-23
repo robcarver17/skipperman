@@ -1,7 +1,5 @@
-from app.backend.file_handling import (
-    generate_qr_code_for_file_in_public_path,
-    generate_qr_code_for_file_with_web_path,
-)
+from app.data_access.file_access import generate_qr_code_for_file_in_public_path, \
+    generate_qr_code_for_file_with_web_path
 from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type
 
 from app.frontend.utilities.files.render_files import (

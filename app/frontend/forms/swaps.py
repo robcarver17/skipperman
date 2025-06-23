@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.generic_objects import TRUE, FALSE
-from app.objects.utilities.utils import from_single_str_to_dict, dict_as_single_str
+from app.objects.utilities.transform_data import dict_as_single_str, from_single_str_to_dict
 
 
 @dataclass

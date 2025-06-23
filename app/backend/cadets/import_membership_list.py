@@ -2,11 +2,11 @@ import os
 
 import pandas as pd
 
-from app.backend.file_handling import get_staged_adhoc_filename
 from app.backend.file_handling import (
     create_local_file_from_uploaded_and_return_filename,
-    load_spreadsheet_file_and_clear_nans,
 )
+from app.data_access.file_access import get_staged_adhoc_filename
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.data_access.csv.generic_csv_data import (
     write_object_as_csv_file,
     read_object_of_type,

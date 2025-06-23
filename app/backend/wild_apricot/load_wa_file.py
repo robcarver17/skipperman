@@ -4,7 +4,7 @@ import shutil
 import pandas as pd
 from app.objects.events import Event
 
-from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.data_access.configuration.configuration import (
     WILD_APRICOT_EVENT_ID,
 )

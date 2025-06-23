@@ -29,7 +29,7 @@ from app.objects.cadets import Cadet
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
 from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
-from app.objects.utilities.utils import make_id_as_int_str
+from app.objects.utilities.transform_data import make_id_as_int_str
 
 
 def get_notes_field(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets):

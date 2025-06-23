@@ -3,10 +3,14 @@ import os
 from copy import copy
 from dataclasses import dataclass
 from datetime import datetime
-from importlib import import_module
 from typing import List
 
-from app.objects.utilities.exceptions import MissingData
+import qrcode
+
+from app.data_access.configuration.configuration import HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY
+from app.data_access.init_directories import upload_directory, download_directory
+from app.objects.abstract_objects.abstract_form import File
+from app.objects.utilities.exceptions import MissingData, arg_not_passed
 
 
 def get_files_in_directory_mask_suffix_and_extension_from_filename_remove_duplicates(
@@ -43,24 +47,6 @@ def get_filename_and_extension(filename: str):
     extension = filename.split(".")[-1]
 
     return filename_without_extension, extension
-
-
-def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
-    package_name = path_as_list[0]
-    paths_or_files = path_as_list[1:]
-
-    if len(paths_or_files) == 0:
-        directory_name_of_package = os.path.dirname(
-            import_module(package_name).__file__
-        )
-        return directory_name_of_package
-
-    last_item_in_list = path_as_list.pop()
-    pathname = os.path.join(
-        get_relative_pathname_from_list(path_as_list), last_item_in_list
-    )
-
-    return pathname
 
 
 def files_with_extension_in_resolved_pathname(
@@ -147,3 +133,39 @@ def delete_all_files_matching_filename(filename: str, pathname: str):
     )
     for filename in list_of_files:
         os.remove(filename)
+
+
+def get_staged_adhoc_filename(adhoc_name: str):
+    return os.path.join(upload_directory, "_%s" % adhoc_name)
+
+
+def generate_qr_code_for_file_in_public_path(filename_without_extension: str) -> File:
+    path_and_filename = PathAndFilename(
+        path="", extension="", filename_without_extension=filename_without_extension
+    )
+    web_path = web_pathname_of_public_version_of_local_file_without_extension(
+        path_and_filename,
+        webserver_url=HOMEPAGE,
+        public_path=PUBLIC_REPORTING_SUBDIRECTORY,
+    )
+    return generate_qr_code_for_file_with_web_path(
+        web_path=web_path, filename_without_extension=filename_without_extension
+    )
+
+
+def generate_qr_code_for_file_with_web_path(
+    web_path: str, filename_without_extension: str = arg_not_passed
+) -> File:
+    if filename_without_extension is arg_not_passed:
+        filename_without_extension = web_path
+
+    img = qrcode.make(web_path)
+    qr_code_filename = temp_qr_code_file_name(filename_without_extension)
+    with open(qr_code_filename, "wb") as qr:
+        img.save(qr)
+
+    return File(qr_code_filename)
+
+
+def temp_qr_code_file_name(filename: str) -> str:
+    return os.path.join(download_directory, "temp_qr_code_%s.png" % filename)

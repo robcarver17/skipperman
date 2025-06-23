@@ -185,14 +185,14 @@ def get_volunteer_skill_checkbox_name(volunteer_id: str) -> str:
 
 
 def is_volunteer_skill_checkbox_ticked(
-    interface: abstractInterface, volunteer_id: str
+    interface: abstractInterface, volunteer_id: str, default= MISSING_FROM_FORM
 ) -> Union[bool, object]:
     checkbox_name = get_volunteer_skill_checkbox_name(volunteer_id=volunteer_id)
     boxes_ticked = interface.value_of_multiple_options_from_form(
         checkbox_name, default=MISSING_FROM_FORM
     )
     if boxes_ticked is MISSING_FROM_FORM:
-        return MISSING_FROM_FORM
+        return default
     else:
         return VOLUNTEERS_SKILL_FOR_PB2 in boxes_ticked
 

@@ -8,7 +8,7 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_subset_of_list_that_matches_multiple_attr,
 )
-from app.objects.utilities.utils import transform_datetime_into_str
+from app.objects.utilities.transform_data import transform_datetime_into_str
 
 Attendance = Enum(
     "Attendance",

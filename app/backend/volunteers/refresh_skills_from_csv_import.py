@@ -2,10 +2,10 @@ import os
 from typing import List
 
 from app.backend.file_handling import (
-    get_staged_adhoc_filename,
-    load_spreadsheet_file_and_clear_nans,
     create_local_file_from_uploaded_and_return_filename,
 )
+from app.data_access.file_access import get_staged_adhoc_filename
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.backend.volunteers.skills import (
     get_list_of_skills,
     get_dict_of_existing_skills_for_volunteer,

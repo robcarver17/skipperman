@@ -81,3 +81,10 @@ def save_dict_of_df_as_csv(
             f.write("\n")
 
     return path_and_filename
+
+
+def load_spreadsheet_file_and_clear_nans(filename: str) -> pd.DataFrame:
+    wa_as_df = load_spreadsheet_file(filename)
+    wa_as_df = wa_as_df.fillna("")
+
+    return wa_as_df

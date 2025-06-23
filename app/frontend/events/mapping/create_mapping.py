@@ -11,7 +11,7 @@ from app.backend.mapping.list_of_field_mappings import (
 from app.backend.wild_apricot.load_wa_file import (
     get_staged_file_raw_event_filename,
 )
-from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.mapping.download_field_mapping import (

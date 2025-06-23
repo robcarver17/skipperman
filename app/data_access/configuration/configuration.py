@@ -1,7 +1,27 @@
+import os
+from importlib import import_module
+from typing import List
+
 import yaml
 import pytz
-from app.data_access.file_access import get_relative_pathname_from_list
 from app.objects.skill_import import from_skills_dict_in_import_config_to_import_config
+
+def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
+    package_name = path_as_list[0]
+    paths_or_files = path_as_list[1:]
+
+    if len(paths_or_files) == 0:
+        directory_name_of_package = os.path.dirname(
+            import_module(package_name).__file__
+        )
+        return directory_name_of_package
+
+    last_item_in_list = path_as_list.pop()
+    pathname = os.path.join(
+        get_relative_pathname_from_list(path_as_list), last_item_in_list
+    )
+
+    return pathname
 
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
 configuration_file = get_relative_pathname_from_list(

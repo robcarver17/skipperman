@@ -31,13 +31,13 @@ from app.objects.registration_status import (
     active_part_paid_status,
     active_unpaid_status,
 )
-from app.objects.utilities.utils import transform_datetime_into_str
+from app.objects.utilities.transform_data import transform_datetime_into_str
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 from app.objects.registration_data import (
     RegistrationDataForEvent,
     RowInRegistrationData,
 )
-from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 
 
 def map_wa_fields_in_df_for_event_and_add_special_fields(

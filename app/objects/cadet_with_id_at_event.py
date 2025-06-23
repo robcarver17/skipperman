@@ -30,7 +30,7 @@ from app.objects.registration_data import (
     RowInRegistrationData,
 )
 from app.objects.registration_status import RegistrationStatus
-from app.objects.utilities.utils import clean_up_dict_with_nans
+from app.objects.utilities.transform_data import clean_up_dict_with_nans
 
 STATUS_KEY = "status"
 AVAILABILITY = "availability"

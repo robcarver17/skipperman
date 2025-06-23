@@ -18,8 +18,7 @@ from app.objects.utilities.generic_list_of_objects import (
     get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
-from app.objects.utilities.utils import clean_up_dict_with_nans
-
+from app.objects.utilities.transform_data import clean_up_dict_with_nans
 
 LIST_KEY = "list_of_associated_cadet_id"
 AVAILABILITY_KEY = "availablity"

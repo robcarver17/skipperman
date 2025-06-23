@@ -16,11 +16,8 @@ from app.objects.registration_status import (
     empty_status,
     manual_status,
 )
-from app.objects.utilities.utils import (
-    clean_up_dict_with_nans,
-    transform_df_from_str_to_dates,
-    transform_df_from_dates_to_str,
-)
+from app.objects.utilities.transform_data import clean_up_dict_with_nans, transform_df_from_dates_to_str, \
+    transform_df_from_str_to_dates
 
 from app.data_access.configuration.field_list import (
     VOLUNTEER_STATUS,

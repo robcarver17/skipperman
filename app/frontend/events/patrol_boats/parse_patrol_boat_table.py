@@ -15,7 +15,7 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
-from app.objects.utilities.exceptions import MISSING_FROM_FORM, UNKNOWN
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (
@@ -205,9 +205,10 @@ def update_skills_checkbox_for_specific_volunteer(
 
     currently_has_boat_skill = skills.can_drive_safety_boat
     is_ticked = is_volunteer_skill_checkbox_ticked(
-        interface=interface, volunteer_id=volunteer.id
+        interface=interface, volunteer_id=volunteer.id,
+        default=MISSING_FROM_FORM
     )
-    if is_ticked is UNKNOWN:
+    if is_ticked is MISSING_FROM_FORM:
         ### fields not available for some reason
         return
 

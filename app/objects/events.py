@@ -3,7 +3,8 @@ from dataclasses import dataclass
 import datetime
 
 
-from app.objects.utilities.utils import transform_date_into_str, similar
+from app.objects.utilities.utils import similar
+from app.objects.utilities.transform_data import transform_date_into_str
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,

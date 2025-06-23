@@ -2,10 +2,7 @@ import datetime
 import pathlib
 
 from app.data_access.configuration.configuration import local_timezone
-from app.objects.utilities.utils import (
-    transform_datetime_into_str,
-    transform_str_into_datetime,
-)
+from app.objects.utilities.transform_data import transform_datetime_into_str, transform_str_into_datetime
 import os
 from typing import List
 

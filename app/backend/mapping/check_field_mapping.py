@@ -7,7 +7,7 @@ from app.backend.mapping.list_of_field_mappings import get_field_mapping_for_eve
 from app.backend.wild_apricot.load_wa_file import (
     does_raw_event_file_exist,
 )
-from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.backend.wild_apricot.load_wa_file import (
     get_staged_file_raw_event_filename,
 )

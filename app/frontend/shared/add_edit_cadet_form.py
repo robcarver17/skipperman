@@ -33,7 +33,6 @@ from app.objects.cadets import (
     DOB_UNKNOWN,
     DOB_IRRELEVANT,
     UNCONFIRMED_DATE_OF_BIRTH,
-    DEFAULT_DATE_OF_BIRTH,
     IRRELEVANT_DATE_OF_BIRTH,
 )
 from app.objects.membership_status import (

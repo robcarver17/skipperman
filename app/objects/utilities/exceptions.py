@@ -2,8 +2,6 @@
 arg_not_passed = "**Arg_not_passed**"
 missing_data = "**missingdata**"
 
-DAYS_IN_YEAR = 365.25
-
 
 class NoFileUploaded(Exception):
     pass
@@ -50,7 +48,6 @@ class CadetNotSelected(Exception):
 
 
 MISSING_FROM_FORM = "Missing from form"
-UNKNOWN = object()
 
 
 class MissingMethod(Exception):

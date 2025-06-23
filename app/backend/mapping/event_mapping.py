@@ -1,4 +1,4 @@
-from app.backend.file_handling import load_spreadsheet_file_and_clear_nans
+from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.backend.wild_apricot.load_wa_file import get_event_id_from_wa_df
 from app.backend.events.list_of_events import get_event_from_id
 

@@ -15,7 +15,7 @@ from app.objects.partners import (
     NO_PARTNER_REQUIRED_STR,
     NOT_ALLOCATED_STR,
 )
-from app.objects.utilities.utils import make_id_as_int_str
+from app.objects.utilities.transform_data import make_id_as_int_str
 from app.objects.boat_classes import NO_BOAT_CLASS_ID
 
 

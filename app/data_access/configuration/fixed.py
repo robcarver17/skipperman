@@ -64,3 +64,4 @@ LOWEST_PRIORITY = "4 - Very low"
 LOW_PRIORITY = "3 - Low"
 MEDIUM_PRIORITY = "2 - Medium"
 HIGH_PRIORITY = "1 - High"
+DAYS_IN_YEAR = 365.25

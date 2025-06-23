@@ -15,8 +15,7 @@ from app.objects.utilities.generic_list_of_objects import (
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.patrol_boats import ListOfPatrolBoats, no_patrol_boat
-from app.objects.utilities.utils import make_id_as_int_str
-
+from app.objects.utilities.transform_data import make_id_as_int_str
 
 EMPTY_VOLUNTEER_ID = "NONE"  ## DO NOT CHANGE
 ARBITRARY_DAY = Day.Monday

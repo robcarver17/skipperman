@@ -30,6 +30,7 @@ def get_dict_of_active_cadets_with_food_requirements_at_event(
     all_food_data_active_cadets = all_food_data.filter_for_list_of_cadets(
         registration_data.list_of_active_cadets()
     )
+    all_food_data_active_cadets.remove_empty_food_required()
 
     return all_food_data_active_cadets
 
@@ -46,5 +47,7 @@ def get_dict_of_active_volunteers_with_food_requirements_at_event(
     all_food_data_active_volunteers = all_food_data.filter_for_list_of_volunteers(
         registration_data.list_of_volunteers_at_event()
     )
+    all_food_data_active_volunteers.remove_empty_food_required()
+
 
     return all_food_data_active_volunteers

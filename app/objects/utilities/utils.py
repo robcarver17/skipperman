@@ -271,3 +271,9 @@ def simplify_and_display(some_list, linker=", "):
         return str(unique_list[0])
 
     return linker.join(unique_list)
+
+
+def all_spaces(x: str):
+    xx = x.replace(" ", "")
+    if len(xx)==0:
+        return True

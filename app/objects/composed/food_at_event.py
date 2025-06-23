@@ -26,6 +26,10 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         )
         self._event = event
 
+    def remove_empty_food_required(self):
+        for food_required in self.values():
+            food_required.clear_other_field_if_empty()
+
     def add_new_cadet_with_food_to_event(
         self,
         cadet: Cadet,

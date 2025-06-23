@@ -11,6 +11,7 @@ from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
+from app.objects.utilities.utils import all_spaces
 
 OTHER_IN_FOOD_REQUIRED = "other"
 
@@ -55,6 +56,10 @@ class FoodRequirements(GenericSkipperManObject):
     def create_empty(cls):
         return cls()
 
+    def clear_other_field_if_empty(self):
+        if all_spaces(self.other):
+            self.other = ""
+
     def describe(self):
         description_list = []
         for key in food_keys:
@@ -69,6 +74,31 @@ class FoodRequirements(GenericSkipperManObject):
 
 no_food_requirements = FoodRequirements.create_empty()
 
+
+def guess_food_requirements_from_food_field(raw_food_field_str: str) -> FoodRequirements:
+    food_field_str = copy(raw_food_field_str)
+    food_field_str_lower = food_field_str.lower()
+    for null_fields in ["just tasty food", "none", "na", "n/a", "no", "no allergies", ",", "-"]:
+        food_field_str_lower = food_field_str_lower.replace(null_fields,'')
+
+    food_required = FoodRequirements(
+        other=food_field_str_lower)
+
+    convert_food_required_from_str_to_bool(food_required, ["vegetarian", "veggie"], 'vegetarian', True)
+    convert_food_required_from_str_to_bool(food_required, ["vegan"], 'vegan', True)
+    convert_food_required_from_str_to_bool(food_required, ["pescatarian"], 'pescatarian', True)
+    convert_food_required_from_str_to_bool(food_required, ["kohser", "kosher"], 'kosher', True)
+    convert_food_required_from_str_to_bool(food_required, ["halal"], 'halal', True)
+
+    convert_food_required_from_str_to_bool(food_required, ["lactose"], 'lactose', False)
+    convert_food_required_from_str_to_bool(food_required, ["gluten", "coeliac", "gluten free"], 'gluten', False)
+    convert_food_required_from_str_to_bool(food_required, ["nut"], 'nut_allergy',drop_from_text=False )
+
+    food_required.clear_other_field_if_empty()
+
+    return food_required
+
+
 def convert_food_required_from_str_to_bool(food_requirements: FoodRequirements, list_of_str_to_check_for: List[str],
                                            attribute_to_modify: str, drop_from_text: bool = False):
     for str_to_check in list_of_str_to_check_for:
@@ -78,28 +108,6 @@ def convert_food_required_from_str_to_bool(food_requirements: FoodRequirements, 
                 food_requirements.other = food_requirements.other.replace(str_to_check, '')
 
     return food_requirements
-
-def guess_food_requirements_from_food_field(raw_food_field_str: str) -> FoodRequirements:
-    food_field_str = copy(raw_food_field_str)
-    food_field_str_lower = food_field_str.lower()
-    for null_fields in ["just tasty food -", "none", "na", "n/a", "no", "no allergies"]:
-        food_field_str_lower = food_field_str_lower.replace(null_fields,'')
-
-    food_required = FoodRequirements(
-        other=food_field_str_lower)
-
-    convert_food_required_from_str_to_bool(food_required, ["vegetarian", "veggie"], 'vegetarian')
-    convert_food_required_from_str_to_bool(food_required, ["vegan"], 'vegan')
-    convert_food_required_from_str_to_bool(food_required, ["pescatarian"], 'pescatarian' )
-    convert_food_required_from_str_to_bool(food_required, ["kohser", "kosher"], 'kosher' )
-    convert_food_required_from_str_to_bool(food_required, ["halal"], 'halal')
-
-    convert_food_required_from_str_to_bool(food_required, ["lactose"], 'lactose', False)
-    convert_food_required_from_str_to_bool(food_required, ["gluten", "coeliac"], 'gluten', False)
-    convert_food_required_from_str_to_bool(food_required, ["nut"], 'nut_allergy',drop_from_text=False )
-
-    return food_required
-
 
 CADET_ID = "cadet_id"
 

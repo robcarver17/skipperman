@@ -330,14 +330,15 @@ def add_edits_from_form(
     existing_list: list,
     get_object_from_form_function: Callable = get_object_from_form,
 ):
-    try:
-        add_edits_from_form_without_error_logging(
-            interface=interface,
-            modifying_function=modifying_function,
-            existing_list=existing_list,
-            get_object_from_form_function=get_object_from_form_function,
-        )
+    add_edits_from_form_without_error_logging(
+        interface=interface,
+        modifying_function=modifying_function,
+        existing_list=existing_list,
+        get_object_from_form_function=get_object_from_form_function,
+    )
 
+    try:
+        pass
     except Exception as e:
         interface.log_error("Error when modifying: %s" % (str(e)))
 

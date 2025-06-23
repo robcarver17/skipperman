@@ -193,15 +193,16 @@ def get_modified_role_from_form(
         field_name=name_of_skills_checkbox_for_role(existing_role),
         default=MISSING_FROM_FORM,
     )
+
     new_hidden = is_radio_yes_or_no(
         interface=interface,
         input_name=hidden_box_name(existing_role),
         default=MISSING_FROM_FORM,
     )
-    if MISSING_FROM_FORM in [
+
+    if new_skills_dict is MISSING_FROM_FORM or MISSING_FROM_FORM in [
         new_role_name,
         new_associated_or_not,
-        new_skills_dict,
         new_hidden,
     ]:
         interface.log_error("Issue updated existing role %s" % str(existing_object))

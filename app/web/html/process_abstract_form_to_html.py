@@ -1,3 +1,5 @@
+from typing import Union
+
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 
 from app.objects.abstract_objects.abstract_form import *
@@ -7,7 +9,9 @@ from app.web.html.forms import *
 from app.web.html.grouped_elements_to_html import get_html_for_element_in_form
 
 
+
 def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
+
     ## Called by action endpoints
     if TERSE:
         print("Abstract form %s" % str(form))

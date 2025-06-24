@@ -47,6 +47,10 @@ class CadetNotSelected(Exception):
     pass
 
 
+class UnexpectedNewForm(Exception):
+    pass
+
+
 MISSING_FROM_FORM = "Missing from form"
 
 

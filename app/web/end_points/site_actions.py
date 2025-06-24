@@ -12,10 +12,10 @@ from app.frontend.instructors.instructor_function_mapping import (
 )
 from app.frontend.administration.admin_function_mapping import admin_function_mapping
 from app.frontend.utilities.utilities_function_mapping import utilities_function_mapping
-from app.objects.utilities.exceptions import MissingMethod
+from app.objects.utilities.exceptions import MissingMethod, UnexpectedNewForm
 
 from app.web.flask.flask_interface import flaskInterface
-from app.objects.abstract_objects.abstract_form import Form, form_with_message, File
+from app.objects.abstract_objects.abstract_form import Form, form_with_message, File, NewForm
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
 )
@@ -34,6 +34,10 @@ def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
         )
 
     abstract_form_for_action = form_handler.get_form()
+
+    if type(abstract_form_for_action) is NewForm:
+        form_handler.interface.log_error("Not expecting 'NewForm: %s' here - you might have pressed buttons too quickly and confused me." % abstract_form_for_action.form_name)
+        raise UnexpectedNewForm()
 
     return abstract_form_for_action
 

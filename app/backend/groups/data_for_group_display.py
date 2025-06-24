@@ -350,7 +350,7 @@ def get_sail_number_for_boat_on_day(
     ):
         return NOT_AVAILABLE
     sail_number_from_data = get_sail_number_for_boat_from_data(
-        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
+        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day, default=missing_data
     )
     if sail_number_from_data is missing_data:
         sail_number_from_data = get_sail_number_for_boat_from_value_on_form(
@@ -361,11 +361,11 @@ def get_sail_number_for_boat_on_day(
 
 
 def get_sail_number_for_boat_from_data(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day, default=missing_data
 ) -> str:
     return dict_of_all_event_data.event_data_for_cadet(
         cadet
-    ).days_and_boat_class.sail_number_on_day(day=day)
+    ).days_and_boat_class.sail_number_on_day(day=day, default=default)
 
 
 def get_sail_number_for_boat_from_value_on_form(

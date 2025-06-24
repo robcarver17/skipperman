@@ -87,7 +87,7 @@ no_food_requirements = FoodRequirements.create_empty()
 def guess_food_requirements_from_food_field(raw_food_field_str: str) -> FoodRequirements:
     food_field_str = copy(raw_food_field_str)
     food_field_str_lower = food_field_str.lower()
-    for null_fields in ["just tasty food", "none", "na", "n/a", "no", "no allergies", ",", "-"]:
+    for null_fields in ["just tasty food", "none", "n/a", "no allergies", "-"]:
         food_field_str_lower = food_field_str_lower.replace(null_fields,'')
 
     food_required = FoodRequirements(

@@ -43,7 +43,7 @@ The following Skipperman fields, if present in the mapping, will be displayed in
 
 These should be used at all events:
 
-- Sail number (this will automatically be added to the cadets)
+- Sail number (this will automatically be added if it appears in the form)
 - Two handed partner (alternatively if 'Crew first name' and 'Crew surname' are mapped, these will be shown in Skipperman as a two handed partner) - unless it is a singlehander only training event.
 - Other information
 
@@ -98,13 +98,15 @@ Skipperman doesn't know how many club boats are available - use the [summary](#s
 
 Note this will include boats allocated to instructors and other helpers in the [patrol boat](patrol_boat_help.md#allocating-club-sailing-dinghies-to-instructors) page.
 
-There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), so you can see if they want a club boat. Check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
+There is an official skipperman field `Boat ownership`. If this is used in the [event field mapping](WA_field_mapping_help.md), it is displayed so you can see if they want a club boat. Check that there are enough club boats available (using the [summary](#seeing-a-summary) information), and if required enforce a priority for borrowing them. If a cadet doesn't get a club boat that they need, make sure you allocate them to a backup group.
 
 ## Boat classes and sail numbers
 
 To enter the boat class just use the dropdown. If you don't see the information you want, go to the [configuration](configuration_help.md#boat-classes) as the boat may be hidden or need adding.
 
 It can be quite boring to allocate boat classes to everyone at an event. If you click the `Autofill Boat Class` button at the top it will guess which boat class that each sailor is sailing in. Make sure you check they look correct.
+
+Sail numbers are autofilled if the sail number field has been included in the field mapping, and they have registered a sail number.
 
 # Creating sailing partnerships
 
@@ -171,16 +173,8 @@ Click on the `Add unregistered sailor` button at the bottom of the sailors table
 
 Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
 
-If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get an error message: 
+If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get asked to confirm the status change. Skipperman will then replace the blank registration with what is imported. It should also automatically update any notes, health data, food or clothing choices. However you should double check everything to see it as expected.
 
-> `ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!`
-
-You have two options:
-
-- Change the original manual registration to `Cancelled` in Skipperman. Then you can re-import the Wild Apricot file with the new registration. This has the disadvantage that you will lose any changes / additional information added in Skipperman. 
-- Ignore the error. This has the disadvantage that you will need to manually update the original manual registration with any relevant information from Wild Apricot.
-
-NOTE: In a future version of Skipperman the system will allow you to replace the manual registration with an official one automatically.
 
 # See more information about a sailor
 

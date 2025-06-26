@@ -19,6 +19,9 @@ class Form(list):
     def title(self, new_title: str):
         setattr(self, "_title", new_title)
 
+    @property
+    def form_name(self):
+        return self.title
 
 @dataclass
 class Link:

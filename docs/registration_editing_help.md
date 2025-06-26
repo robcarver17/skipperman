@@ -89,16 +89,7 @@ Click on the `Add unregistered sailor` button at the bottom of the sailors table
 
 Note that adding a sailor manually will set their registration status to 'Manual'. Since there is no registration information, all the registration fields will be blank. 
 
-If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get an error message: 
-
-> `ACTION REQUIRED: Cadet John Smith (2000-01-01) Member appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!`
-
-You have two options:
-
-- Change the original manual registration to `Cancelled` in Skipperman. Then you can re-import the Wild Apricot file with the new registration. This has the disadvantage that you will lose any changes / additional information added in Skipperman. 
-- Ignore the error. This has the disadvantage that you will need to manually update the original manual registration with any relevant information from Wild Apricot.
-
-NOTE: In a future version of Skipperman the system will allow you to replace the manual registration with an official one automatically.
+If the sailor is subsequently registered on Wild Apricot, and the data imported, you will get asked to confirm the status change. Skipperman will then replace the blank registration with what is imported. It should also automatically update any notes, health data, food or clothing choices. However you should double check everything to see it as expected.
 
 # Warnings
 

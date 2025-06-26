@@ -1,6 +1,11 @@
 from typing import Union
-from app.web.end_points.site_actions import get_abstract_form_for_specific_action
-from app.objects.abstract_objects.abstract_form import File, Form
+
+from app.data_access.init_data import object_store
+from app.frontend.form_handler import FormHandler
+from app.frontend.menu_define import get_functions_mapping_for_action_name
+from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewForm
+from app.objects.utilities.exceptions import MissingMethod, UnexpectedNewForm
+from app.web.flask.flask_interface import flaskInterface
 from app.web.html.html_components import (
     Html,
 )
@@ -45,3 +50,36 @@ def from_abstract_to_laid_out_html(
     )
 
     return html_code_for_action
+
+
+def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
+    try:
+        form_handler = get_form_handler_for_specific_action(action_name)
+    except MissingMethod:
+        ## missing action
+        return form_with_message(
+            "Action %s not defined. Could be a bug or simply not written yet\n"
+            % action_name
+        )
+
+    abstract_form_for_action = form_handler.get_form()
+
+    if type(abstract_form_for_action) is NewForm:
+        form_handler.interface.log_error("Not expecting 'NewForm: %s' here - you might have pressed buttons too quickly and confused me." % abstract_form_for_action.form_name)
+        raise UnexpectedNewForm()
+
+    return abstract_form_for_action
+
+
+def get_form_handler_for_specific_action(action_name) -> FormHandler:
+    form_mapping = get_functions_mapping_for_action_name(action_name)
+
+    interface = flaskInterface(
+        action_name=action_name,
+        display_and_post_form_function_maps=form_mapping,
+        object_store=object_store,
+    )
+
+    return FormHandler(interface)
+
+

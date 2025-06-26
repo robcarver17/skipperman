@@ -70,4 +70,3 @@ def check_local_file_is_valid_wa_file(new_filename: str):
         raise FileError("File is not a valid WA event file, error %s" % str(e))
 
 
-WA_FILE = "file"

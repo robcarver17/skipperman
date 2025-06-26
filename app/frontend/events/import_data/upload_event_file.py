@@ -23,8 +23,7 @@ from app.frontend.form_handler import (
 )
 from app.backend.wild_apricot.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
-    check_local_file_is_valid_wa_file,
-    WA_FILE,
+    check_local_file_is_valid_wa_file
 )
 from app.backend.file_handling import (
     get_file_from_interface_verify_extension_and_return_file_object,
@@ -45,7 +44,7 @@ def display_form_upload_event_file(
 
 def get_form_for_wa_upload_with_prompt(prompt: str) -> Form:
     buttons = get_upload_buttons()
-    input_field = fileInput(input_name=WA_FILE, accept=ALLOWED_UPLOAD_FILE_TYPES)
+    input_field = fileInput(input_name=WA_FILE_MARKER, accept=ALLOWED_UPLOAD_FILE_TYPES)
 
     list_of_lines = ListOfLines([Line(prompt), Line(input_field), buttons])
 
@@ -111,7 +110,7 @@ def verify_and_save_uploaded_wa_event_file_as_temporary_file(
     ## does not check is a valid WA file
     ## not associated with event so just given incremental filename
     file = get_file_from_interface_verify_extension_and_return_file_object(
-        interface=interface, file_marker_name=WA_FILE
+        interface=interface, file_marker_name=WA_FILE_MARKER
     )
     temp_filename = save_uploaded_file_as_local_temp_file(file)
     check_local_file_is_valid_wa_file(temp_filename)
@@ -121,3 +120,6 @@ def verify_and_save_uploaded_wa_event_file_as_temporary_file(
 
 UPLOAD_FILE_BUTTON_LABEL = "Upload selected file"
 upload_button = Button(UPLOAD_FILE_BUTTON_LABEL)
+
+
+WA_FILE_MARKER = "wa_file_marker"

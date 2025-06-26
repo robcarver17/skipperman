@@ -49,4 +49,6 @@ If the sailor is subsequently registered on Wild Apricot, and the data imported,
 
 If they have been registered with different days attending, that will also be higlighted. Click on `Use new data imported from latest file` to update Skipperman.
 
-Any other information on the registration form won't be pulled in, but any volunteers included will be identified and added.
+Any other information on the registration form will be pulled in, and any volunteers included will be identified and added.
+
+You should double check the data in SM accurately reflects what has been pulled in to the registration fields, in particular volunteers, health, food, notes, and clothing choices if relevant.

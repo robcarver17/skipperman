@@ -70,7 +70,7 @@ class flaskInterface(abstractInterface):
         return is_website_post()
 
     def value_from_form(
-        self, key: str, value_is_date: bool = False, default=arg_not_passed
+        self, key: str, default=arg_not_passed,  value_is_date: bool = False
     ):
         try:
             value = get_value_from_form(key)

@@ -69,7 +69,7 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
             continue
         pdf_layout.add_page(page)
 
-    path_and_filename = get_download_path_and_filename_for_report(print_options, ".pdf")
+    path_and_filename = get_download_path_and_filename_for_report(print_options, "pdf")
     pdf_layout.output_file(path_and_filename.full_path_and_name)
 
     return path_and_filename
@@ -116,7 +116,7 @@ def web_pathname_of_public_version_of_local_report_file(print_options: PrintOpti
 
 
 def get_download_path_and_filename_for_report(
-    print_options: PrintOptions, use_extension: str = ".pdf"
+    print_options: PrintOptions, use_extension: str = "pdf"
 ):
     return PathAndFilename(
         path=download_directory,

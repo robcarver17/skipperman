@@ -36,7 +36,7 @@ from app.frontend.utilities.cleaning.ENTRY_cleaning import (
     display_form_for_event_cleaning,
     post_form_view_of_event_data_cleaning,
 )
-
+from app.frontend.utilities.cleaning.delete_attendance import display_form_for_event_attendance, post_form_view_of_event_data_attendance
 utilities_function_mapping = (
     DisplayAndPostFormFunctionMaps.from_nested_dict_of_functions(
         NestedDictOfMappings(
@@ -66,6 +66,11 @@ utilities_function_mapping = (
                         display_form_for_event_cleaning,
                         post_form_view_of_event_data_cleaning,
                     ): 0,
+                    (
+                        display_form_for_event_attendance,
+                        post_form_view_of_event_data_attendance,
+                    ): 0,
+
                     (display_form_notes, post_form_notes): 0,
                 },
             }

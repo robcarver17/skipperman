@@ -1,5 +1,6 @@
 from typing import Dict
 
+from app.backend.cadets.list_of_cadets import get_list_of_cadets
 from app.backend.groups.previous_groups import (
     get_group_allocations_for_event_active_cadets_only,
 )
@@ -23,6 +24,14 @@ from app.objects.composed.attendance import (
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
+
+
+def clean_attendance_data_for_event(object_store: ObjectStore, event: Event):
+    list_of_cadets = get_list_of_cadets(object_store)
+    attendance = get_attendance_across_events_for_list_of_cadets(
+        object_store, list_of_cadets=list_of_cadets)
+    attendance.clean_attendance_data_for_event(event)
+    update_attendance_across_events_for_list_of_cadets(object_store, list_of_cadets=list_of_cadets, dict_of_attendance_across_events_for_list_of_cadets=attendance)
 
 
 def delete_raw_attendance_for_cadet_and_return_list_of_events(

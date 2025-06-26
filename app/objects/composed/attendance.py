@@ -97,6 +97,9 @@ class AttendanceAcrossDays(Dict[Day, AttendanceOnDay]):
 
 
 class AttendanceAcrossDaysAndEvents(Dict[Event, AttendanceAcrossDays]):
+    def clean_attendance_data_for_event(self, event: Event):
+        self.pop(event)
+
     def update_attendance_for_cadet_on_day_at_event(
         self,
         event: Event,
@@ -128,6 +131,17 @@ class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
     ):
         super().__init__(raw_dict)
         self._dict_of_raw_attendance = dict_of_list_of_raw_attendance
+
+    def clean_attendance_data_for_event(self, event: Event):
+        for cadet in self.list_of_cadets:
+            attendance = self.attendance_for_cadet_across_days_and_events(cadet)
+            attendance.clean_attendance_data_for_event(event)
+
+            underlying_raw_attendance = self.dict_of_list_of_raw_attendance.get(
+                cadet.id, ListOfRawAttendanceItemsForSpecificCadet([])
+            )
+            underlying_raw_attendance.clean_attendance_data_for_event(event.id)
+            self._dict_of_raw_attendance[cadet.id] = underlying_raw_attendance
 
     def mark_unknown_cadets_as_not_attending_or_unregistered(
         self, day: Day, event: Event, availability_dict: Dict[Cadet, DaySelector]

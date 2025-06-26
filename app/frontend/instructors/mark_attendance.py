@@ -91,6 +91,7 @@ def get_save_buttons(
 
 
 save_returned_ticks_button = Button("Save changes", shortcut=SAVE_KEYBOARD_SHORTCUT)
+
 initial_mark_all_as_attending_or_absence_button = Button(
     "Save changes - anyone not ticked will be marked as absent",
     shortcut=SAVE_KEYBOARD_SHORTCUT,

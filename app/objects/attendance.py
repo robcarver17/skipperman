@@ -66,6 +66,14 @@ class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
     def _object_class_contained(self):
         return RawAttendanceItem
 
+    def clean_attendance_data_for_event(self, event_id: str):
+        subset = get_subset_of_list_that_matches_multiple_attr(
+            self, dict_of_attributes={"event_id": event_id}
+        )
+        for item in subset:
+            self.remove(item)
+
+
     def list_of_tuple_of_datetime_marked_and_attendance(self):
         return [(item.datetime_marked, item.attendance) for item in self]
 

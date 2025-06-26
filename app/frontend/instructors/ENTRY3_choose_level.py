@@ -109,8 +109,7 @@ def get_level_buttons(interface: abstractInterface):
     return Line(list_with_buttons)
 
 
-mark_attendance_button = Button("Mark attendance", tile=True)
-
+mark_attendance_button = Button("Mark attendance and view health", tile=True)
 
 def post_form_choose_level_for_group_at_event(
     interface: abstractInterface,

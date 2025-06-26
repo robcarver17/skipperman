@@ -1,6 +1,7 @@
 import datetime
 
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import     get_health_notes_for_cadet_at_event
 from app.backend.cadets_at_event.instructor_marked_attendance import (
     get_current_attendance_on_day_for_cadets_in_group,
     are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late,
@@ -48,6 +49,7 @@ def get_table_to_mark_attendance(
     body_of_table = [
         get_row_in_table_for_attendance(
             interface=interface,
+            event=event,
             cadet=cadet,
             attendance_on_day=attendance_on_day,
             not_initial_registration_phase=not_initial_registration_phase,
@@ -55,8 +57,8 @@ def get_table_to_mark_attendance(
         for cadet, attendance_on_day in current_attendance.items()
     ]
     max_width = max([len(row) for row in body_of_table])
-    padding = [""] * (max_width - 1)
-    top_row = RowInTable(["Cadet - click to see history"] + padding)
+    padding = [""] * (max_width - 2)
+    top_row = RowInTable(["Cadet - click to see history", "Health"] + padding)
 
     return Table([top_row] + body_of_table, has_column_headings=True)
 
@@ -76,6 +78,7 @@ def is_not_initial_registration(
 def get_row_in_table_for_attendance(
     interface: abstractInterface,
     cadet: Cadet,
+        event: Event,
     attendance_on_day: AttendanceOnDay,
     not_initial_registration_phase: bool,
 ) -> RowInTable:
@@ -92,9 +95,12 @@ def get_row_in_table_for_attendance(
         not_initial_registration_phase=not_initial_registration_phase,
     )
 
+    health_cell = health_for_cadet(interface=interface, event=event, cadet=cadet)
+
     return RowInTable(
         [
             cadet_cell,
+                health_cell,
         ]
         + attendance_columns
     )
@@ -142,6 +148,8 @@ def select_cadet_button(
 def name_and_age_of_cadet(cadet: Cadet):
     return "%s (%dyrs)" % (cadet.name, int(cadet.approx_age_years()))
 
+def health_for_cadet(interface: abstractInterface, event: Event, cadet: Cadet):
+    return get_health_notes_for_cadet_at_event(object_store=interface.object_store, event=event, cadet=cadet)
 
 def get_attendance_fields_given_current_attendance(
     cadet: Cadet, attendance_on_day: Attendance, not_initial_registration_phase: bool

@@ -51,6 +51,23 @@ def get_health_notes_for_list_of_cadets_at_event(
 
     return health_notes
 
+def get_health_notes_for_cadet_at_event(
+    object_store: ObjectStore, cadet: Cadet, event: Event
+) -> str:
+    all_event_info = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event, active_only=True
+    )
+
+    registration_data = all_event_info.dict_of_cadets_with_registration_data.registration_data_for_cadet(
+        cadet
+    )
+    health_for_cadet = registration_data.health
+    if len(health_for_cadet) == 0:
+        health_for_cadet = "none"
+
+    return health_for_cadet
+
+
 
 def get_attendance_matrix_for_list_of_cadets_at_event(
     object_store: ObjectStore,

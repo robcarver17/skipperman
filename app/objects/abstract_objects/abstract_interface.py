@@ -117,7 +117,7 @@ class abstractInterface:
         raise NotImplemented
 
     def true_if_radio_was_yes(self, input_label: str, default=missing_data) -> bool:
-        value = self.value_from_form(input_label, missing_data)
+        value = self.value_from_form(input_label, default=missing_data)
         if value is missing_data:
             return default
 

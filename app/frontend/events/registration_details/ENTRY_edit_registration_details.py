@@ -217,7 +217,8 @@ clear_sort_button = Button(label="Sort by registration order", nav_button=True)
 def create_quick_spotters_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rollcall_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     interface.log_error(

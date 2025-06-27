@@ -45,7 +45,7 @@ from app.frontend.reporting.shared.constants import (
     OUTPUT_PDF,
     PUBLIC,
     IF_HEADER_INCLUDE_SIZE,
-    FONT_SIZE,
+    FONT_SIZE, INCLUDE_ROW_NUMBER, DROP_GROUP_NAME_FROM_COLUMNS,
 )
 from app.objects.utilities.exceptions import missing_data, MISSING_FROM_FORM
 
@@ -167,6 +167,8 @@ def report_print_options_as_list_of_lines(print_options: PrintOptions) -> ListOf
             "Prepend group name to all entries: %s" % print_options.prepend_group_name,
             "If prepending, include size of group: %s"
             % print_options.include_size_of_group_if_header,
+            "Include row number: %s" % print_options.include_row_count,
+            "Drop group name from columns: %s" % print_options.drop_group_from_columns
         ]
     )
     output = ListOfLines(output_pdf_line + public_pdf_line + pdf_only + generic)
@@ -230,9 +232,13 @@ def get_print_options_from_main_option_form_fields(
     include_size_of_group_if_header = is_radio_yes_or_no(
         interface, IF_HEADER_INCLUDE_SIZE, default=MISSING_FROM_FORM
     )
+    include_row_number = is_radio_yes_or_no(interface, INCLUDE_ROW_NUMBER, default=MISSING_FROM_FORM)
+    drop_column_group = is_radio_yes_or_no(interface, DROP_GROUP_NAME_FROM_COLUMNS, default=MISSING_FROM_FORM)
     public = is_radio_yes_or_no(interface, PUBLIC, default=MISSING_FROM_FORM)
 
     if MISSING_FROM_FORM in [
+        drop_column_group,
+        include_row_number,
         page_alignment,
         output_to,
         font,
@@ -264,6 +270,8 @@ def get_print_options_from_main_option_form_fields(
     print_options.publish_to_public = public
     print_options.include_size_of_group_if_header = include_size_of_group_if_header
     print_options.font_size = int(font_size)
+    print_options.include_row_count = include_row_number
+    print_options.drop_group_from_columns = drop_column_group
 
     print("Print shared from form %s" % str(print_options))
     return print_options
@@ -344,6 +352,11 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 default_is_yes=print_options.include_group_as_header,
             ),
             yes_no_radio(
+                input_label="Output to public with shareable web link (ensure no private information!)",
+                input_name=PUBLIC,
+            ),
+
+            yes_no_radio(
                 input_label="If group name is header, include size of group",
                 input_name=IF_HEADER_INCLUDE_SIZE,
                 default_is_yes=print_options.include_size_of_group_if_header,
@@ -353,6 +366,17 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
                 input_name=PREPEND_GROUP_NAME,
                 default_is_yes=print_options.prepend_group_name,
             ),
+            yes_no_radio(
+                input_label="Include row number",
+                input_name=INCLUDE_ROW_NUMBER,
+                default_is_yes=print_options.include_row_count
+            ),
+            yes_no_radio(
+                input_label="Drop group name from columns",
+                input_name=DROP_GROUP_NAME_FROM_COLUMNS,
+                default_is_yes=print_options.drop_group_from_columns
+            ),
+
             _______________,
         ]
     )

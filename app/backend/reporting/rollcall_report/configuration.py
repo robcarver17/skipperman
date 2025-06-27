@@ -5,6 +5,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
+from app.objects.events import Event
 from app.objects.groups import unallocated_group
 
 
@@ -13,6 +14,7 @@ GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET = "Group"
 
 def get_specific_parameters_for_rollcall_report(
     object_store: ObjectStore,
+        event: Event
 ) -> SpecificParametersForTypeOfReport:
     list_of_groups = get_list_of_groups(object_store)  ## will be ordered
     list_of_groups.add_unallocated()

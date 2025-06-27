@@ -261,7 +261,8 @@ def cadet_button_clicked(interface: abstractInterface):
 def create_quick_group_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         allocation_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     interface.log_error(
@@ -278,7 +279,8 @@ def create_quick_group_report(interface: abstractInterface) -> File:
 def create_quick_spotters_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         boat_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     interface.log_error(

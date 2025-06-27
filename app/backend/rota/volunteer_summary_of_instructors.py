@@ -195,19 +195,33 @@ def get_dict_of_instructors_by_day_for_specific_role_in_group(
 
     dict_of_instructors_by_day = {}
     for day in days_in_event:
-        list_of_volunteers = volunteers_in_roles_at_event.list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
-            role=role, day=day
+        list_of_volunteers = get_list_of_instructors_on_day_for_specific_role_in_group(
+            volunteers_in_roles_at_event=volunteers_in_roles_at_event,
+            role=role,
+            group=group,
+            day=day
         )
-        list_of_volunteers = [
-            volunteer_with_group.volunteer.name
-            for volunteer_with_group in list_of_volunteers
-            if volunteer_with_group.group == group
-        ]
-        list_of_volunteers.sort()
         dict_of_instructors_by_day[day] = list_of_volunteers
 
     return dict_of_instructors_by_day
 
+def get_list_of_instructors_on_day_for_specific_role_in_group(
+        volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+        role: RoleWithSkills,
+        group: Group,
+        day: Day
+) -> List[str]:
+    list_of_volunteers = volunteers_in_roles_at_event.list_of_volunteers_with_roles_and_groups_and_teams_doing_role_on_day(
+        role=role, day=day
+    )
+    list_of_volunteers = [
+        volunteer_with_group.volunteer.name
+        for volunteer_with_group in list_of_volunteers
+        if volunteer_with_group.group == group
+    ]
+    list_of_volunteers.sort()
+
+    return list_of_volunteers
 
 def check_all_instructors_same_across_days(
     dict_of_instructors_by_day: Dict[Day, List[str]]

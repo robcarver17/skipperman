@@ -17,7 +17,7 @@ def create_column_report_from_df_and_return_filename(
 ) -> str:
     list_of_pages = create_list_of_pages_from_dict_of_df(
         dict_of_df=reporting_options.dict_of_df,
-        marked_up_list_from_df_parameters=reporting_options.marked_up_list_from_df_parameters,
+        reporting_options=reporting_options,
     )
     list_of_pages_with_columns = create_list_of_pages_with_columns_from_list_of_pages(
         list_of_pages=list_of_pages, reporting_options=reporting_options

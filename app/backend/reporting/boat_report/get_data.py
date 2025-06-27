@@ -249,7 +249,6 @@ def row_of_data_for_cadet(
             GROUP: group.name,
             BOAT_CLASS: boat_class,
             SAIL_NUMBER: sail_number,
-            CLUB_BOAT: club_boat_flag,
         }
     )
 
@@ -290,7 +289,6 @@ def row_of_data_for_volunteer(
         .name
     )
     sail_number = ""
-    club_boat_flag = "(Club boat)"
     row_for_volunteer = pd.Series(
         {
             FIRST_CADET: volunteer_name,
@@ -298,7 +296,8 @@ def row_of_data_for_volunteer(
             GROUP: group_name,
             BOAT_CLASS: boat_class,
             SAIL_NUMBER: sail_number,
-            CLUB_BOAT: club_boat_flag,
+
+
         }
     )
 

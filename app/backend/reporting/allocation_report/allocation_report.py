@@ -28,6 +28,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
 
 def get_specific_parameters_for_allocation_report(
     object_store: ObjectStore,
+        event: Event
 ) -> SpecificParametersForTypeOfReport:
     list_of_groups = get_list_of_groups(object_store)  ## will be ordered
     list_of_groups.add_unallocated()

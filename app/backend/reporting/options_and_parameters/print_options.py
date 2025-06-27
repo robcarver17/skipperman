@@ -26,10 +26,13 @@ class PrintOptions(GenericSkipperManObject):
     first_value_in_group_is_key: bool = False
     prepend_group_name: bool = False
     equalise_column_width: bool = True
+    include_row_count: bool = False
     landscape: bool = True
     publish_to_public: bool = False
     include_size_of_group_if_header: bool = False
+    drop_group_from_columns: bool = False
     font_size: int = AUTO_FONT_SIZE
+
 
     @property
     def filename(self) -> str:

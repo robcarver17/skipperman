@@ -157,6 +157,7 @@ def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         patrol_boat_report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     interface.log_error(

@@ -80,7 +80,7 @@ def create_arrangement_from_order_and_algo(
 ) -> ArrangementOptionsAndGroupOrder:
     list_of_pages = create_list_of_pages_from_dict_of_df(
         dict_of_df=reporting_options.dict_of_df,
-        marked_up_list_from_df_parameters=reporting_options.marked_up_list_from_df_parameters,
+        reporting_options=reporting_options
     )
 
     arrangement_options_and_group_order = (

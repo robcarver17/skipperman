@@ -66,7 +66,8 @@ def display_initial_generic_report_form(
 ) -> Form:
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+
         )
     )
 
@@ -131,7 +132,8 @@ def display_form_for_generic_report_all_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=event
         )
     )
 
@@ -193,7 +195,8 @@ def post_form_for_generic_report_all_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
 
@@ -263,7 +266,8 @@ def display_form_for_generic_report_additional_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=event
         )
     )
     help_button = HelpButton(report_generator_with_specific_parameters.help_page)
@@ -311,7 +315,8 @@ def post_form_for_generic_report_additional_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
 
@@ -355,7 +360,8 @@ def display_form_for_generic_report_print_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=event
         )
     )
     specific_parameters_for_type_of_report = (
@@ -403,7 +409,8 @@ def post_form_for_generic_report_print_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            object_store=interface.object_store
+            object_store=interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
 
@@ -450,7 +457,8 @@ def display_form_for_generic_report_arrangement_options(
     dict_of_df = report_generator.get_dict_of_df(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     specific_parameters_for_type_of_report = (
@@ -505,7 +513,8 @@ def post_form_for_generic_report_arrangement_options(
 
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store
+            interface.object_store,
+            event=get_event_from_state(interface)
         )
     )
     specific_parameters_for_type_of_report = (

@@ -1,6 +1,7 @@
 from typing import Dict
 import pandas as pd
 
+from app.backend.reporting import ReportingOptions
 from app.backend.reporting.arrangement.group_order import GroupOrder
 from app.backend.reporting.options_and_parameters.marked_up_list_from_df_parameters import (
     MarkedUpListFromDfParametersWithActualGroupOrder,
@@ -26,8 +27,10 @@ class ListOfDfRowsFromSubset(list):
 
 def create_list_of_pages_from_dict_of_df(
     dict_of_df: Dict[str, pd.DataFrame],
-    marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
+        reporting_options: ReportingOptions
+,
 ) -> ListOfPages:
+    marked_up_list_from_df_parameters = reporting_options.marked_up_list_from_df_parameters ## ignore
     ordered_list_of_groups = marked_up_list_from_df_parameters.actual_group_order
     dict_of_grouped_df = get_dict_of_grouped_df(
         dict_of_df=dict_of_df,
@@ -39,9 +42,9 @@ def create_list_of_pages_from_dict_of_df(
             grouped_df=grouped_df,
             ordered_list_of_groups=ordered_list_of_groups,
             marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
-            title_str=key,
+            page_name=page_name
         )
-        for key, grouped_df in dict_of_grouped_df.items()
+        for page_name, grouped_df in dict_of_grouped_df.items()
     ]
 
     return ListOfPages(list_of_pages)
@@ -49,17 +52,18 @@ def create_list_of_pages_from_dict_of_df(
 
 def create_page_from_df(
     grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
+        page_name: str,
     ordered_list_of_groups: GroupOrder,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
-    title_str: str,
 ) -> Page:
-    page = Page([], title_str=title_str)
+    page = Page([], title_str=page_name)
     groups_with_content = []
     for group in ordered_list_of_groups:
         group_of_marked_up_str = _create_marked_up_str_for_group(
             group=group,
             grouped_df=grouped_df,
             marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
+           page_name=page_name
         )
         if group_of_marked_up_str is EMPTY_GROUP:
             continue
@@ -114,6 +118,7 @@ def get_grouped_df(
 
 def _create_marked_up_str_for_group(
     group: str,
+        page_name: str,
     grouped_df: pd.core.groupby.generic.DataFrameGroupBy,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
@@ -122,7 +127,7 @@ def _create_marked_up_str_for_group(
     group_of_marked_up_str = group_of_marked_up_str_from_subset_list_for_group(
         subset_group_as_list=subset_group_as_list,
         marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
-        group=group,
+        group=group,page_name=page_name
     )
 
     return group_of_marked_up_str
@@ -130,6 +135,7 @@ def _create_marked_up_str_for_group(
 
 def group_of_marked_up_str_from_subset_list_for_group(
     group: str,
+        page_name: str,
     subset_group_as_list: ListOfDfRowsFromSubset,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
 ) -> GroupOfMarkedUpString:
@@ -139,6 +145,7 @@ def group_of_marked_up_str_from_subset_list_for_group(
 
     _add_groupname_inplace_to_list_for_this_group_if_required(
         group=group,
+        page_name=page_name,
         group_of_marked_up_str=group_of_marked_up_str,
         marked_up_list_from_df_parameters=marked_up_list_from_df_parameters,
         size_of_group=len(subset_group_as_list),
@@ -146,18 +153,27 @@ def group_of_marked_up_str_from_subset_list_for_group(
     dict_of_max_length = dict_of_max_length_by_column_name_across_list(
         subset_group_as_list=subset_group_as_list
     )
+
+    prepend_group_name = marked_up_list_from_df_parameters.prepend_group_name
+    include_row_count = marked_up_list_from_df_parameters.include_row_count
+    group_by_column = marked_up_list_from_df_parameters.group_by_column
+    drop_group_name_from_columns = marked_up_list_from_df_parameters.drop_group_name_from_columns
+
     for index, row in enumerate(subset_group_as_list):
         __, row_entries = row  ## weird pandas thing
-        prepend_group_name = marked_up_list_from_df_parameters.prepend_group_name
         keyvalue = (
             marked_up_list_from_df_parameters.first_value_in_group_is_key and index == 0
         )
         marked_string = create_marked_string_from_row(
             row_entries,
+            index=index,
             keyvalue=keyvalue,
             prepend_group_name=prepend_group_name,
+            include_row_count=include_row_count,
             group=group,
             dict_of_max_length=dict_of_max_length,
+            group_by_column=group_by_column,
+            drop_group_name_from_columns=drop_group_name_from_columns
         )
         group_of_marked_up_str.append(marked_string)
 
@@ -219,7 +235,8 @@ def subset_list_for_group(
 
 def _add_groupname_inplace_to_list_for_this_group_if_required(
     group: str,
-    group_of_marked_up_str: GroupOfMarkedUpString,
+        page_name: str,
+        group_of_marked_up_str: GroupOfMarkedUpString,
     marked_up_list_from_df_parameters: MarkedUpListFromDfParametersWithActualGroupOrder,
     size_of_group: int,
 ):
@@ -228,27 +245,44 @@ def _add_groupname_inplace_to_list_for_this_group_if_required(
         if marked_up_list_from_df_parameters.include_size_of_group_if_header:
             group_name = group_name + "(%d)" % size_of_group
 
+        if marked_up_list_from_df_parameters.group_annotations is not arg_not_passed:
+            annotation_for_day = marked_up_list_from_df_parameters.group_annotations.get(page_name)
+            annotation = annotation_for_day.get(group, "")
+            group_name = group_name+" "+annotation
+
         group_of_marked_up_str.append(MarkedUpString.header(group_name))
 
 
 def create_marked_string_from_row(
     row: pd.Series,
     group: str,
+    index: int,
     dict_of_max_length: Dict[str, int],
-    keyvalue: bool = False,
+        group_by_column: str,
+        keyvalue: bool = False,
     prepend_group_name: bool = False,
+include_row_count: bool = False,
+        drop_group_name_from_columns: bool = False
+
 ) -> MarkedUpString:
+    if drop_group_name_from_columns:
+        row = row.drop(group_by_column)
+
     if keyvalue:
         return MarkedUpString.keyvalue(
+            index=index,
             row=row,
             group=group,
             prepend_group_name=prepend_group_name,
             dict_of_max_length=dict_of_max_length,
+            include_row_count=include_row_count
         )
     else:
         return MarkedUpString.bodytext(
+            index=index,
             row=row,
             group=group,
             prepend_group_name=prepend_group_name,
             dict_of_max_length=dict_of_max_length,
+            include_row_count=include_row_count
         )

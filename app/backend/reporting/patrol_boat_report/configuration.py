@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,
 )
+from app.objects.events import Event
 from app.objects.patrol_boats import RIVER_SAFETY, LAKE_SAFETY
 from app.data_access.store.object_store import ObjectStore
 from app.objects.day_selectors import DaySelector
@@ -18,6 +19,7 @@ LOCATIONS = [RIVER_SAFETY, LAKE_SAFETY]
 
 def get_specific_parameters_for_patrol_boat_report(
     object_store: ObjectStore,
+        event: Event
 ) -> SpecificParametersForTypeOfReport:
     specific_parameters_for_patrol_boat_report = SpecificParametersForTypeOfReport(
         group_by_column=LOCATION,

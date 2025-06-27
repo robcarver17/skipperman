@@ -22,17 +22,21 @@ class MarkedUpString:
     def bodytext(
         cls,
         row: Union[str, pd.Series],
-        group: str = arg_not_passed,
+            index: int,
+            group: str = arg_not_passed,
         prepend_group_name: bool = False,
+            include_row_count: bool = False,
         dict_of_max_length: Dict[str, int] = arg_not_passed,
     ):
         (
             string,
             original_contents_as_series,
         ) = from_row_and_columns_to_string_and_original_contents(
+            index=index,
             row=row,
             group=group,
             prepend_group_name=prepend_group_name,
+            include_row_count=include_row_count,
             dict_of_max_length=dict_of_max_length,
         )
         return cls(
@@ -71,19 +75,23 @@ class MarkedUpString:
     @classmethod
     def keyvalue(
         cls,
+            index: int,
         row: Union[str, pd.Series],
         group: str = arg_not_passed,
         prepend_group_name: bool = False,
-        dict_of_max_length: Dict[str, int] = arg_not_passed,
+            include_row_count: bool = False,
+            dict_of_max_length: Dict[str, int] = arg_not_passed,
     ):
         (
             string,
             original_contents_as_series,
         ) = from_row_and_columns_to_string_and_original_contents(
+            index=index,
             row=row,
             group=group,
             prepend_group_name=prepend_group_name,
             dict_of_max_length=dict_of_max_length,
+            include_row_count=include_row_count
         )
         return cls(
             string=string,
@@ -102,17 +110,28 @@ def from_row_and_columns_to_string_and_original_contents(
     row: Union[str, pd.Series],
     group: str = arg_not_passed,
     prepend_group_name: bool = False,
+        include_row_count: bool= False,
     dict_of_max_length: Dict[str, int] = arg_not_passed,
+        index = arg_not_passed
 ) -> Tuple[str, pd.Series]:
     if type(row) is str:
         string = row
         return string, pd.Series(dict(text=string))
-    original_contents_as_dict = row.to_dict()
+
+    original_contents_as_dict=row.to_dict()
+
     original_contents_as_dict = reformat_to_max_length_padding(
         original_contents_as_dict=original_contents_as_dict,
         dict_of_max_length=dict_of_max_length,
     )
-    original_contents_as_series = pd.Series(original_contents_as_dict)
+    if include_row_count and index is not arg_not_passed:
+        contents_as_dict = {'': str(index+1)}
+        contents_as_dict.update(original_contents_as_dict)
+    else:
+        contents_as_dict = original_contents_as_dict
+
+    original_contents_as_series = pd.Series(contents_as_dict)
+
     original_contents_as_list = original_contents_as_series.to_list()
     string = " ".join(original_contents_as_list)
     if prepend_group_name:

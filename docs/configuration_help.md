@@ -88,9 +88,11 @@ Note that you can't add entirely new roles here, or change the names or other at
 
 # Sailing groups
 
-These are the training and racing groups that sailors can be in. As well as a name, each group has a location: Lake training, River training, MG. They can be hidden - this is very useful here as we often have 'one off' groups that are only used for certain events, and the dropdown options would be.
+These are the training and racing groups that sailors can be in. As well as a name, each group has a location: Lake training, River training, MG. They can be hidden - this is very useful here as we often have 'one off' groups that are only used for certain events, and the dropdown options would be too long otherwise.
 
 It's recommended that the order here is lake training, river training, MG groups; from beginners (Sprites), up to the most difficult MG group (General handicap). This will be the default for reporting.
+
+You can add a streamer colour; this is printed on the spotter sheet report.
 
 # Sailing qualifications
 

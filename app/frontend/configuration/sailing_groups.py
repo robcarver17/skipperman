@@ -87,6 +87,7 @@ def get_row_for_existing_entry(entry: Group, **kwargs_to_ignore) -> RowInTable:
         text_box_for_group_name(entry),
         dropdown_for_location(entry),
         hide_button_for_entry(entry),
+        text_box_for_streamer(entry),
         Line([up_button_for_entry(entry), down_button_for_entry(entry)]),
     ]
 
@@ -103,6 +104,14 @@ def text_box_for_group_name(entry: Group) -> textInput:
         value=str(entry), input_label="Edit name", input_name=text_box_name(entry)
     )
 
+
+def text_box_for_streamer(entry: Group) -> textInput:
+    return textInput(
+        value=str(entry.streamer), input_label="Edit streamer colour", input_name=streamer_box_name(entry)
+    )
+
+def streamer_box_name(entry: Group):
+    return "streamer_%s" % entry.id
 
 def location_box_name(entry: Group = arg_not_passed) -> str:
     return LOCATION_FIELD_NAME + "_" + entry.name
@@ -136,12 +145,14 @@ def get_group_from_form(
         input_name=hidden_box_name(existing_object),
         default=MISSING_FROM_FORM,
     )
-    if MISSING_FROM_FORM in [new_location, new_group_name, is_hidden]:
+    new_streamer = interface.value_from_form(streamer_box_name(existing_object), default=MISSING_FROM_FORM)
+    if MISSING_FROM_FORM in [new_location, new_group_name, is_hidden, new_streamer]:
         interface.log_error("Can't update %s" % str(existing_object))
         return existing_object
 
     new_group = Group(
-        name=new_group_name, location=new_location, protected=False, hidden=is_hidden
+        name=new_group_name, location=new_location, protected=False, hidden=is_hidden,
+        streamer=new_streamer
     )
     return new_group
 

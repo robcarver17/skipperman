@@ -111,7 +111,7 @@ def get_df_for_day_of_boat_report_of_cadets(
     if len(df) == 0:
         return pd.DataFrame()
 
-    df = df.sort_values(by=[FIRST_CADET, BOAT_CLASS, SAIL_NUMBER])
+    df = df.sort_values(by=[ SAIL_NUMBER])
 
     return df
 

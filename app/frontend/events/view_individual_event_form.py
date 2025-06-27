@@ -14,6 +14,7 @@ from app.backend.patrol_boats.patrol_boat_summary import (
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     main_menu_button,
@@ -38,7 +39,7 @@ def get_event_form_for_event(
 ) -> Union[Form, NewForm]:
     event_heading = get_event_heading(interface=interface, event=event)
     summary_lines = summary_tables_for_event(interface=interface, event=event)
-    buttons = ListOfLines([get_event_buttons()])
+    buttons = ListOfLines([get_event_buttons(interface)])
 
     lines_in_form = buttons + event_heading + summary_lines
 
@@ -173,22 +174,31 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     return summary_lines
 
 
-def get_event_buttons() -> ButtonBar:
-    return ButtonBar(
-        [
-            main_menu_button,
-            back_menu_button,
-            " ",
-            import_registration_data_button,
-            edit_registration_button,
-            group_allocation_button,
-            volunteer_rota_button,
-            patrol_boat_allocation_button,
-            food_button,
-            clothing_button,
-            help_button,
-        ]
-    )
+def get_event_buttons(interface: abstractInterface) -> ButtonBar:
+    if is_admin_or_skipper(interface):
+        return ButtonBar(
+            [
+                main_menu_button,
+                back_menu_button,
+                " ",
+                import_registration_data_button,
+                edit_registration_button,
+                group_allocation_button,
+                volunteer_rota_button,
+                patrol_boat_allocation_button,
+                food_button,
+                clothing_button,
+                help_button,
+            ]
+        )
+    else:
+        return ButtonBar(
+            [
+                group_allocation_button,
+                patrol_boat_allocation_button,
+            ]
+        )
+
 
 
 IMPORT_REGISTRATION_DATA_BUTTON_LABEL = "Import registration data"

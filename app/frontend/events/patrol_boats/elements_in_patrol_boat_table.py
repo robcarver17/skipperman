@@ -1,4 +1,5 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.warnings_table import display_warnings_tables
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
@@ -237,15 +238,24 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ButtonBar([get_arbitrary_swap_cancel_button()])
-    return ButtonBar(
-        [
-            cancel_menu_button,
-            save_menu_button,
-            access_copy_menu_button,
-            quick_report_button,
-            help_button,
-        ]
-    )
+
+    if is_admin_or_skipper(interface):
+        return ButtonBar(
+            [
+                cancel_menu_button,
+                save_menu_button,
+                access_copy_menu_button,
+                quick_report_button,
+                help_button,
+            ]
+        )
+    else:
+        return ButtonBar(
+            [
+                cancel_menu_button,
+                quick_report_button,
+            ]
+        )
 
 
 quick_report_button = Button("Quick report", nav_button=True)

@@ -23,6 +23,7 @@ from app.frontend.events.group_allocation.buttons import (
     get_day_buttons,
     button_to_click_on_cadet,
 )
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.club_dinghies import get_club_dinghies_detail
 from app.frontend.shared.club_boats_instructors import (
     get_club_dinghies_detail_instructors,
@@ -94,7 +95,7 @@ def display_form_allocate_cadets_at_event(
     return Form(
         ListOfLines(
             [
-                nav_bar_top,
+                get_nav_bar_top(interface),
                 Heading(
                     "Cadets in %s: Allocate groups, boats and sailing partners"
                     % str(event),
@@ -113,7 +114,7 @@ def display_form_allocate_cadets_at_event(
                 _______________,
                 inner_form,
                 _______________,
-                nav_bar_bottom,
+                get_nav_bar_bottom(interface),
             ]
         )
     )
@@ -126,8 +127,9 @@ add_button = Button(
 quick_group_report_button = Button("Quick group report", nav_button=True)
 quick_spotters_report_button = Button("Quick spotters report", nav_button=True)
 
-
-nav_bar_top = ButtonBar(
+def get_nav_bar_top(interface: abstractInterface):
+    if is_admin_or_skipper(interface):
+        return ButtonBar(
     [
         cancel_menu_button,
         save_menu_button,
@@ -138,9 +140,25 @@ nav_bar_top = ButtonBar(
         help_button,
     ]
 )
-nav_bar_bottom = ButtonBar(
+    else:
+        return ButtonBar(
+    [
+        cancel_menu_button,
+        save_menu_button,
+        quick_spotters_report_button,
+        help_button,
+    ]
+)
+
+def get_nav_bar_bottom(interface: abstractInterface):
+    if is_admin_or_skipper(interface):
+        return ButtonBar(
     [cancel_menu_button, save_menu_button, add_button, help_button]
 )
+    else:
+        return ButtonBar(
+            [cancel_menu_button, save_menu_button,  help_button]
+        )
 
 
 def get_allocations_and_classes_detail(
@@ -198,10 +216,13 @@ def get_classes_detail(interface: abstractInterface, event: Event):
 
 
 def get_previous_event_selection_detail(interface: abstractInterface, event: Event):
-    return DetailListOfLines(
-        get_previous_event_selection_form(interface=interface, event=event),
-        name="Select previous events to show",
-    )
+    if is_admin_or_skipper(interface):
+        return DetailListOfLines(
+            get_previous_event_selection_form(interface=interface, event=event),
+            name="Select previous events to show",
+        )
+    else:
+        return ""
 
 
 def get_sort_line(sort_order):
@@ -274,18 +295,23 @@ def get_top_row(
     previous_event_names_in_list = (
         previous_groups_for_cadets.list_of_events.list_of_names()
     )
-
-    info_field_names = group_allocation_info.visible_field_names
+    info_field_names = group_allocation_info.visible_field_names()
 
     input_field_names_over_days = get_daily_input_field_headings(interface=interface)
 
-    return RowInTable(
-        ["", "Set Availability"]  ## cadet name
-        + previous_event_names_in_list
-        + info_field_names
-        + ["Official qualification", "Notes"]
-        + input_field_names_over_days
-    )
+    if is_admin_or_skipper(interface):
+        return RowInTable(
+            ["", "Set Availability"]  ## cadet name
+            + previous_event_names_in_list
+            + info_field_names
+            + ["Official qualification", "Notes"]
+            + input_field_names_over_days
+        )
+    else:
+        return RowInTable(
+            [""]  ## cadet name
+            + input_field_names_over_days
+        )
 
 
 def get_daily_input_field_headings(interface: abstractInterface) -> list:
@@ -357,14 +383,19 @@ def get_row_for_cadet(
     input_fields = get_input_fields_for_cadet(
         interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
-
-    return RowInTable(
-        [cell_for_cadet, days_attending_field]
-        + previous_groups_as_list
-        + group_info
-        + [qualification, notes_field]
-        + input_fields
-    )
+    if is_admin_or_skipper(interface):
+        return RowInTable(
+            [cell_for_cadet, days_attending_field]
+            + previous_groups_as_list
+            + group_info
+            + [qualification, notes_field]
+            + input_fields
+        )
+    else:
+        return RowInTable(
+            [str(cadet)]
+            + input_fields
+        )
 
 
 MAX_EVENTS_TO_SHOW = 10

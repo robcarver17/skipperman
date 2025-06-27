@@ -33,6 +33,7 @@ from app.frontend.reporting.patrol_boats.report_patrol_boats import (
     patrol_boat_report_generator,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.club_boats_instructors import (
     is_club_dinghy_instructor_button,
     handle_club_dinghy_instructor_allocation_button_pressed,
@@ -61,6 +62,14 @@ from app.objects.abstract_objects.abstract_text import Heading
 def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -> Form:
     event = get_event_from_state(interface)
     top_button_bar = get_top_button_bar_for_patrol_boats(interface)
+
+    if not is_admin_or_skipper(interface):
+        return Form(
+            ListOfLines(
+                [top_button_bar]
+            )
+        )
+
     title = Heading(
         "Patrol boat allocation for event %s" % str(event), centred=True, size=4
     )
@@ -95,14 +104,22 @@ def post_form_view_for_patrol_boat_allocation(
         interface.flush_cache_to_store()
         return previous_form(interface)
 
-    update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+    if quick_report_button.pressed(last_button_pressed):
+        return create_quick_report(interface)
+
+    if is_admin_or_skipper(interface):
+        update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+    else:
+        ## ignore
+        interface.log_error("User not permitted to change patrol boats")
+        return interface.get_new_form_given_function(
+        display_form_view_for_patrol_boat_allocation
+    )
 
     ## New form
     if access_copy_menu_button.pressed(last_button_pressed):
         interface.flush_cache_to_store()
         return interface.get_new_form_given_function(display_form_patrol_boat_copy_menu)
-    elif quick_report_button.pressed(last_button_pressed):
-        return create_quick_report(interface)
 
     ## remaining options do something and then return current form
     if save_menu_button.pressed(last_button_pressed):

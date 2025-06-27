@@ -48,7 +48,8 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
     event: Event,
     list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner],
     day: Day,
-):
+        group_switch_allowed: bool
+) -> List[str]:
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event
     )
@@ -69,12 +70,14 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
     )
-    update_boat_info_for_updated_cadets_at_event(
+    messages = update_boat_info_for_updated_cadets_at_event(
         object_store=object_store,
         event=event,
         list_of_updated_cadets_boats_groups_club_dinghies_and_partners=list_of_updated_cadets_boats_groups_club_dinghies_and_partners,
+        group_switch_allowed=group_switch_allowed
     )
 
+    return messages
 
 def convert_list_of_inputs_to_list_of_cadet_at_event_objects(
     object_store: ObjectStore,
@@ -340,19 +343,25 @@ def update_boat_info_for_updated_cadets_at_event(
     object_store: ObjectStore,
     event: Event,
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-):
+        group_switch_allowed: bool
+) -> List[str]:
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event
     )
 
+    messages = []
     for (
         cadet_boat_class_group_club_dinghy_and_partner_on_day
     ) in list_of_updated_cadets_boats_groups_club_dinghies_and_partners:
-        dict_of_all_event_info_for_cadets.update_boat_info_for_updated_cadet_at_event(
+        warning_or_none = dict_of_all_event_info_for_cadets.update_boat_info_for_updated_cadet_at_event(
             cadet_boat_class_group_club_dinghy_and_partner_on_day
         )
+        if warning_or_none is not None:
+            messages.append(warning_or_none)
 
     update_dict_of_all_event_info_for_cadets(
         object_store=object_store,
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
     )
+
+    return messages

@@ -25,4 +25,5 @@ It's recommended you use the following [printing options](general_report_config_
 - private (public is okay: although you will not share this widely as it contains the full names of sailors, if you share the report as a link with the race officer they will see updates automatically)
 - put group name as header
 - include size of group
-
+- include row number
+- drop group name from columns

@@ -1,6 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
@@ -173,7 +173,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def update_boat_info_for_updated_cadet_at_event(
         self,
         cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-    ):
+    ) -> Union[None, str]:
         availability_dict = (
             self.dict_of_cadets_with_registration_data.availability_dict()
         )

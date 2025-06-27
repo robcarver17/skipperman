@@ -17,6 +17,7 @@ from app.frontend.reporting.allocations.report_group_allocations import (
     allocation_report_generator,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.boat_classes import no_boat_class
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
@@ -119,12 +120,13 @@ def update_data_given_allocation_form(interface: abstractInterface):
 
     list_of_cadets = get_list_of_all_cadets_with_event_data(interface=interface)
     for cadet in list_of_cadets:
-        update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
-        get_cadet_notes_for_row_in_form_and_alter_registration_data(
-            interface=interface,
-            event=event,
-            cadet=cadet,
-        )
+        if is_admin_or_skipper(interface):
+            update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
+            get_cadet_notes_for_row_in_form_and_alter_registration_data(
+                interface=interface,
+                event=event,
+                cadet=cadet,
+            )
 
     ## has to be done in one go because of swaps
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
@@ -288,13 +290,18 @@ def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_
     list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner],
     list_of_days: List[Day],
 ):
+    group_switch_allowed = is_admin_or_skipper(interface)
     for day in list_of_days:
-        update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
+        messages=update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
             object_store=interface.object_store,
             event=event,
             list_of_updates=list_of_updates,
             day=day,
+            group_switch_allowed=group_switch_allowed
         )
+
+        for message in messages:
+            interface.log_error(message)
 
 
 def make_cadet_available_on_current_day(

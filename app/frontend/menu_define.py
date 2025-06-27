@@ -10,7 +10,7 @@ from app.frontend.reporting.reporting_function_mapping import reporting_function
 from app.frontend.utilities.utilities_function_mapping import utilities_function_mapping
 from app.frontend.volunteers.volunteer_function_mapping import volunteer_function_mapping
 from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
-from app.objects.users_and_security import ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP
+from app.objects.users_and_security import ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP,RACE_OFFICER_GROUP
 from app.objects.utilities.exceptions import MissingMethod
 
 menu_definition = {
@@ -29,7 +29,7 @@ menu_definition = {
 menu_security_dict = {
     "view_master_list_of_cadets": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_list_of_volunteers": [ADMIN_GROUP, SKIPPER_GROUP],
-    "view_list_of_events": [ADMIN_GROUP, SKIPPER_GROUP],
+    "view_list_of_events": [ADMIN_GROUP, SKIPPER_GROUP, RACE_OFFICER_GROUP],
     "view_possible_reports": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_configuration": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_utilities": [ADMIN_GROUP, SKIPPER_GROUP],

@@ -7,6 +7,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
+from app.objects.users_and_security import UserGroup
 
 from app.objects.utilities.exceptions import (
     missing_data,
@@ -37,6 +38,7 @@ def finished_button_with_custom_label(label: str):
 @dataclass
 class abstractInterface:
     object_store: ObjectStore
+    user_group: UserGroup
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 

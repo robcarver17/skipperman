@@ -1,4 +1,5 @@
 
+- added race officer login
 - print config changes for spotter sheets
 - add streamers to colour groups
 - added option to clear attendance records for event

@@ -11,6 +11,7 @@ from app.backend.club_boats.list_of_club_dinghies import (
     get_list_of_visible_club_dinghies,
 )
 from app.backend.club_boats.summary import summarise_club_boat_allocations_for_event
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import intInput
@@ -22,16 +23,19 @@ from app.objects.events import Event
 
 
 def get_club_dinghies_detail(interface: abstractInterface, event: Event):
-    return DetailListOfLines(
-        ListOfLines(
-            [
-                "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
-                get_club_dinghies_form(interface=interface, event=event),
-                "Includes volunteers allocated to dinghies - see patrol boat rota",
-            ]
-        ),
-        name="Club dinghies - summary",
-    )
+    if is_admin_or_skipper(interface):
+        return DetailListOfLines(
+            ListOfLines(
+                [
+                    "Allocated club dinghies (numbers are sailors, not boats. * means over capacity):",
+                    get_club_dinghies_form(interface=interface, event=event),
+                    "Includes volunteers allocated to dinghies - see patrol boat rota",
+                ]
+            ),
+            name="Club dinghies - summary",
+        )
+    else:
+        return ""
 
 
 def get_club_dinghies_form(interface: abstractInterface, event: Event) -> Table:
@@ -146,6 +150,8 @@ def get_bottom_row_in_club_dinghy_form(event: Event) -> RowInTable:
 
 
 def update_club_boat_limits_for_event_from_form(interface: abstractInterface):
+    if not is_admin_or_skipper(interface):
+        return
     event = get_event_from_state(interface)
     list_of_club_dinghies = get_list_of_club_dinghies(interface.object_store)
 

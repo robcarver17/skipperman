@@ -12,13 +12,14 @@ from app.objects.utilities.generic_list_of_objects import (
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
-UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "public"])
+UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "RO", "public"])
 ADMIN_GROUP = UserGroup.admin
 SKIPPER_GROUP = UserGroup.skipper
 INSTRUCTOR_GROUP = UserGroup.instructor
 PUBLIC_GROUP = UserGroup.public
+RACE_OFFICER_GROUP = UserGroup.RO
 
-ALL_GROUPS = [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP, PUBLIC_GROUP]
+ALL_GROUPS = [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP, RACE_OFFICER_GROUP, PUBLIC_GROUP]
 
 
 @dataclass

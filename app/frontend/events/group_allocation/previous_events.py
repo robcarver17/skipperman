@@ -5,6 +5,7 @@ from app.backend.events.list_of_events import (
     get_list_of_events,
 )
 from app.data_access.store.object_store import ObjectStore
+from app.frontend.shared.check_security import is_admin_or_skipper
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -117,6 +118,9 @@ def get_picklist_of_all_events_excluding_current(
 
 
 def save_event_selection_from_form(interface: abstractInterface):
+    if not is_admin_or_skipper(interface):
+        return
+
     last_button = interface.last_button_pressed()
     if revert_to_default_event_button.pressed(last_button):
         clear_prior_event_selection_in_state(interface)

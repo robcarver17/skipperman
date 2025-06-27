@@ -16,7 +16,6 @@ from app.objects.composed.cadets_with_all_event_info import (
 class GroupAllocationInfo:
     dict_of_dicts: Dict[str, Dict[Cadet, str]]
 
-    @property
     def visible_field_names(self) -> list:
         fields = [
             field
@@ -41,7 +40,7 @@ class GroupAllocationInfo:
         info_dict = self.get_allocation_info_for_cadet(cadet)
 
         return [
-            info_dict.get(field_name, "") for field_name in self.visible_field_names
+            info_dict.get(field_name, "") for field_name in self.visible_field_names()
         ]
 
     def get_allocation_info_for_cadet(self, cadet: Cadet) -> dict:

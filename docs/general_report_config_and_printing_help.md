@@ -74,6 +74,8 @@ For all reports:
 - Do you want the group name as a header?
 - Do you want the number of sailors / volunteers in the group in the header?
 - Do you want the group name to be inserted in front of every item? 
+- Do you want a row number to be put at the start of the line?
+- Do you want the group to be dropped from the main part of the data (fine if it's there as a header as well)
 
 Click back if you don't want to change parameters, and reset if you want to [return them to their default values](#resetting-options).
 

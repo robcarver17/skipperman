@@ -6,6 +6,7 @@ from app.frontend.menu_define import get_functions_mapping_for_action_name
 from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewForm
 from app.objects.utilities.exceptions import MissingMethod, UnexpectedNewForm
 from app.web.flask.flask_interface import flaskInterface
+from app.web.flask.security import get_access_group_for_current_user
 from app.web.html.html_components import (
     Html,
 )
@@ -73,9 +74,11 @@ def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
 
 def get_form_handler_for_specific_action(action_name) -> FormHandler:
     form_mapping = get_functions_mapping_for_action_name(action_name)
+    group = get_access_group_for_current_user()
 
     interface = flaskInterface(
         action_name=action_name,
+        user_group=group,
         display_and_post_form_function_maps=form_mapping,
         object_store=object_store,
     )

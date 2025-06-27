@@ -50,6 +50,7 @@ class Group(GenericSkipperManObjectWithIds):
     location: GroupLocation
     protected: bool
     hidden: bool
+    streamer: str
     id: str = arg_not_passed
 
     def __eq__(self, other):
@@ -57,6 +58,7 @@ class Group(GenericSkipperManObjectWithIds):
             self.name == other.name
             and self.location == other.location
             and self.hidden == other.hidden
+            and self.streamer == other.streamer
         )
 
     def __hash__(self):
@@ -76,6 +78,7 @@ class Group(GenericSkipperManObjectWithIds):
             protected=True,
             id=UNALLOCATED_GROUP_ID,  ## DO NOT CHANGE
             hidden=False,
+            streamer = ""
         )
 
     @classmethod
@@ -86,6 +89,7 @@ class Group(GenericSkipperManObjectWithIds):
             protected=True,
             id="-9asmissing",  ## DO NOT CHANGE
             hidden=False,
+            streamer=""
         )
 
     @property
@@ -122,6 +126,7 @@ class ListOfGroups(GenericListOfObjectsWithIds):
             protected=False,
             location=lake_training_group_location,
             hidden=False,
+            streamer=""
         )
         group.id = self.next_id()
 

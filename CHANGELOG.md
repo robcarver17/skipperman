@@ -1,4 +1,9 @@
 
+- add streamers to colour groups
+- added option to clear attendance records for event
+- added health to instructors screen
+- html refactoring and clean up
+- better handling of food fields
 - adhoc QR code generator
 - on uploading file without extension, will guess extension
 

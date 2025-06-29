@@ -156,9 +156,9 @@ def update_list_of_teams(object_store: ObjectStore, list_of_teams: ListOfTeams):
     )
 
 
-def get_role_from_name(object_store: ObjectStore, role_name: str) -> RoleWithSkills:
+def get_role_from_name(object_store: ObjectStore, role_name: str, default=arg_not_passed) -> RoleWithSkills:
     list_of_roles = get_list_of_roles_with_skills(object_store)
-    return list_of_roles.role_with_name(role_name)
+    return list_of_roles.role_with_name(role_name, default=default)
 
 
 def get_list_of_roles(object_store: ObjectStore) -> ListOfRolesWithSkillIds:

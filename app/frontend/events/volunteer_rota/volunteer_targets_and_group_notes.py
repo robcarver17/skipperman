@@ -26,6 +26,7 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.abstract_objects.abstract_form import intInput
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.composed.volunteer_roles import RoleWithSkills
 
 from app.objects.events import Event
 from app.objects.groups import Group
@@ -93,15 +94,15 @@ def get_row_for_volunteer_targets_at_event(
     event: Event,
     ready_to_swap: bool = False,
 ) -> RowInTable:
-    role = row_of_data.role
+    role_name = row_of_data.role.name
     daily_counts = row_of_data.daily_counts
     daily_values = [daily_counts[day] for day in event.days_in_event()]
     target_box = get_target_box_in_form(
-        role=role, target=row_of_data.target, ready_to_swap=ready_to_swap
+        role=role_name, target=row_of_data.target, ready_to_swap=ready_to_swap
     )
     worst_shortfall = row_of_data.worst_shortfall
 
-    return RowInTable([role] + daily_values + [target_box, worst_shortfall])
+    return RowInTable([role_name] + daily_values + [target_box, worst_shortfall])
 
 
 def get_target_box_in_form(role: str, target: int, ready_to_swap: bool = False):
@@ -126,15 +127,15 @@ def save_volunteer_targets(interface: abstractInterface):
     )
     for row in data_for_table:
         save_volunteer_targets_for_specific_role(
-            interface=interface, event=event, role_name=row.role
+            interface=interface, event=event, role=row.role
         )
 
 
 def save_volunteer_targets_for_specific_role(
-    interface: abstractInterface, event: Event, role_name: str
+    interface: abstractInterface, event: Event, role: RoleWithSkills
 ):
     new_target = get_target_from_form(
-        interface=interface, role_name=role_name, default=MISSING_FROM_FORM
+        interface=interface, role_name=role.name, default=MISSING_FROM_FORM
     )
     if new_target is MISSING_FROM_FORM:
         return
@@ -142,7 +143,7 @@ def save_volunteer_targets_for_specific_role(
     save_new_volunteer_target(
         object_store=interface.object_store,
         event=event,
-        role_name=role_name,
+        role=role,
         target=new_target,
     )
 

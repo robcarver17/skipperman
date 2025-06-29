@@ -26,7 +26,7 @@ from app.backend.volunteers.roles_and_teams import (
 
 @dataclass
 class RowInTableWithActualAndTargetsForRole:
-    role: str
+    role: RoleWithSkills
     daily_counts: Dict[Day, int]
     target: int
     worst_shortfall: int
@@ -89,7 +89,7 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     worst_shortfall = int(target) - int(min_count)
 
     return RowInTableWithActualAndTargetsForRole(
-        role=role.name,
+        role=role,
         daily_counts=daily_counts,
         target=target,
         worst_shortfall=worst_shortfall,
@@ -97,12 +97,11 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
 
 
 def save_new_volunteer_target(
-    object_store: ObjectStore, event: Event, role_name: str, target: int
+    object_store: ObjectStore, event: Event, role: RoleWithSkills, target: int
 ):
     targets_at_event = get_volunteer_targets_at_event(
         object_store=object_store, event=event
     )
-    role = get_role_from_name(object_store=object_store, role_name=role_name)
     targets_at_event.update_new_volunteer_target(role=role, target=target)
     update_volunteer_targets_at_event(
         object_store=object_store, dict_of_targets=targets_at_event

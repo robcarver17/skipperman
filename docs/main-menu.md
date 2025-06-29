@@ -95,3 +95,5 @@ Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button.
 
 
 In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key; for later versions Alt and key should work. On a Mac, use Ctrl/Alt/Key in Chrome, Firefox and Safari. 
+
+Also **never use the 'refresh' button on your browser** Instead press cancel or back. 

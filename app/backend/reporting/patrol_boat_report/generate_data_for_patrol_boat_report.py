@@ -111,6 +111,7 @@ def get_df_for_location_on_day(
     boat_designations = unique_list_of_boat_designations_for_event_on_day(
         volunteer_event_data=volunteer_event_data, day=day
     )
+    boat_designations.sort()
     all_df = [
         get_df_for_designation_and_location_on_day(
             volunteer_event_data=volunteer_event_data,

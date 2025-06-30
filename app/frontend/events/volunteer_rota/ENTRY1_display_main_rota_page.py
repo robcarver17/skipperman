@@ -241,7 +241,8 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
 def save_all_information_across_forms(interface: abstractInterface):
     save_all_information_in_rota_page(interface)
-    save_volunteer_targets(interface)
+    interface.log_error("Not saving volunteer targets")
+    #save_volunteer_targets(interface)
     save_group_notes_from_form(interface)
     save_warnings_from_table(interface)
 

@@ -19,7 +19,6 @@ from app.objects.composed.dict_of_volunteer_role_targets import (
     DictOfTargetsForRolesAtEvent,
 )
 from app.backend.volunteers.roles_and_teams import (
-    get_role_from_name,
     get_list_of_roles_with_skills,
 )
 
@@ -30,6 +29,7 @@ class RowInTableWithActualAndTargetsForRole:
     daily_counts: Dict[Day, int]
     target: int
     worst_shortfall: int
+
 
 
 def get_list_of_actual_and_targets_for_roles_at_event(

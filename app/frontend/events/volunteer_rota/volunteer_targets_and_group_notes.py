@@ -37,7 +37,7 @@ def get_volunteer_targets_table_and_save_button(
     interface: abstractInterface,
     event: Event,
 ) -> DetailListOfLines:
-    return DetailListOfLines(ListOfLines(["CONTACT ADMIN: Disabled"]))
+    return DetailListOfLines(ListOfLines(["CONTACT ADMIN: Disabled"]), name="Role numbers and targets")
 
     table = get_volunteer_targets_table(event=event, interface=interface)
     elements_to_return = [table, save_targets_button]

@@ -58,10 +58,7 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
         else:
             cadet = self.cadet.initial_and_surname
 
-        group = self.group.name
-        #day = self.day.name
-
-        return {"name": cadet, GROUP_STR_NAME: group}
+        return {"name": cadet}
 
 
 

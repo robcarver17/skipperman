@@ -52,22 +52,23 @@ class CadetWithGroupOnDay(GenericSkipperManObject):
     def cadet_id(self):
         return self.cadet.id
 
-    def as_str_dict(self, display_full_names: bool = True) -> dict:
+    def cadet_names_and_groups_as_str(self, display_full_names: bool = True) -> dict:
         if display_full_names:
             cadet = self.cadet.name
         else:
             cadet = self.cadet.initial_and_surname
 
         group = self.group.name
-        day = self.day.name
+        #day = self.day.name
 
-        return {"name": cadet, GROUP_STR_NAME: group, "day": day}
+        return {"name": cadet, GROUP_STR_NAME: group}
+
 
 
 class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
-    def as_df_of_str(self, display_full_names: bool = True):
+    def as_df_of_cadet_names_and_groups_as_str(self, display_full_names: bool = True):
         list_of_dicts = [
-            item.as_str_dict(display_full_names=display_full_names) for item in self
+            item.cadet_names_and_groups_as_str(display_full_names=display_full_names) for item in self
         ]
         return pd.DataFrame(list_of_dicts)
 

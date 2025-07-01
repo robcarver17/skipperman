@@ -24,7 +24,7 @@ def write_qualifications_to_temp_csv_file_and_return_filename(
     list_of_cadet_names_with_qualifications = (
         list_of_cadet_names_with_qualifications.sort_by_date()
     )
-    df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_str()
+    df_of_qualifications = list_of_cadet_names_with_qualifications.as_df_of_cadet_names_and_groups_as_str()
 
     filename = temp_file_name_in_download_directory()
 

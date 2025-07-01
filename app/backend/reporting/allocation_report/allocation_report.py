@@ -38,6 +38,7 @@ def get_specific_parameters_for_allocation_report(
         report_type="Allocation report",
         group_order=list_of_groups.list_of_names(),
         unallocated_group=unallocated_group.name,
+
     )
 
     return specific_parameters_for_allocation_report

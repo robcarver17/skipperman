@@ -212,18 +212,24 @@ def update_skills_checkbox_for_specific_volunteer(
         ### fields not available for some reason
         return
 
-    if currently_has_boat_skill == is_ticked:
-        ## no change needed
-        return
-
     if is_ticked:
-        add_boat_related_skill_for_volunteer(
-            object_store=interface.object_store, volunteer=volunteer
-        )
+        if currently_has_boat_skill:
+            ## no change needed
+            return
+        else:
+            add_boat_related_skill_for_volunteer(
+                object_store=interface.object_store, volunteer=volunteer
+            )
+            return
     else:
-        remove_boat_related_skill_for_volunteer(
-            object_store=interface.object_store, volunteer=volunteer
-        )
+        if currently_has_boat_skill:
+            remove_boat_related_skill_for_volunteer(
+                object_store=interface.object_store, volunteer=volunteer
+            )
+            return
+        else:
+            ## no change needed
+            return
 
 
 def update_role_dropdowns(interface: abstractInterface):

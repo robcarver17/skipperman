@@ -69,6 +69,12 @@ class PathAndFilename:
     path: str = ""
     extension: str = ""
 
+    @classmethod
+    def from_filename_without_path(cls, filename_without_path: str):
+        filename, extension = filename_without_path.split(".")
+        return cls(filename_without_extension=filename, extension=extension
+                   )
+
     @property
     def full_path_and_name(self):
         filename = self.filename

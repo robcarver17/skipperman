@@ -91,10 +91,13 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
 
     try:
         file = get_file_from_interface(FILE_FIELD, interface=interface)
+        extension= file.content_type
         delete_existing_public_files(original_path_and_filename)
         full_filename = get_public_filename_with_suffix_given_local_file(
             original_path_and_filename
         )
+        full_filename.add_or_replace_extension(extension)
+
         file.save(full_filename.full_path_and_name)
 
     except Exception as e:

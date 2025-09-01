@@ -36,7 +36,6 @@ from app.data_access.configuration.configuration import (
     PUBLIC_REPORTING_SUBDIRECTORY,
 )
 
-
 ## Do not move these functions out of this file or things break
 
 
@@ -92,7 +91,6 @@ app = prepare_flask_app(max_file_size=MAX_FILE_SIZE, profile=PROFILE)
 app.secret_key = "a;lsjfd;lkasdfiawers"
 
 login_manager = prepare_login_manager(app)
-
 
 ## @APP MAGIC
 
@@ -166,7 +164,7 @@ def action(action_option):
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
     else:
-        return generate_action_page_html(action_option)
+        return generate_action_page_html(action_name=action_option)
 
 
 

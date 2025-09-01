@@ -90,6 +90,7 @@ def copy_previous_role_button_or_blank(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Union[Button, str]:
     ready_to_swap = is_ready_to_swap(interface)
+    return "Removed for speed"
     previous_role = get_last_role_or_none_for_volunteer_at_previous_events(
         object_store=interface.object_store,
         avoid_event=volunteer_data_at_event.event,

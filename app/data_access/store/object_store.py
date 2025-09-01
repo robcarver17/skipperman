@@ -8,15 +8,19 @@ from app.data_access.store.object_definitions import (
 )
 
 from app.data_access.store.store import Store, DataAccessMethod
+from app.objects.utilities.exceptions import arg_not_passed
 
 NOT_IN_STORE = object()
 
 
 class ObjectStore:
-    def __init__(self, data_store: Store, data_api: GenericDataApi):
+    def __init__(self, data_store: Store, data_api: GenericDataApi, underyling_object_store: dict = arg_not_passed):
         self._data_store = data_store
         self._data_api = data_api
-        self._object_store = {}
+        if underyling_object_store is arg_not_passed:
+            self._object_store = {}
+        else:
+            self._object_store = underyling_object_store
 
     def delete_all_data(self, are_you_sure: bool = False):
         ### YOU REALLY NEED TO BE SURE!
@@ -80,7 +84,7 @@ class ObjectStore:
         **kwargs,
     ):
         key = get_store_key(object_definition=object_definition, **kwargs)
-        self.object_store[key] = new_object
+        self.object_store.update({key:new_object})
 
     def _call_and_store(
         self,
@@ -92,12 +96,12 @@ class ObjectStore:
             object_definition=object_definition, object_store=self, **kwargs
         )
 
-        self.object_store[key] = stored_object
+        self.object_store.update({key: stored_object})
 
         return stored_object
 
     def clear_object_store(self):
-        self._object_store = {}
+        self.object_store.clear()
 
     @property
     def master_data_path(self) -> str:
@@ -118,6 +122,7 @@ class ObjectStore:
     @property
     def object_store(self) -> dict:
         return self._object_store
+
 
     @property
     def global_read_only(self):

@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.data_access.init_data import object_store
+from app.data_access.init_data import underling_data_api
+from app.data_access.store.object_store import ObjectStore
+from app.data_access.store.store import Store
 from app.frontend.form_handler import FormHandler
 from app.frontend.menu_define import get_functions_mapping_for_action_name
 from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewForm
@@ -22,7 +24,7 @@ from flask import send_file, Response
 def generate_action_page_html(action_name: str) -> Union[Html, Response]:
     print("getting html for %s" % action_name)
 
-    abstract_form_for_action = get_abstract_form_for_specific_action(action_name)
+    abstract_form_for_action = get_abstract_form_for_specific_action(action_name=action_name)
 
     if type(abstract_form_for_action) is File:
         print("Generating file %s" % abstract_form_for_action.path_and_filename)
@@ -53,9 +55,9 @@ def from_abstract_to_laid_out_html(
     return html_code_for_action
 
 
-def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
+def get_abstract_form_for_specific_action(action_name: str) -> Union[File, Form]:
     try:
-        form_handler = get_form_handler_for_specific_action(action_name)
+        form_handler = get_form_handler_for_specific_action(action_name=action_name)
     except MissingMethod:
         ## missing action
         return form_with_message(
@@ -72,10 +74,11 @@ def get_abstract_form_for_specific_action(action_name) -> Union[File, Form]:
     return abstract_form_for_action
 
 
-def get_form_handler_for_specific_action(action_name) -> FormHandler:
+def get_form_handler_for_specific_action(action_name: str) -> FormHandler:
     form_mapping = get_functions_mapping_for_action_name(action_name)
     group = get_access_group_for_current_user()
-
+    store = Store()
+    object_store = ObjectStore(data_store=store, data_api=underling_data_api)
     interface = flaskInterface(
         action_name=action_name,
         user_group=group,

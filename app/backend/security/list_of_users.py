@@ -1,8 +1,7 @@
-from app.objects.utilities.exceptions import arg_not_passed
-from app.data_access.init_data import object_store as default_object_store
 from app.data_access.store.object_definitions import object_definition_for_list_of_users
 from app.data_access.store.object_store import ObjectStore
 from app.objects.users_and_security import ListOfSkipperManUsers, SkipperManUser
+
 
 
 def add_user(object_store: ObjectStore, user: SkipperManUser):
@@ -23,10 +22,9 @@ def already_in_list(object_store: ObjectStore, username: str) -> bool:
 
 
 def get_list_of_users(
-    object_store: ObjectStore = arg_not_passed,
+    object_store: ObjectStore
 ) -> ListOfSkipperManUsers:
-    if object_store is arg_not_passed:
-        object_store = default_object_store
+
     list_of_users = get_list_of_users_could_be_empty(object_store)
 
     return list_of_users.list_of_users()

@@ -80,10 +80,8 @@ class Store(dict):
         storage_item = self.get_storage_item(key)
         unchanged = not storage_item.changed
         if unchanged:
-            print("%s unchanged not saving")
             return
         contents = storage_item.contents
-        print("%s changed to %s, writing" % (key, contents))
         self._write_to_data(
             contents, data_access_method=storage_item.data_access_method
         )

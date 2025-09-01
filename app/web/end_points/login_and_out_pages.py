@@ -1,5 +1,6 @@
 from flask import request, render_template
 
+
 from flask_login import login_user, logout_user
 
 from app.backend.security.modify_user import change_password_for_user
@@ -31,7 +32,7 @@ def login_page():
         username = request.form[USERNAME]
         password = request.form[PASSWORD]
 
-        return process_login(username=username, password=password)
+        return process_login( username=username, password=password)
 
 
 def change_password_page():
@@ -64,7 +65,7 @@ def display_change_password_page():
 def login_link_page():
     username = request.args.get("username")
     password = request.args.get("password")
-    return process_login(username=username, password=password)
+    return process_login( username=username, password=password)
 
 
 def display_login_form():
@@ -94,7 +95,7 @@ login_html_wrapper = HtmlWrapper(
 """
 
 
-def process_login(username: str, password: str):
+def process_login( username: str, password: str):
     all_flask_users = get_all_flask_users()
     if username not in all_flask_users:
         print("User %s not known in %s" % (username, str(all_flask_users)))

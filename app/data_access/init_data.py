@@ -28,5 +28,3 @@ def make_data():
 
 underling_data_api = make_data()
 store = Store()
-
-object_store = ObjectStore(data_store=store, data_api=underling_data_api)

@@ -5,7 +5,7 @@ from app.backend.security.list_of_users import get_list_of_users, update_list_of
 from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.configuration.configuration import HOMEPAGE
-from app.data_access.init_data import object_store as default_object_store
+from app.data_access.init_data import underling_data_api, store
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.users_and_security import get_random_string
 from app.web.html.url_define import LINK_LOGIN
@@ -16,7 +16,7 @@ def change_password_for_user(
 ):
     if object_store is arg_not_passed:
         ## If called from change password web page
-        object_store = default_object_store
+        object_store = ObjectStore(data_store=store, data_api=underling_data_api)
 
     list_of_users = get_list_of_users(object_store)
     list_of_users.change_password_for_user(username, new_password=new_password)

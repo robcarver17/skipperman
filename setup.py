@@ -51,6 +51,7 @@ setup(
         "PyYAML>=5.4",
         "fpdf>=1.7",
         "flask>=2.0.0",
+        "flask-caching==2.3.1",
         "openpyxl>3.0",
         "flask-security==3.0",
         "xlsxwriter>3.0",

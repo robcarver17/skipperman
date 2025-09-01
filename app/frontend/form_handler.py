@@ -23,6 +23,7 @@ class FormHandler:
     interface: abstractInterface
 
     def get_form(self) -> Form:
+        self.interface.clear_cache() ## prevent weird behaviour with multiple web workers
         if self.interface.is_posted_form:
             print("posted form")
             return self.get_posted_form()

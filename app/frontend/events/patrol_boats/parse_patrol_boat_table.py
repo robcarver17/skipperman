@@ -89,7 +89,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     )  ## must come last or will confuse role and skills
     save_warnings_from_table(interface)
 
-    interface.save_cache_to_store_without_clearing()
+    interface.flush_cache_to_store()
 
 
 def update_boat_labels(interface: abstractInterface):

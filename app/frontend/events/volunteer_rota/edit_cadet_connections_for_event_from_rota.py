@@ -105,11 +105,11 @@ def post_form_edit_cadet_connections_from_rota(
 
     elif add_connection_button.pressed(button):
         add_cadet_connection_from_form(interface)
-        interface.save_cache_to_store_without_clearing()
+        interface.flush_cache_to_store()
 
     elif last_button_pressed_was_delete_cadet_connection(interface):
         delete_event_connection_given_form(interface)
-        interface.save_cache_to_store_without_clearing()
+        interface.flush_cache_to_store()
 
     else:
         return button_error_and_back_to_initial_state_form(interface)

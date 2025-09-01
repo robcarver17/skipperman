@@ -157,7 +157,7 @@ def post_form_view_for_patrol_boat_allocation(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_cache_to_store_without_clearing()
+    interface.flush_cache_to_store()
 
     return interface.get_new_form_given_function(
         display_form_view_for_patrol_boat_allocation

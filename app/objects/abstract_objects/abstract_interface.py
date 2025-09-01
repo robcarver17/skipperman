@@ -45,10 +45,6 @@ class abstractInterface:
     def clear_cache(self):
         self.object_store.clear_store()
 
-    def save_cache_to_store_without_clearing(self):
-        read_only = self.warn_and_return_read_only()
-        self.object_store.save_store(read_only)
-
     def flush_cache_to_store(self):
         read_only = self.warn_and_return_read_only()
         self.object_store.flush_store(read_only)

@@ -96,7 +96,10 @@ class Event(GenericSkipperManObjectWithIds):
         return timediff.days + 1
 
     def similarity_event_name(self, other_event: "Event") -> float:
-        return similar(self.event_name, other_event.event_name)
+        if self.event_year == other_event.event_year: ## don't mind if same event name in different years
+            return similar(self.event_name, other_event.event_name)
+        else:
+            return 0
 
     def similarity_start_date(self, other_event: "Event") -> float:
         return similar(self._start_of_event_as_str, other_event._start_of_event_as_str)

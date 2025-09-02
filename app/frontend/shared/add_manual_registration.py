@@ -82,7 +82,7 @@ def add_cadet_to_event_and_return_form(
         object_store=interface.object_store, event=event, new_cadet=cadet
     )
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return return_to_allocation_pages(
         interface=interface, calling_function=calling_function

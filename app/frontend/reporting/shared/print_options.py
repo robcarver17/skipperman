@@ -440,4 +440,4 @@ def save_print_options_from_form(
         print_options=print_options,
         interface=interface,
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()

@@ -50,7 +50,7 @@ def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data
     )
     update_food_for_volunteers_from_registration_data(interface=interface, event=event)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return return_to_controller(interface)
 

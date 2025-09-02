@@ -106,7 +106,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
     )
     interface.lock_cache()
     clean_sensitive_data_for_event(object_store=interface.object_store, event=event)
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return form_with_message_and_finished_button(
         "Cleaned sensitive data for event %s" % str(event),

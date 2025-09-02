@@ -76,7 +76,7 @@ def post_form_config_volunteer_roles(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return interface.get_new_form_given_function(display_form_config_volunteer_roles)
 

@@ -69,14 +69,14 @@ def post_form_AN_EXAMPLE(interface: abstractInterface) -> Union[Form, NewForm]:
     ## note we don't need to handle help and menu buttons
 
     if back_menu_button.pressed(button_pressed):
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_AN_EXAMPLE
         )
 
     elif cancel_menu_button.pressed(button_pressed):
         interface.log_error("You pressed cancel")
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
     elif save_button.pressed(button_pressed):
         interface.log_error(
             "you entered %s"

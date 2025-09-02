@@ -147,7 +147,7 @@ def add_connection_from_form(interface: abstractInterface):
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         object_store=interface.object_store, cadet=selected_cadet, volunteer=volunteer
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def delete_connection_given_form(interface: abstractInterface):
@@ -158,4 +158,4 @@ def delete_connection_given_form(interface: abstractInterface):
     delete_cadet_connection(
         object_store=interface.object_store, cadet=cadet, volunteer=volunteer
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()

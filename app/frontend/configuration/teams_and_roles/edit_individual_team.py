@@ -141,7 +141,7 @@ def post_form_edit_individual_team_page(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return interface.get_new_form_given_function(display_form_edit_individual_team_page)
 
@@ -159,7 +159,6 @@ def reorder_ordered_list_of_roles(
         )
     except Exception as e:
         interface.log_error("Error reordering teams: %s" % str(e))
-        interface.clear_and_unlock_cache()
 
 
 def add_new_role_to_team(interface: abstractInterface, team: Team):
@@ -174,4 +173,4 @@ def add_new_role_to_team(interface: abstractInterface, team: Team):
         )
     except Exception as e:
         interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))
-        interface.clear_and_unlock_cache()
+        interface.unlock_cache_ignoring_errors()

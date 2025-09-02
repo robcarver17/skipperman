@@ -220,7 +220,7 @@ def post_form_for_generic_report_all_options(
     elif reset_all_options_button.pressed(last_button_pressed):
         interface.lock_cache()
         reset_all_report_options(interface, report_generator_with_specific_parameters)
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return display_form_for_generic_report_all_options(interface, report_generator)
 
     elif back_menu_button.pressed(last_button_pressed):
@@ -330,7 +330,7 @@ def post_form_for_generic_report_additional_options(
         reset_specific_report_options(
             interface, report_generator_with_specific_parameters
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return display_form_for_generic_report_additional_options(
             interface=interface, report_generator=report_generator
         )
@@ -341,7 +341,7 @@ def post_form_for_generic_report_additional_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -352,7 +352,7 @@ def post_form_for_generic_report_additional_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return previous_form
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -428,7 +428,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return display_form_for_generic_report_print_options(
             interface=interface, report_generator=report_generator
         )
@@ -439,7 +439,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -451,7 +451,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return previous_form
 
     else:
@@ -546,7 +546,7 @@ def post_form_for_generic_report_arrangement_options(
             object_store=interface.object_store,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return display_form_for_generic_report_arrangement_options(
             interface=interface, report_generator=report_generator
         )

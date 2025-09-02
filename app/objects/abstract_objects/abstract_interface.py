@@ -44,6 +44,7 @@ class abstractInterface:
 
     def clear_persistent_cache(self):
         self.object_store.clear_store_including_persistent_cache()
+        self.log_error("Cleared object cache")
 
     def force_cache_unlock(self):
         ## allows anyone to clear the cache lock
@@ -53,13 +54,6 @@ class abstractInterface:
         else:
             self.object_store.unlock_store()
 
-
-    def clear_and_unlock_cache(self):
-        ## clear in memory cache without saving, used to save time and be safe in such cases
-        self.object_store.clear_cache_in_memory()
-
-        ## We do this because someone might lock before a clear
-        self.unlock_cache_ignoring_errors()
 
     def unlock_cache_ignoring_errors(self):
         try:
@@ -75,23 +69,20 @@ class abstractInterface:
         except CacheIsLocked:
             self.log_error("Can't save whilst someone else is saving, make changes and try again")
 
-    def flush_cache_to_store(self):
+    def save_changes_in_cached_data_to_disk(self):
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
-            self.clear_and_unlock_cache()
-            return
 
-        if self.store_is_locked_by_another_thread:
+        elif self.store_is_locked_by_another_thread:
             ## should never get here, but heyho
             self.log_error("Can't save whilst someone else is saving, make changes and try again")
-            self.clear_and_unlock_cache()
-            return
+        else:
+            try:
+                self.object_store.save_changed_data_and_unlock_cache()
+            except Exception as e:
+                self.log_error("Unexpected error %s whilst saving data, contact support" % str(e))
 
-        try:
-            self.object_store.flush_store_and_unlock_cache()
-        except Exception as e:
-            self.log_error("Unexpected error %s whilst saving data, contact support" % str(e))
-            self.unlock_cache_ignoring_errors() ## leaving a locked cache is the worst sin, avoid at all costs
+        self.unlock_cache_ignoring_errors() ## leaving a locked cache is the worst sin, avoid at all costs
 
     @property
     def store_is_locked_by_another_thread(self):
@@ -180,7 +171,7 @@ class abstractInterface:
         return NewForm(form_name)
 
     def get_new_display_form_for_parent_of_function(self, func: Callable) -> NewForm:
-        self.clear_and_unlock_cache()
+        self.unlock_cache_ignoring_errors()
         form_name = self.display_and_post_form_function_maps.get_display_form_name_for_parent_of_function(
             func
         )
@@ -215,7 +206,7 @@ def form_with_message_and_finished_button(
     log_error: str = arg_not_passed,
     log_msg: str = arg_not_passed,
 ) -> Form:
-    interface.clear_and_unlock_cache()
+    interface.unlock_cache_ignoring_errors()
 
     if log_error is not arg_not_passed:
         interface.log_error(log_error)

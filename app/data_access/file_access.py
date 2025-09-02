@@ -133,6 +133,7 @@ def get_all_files_matching_filename(filename: str, pathname: str):
     return glob.glob(matching)
 
 
+
 def delete_all_files_matching_filename(filename: str, pathname: str):
     list_of_files = get_all_files_matching_filename(
         filename=filename, pathname=pathname
@@ -140,6 +141,15 @@ def delete_all_files_matching_filename(filename: str, pathname: str):
     for filename in list_of_files:
         os.remove(filename)
 
+def delete_all_files_in_directory(pathname: str):
+    list_of_files = get_all_files_in_path(pathname)
+    for filename in list_of_files:
+        os.remove(filename)
+
+
+def get_all_files_in_path( pathname: str):
+    matching = "%s/*" % pathname
+    return glob.glob(matching)
 
 def get_staged_adhoc_filename(adhoc_name: str):
     return os.path.join(upload_directory, "_%s" % adhoc_name)

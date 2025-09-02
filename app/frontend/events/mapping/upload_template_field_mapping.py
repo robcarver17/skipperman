@@ -83,7 +83,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
         object_store=interface.object_store,
         template=template,
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return form_with_message_and_finished_button(
         "Uploaded new template %s" % (template_name),

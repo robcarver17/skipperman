@@ -49,7 +49,6 @@ def post_form_add_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
         return process_form_when_cadet_verified(interface)
 
     elif cancel_menu_button.pressed(last_button_pressed):
-        interface.clear_and_unlock_cache()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -68,10 +67,10 @@ def process_form_when_cadet_verified(
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error("Can't add this sailor, error code %s, try again" % str(e))
-        interface.clear_and_unlock_cache()
+        interface.unlock_cache_ignoring_errors()
         return initial_state_form
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return form_with_message_and_finished_button(
         "Added sailor %s" % str(cadet),

@@ -240,7 +240,7 @@ def update_comparing_new_and_existing_cadet_at_event(
             )
         )
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_changed(

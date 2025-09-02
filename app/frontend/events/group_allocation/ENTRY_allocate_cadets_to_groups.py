@@ -213,7 +213,7 @@ def post_form_allocate_cadets_when_changing_data(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return display_form_allocate_cadets(interface)
 
@@ -224,7 +224,7 @@ def save_all_information_in_forms_on_page(interface: abstractInterface):
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def previous_form(interface: abstractInterface):

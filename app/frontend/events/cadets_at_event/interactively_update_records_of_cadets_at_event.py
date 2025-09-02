@@ -268,7 +268,7 @@ def process_update_to_cadet_new_to_event(
         row_in_registration_data=relevant_row,
         cadet=cadet,
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return process_next_cadet_at_event(interface)
 

@@ -97,7 +97,7 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
         update_cadet_connections_when_volunteer_already_at_event(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return next_volunteer_in_event(interface)
 
     else:
@@ -173,5 +173,5 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
     return next_volunteer_in_event(interface)

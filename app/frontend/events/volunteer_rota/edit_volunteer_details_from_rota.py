@@ -82,7 +82,7 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
         volunteer=volunteer,
         availability=availability,
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 AVAILABILITY = "Availability"

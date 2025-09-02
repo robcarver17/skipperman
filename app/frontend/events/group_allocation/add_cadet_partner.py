@@ -123,7 +123,7 @@ def add_matched_partner_cadet_with_duplicate_registration(
         original_cadet=primary_cadet,
         new_cadet=new_cadet,
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return return_to_allocation_pages(interface)
 

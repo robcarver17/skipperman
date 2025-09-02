@@ -50,7 +50,7 @@ def add_volunteer_from_form_to_data(interface: abstractInterface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
     interface.lock_cache()
     add_new_verified_volunteer(volunteer=volunteer, object_store=interface.object_store)
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return volunteer
 

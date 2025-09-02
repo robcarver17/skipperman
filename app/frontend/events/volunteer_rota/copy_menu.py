@@ -63,7 +63,7 @@ def post_form_volunteer_copy_menu(interface: abstractInterface) -> Union[Form, N
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return interface.get_new_display_form_for_parent_of_function(
         post_form_volunteer_copy_menu

@@ -82,7 +82,7 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         save_field_mapping_for_event(
             object_store=interface.object_store, event=event, mapping=mapping
         )
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
 
     except Exception as e:
         interface.log_error("Something went wrong uploading file %s" % str(e))

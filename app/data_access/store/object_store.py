@@ -33,11 +33,6 @@ class ObjectStore:
     def backup_underlying_data(self):
         self.data_api.make_backup()
 
-    def flush_store_and_unlock_cache(self):
-        self.save_cache()
-        self.clear_cache_in_memory()
-        self.unlock_store()
-
     def lock_store(self):
         ### locks occur on a post when data could be modified
         ### We only need to lock the object cache, implicit this locks the data cache as well
@@ -58,17 +53,13 @@ class ObjectStore:
     def store_is_locked_by_another_thread(self):
         return self.object_cache.is_locked_by_another_thread
 
-    def save_cache(self):
+    def save_changed_data_and_unlock_cache(self):
         if self.store_is_locked_by_another_thread:
             raise CacheIsLocked("Can't save changes, someone else is trying to save")
 
         self.object_cache.save_cache() ## save object first, as this will also throw a lock error, just in case
         self.underlying_data_cache.save_cache()
-
-    def clear_cache_in_memory(self):
-        self.underlying_data_cache.clear_stored_items()
-        ### Does not clear persistent object cache on disk
-        self.object_cache.clear_in_memory_only()
+        self.unlock_store()
 
     def clear_store_including_persistent_cache(self):
         self.underlying_data_cache.clear_stored_items()

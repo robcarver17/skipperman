@@ -12,6 +12,7 @@ home_directory = os.path.expanduser("~")
 
 master_data_path = os.path.join(home_directory, DATAPATH)
 pickle_directory = os.path.join(home_directory, PICKLE_STORE)
+
 try:
     os.mkdir(master_data_path)
 except:

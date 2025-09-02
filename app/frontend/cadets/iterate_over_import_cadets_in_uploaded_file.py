@@ -123,7 +123,7 @@ def mark_existing_cadet_as_member_and_log(interface: abstractInterface, cadet: C
 
     interface.lock_cache()
     confirm_cadet_is_member(object_store=interface.object_store, cadet=cadet)
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def next_iteration_over_rows_in_temp_cadet_file(
@@ -163,7 +163,7 @@ def process_when_cadet_to_be_added_from_membership_list(
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -388,7 +388,7 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     not_members = set_all_user_unconfirmed_members_to_non_members_and_return_list(
         object_store=interface.object_store
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     for cadet in not_members:
         interface.log_error(

@@ -81,7 +81,7 @@ def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface)
     volunteer = get_volunteer_from_state(interface)
     interface.lock_cache()
     get_and_save_volunteer_skills_from_form(interface=interface, volunteer=volunteer)
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def previous_form(interface: abstractInterface):

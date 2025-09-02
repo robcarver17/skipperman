@@ -74,7 +74,7 @@ def post_form_edit_individual_cadet(
     elif save_menu_button.pressed(button_pressed):
         interface.lock_cache()
         modify_cadet_given_form_contents(interface)
-        interface.flush_cache_to_store()
+        interface.save_changes_in_cached_data_to_disk()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)

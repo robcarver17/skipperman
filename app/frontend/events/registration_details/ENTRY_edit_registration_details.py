@@ -95,7 +95,7 @@ def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLine
             object_store=interface.object_store, event=event
         )
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     warnings_detail = display_warnings_tables(warnings)
 
@@ -169,7 +169,7 @@ def save_details_from_form(interface: abstractInterface):
     parse_registration_details_from_form(interface=interface, event=event)
     save_warnings_from_table(interface)
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
 
 def previous_form(interface: abstractInterface):

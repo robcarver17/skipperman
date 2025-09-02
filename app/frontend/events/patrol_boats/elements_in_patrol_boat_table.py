@@ -227,7 +227,7 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     process_all_warnings_for_patrol_boats(
         object_store=interface.object_store, event=event
     )
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
     all_warnings = get_all_saved_warnings_for_patrol_boats(
         object_store=interface.object_store, event=event
     )

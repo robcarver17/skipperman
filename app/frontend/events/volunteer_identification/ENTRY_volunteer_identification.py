@@ -389,7 +389,7 @@ def process_identification_when_volunteer_matched(
             % (volunteer.name, str(e))
         )
 
-    interface.flush_cache_to_store()
+    interface.save_changes_in_cached_data_to_disk()
 
     return next_volunteer_in_current_row(interface)
 

@@ -143,10 +143,10 @@ class PickledObjectCache(SimpleObjectCache):
 
     def read_lock_id_from_file(self, default=NOT_LOCKED):
         fname = self.filename_for_lock
-        if os.path.isfile(fname):
+        try:
             with open(fname, "rb") as f:
                 return pickle.load(f)
-        else:
+        except:
             return default
 
     def clear_lock_file(self):
@@ -243,13 +243,14 @@ class PickledObjectCache(SimpleObjectCache):
 
     def get_shared_cache_or_default(self, default=None):
         fname = self.filename_for_data
-        if os.path.isfile(fname):
+        try:
             with open(fname, "rb") as f:
                 return pickle.load(f)
-        else:
+        except:
             return default
 
     def update_shared_cache(self, new_dict):
+
         with open(self.filename_for_data, "wb") as f:
             pickle.dump(new_dict , f)
 

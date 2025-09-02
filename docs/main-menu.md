@@ -100,4 +100,4 @@ Also **never use the 'refresh' button on your browser** Instead press cancel or 
 
 # Data locks and saving errors
 
-Vey occasionally you will get the error 'Can't save whilst someone else is saving, make changes and try again'. This means you have pressed a button at almost the exact same time as another user; and to avoid data corruption it stops you saving. If you keep having problems saving, then you need to go the utilities menu / choose data: backup, upload and restore, and click on 'Clear data lock'. If you can't see that menu find someone who can.
+Vey occasionally you will get the error 'Can't save whilst someone else is saving, make changes and try again'. This means you have pressed a button at almost the exact same time as another user; and to avoid data corruption it stops you saving. If you keep having problems saving, then you need to go the utilities menu / choose 'data: backup, upload and restore', and click on 'Clear data lock'. If you can't see that menu find someone who can.

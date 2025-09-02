@@ -150,6 +150,7 @@ def get_volunteer_warning_table(
     interface: abstractInterface,
 ) -> ListOfLines:
     event = get_event_from_state(interface)
+    interface.lock_cache()
     process_all_warnings_for_rota(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
 

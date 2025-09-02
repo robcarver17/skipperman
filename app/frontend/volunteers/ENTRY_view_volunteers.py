@@ -1,3 +1,4 @@
+
 from typing import Union
 
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT

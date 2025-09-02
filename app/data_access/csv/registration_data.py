@@ -5,14 +5,10 @@ from app.data_access.resolve_paths_and_filenames import (
 )
 
 from app.objects.registration_data import RegistrationDataForEvent
-from app.data_access.classes.mapped_wa_event import (
-    DataMappedRegistrationData,
-    DataListOfEventWarnings,
-)
 from app.objects.event_warnings import ListOfEventWarnings
 
 
-class CsvDataMappedRegistrationData(GenericCsvData, DataMappedRegistrationData):
+class CsvDataMappedRegistrationData(GenericCsvData):
     def read(self, event_id: str) -> RegistrationDataForEvent:
         registration_data = self.read_and_return_object_of_type(
             RegistrationDataForEvent,
@@ -30,7 +26,7 @@ class CsvDataMappedRegistrationData(GenericCsvData, DataMappedRegistrationData):
         )
 
 
-class CsvDataListOfEventWarnings(GenericCsvData, DataListOfEventWarnings):
+class CsvDataListOfEventWarnings(GenericCsvData):
     def read(self, event_id: str) -> RegistrationDataForEvent:
         warnings = self.read_and_return_object_of_type(
             ListOfEventWarnings,

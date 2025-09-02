@@ -1,8 +1,6 @@
 import shutil
 
-from app.data_access.api.generic_api import GenericDataApi
 from app.data_access.backups.make_backup import make_backup
-from app.data_access.classes.volunteers import DataListOfIdentifiedVolunteersAtEvent
 from app.data_access.csv.cadets import *
 from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.global_read_only import (
@@ -11,7 +9,7 @@ from app.data_access.csv.global_read_only import (
 )
 from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
-from app.data_access.csv.wa_field_mapping import CsvDataWAFieldMapping
+from app.data_access.csv.wa_field_mapping import *
 from app.data_access.csv.registration_data import *
 from app.data_access.csv.configuration import *
 from app.data_access.csv.volunteers import *
@@ -24,7 +22,7 @@ from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
 
 
-class CsvDataApi(GenericDataApi):
+class CsvDataApi(object):
     def __init__(
         self, master_data_path: str, user_data_path: str, backup_data_path: str
     ):
@@ -119,6 +117,20 @@ class CsvDataApi(GenericDataApi):
         )
 
     @property
+    def data_wa_field_mapping_templates(self) -> CsvDataWAFieldMappingTemplates:
+        return CsvDataWAFieldMappingTemplates(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+        )
+
+    @property
+    def data_wa_field_mapping_list_of_templates(self) -> CsvDataWAFieldMappingListOfTemplates:
+        return CsvDataWAFieldMappingListOfTemplates(
+            master_data_path=self.master_data_path,
+            backup_data_path=self.backup_data_path,
+        )
+
+    @property
     def data_registration_data(self) -> CsvDataMappedRegistrationData:
         return CsvDataMappedRegistrationData(
             master_data_path=self.master_data_path,
@@ -208,7 +220,7 @@ class CsvDataApi(GenericDataApi):
     @property
     def data_list_of_identified_volunteers_at_event(
         self,
-    ) -> DataListOfIdentifiedVolunteersAtEvent:
+    ) ->CsvDataListOfIdentifiedVolunteersAtEvent:
         return CsvDataListOfIdentifiedVolunteersAtEvent(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,

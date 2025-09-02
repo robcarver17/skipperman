@@ -220,7 +220,8 @@ def post_form_cadet_committee(
     if cancel_menu_button.pressed(button_pressed):
         return previous_form(interface)
 
-    elif add_button.pressed(button_pressed):
+    interface.lock_cache()
+    if add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
 
     elif is_button_cadet_selection(button_pressed):

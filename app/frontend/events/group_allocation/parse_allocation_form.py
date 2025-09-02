@@ -13,12 +13,7 @@ from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
-from app.frontend.reporting.allocations.report_group_allocations import (
-    allocation_report_generator,
-)
-from app.frontend.reporting.shared.create_report import create_generic_report
 from app.frontend.shared.check_security import is_admin_or_skipper
-from app.objects.abstract_objects.abstract_form import File
 from app.objects.boat_classes import no_boat_class
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
@@ -30,7 +25,7 @@ from app.frontend.events.group_allocation.input_fields import (
     CLUB_BOAT,
     PARTNER,
     BOAT_CLASS,
-    SAIL_NUMBER,
+    SAIL_NUMBER, ATTENDANCE
 )
 from app.frontend.events.group_allocation.buttons import (
     get_cadet_from_cadet_available_buttons,
@@ -55,9 +50,6 @@ from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_eve
     make_cadet_available_on_day,
 )
 
-from app.frontend.events.constants import (
-    ATTENDANCE,
-)
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets

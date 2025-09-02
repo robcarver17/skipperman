@@ -73,7 +73,9 @@ def post_form_view_for_food_requirements(
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    elif save_menu_button.pressed(last_button_pressed):
+
+    interface.lock_cache()
+    if save_menu_button.pressed(last_button_pressed):
         save_food_data_in_form(interface)
         interface.flush_cache_to_store()
 

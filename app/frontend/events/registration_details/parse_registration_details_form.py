@@ -1,6 +1,7 @@
 from app.backend.volunteers.connected_cadets import (
     get_list_of_volunteers_associated_with_cadet,
 )
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import ROW_STATUS
 
 from app.objects.cadets import Cadet
 

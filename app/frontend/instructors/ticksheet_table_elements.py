@@ -57,7 +57,7 @@ print_button = Button(PRINT_BUTTON_LABEL)
 show_all_cadets_button = Button(SHOW_ALL_CADETS_BUTTON_LABEL)
 
 
-def user_can_award_qualifications(interface):
+def user_can_award_qualifications(interface: abstractInterface):
     volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
     event = get_event_from_state(interface)
 
@@ -68,7 +68,7 @@ def user_can_award_qualifications(interface):
     return can_award_qualificaiton
 
 
-def get_cadet_button_instructions(interface) -> str:
+def get_cadet_button_instructions(interface: abstractInterface) -> str:
     can_award_qualificaiton = user_can_award_qualifications(interface)
     state = get_edit_state_of_ticksheet(interface)
     cadet_id_set = return_true_if_a_cadet_id_been_set(interface)

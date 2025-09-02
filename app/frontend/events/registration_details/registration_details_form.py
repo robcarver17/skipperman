@@ -14,7 +14,7 @@ from app.frontend.forms.form_utils import (
 )
 from app.frontend.forms.form_utils import dropdown_input_for_status_change
 
-from app.frontend.events.constants import ROW_STATUS
+
 from app.objects.abstract_objects.abstract_form import (
     dropDownInput,
     checkboxInput,
@@ -43,7 +43,7 @@ from app.backend.registration_data.cadet_registration_data import (
 DAYS_ATTENDING = "days_attending_field"
 NOTES = "Notes"
 HEALTH = "Health"
-
+ROW_STATUS = "row status"
 
 @dataclass
 class RegistrationDetailsForEvent:

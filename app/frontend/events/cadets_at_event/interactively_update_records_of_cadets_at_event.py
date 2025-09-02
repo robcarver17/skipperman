@@ -261,6 +261,7 @@ def process_update_to_cadet_new_to_event(
 
         return process_next_cadet_at_event(interface)
 
+    interface.lock_cache()
     add_new_cadet_to_event_from_row_in_registration_data(
         object_store=interface.object_store,
         event=event,

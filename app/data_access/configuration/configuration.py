@@ -39,6 +39,7 @@ USER_DATA = configuration["userdata"]
 UPLOADS = configuration["uploads"]
 DOWNLOAD_DIRECTORY = configuration["download_subdirectory"]
 PUBLIC_REPORTING_SUBDIRECTORY = configuration["public_reporting_subdirectory"]
+PICKLE_STORE = configuration["pickle_store"]
 
 ## backups
 NUMBER_OF_BACKUPS = configuration["number_of_backups_to_keep"]

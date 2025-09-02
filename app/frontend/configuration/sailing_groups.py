@@ -58,6 +58,7 @@ def post_form_config_sailing_groups(
 ) -> Union[Form, NewForm]:
     list_of_groups = get_list_of_groups(interface.object_store)
 
+    interface.lock_cache()
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_groups,
         interface=interface,

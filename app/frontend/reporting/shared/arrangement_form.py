@@ -224,6 +224,7 @@ def post_form_for_group_arrangement_options(
 
     last_button_pressed = interface.last_button_pressed()
 
+    interface.lock_cache()
     if is_auto_layout_button(last_button_pressed):
         change_arrangement_given_method_and_current_order(
             interface=interface, reporting_options=reporting_options

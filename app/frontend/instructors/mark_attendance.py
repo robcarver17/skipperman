@@ -109,7 +109,6 @@ def post_instructor_attendance(interface: abstractInterface):
     initial_registration = not is_not_initial_registration(interface, event, group, day)
 
     if cancel_menu_button.pressed(last_button):
-        interface.flush_cache_to_store()
         return return_to_parent(interface)
 
     if initial_registration:
@@ -127,6 +126,7 @@ def post_instructor_attendance(interface: abstractInterface):
 def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     interface: abstractInterface, last_button: str
 ):
+    interface.lock_cache()
     if initial_mark_all_as_attending_or_absence_button.pressed(last_button):
         final_save_of_initial_registration(interface)
 
@@ -145,6 +145,7 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
 def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     interface: abstractInterface, last_button: str
 ):
+    interface.lock_cache()
     if is_button_cadet_selection(last_button):
         cadet_button_pressed(interface, last_button)
 

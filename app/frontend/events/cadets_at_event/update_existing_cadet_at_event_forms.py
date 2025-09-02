@@ -15,10 +15,6 @@ from app.backend.registration_data.update_cadets_at_event import (
     NO_STATUS_CHANGE,
     new_status_and_status_message,
 )
-from app.frontend.events.constants import (
-    ATTENDANCE,
-    ROW_STATUS,
-)
 from app.objects.abstract_objects.abstract_form import (
     Form,
 )
@@ -165,3 +161,6 @@ def get_line_in_form_for_status_change(
                 )  ## no dict passed, so all shared will be on the table
             ]
         )
+
+ROW_STATUS = "row_status"
+ATTENDANCE = "attendance"

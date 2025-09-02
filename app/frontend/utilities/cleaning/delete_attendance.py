@@ -84,7 +84,6 @@ def post_form_view_of_event_data_attendance(
 ) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
     if back_menu_button.pressed(button_pressed):
-        interface.flush_cache_to_store()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_for_event_attendance
         )
@@ -105,6 +104,7 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
         value_of_button_pressed=interface.last_button_pressed(),
         object_store=interface.object_store,
     )
+    interface.lock_cache()
     clean_attendance_data_for_event(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
 

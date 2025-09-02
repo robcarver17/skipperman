@@ -44,6 +44,7 @@ def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data
     interface: abstractInterface,
 ) -> NewForm:
     event = get_event_from_state(interface)
+    interface.lock_cache()
     update_food_for_cadets_from_registration_data_on_import(
         interface=interface, event=event
     )

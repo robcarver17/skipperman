@@ -110,11 +110,9 @@ def post_form_edit_individual_volunteer(
     )
 
     if cancel_menu_button.pressed(button):
-        interface.clear_cache()
         return previous_page_form
     elif save_menu_button.pressed(button):
         modify_volunteer_given_form_contents(interface=interface)
-        interface.flush_cache_to_store()
         return previous_page_form
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -123,12 +121,14 @@ def post_form_edit_individual_volunteer(
 def modify_volunteer_given_form_contents(interface: abstractInterface):
     original_volunteer = get_volunteer_from_state(interface)
 
+    interface.lock_cache()
     get_and_save_core_volunteer_details_from_form(
         interface=interface, original_volunteer=original_volunteer
     )
     get_and_save_volunteer_skills_from_form(
         interface=interface, volunteer=original_volunteer
     )
+    interface.flush_cache_to_store()
 
 
 def get_and_save_core_volunteer_details_from_form(

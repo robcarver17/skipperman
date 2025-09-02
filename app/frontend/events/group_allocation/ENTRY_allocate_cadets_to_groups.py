@@ -102,7 +102,6 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
     ## Called by post on view events form, so both stage and event name are set
     last_button = interface.last_button_pressed()
     if cancel_menu_button.pressed(last_button):
-        interface.flush_cache_to_store()
         return previous_form(interface)
 
     save_all_information_in_forms_on_page(interface)
@@ -146,7 +145,6 @@ def post_form_allocate_cadets_returns_new_form(
     interface: abstractInterface, last_button: str
 ) -> Union[File, Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
-    interface.flush_cache_to_store()  ## new form so flush
 
     if add_button.pressed(last_button):
         return interface.get_new_form_given_function(
@@ -192,6 +190,7 @@ def post_form_allocate_cadets_when_changing_data(
     interface: abstractInterface, last_button: str
 ) -> Union[Form, NewForm]:
     ## save existing form changes first, might be overwritten later by button actions
+    interface.lock_cache()
     if save_menu_button.pressed(last_button):
         pass  # already saved
 
@@ -211,7 +210,6 @@ def post_form_allocate_cadets_when_changing_data(
 
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
-        interface.flush_cache_to_store()  ## weird bug
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
@@ -221,6 +219,7 @@ def post_form_allocate_cadets_when_changing_data(
 
 
 def save_all_information_in_forms_on_page(interface: abstractInterface):
+    interface.lock_cache()
     update_data_given_allocation_form(interface)
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)

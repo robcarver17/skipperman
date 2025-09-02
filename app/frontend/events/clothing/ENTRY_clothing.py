@@ -66,6 +66,7 @@ def post_form_view_for_clothing_requirements(
         return previous_form(interface)
 
     ### save
+    interface.lock_cache()
     if save_menu_button.pressed(last_button_pressed):
         save_clothing_data(interface)
         interface.flush_cache_to_store()

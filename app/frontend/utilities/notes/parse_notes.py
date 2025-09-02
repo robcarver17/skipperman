@@ -32,6 +32,7 @@ from app.backend.administration_and_utilities.notes import (
 
 
 def save_all_notes(interface: abstractInterface):
+    interface.lock_cache()
     save_quick_note(interface)
     update_all_existing_notes(interface)
     interface.flush_cache_to_store()

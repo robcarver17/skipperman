@@ -249,6 +249,7 @@ def post_form_view_ticksheets_for_event_and_saving_ticksheets(
 ) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
 
+    interface.lock_cache()
     if is_generic_tick_button_pressed(button_pressed):
         action_if_macro_tick_button_pressed(
             interface=interface, button_pressed=button_pressed

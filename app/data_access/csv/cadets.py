@@ -1,13 +1,4 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.classes.cadets import (
-    DataListOfCadets,
-    DataListOfCadetsWithGroups,
-    DataListOfCadetsAtEvent,
-    DataListOfIdentifiedCadetsAtEvent,
-    DataListOfCadetsOnCommitte,
-    DataAttendanceAtEventsForSpecificCadet,
-    DataListOfGroupNotesAtEvent,
-)
 from app.data_access.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
     CADETS_AT_EVENT_ID,
@@ -27,7 +18,7 @@ from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
 
 
-class CsvDataListOfCadets(GenericCsvData, DataListOfCadets):
+class CsvDataListOfCadets(GenericCsvData):
     def read(self) -> ListOfCadets:
         list_of_cadets = self.read_and_return_object_of_type(
             ListOfCadets, file_identifier=LIST_OF_CADETS_FILE_ID
@@ -39,7 +30,7 @@ class CsvDataListOfCadets(GenericCsvData, DataListOfCadets):
         self.write_object(list_of_cadets, file_identifier=LIST_OF_CADETS_FILE_ID)
 
 
-class CsvDataListOfCadetsOnCommitte(GenericCsvData, DataListOfCadetsOnCommitte):
+class CsvDataListOfCadetsOnCommitte(GenericCsvData):
     def read(self) -> ListOfCadetsWithIdOnCommittee:
         list_of_cadets = self.read_and_return_object_of_type(
             ListOfCadetsWithIdOnCommittee, file_identifier=LIST_OF_CADETS_ON_COMMITTEE
@@ -51,8 +42,8 @@ class CsvDataListOfCadetsOnCommitte(GenericCsvData, DataListOfCadetsOnCommitte):
         self.write_object(list_of_cadets, file_identifier=LIST_OF_CADETS_ON_COMMITTEE)
 
 
-class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
-    def read_groups_for_event(self, event_id: str) -> ListOfCadetIdsWithGroups:
+class CsvDataListOfCadetsWithGroups(GenericCsvData):
+    def read(self, event_id: str) -> ListOfCadetIdsWithGroups:
         list_of_cadets_with_groups = self.read_and_return_object_of_type(
             ListOfCadetIdsWithGroups,
             file_identifier=CADETS_WITH_GROUPS_ID,
@@ -61,7 +52,7 @@ class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
 
         return list_of_cadets_with_groups
 
-    def write_groups_for_event(
+    def write(
         self, list_of_cadets_with_groups: ListOfCadetIdsWithGroups, event_id: str
     ):
         self.write_object(
@@ -71,18 +62,18 @@ class CsvDataListOfCadetsWithGroups(GenericCsvData, DataListOfCadetsWithGroups):
         )
 
 
-class CsvDataListOfGroupNotesAtEvent(GenericCsvData, DataListOfGroupNotesAtEvent):
-    def read_all_notes(self) -> ListOfGroupNotesAtEventWithIds:
+class CsvDataListOfGroupNotesAtEvent(GenericCsvData):
+    def read(self) -> ListOfGroupNotesAtEventWithIds:
         return self.read_and_return_object_of_type(
             ListOfGroupNotesAtEventWithIds,
             file_identifier=GROUP_NOTES_ID,
         )
 
-    def write_notes(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
+    def write(self, list_of_group_notes_with_ids: ListOfGroupNotesAtEventWithIds):
         self.write_object(list_of_group_notes_with_ids, file_identifier=GROUP_NOTES_ID)
 
 
-class CsvDataListOfCadetsAtEvent(GenericCsvData, DataListOfCadetsAtEvent):
+class CsvDataListOfCadetsAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:
         list_of_cadets = self.read_and_return_object_of_type(
             ListOfCadetsWithIDAtEvent,
@@ -101,7 +92,7 @@ class CsvDataListOfCadetsAtEvent(GenericCsvData, DataListOfCadetsAtEvent):
 
 
 class CsvDataListOfIdentifiedCadetsAtEvent(
-    GenericCsvData, DataListOfIdentifiedCadetsAtEvent
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfIdentifiedCadetsAtEvent:
         list_of_cadets = self.read_and_return_object_of_type(
@@ -123,9 +114,9 @@ class CsvDataListOfIdentifiedCadetsAtEvent(
 
 
 class CsvDataAttendanceAtEventsForSpecificCadet(
-    DataAttendanceAtEventsForSpecificCadet, GenericCsvData
+    GenericCsvData
 ):
-    def read_attendance_for_cadet_id(
+    def read(
         self, cadet_id: str
     ) -> ListOfRawAttendanceItemsForSpecificCadet:
         return self.read_and_return_object_of_type(
@@ -134,7 +125,7 @@ class CsvDataAttendanceAtEventsForSpecificCadet(
             additional_file_identifiers=cadet_id,
         )
 
-    def write_attendance_for_cadet_id(
+    def write(
         self,
         list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
         cadet_id: str,

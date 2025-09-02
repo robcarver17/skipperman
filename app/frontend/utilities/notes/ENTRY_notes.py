@@ -80,7 +80,6 @@ def post_form_notes(interface: abstractInterface) -> Union[Form, NewForm]:
     ## note we don't need to handle help and menu buttons
 
     if cancel_menu_button.pressed(button_pressed):
-        interface.flush_cache_to_store()
         return interface.get_new_display_form_for_parent_of_function(display_form_notes)
     elif was_sort_button(interface):
         update_sort_status(interface)

@@ -77,6 +77,8 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         file = get_file_from_interface(MAPPING_FILE, interface=interface)
         mapping = read_mapping_from_csv_file_object(file)
         event = get_event_from_state(interface)
+
+        interface.lock_cache()
         save_field_mapping_for_event(
             object_store=interface.object_store, event=event, mapping=mapping
         )

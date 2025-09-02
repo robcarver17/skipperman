@@ -204,7 +204,9 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 
 def clear_wa_event_id_mapping_from_data(interface: abstractInterface):
+
     event = get_event_from_state(interface)
+    interface.lock_cache()
     clear_wa_event_id_mapping(object_store=interface.object_store, event=event)
     interface.flush_cache_to_store()
     interface.log_error(

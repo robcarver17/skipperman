@@ -96,4 +96,8 @@ Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button.
 
 In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key; for later versions Alt and key should work. On a Mac, use Ctrl/Alt/Key in Chrome, Firefox and Safari. 
 
-Also **never use the 'refresh' button on your browser** Instead press cancel or back. 
+Also **never use the 'refresh' button on your browser** Instead press cancel or back.
+
+# Data locks and saving errors
+
+Vey occasionally you will get the error 'Can't save whilst someone else is saving, make changes and try again'. This means you have pressed a button at almost the exact same time as another user; and to avoid data corruption it stops you saving. If you keep having problems saving, then you need to go the utilities menu / choose data: backup, upload and restore, and click on 'Clear data lock'. If you can't see that menu find someone who can.

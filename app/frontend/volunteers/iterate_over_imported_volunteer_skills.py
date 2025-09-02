@@ -215,6 +215,7 @@ def post_skills_editing_form_when_mismatch(interface: abstractInterface):
         return return_to_calling_function(interface)
     else:
         volunteer = get_volunteer_from_state(interface)
+        interface.lock_cache()
         get_and_save_volunteer_skills_from_form(
             interface=interface, volunteer=volunteer
         )
@@ -242,8 +243,6 @@ def return_to_calling_function(interface: abstractInterface):
     clear_state_for_specific_volunteer_id_in_temporary_file(interface)
     clear_volunteer_id_in_state(interface)
     delete_skills_refresh_file()
-
-    interface.flush_cache_to_store()
 
     return interface.get_new_display_form_for_parent_of_function(
         display_volunteer_selection_in_skill_import_form

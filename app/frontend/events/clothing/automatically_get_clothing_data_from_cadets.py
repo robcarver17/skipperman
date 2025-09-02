@@ -38,6 +38,8 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
         )
     )
 
+    interface.lock_cache()
+
     for (
         cadet,
         registration_data,

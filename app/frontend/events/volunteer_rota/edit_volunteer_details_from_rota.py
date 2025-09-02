@@ -75,6 +75,7 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
         interface.log_error("Availability not in form for %s" % volunteer)
         return
 
+    interface.lock_cache()
     update_volunteer_availability_at_event(
         object_store=interface.object_store,
         event=event,

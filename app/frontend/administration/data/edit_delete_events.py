@@ -71,14 +71,12 @@ def post_form_edit_delete_events(interface: abstractInterface) -> Union[Form, Ne
     ## note we don't need to handle help and menu buttons
 
     if back_menu_button.pressed(button_pressed):
-        interface.flush_cache_to_store()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_edit_delete_events
         )
 
     elif cancel_menu_button.pressed(button_pressed):
         interface.log_error("You pressed cancel")
-        interface.flush_cache_to_store()
     elif save_button.pressed(button_pressed):
         interface.log_error("you entered %s" % interface.value_from_form(input_name))
         return interface.get_new_form_given_function(

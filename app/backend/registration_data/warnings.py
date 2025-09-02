@@ -111,14 +111,12 @@ def refresh_manually_added_cadet_warnings(object_store: ObjectStore, event: Even
     )
     warnings = []
     for cadet, registration in dict_of_registrations.items():
-        print("registration status for %s is %s" % (cadet, str(registration.status)))
         if registration.status.is_manual:
             warnings.append(
                 "Cadet %s has been registered manually - OK if no training and unpaid event"
                 % cadet.name
             )
 
-    print("all warnings: %s" % str(warnings))
     process_warnings_into_warning_list(
         object_store=object_store,
         event=event,

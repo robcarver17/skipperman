@@ -7,6 +7,7 @@ userdata: "skipperman_user_data" ## special directory for username and password 
 download_subdirectory: "Downloads" ## non public downloads
 public_reporting_subdirectory: "file" ## make sure mapped and exposed in pythonanywhere
 uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
+pickle_store: "pickle_store" ## shared store
 #
 WA_field_list_file: WA_field_list.xlsx
 #

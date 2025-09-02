@@ -1,15 +1,16 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
-from app.data_access.classes.food_and_clothing import *
 from app.data_access.resolve_paths_and_filenames import (
     LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT,
     LIST_OF_CADETS_WITH_FOOD_AT_EVENT,
     LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT,
 )
+from app.objects.clothing import ListOfCadetsWithClothingAndIdsAtEvent
+from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, ListOfVolunteersWithFoodRequirementsAtEvent
 
 
 class CsvDataListOfCadetsWithClothingAtEvent(
-    GenericCsvData, DataListOfCadetsWithClothingAtEvent
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfCadetsWithClothingAndIdsAtEvent:
         return self.read_and_return_object_of_type(
@@ -31,7 +32,7 @@ class CsvDataListOfCadetsWithClothingAtEvent(
 
 
 class CsvDataListOfCadetsWithFoodRequirementsAtEvent(
-    GenericCsvData, DataListOfCadetsWithFoodRequirementsAtEvent
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfCadetsWithFoodRequirementsAtEvent:
         return self.read_and_return_object_of_type(
@@ -53,7 +54,7 @@ class CsvDataListOfCadetsWithFoodRequirementsAtEvent(
 
 
 class CsvDataListOfVolunteersWithFoodRequirementsAtEvent(
-    GenericCsvData, DataListOfVolunteersWithFoodRequirementsAtEvent
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfVolunteersWithFoodRequirementsAtEvent:
         return self.read_and_return_object_of_type(

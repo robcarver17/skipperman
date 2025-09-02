@@ -192,16 +192,18 @@ def get_event_from_form(interface) -> Event:
 def process_form_when_event_verified(interface: abstractInterface) -> Form:
     try:
         event = get_event_from_form(interface)
-
+        interface.lock_cache()
         add_new_verified_event(interface.object_store, event=event)
+        interface.flush_cache_to_store()
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(
             "Can't add this event, reason: %s, try again or consult support" % str(e)
         )
+        interface.clear_and_unlock_cache()
         return initial_state_form
 
-    interface.flush_cache_to_store()
+
 
     return form_with_message_and_finished_button(
         "Added event %s" % str(event),

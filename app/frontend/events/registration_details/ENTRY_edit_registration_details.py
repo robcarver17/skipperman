@@ -89,6 +89,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 
 
 def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLines:
+    interface.lock_cache()
     warnings = (
         refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
             object_store=interface.object_store, event=event
@@ -129,7 +130,6 @@ def post_form_edit_registration_details(
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
-        interface.flush_cache_to_store()
         return previous_form(interface)
 
     save_details_from_form(interface)
@@ -138,7 +138,6 @@ def post_form_edit_registration_details(
         return create_quick_spotters_report(interface)
 
     if add_button.pressed(last_button_pressed):
-        interface.flush_cache_to_store()  ## new form
         return interface.get_new_form_given_function(
             display_add_unregistered_cadet_from_registration_form
         )
@@ -166,6 +165,7 @@ def post_form_edit_registration_details(
 
 def save_details_from_form(interface: abstractInterface):
     event = get_event_from_state(interface)
+    interface.lock_cache()
     parse_registration_details_from_form(interface=interface, event=event)
     save_warnings_from_table(interface)
 
@@ -173,7 +173,6 @@ def save_details_from_form(interface: abstractInterface):
 
 
 def previous_form(interface: abstractInterface):
-    interface.flush_cache_to_store()
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_registration_details
     )

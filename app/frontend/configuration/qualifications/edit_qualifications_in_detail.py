@@ -50,10 +50,11 @@ def post_form_edit_qualification_details(
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
-        interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_edit_qualification_details
         )
+
+    interface.lock_cache()
     if button_for_new_substage.pressed(last_button_pressed):
         add_new_substage_to_qualification_from_form(interface)
 

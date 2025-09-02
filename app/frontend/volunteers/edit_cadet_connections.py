@@ -74,12 +74,10 @@ def post_form_edit_cadet_volunteer_connections(
     button = interface.last_button_pressed()
     ### Buttons are back; delete button for individual cadet connection; add to add a new connection
     if back_menu_button.pressed(button):
-        interface.flush_cache_to_store()
         return previous_form(interface)
 
     elif add_connection_button.pressed(button):
         add_connection_from_form(interface)
-        interface.flush_cache_to_store()
         ## might want to do more, display form again
         return display_form_edit_cadet_volunteer_connections(interface)
 
@@ -101,7 +99,6 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_probably_press
 ) -> Union[Form, NewForm]:
     if last_button_pressed_was_delete_cadet_button(interface=interface):
         delete_connection_given_form(interface=interface)
-        interface.flush_cache_to_store()
         ## might want to do more
         return display_form_edit_cadet_volunteer_connections(interface)
     else:
@@ -146,14 +143,19 @@ def add_connection_from_form(interface: abstractInterface):
 
     volunteer = get_volunteer_from_state(interface)
 
+    interface.lock_cache()
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         object_store=interface.object_store, cadet=selected_cadet, volunteer=volunteer
     )
+    interface.flush_cache_to_store()
 
 
 def delete_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
+
+    interface.lock_cache()
     delete_cadet_connection(
         object_store=interface.object_store, cadet=cadet, volunteer=volunteer
     )
+    interface.flush_cache_to_store()

@@ -121,7 +121,9 @@ def mark_existing_cadet_as_member_and_log(interface: abstractInterface, cadet: C
             % (cadet.name, describe_status(cadet.membership_status))
         )
 
+    interface.lock_cache()
     confirm_cadet_is_member(object_store=interface.object_store, cadet=cadet)
+    interface.flush_cache_to_store()
 
 
 def next_iteration_over_rows_in_temp_cadet_file(
@@ -156,6 +158,7 @@ def process_when_cadet_is_in_membership_list_and_not_in_system(
 def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
+    interface.lock_cache()
     add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)
@@ -169,7 +172,6 @@ def process_when_cadet_already_added_from_form(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
     interface.log_error("Added new cadet  %s" % str(cadet))
-    interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -248,14 +250,12 @@ def post_verify_adding_cadet_from_list_form(
 def confirm_selected_cadet_is_member(
     interface: abstractInterface, existing_cadet: Cadet
 ):
-    cadet_in_file = get_cadet_from_temp_file_and_state(interface)
 
+    cadet_in_file = get_cadet_from_temp_file_and_state(interface)
     change_or_warn_on_discrepancy(
         interface=interface, cadet_in_file=cadet_in_file, existing_cadet=existing_cadet
     )
     mark_existing_cadet_as_member_and_log(interface=interface, cadet=existing_cadet)
-
-    interface.flush_cache_to_store()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -367,8 +367,6 @@ TEMP_CADET_ID = "temp_cadet_id"
 def finishing_processing_file(interface: abstractInterface) -> NewForm:
     remove_temp_file_with_list_of_cadet_members()
     set_all_unconfirmed_members_to_lapsed_and_log(interface)
-
-    interface.flush_cache_to_store()
     clear_state_for_specific_cadet_id_in_temporary_file(interface)
 
     return interface.get_new_display_form_for_parent_of_function(
@@ -377,6 +375,7 @@ def finishing_processing_file(interface: abstractInterface) -> NewForm:
 
 
 def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
+    interface.lock_cache()
     lapsed_members = set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(
         object_store=interface.object_store
     )
@@ -389,6 +388,8 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     not_members = set_all_user_unconfirmed_members_to_non_members_and_return_list(
         object_store=interface.object_store
     )
+    interface.flush_cache_to_store()
+
     for cadet in not_members:
         interface.log_error(
             "Unconfirmed sailor %s is not in membership list and has been marked as a non member"

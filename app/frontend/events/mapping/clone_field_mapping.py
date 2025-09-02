@@ -107,7 +107,6 @@ def clone_field_mapping_for_selected_event_and_return_message(
 ) -> str:
     event_description_selected = interface.last_button_pressed()
     current_event = get_event_from_state(interface)
-
     event = get_event_from_list_of_events_given_event_description(
         object_store=interface.object_store,
         event_description=event_description_selected,
@@ -119,8 +118,10 @@ def clone_field_mapping_for_selected_event_and_return_message(
         )
         assert len(mapping) > 0
     except:
+
         return "No mapping set up for event of mapping file is corrupted - try another event"
 
+    interface.lock_cache()
     save_field_mapping_for_event(
         object_store=interface.object_store, event=current_event, mapping=mapping
     )

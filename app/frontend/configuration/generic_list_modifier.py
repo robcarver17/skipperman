@@ -342,7 +342,7 @@ def add_edits_from_form(
     except Exception as e:
         interface.log_error("Error when modifying: %s" % (str(e)))
 
-        interface.clear_cache()
+        interface.clear_and_unlock_cache()
 
 
 def add_edits_from_form_without_error_logging(

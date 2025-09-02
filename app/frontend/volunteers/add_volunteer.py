@@ -64,7 +64,7 @@ def post_form_add_volunteer(interface: abstractInterface) -> Union[Form, NewForm
 
     last_button_pressed = interface.last_button_pressed()
     if cancel_menu_button.pressed(last_button_pressed):
-        interface.clear_cache()
+        interface.clear_and_unlock_cache()
         return previous_form(interface)
 
     if check_submit_button.pressed(last_button_pressed):

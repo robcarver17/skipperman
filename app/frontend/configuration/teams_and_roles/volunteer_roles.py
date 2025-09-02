@@ -57,6 +57,7 @@ def post_form_config_volunteer_roles(
 ) -> Union[Form, NewForm]:
     list_of_roles = get_list_of_roles_with_skills(interface.object_store)
 
+    interface.lock_cache()
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_roles,
         interface=interface,
@@ -68,7 +69,6 @@ def post_form_config_volunteer_roles(
     )
 
     if generic_list_output is BACK_BUTTON_PRESSED:
-        interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_volunteer_roles
         )

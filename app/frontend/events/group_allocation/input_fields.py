@@ -2,6 +2,7 @@ from app.backend.groups.data_for_group_display import *
 from app.backend.groups.data_for_group_display import (
     get_potential_partner_to_be_added_or_missing_data,
 )
+
 from app.frontend.events.group_allocation.buttons import (
     get_make_available_button,
     get_button_for_partnership_cell,
@@ -9,9 +10,6 @@ from app.frontend.events.group_allocation.buttons import (
 from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availability_checkbox,
-)
-from app.frontend.events.constants import (
-    ATTENDANCE,
 )
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
@@ -31,6 +29,7 @@ from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoFo
 from app.objects.day_selectors import Day
 from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.utilities.transform_data import make_id_as_int_str
+
 
 
 def get_notes_field(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets):
@@ -552,7 +551,7 @@ CLUB_BOAT = "club_boat"
 PARTNER = "partner"
 BOAT_CLASS = "boat_class"
 SAIL_NUMBER = "sail_number"
-
+ATTENDANCE = "attendance"
 
 GUESS_BOAT_BUTTON = "Autofill Boat Class"
 

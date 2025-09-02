@@ -132,6 +132,7 @@ def post_form_when_template_chosen(
         return initial_state_form
 
     event = get_event_from_state(interface)
+    interface.lock_cache()
     save_field_mapping_for_event(
         object_store=interface.object_store, event=event, mapping=mapping
     )

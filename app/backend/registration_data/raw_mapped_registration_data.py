@@ -53,7 +53,7 @@ def _translate_df_timestamp_to_datetime(df_timestamp) -> datetime.date:
     if type(df_timestamp) is datetime.date:
         return df_timestamp
 
-    if type(df_timestamp) is pd._libs.tslibs.timestamps.Timestamp:
+    if type(df_timestamp) is pd._libs.tslibs.local_mem_timestamps.Timestamp:
         return df_timestamp.date()
 
     if type(df_timestamp) is str:

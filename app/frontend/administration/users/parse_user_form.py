@@ -114,7 +114,7 @@ def save_changes_to_existing_users(interface: abstractInterface):
             save_change_to_user_from_form(interface=interface, user=user)
     except Exception as e:
         interface.log_error("Error updating users %s" % str(e))
-        interface.clear_cache()
+        interface.clear_and_unlock_cache()
 
 
 def save_change_to_user_from_form(interface: abstractInterface, user: SkipperManUser):

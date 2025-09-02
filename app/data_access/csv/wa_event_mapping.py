@@ -1,10 +1,9 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 from app.data_access.resolve_paths_and_filenames import EVENT_MAPPING_FILE_ID
 from app.objects.wa_event_mapping import ListOfWAEventMaps
-from app.data_access.classes.wa_event_mapping import DataWAEventMapping
 
 
-class CsvDataWAEventMapping(GenericCsvData, DataWAEventMapping):
+class CsvDataWAEventMapping(GenericCsvData):
     def read(self) -> ListOfWAEventMaps:
         wa_event_mapping = self.read_and_return_object_of_type(
             ListOfWAEventMaps, file_identifier=EVENT_MAPPING_FILE_ID

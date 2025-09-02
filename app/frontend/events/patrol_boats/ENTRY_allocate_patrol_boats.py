@@ -101,7 +101,6 @@ def post_form_view_for_patrol_boat_allocation(
     last_button_pressed = interface.last_button_pressed()
 
     if cancel_menu_button.pressed(last_button_pressed):
-        interface.flush_cache_to_store()
         return previous_form(interface)
 
     if quick_report_button.pressed(last_button_pressed):
@@ -118,10 +117,10 @@ def post_form_view_for_patrol_boat_allocation(
 
     ## New form
     if access_copy_menu_button.pressed(last_button_pressed):
-        interface.flush_cache_to_store()
         return interface.get_new_form_given_function(display_form_patrol_boat_copy_menu)
 
     ## remaining options do something and then return current form
+    interface.lock_cache()
     if save_menu_button.pressed(last_button_pressed):
         pass  # already done
 

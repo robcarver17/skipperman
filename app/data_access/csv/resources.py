@@ -1,6 +1,5 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
-from app.data_access.classes.resources import *
 from app.data_access.resolve_paths_and_filenames import (
     LIST_OF_PATROL_BOATS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_FILE_ID,
@@ -9,16 +8,17 @@ from app.data_access.resolve_paths_and_filenames import (
     PATROL_BOAT_LABELS,
     LIST_OF_CLUB_DINGHIES_AND_VOLUNTEERS_FILE_ID,
 )
+from app.objects.club_dinghies import ListOfClubDinghies, ListOfClubDinghyLimits
 from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import (
-    ListOfCadetAtEventWithIdAndClubDinghies,
+    ListOfCadetAtEventWithIdAndClubDinghies, ListOfVolunteerAtEventWithIdAndClubDinghies,
 )
-from app.objects.patrol_boats import ListOfPatrolBoats
+from app.objects.patrol_boats import ListOfPatrolBoats, ListOfPatrolBoatLabelsAtEvents
 from app.objects.patrol_boats_with_volunteers_with_id import (
     ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
 )
 
 
-class CsvDataListOfPatrolBoats(GenericCsvData, DataListOfPatrolBoats):
+class CsvDataListOfPatrolBoats(GenericCsvData):
     def read(self) -> ListOfPatrolBoats:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfPatrolBoats, file_identifier=LIST_OF_PATROL_BOATS_FILE_ID
@@ -30,7 +30,7 @@ class CsvDataListOfPatrolBoats(GenericCsvData, DataListOfPatrolBoats):
         self.write_object(list_of_boats, file_identifier=LIST_OF_PATROL_BOATS_FILE_ID)
 
 
-class CsvDataListOfClubDinghies(GenericCsvData, DataListOfClubDinghies):
+class CsvDataListOfClubDinghies(GenericCsvData):
     def read(self) -> ListOfClubDinghies:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfClubDinghies, file_identifier=LIST_OF_CLUB_DINGHIES_FILE_ID
@@ -43,7 +43,7 @@ class CsvDataListOfClubDinghies(GenericCsvData, DataListOfClubDinghies):
 
 
 class CsvDataListOfVolunteersAtEventWithPatrolBoats(
-    GenericCsvData, DataListOfVolunteersAtEventWithPatrolBoats
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfVolunteersWithIdAtEventWithPatrolBoatsId:
         people_and_boats = self.read_and_return_object_of_type(
@@ -67,7 +67,7 @@ class CsvDataListOfVolunteersAtEventWithPatrolBoats(
 
 
 class CsvDataListOfCadetAtEventWithClubDinghies(
-    GenericCsvData, DataListOfCadetAtEventWithClubDinghies
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfCadetAtEventWithIdAndClubDinghies:
         people_and_boats = self.read_and_return_object_of_type(
@@ -89,7 +89,7 @@ class CsvDataListOfCadetAtEventWithClubDinghies(
 
 
 class CsvDataListOfVolunteersAtEventWithClubDinghies(
-    GenericCsvData, DataListOfVolunteersAtEventWithClubDinghies
+    GenericCsvData
 ):
     def read(self, event_id: str) -> ListOfVolunteerAtEventWithIdAndClubDinghies:
         return self.read_and_return_object_of_type(
@@ -113,7 +113,7 @@ class CsvDataListOfVolunteersAtEventWithClubDinghies(
 from app.data_access.resolve_paths_and_filenames import CLUB_BOAT_LIMIT_CSV
 
 
-class CsvDataListOfClubDinghyLimits(GenericCsvData, DataListOfClubDinghyLimits):
+class CsvDataListOfClubDinghyLimits(GenericCsvData):
     def read(self) -> ListOfClubDinghyLimits:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfClubDinghyLimits, file_identifier=CLUB_BOAT_LIMIT_CSV
@@ -126,7 +126,7 @@ class CsvDataListOfClubDinghyLimits(GenericCsvData, DataListOfClubDinghyLimits):
 
 
 class CsvDataListOfPatrolBoatLabelsAtEvent(
-    GenericCsvData, DataListOfPatrolBoatLabelsAtEvent
+    GenericCsvData
 ):
     def read(self) -> ListOfPatrolBoatLabelsAtEvents:
         return self.read_and_return_object_of_type(

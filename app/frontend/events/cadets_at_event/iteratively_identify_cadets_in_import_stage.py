@@ -170,6 +170,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
         "adding matched row %s with cadet id %s for cadet %s"
         % (row_id, cadet.id, str(cadet))
     )
+    interface.lock_cache()
     add_identified_cadet_and_row(
         object_store=interface.object_store, event=event, row_id=row_id, cadet=cadet
     )
@@ -324,6 +325,7 @@ def process_form_when_skipping_cadet_permanently(interface: abstractInterface) -
     event = get_event_from_state(interface)
     row_id = get_current_row_id(interface)
 
+    interface.lock_cache()
     mark_row_as_permanently_skip_cadet(
         event=event, row_id=row_id, object_store=interface.object_store
     )

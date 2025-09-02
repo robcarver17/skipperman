@@ -8,10 +8,10 @@ from app.data_access.resolve_paths_and_filenames import (
     TEMPLATES_FIELD_MAPPING_FILE_ID,
 )
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
-from app.data_access.classes.wa_field_mapping import DataWAFieldMapping
 
 
-class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
+
+class CsvDataWAFieldMapping(GenericCsvData):
     def read(self, event_id: str) -> ListOfWAFieldMappings:
         field_mapping = self.read_and_return_object_of_type(
             ListOfWAFieldMappings,
@@ -27,7 +27,12 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
             additional_file_identifiers=event_id,
         )
 
-    def get_template(self, template_name: str) -> ListOfWAFieldMappings:
+
+
+
+class CsvDataWAFieldMappingTemplates(GenericCsvData):
+
+    def read(self, template_name: str) -> ListOfWAFieldMappings:
         mapping_template = self.read_and_return_object_of_type(
             ListOfWAFieldMappings,
             file_identifier=TEMPLATES_FIELD_MAPPING_FILE_ID,
@@ -36,7 +41,7 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
 
         return mapping_template
 
-    def write_template(
+    def write(
         self, wa_field_mapping: ListOfWAFieldMappings, template_name: str
     ):
         self.write_object(
@@ -45,10 +50,14 @@ class CsvDataWAFieldMapping(GenericCsvData, DataWAFieldMapping):
             additional_file_identifiers=template_name,
         )
 
-    def get_list_of_templates(self) -> List[str]:
+class CsvDataWAFieldMappingListOfTemplates(GenericCsvData):
+    def read(self) -> List[str]:
         return self.get_list_of_csv_files_in_path_for_field_id(
             TEMPLATES_FIELD_MAPPING_FILE_ID
         )
+
+    def write(self, list_of_templates: List[str]):
+        raise NotImplemented("Can't write list of templates")
 
 
 def read_mapping_from_csv_file_object(file) -> ListOfWAFieldMappings:

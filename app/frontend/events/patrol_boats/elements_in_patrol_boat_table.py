@@ -223,6 +223,7 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     if is_ready_to_swap(interface):
         return ListOfLines([""])
 
+    interface.lock_cache()
     process_all_warnings_for_patrol_boats(
         object_store=interface.object_store, event=event
     )

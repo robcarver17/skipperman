@@ -23,13 +23,15 @@ class FormHandler:
     interface: abstractInterface
 
     def get_form(self) -> Form:
-        self.interface.clear_cache() ## prevent weird behaviour with multiple web workers
+        self.interface.clear_and_unlock_cache()
         if self.interface.is_posted_form:
             print("posted form")
-            return self.get_posted_form()
+            form = self.get_posted_form()
         else:
             print("displayed form")
-            return self.get_displayed_form()
+            form = self.get_displayed_form()
+
+        return form
 
     def get_posted_form(self) -> Form:
         finished_button_pressed = self.finished_button_pressed()
@@ -82,7 +84,12 @@ class FormHandler:
             )
             return self.get_posted_form_with_finished_button_pressed()
 
-        form_contents = form_function(self.interface)
+        try:
+            form_contents = form_function(self.interface)
+        except Exception as e:
+            self.interface.log_error("Unexpected error %s in the bagging area - contact support" % str(e))
+            self.interface.clear_and_unlock_cache()
+            return self.get_posted_form_with_finished_button_pressed()
 
         return form_contents
 
@@ -181,6 +188,7 @@ initial_state_form = NewForm(INITIAL_STATE)
 def button_error_and_back_to_initial_state_form(
     interface: abstractInterface,
 ) -> NewForm:
+    interface.clear_and_unlock_cache()
     try:
         button = interface.last_button_pressed()
         interface.log_error("Button %s not recognised!" % button)

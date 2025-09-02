@@ -6,33 +6,48 @@ from typing import Callable
 NO_OBJECT = object()
 
 
-@dataclass
 class DataAccessMethod:
-    key: str
-    read_method: Callable
-    write_method: Callable
-    method_kwargs: dict
+    def __init__(self, key, data_object_with_methods, **kwargs):
+        try:
+            self._read_method = data_object_with_methods.read
+            self._write_method = data_object_with_methods.write
+        except:
+            raise Exception("Data object identified with key %s should have read and write methods" % key)
 
-    def __init__(self, key, read_method: Callable, write_method: Callable, **kwargs):
-        self.read_method = read_method
-        self.write_method = write_method
+        copied_key = copy(key)
         if len(kwargs) == 0:
-            self.method_kwargs = {}
+            self._method_kwargs = {}
         else:
-            self.method_kwargs = kwargs
-            key += str(kwargs)
+            self._method_kwargs = kwargs
+            kwargs_described = ",".join(["%s:%s" % (key, item) for key, item in kwargs.items()])
+            copied_key = "%s_(%s)" % (copied_key, kwargs_described)
 
-        self.key = key
+        self._key = copied_key
 
+    @property
+    def read_method(self) -> Callable:
+        return self._read_method
+
+    @property
+    def write_method(self) -> Callable:
+        return self._write_method
+
+    @property
+    def key(self) -> str:
+        return self._key
+
+    @property
+    def method_kwargs(self) -> dict:
+        return self._method_kwargs
 
 @dataclass
-class StorageItem:
+class CachedUnderylingDataItem:
     contents: object
     data_access_method: DataAccessMethod
     changed: bool = False
 
 
-class Store(dict):
+class UnderylingDataCache(dict):
     def read(self, data_access_method: DataAccessMethod):
         storage_item = self.get_storage_item(data_access_method.key)
         if storage_item is NO_OBJECT:
@@ -41,7 +56,7 @@ class Store(dict):
         return storage_item.contents
 
     def write(self, contents, data_access_method: DataAccessMethod):
-        storage_item = StorageItem(
+        storage_item = CachedUnderylingDataItem(
             contents=contents, data_access_method=data_access_method, changed=True
         )
         self.put_storage_item(storage_item)
@@ -51,7 +66,7 @@ class Store(dict):
         for key in list_of_keys:
             self.delete_storage_item_with_key(key)
 
-    def save_stored_items(self):
+    def save_cache(self):
         ## write only changed items
         list_of_keys = list(self.keys())
         for key in list_of_keys:
@@ -60,7 +75,7 @@ class Store(dict):
 
     def mark_stored_item_as_unchanged(self, key):
         storage_item = self.get_storage_item(key)
-        storage_item = StorageItem(
+        storage_item = CachedUnderylingDataItem(
             contents=storage_item.contents,
             data_access_method=storage_item.data_access_method,
             changed=False,
@@ -69,7 +84,7 @@ class Store(dict):
 
     def _read_from_data_and_store(self, data_access_method: DataAccessMethod):
         contents = self._read_from_data(data_access_method)
-        storage_item = StorageItem(
+        storage_item = CachedUnderylingDataItem(
             contents=contents, changed=False, data_access_method=data_access_method
         )
         self.put_storage_item(storage_item)
@@ -94,11 +109,11 @@ class Store(dict):
         kwargs = data_access_method.method_kwargs
         data_access_write_method(contents, **kwargs)
 
-    def get_storage_item(self, key) -> StorageItem:
+    def get_storage_item(self, key) -> CachedUnderylingDataItem:
         storage_item = self.get(key, NO_OBJECT)
         return storage_item
 
-    def put_storage_item(self, storage_item: StorageItem):
+    def put_storage_item(self, storage_item: CachedUnderylingDataItem):
         key = storage_item.data_access_method.key
         self[key] = storage_item
 

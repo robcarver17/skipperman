@@ -14,11 +14,13 @@ def set_all_current_members_to_temporary_unconfirmed(object_store: ObjectStore):
 
 
 def confirm_cadet_is_member(object_store: ObjectStore, cadet: Cadet):
+
     list_of_cadets = get_list_of_cadets(object_store)
     list_of_cadets.confirm_cadet_as_member(cadet)
     update_list_of_cadets(
         object_store=object_store, updated_list_of_cadets=list_of_cadets
     )
+
 
 
 def set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(

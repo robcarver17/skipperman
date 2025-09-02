@@ -78,6 +78,7 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
     except Exception as e:
         ## revert to view events
         interface.log_error("Problem with file upload %s" % e)
+
         return initial_state_form
 
     return form_with_message_and_finished_button(

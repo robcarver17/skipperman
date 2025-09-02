@@ -3,9 +3,7 @@ from typing import Dict
 from flask_login import UserMixin, current_user
 
 from app.backend.security.list_of_users import get_list_of_users
-from app.data_access.init_data import underling_data_api
-from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.store import Store
+from app.data_access.init_data import  object_store
 from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
@@ -67,8 +65,6 @@ def as_dict_of_flask_users(
 
 
 def get_all_flask_users():
-    store = Store()
-    object_store = ObjectStore(data_store=store, data_api=underling_data_api)
     all_skipperman_users_from_data = get_list_of_users(object_store)
     all_flask_users = as_dict_of_flask_users(all_skipperman_users_from_data)
 

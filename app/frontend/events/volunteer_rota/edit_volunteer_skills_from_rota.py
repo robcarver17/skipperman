@@ -71,7 +71,6 @@ def post_form_edit_individual_volunteer_skills_from_rota(
 
     elif save_button.pressed(button):
         modify_volunteer_from_rota_given_form_contents(interface=interface)
-        interface.flush_cache_to_store()
         return previous_form(interface)
 
     else:
@@ -80,8 +79,9 @@ def post_form_edit_individual_volunteer_skills_from_rota(
 
 def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
-
+    interface.lock_cache()
     get_and_save_volunteer_skills_from_form(interface=interface, volunteer=volunteer)
+    interface.flush_cache_to_store()
 
 
 def previous_form(interface: abstractInterface):

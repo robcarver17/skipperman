@@ -121,6 +121,7 @@ def post_form_config_club_dinghies_page(
         object_store=interface.object_store
     )
 
+    interface.lock_cache()
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats_and_limits,
         interface=interface,
@@ -132,7 +133,6 @@ def post_form_config_club_dinghies_page(
     )
 
     if generic_list_output is BACK_BUTTON_PRESSED:
-        interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_club_dinghies_page
         )

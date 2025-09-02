@@ -127,11 +127,12 @@ def post_form_edit_individual_team_page(
     )
 
     if cancel_menu_button.pressed(last_button):
-        interface.clear_cache()
         return interface.get_new_display_form_for_parent_of_function(
             post_form_edit_individual_team_page
         )
-    elif add_button.pressed(last_button):
+
+    interface.lock_cache()
+    if add_button.pressed(last_button):
         add_new_role_to_team(interface=interface, team=team)
     elif is_button_arrow_button(last_button):
         reorder_ordered_list_of_roles(
@@ -158,7 +159,7 @@ def reorder_ordered_list_of_roles(
         )
     except Exception as e:
         interface.log_error("Error reordering teams: %s" % str(e))
-        interface.clear_cache()
+        interface.clear_and_unlock_cache()
 
 
 def add_new_role_to_team(interface: abstractInterface, team: Team):
@@ -173,4 +174,4 @@ def add_new_role_to_team(interface: abstractInterface, team: Team):
         )
     except Exception as e:
         interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))
-        interface.clear_cache()
+        interface.clear_and_unlock_cache()

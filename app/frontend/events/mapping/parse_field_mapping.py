@@ -61,6 +61,7 @@ def add_WA_and_skipperman_field_to_mapping(interface: abstractInterface):
         clear_current_skipperman_field_to_add_from_state(interface)
         return
 
+    interface.lock_cache()
     try:
         save_new_mapping_pairing(
             object_store=interface.object_store,

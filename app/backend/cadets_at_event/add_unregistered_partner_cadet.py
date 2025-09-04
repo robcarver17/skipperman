@@ -69,6 +69,7 @@ def add_unregistered_partner_cadet(
     new_cadet: Cadet,
     event: Event,
 ):
+    print("Adding %s to registration data" % new_cadet)
     new_row = add_cloned_row_to_raw_registration_data_and_return_row(
         object_store=object_store,
         original_cadet=original_cadet,
@@ -76,10 +77,12 @@ def add_unregistered_partner_cadet(
         event=event,
     )
 
+    print("Adding %s as idenitified cadet" % new_cadet)
     add_identified_cadet_and_row(
         object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet
     )
 
+    print("Adding %s to event data" % new_cadet)
     add_new_cadet_to_event_from_row_in_registration_data(
         object_store=object_store,
         event=event,
@@ -87,6 +90,7 @@ def add_unregistered_partner_cadet(
         cadet=new_cadet,
     )
 
+    print("Adding %s as partner " % new_cadet)
     add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
         object_store=object_store,
         event=event,
@@ -94,6 +98,7 @@ def add_unregistered_partner_cadet(
         new_cadet=new_cadet,
     )
 
+    print("Adding %s to sailing groups " % new_cadet)
     add_new_cadet_to_groups(
         object_store=object_store,
         new_cadet=new_cadet,

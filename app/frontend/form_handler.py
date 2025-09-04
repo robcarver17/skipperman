@@ -24,6 +24,7 @@ class FormHandler:
 
     def get_form(self) -> Form:
         self.interface.unlock_cache_ignoring_errors()
+        self.interface.clear_in_memory_cache()
         if self.interface.is_posted_form:
             print("posted form")
             form = self.get_posted_form()

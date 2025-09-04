@@ -61,17 +61,18 @@ class ObjectStore:
         self.save_underlying_data()
         self.unlock_store()
 
-        ## FIXME CACHE NOT WORKING BETWEEN SESSIONS SO CLEAR EVERY TIME
-        self.clear_store_including_persistent_cache()
-
     def save_underlying_data(self):
-        for  saved_data_item in self.values():
+        for saved_data_item in self.values():
             if saved_data_item.is_underyling_object:
-                if saved_data_item.changed:
+                if saved_data_item.changed_vs_persistent:
                     write_modified_underlying_object_to_data_api(
                         saved_data_item=saved_data_item,
                         object_store=self,
                     )
+                    saved_data_item.flag_as_saved_to_persistent()
+
+    def clear_memory_cache_in_store(self):
+        self.object_cache.clear_in_memory_only()
 
     def clear_store_including_persistent_cache(self):
         self.object_cache.clear_persistent_and_in_memory()
@@ -80,14 +81,43 @@ class ObjectStore:
         self,
         new_object,
         object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
+        called_by_component_change: bool = False,
         **kwargs,
     ):
         definition_with_args = DefinitionWithArgs(object_definition, kwargs)
-        cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args, changed=True)
-        self.object_cache.update(cached_data_item, key=definition_with_args.key)
+        self.update_in_cache(new_object, definition_with_args=definition_with_args)
 
         update_components_of_changed_object(object_store=self, new_object=new_object, definition_with_args=definition_with_args)
-        clear_unchanged_dependents_of_changed_object(definition_with_args=definition_with_args, object_store=self)
+        clear_unchanged_items_that_depend_on_changed_object(definition_with_args=definition_with_args, object_store=self)
+
+        ## After doing this iteratively, inside the cache there will be items showing as changed.
+        ## This will cause problems for future changes, as we will think
+        if not called_by_component_change:
+            self.revert_changed_status()
+
+
+    def update_in_cache(
+        self,
+        new_object,
+        definition_with_args:DefinitionWithArgs
+    ):
+        cached_data_item = self.object_cache.get(definition_with_args.key, NOT_IN_STORE)
+        if cached_data_item is NOT_IN_STORE:
+            cached_data_item = CachedDataItem(contents=new_object,
+                                              definition_with_args=definition_with_args,
+                                              changed=True,
+                                              changed_vs_persistent=True)
+        else:
+            cached_data_item.change_contents(contents=new_object)
+            
+        self.object_cache.update(cached_data_item)
+
+
+    def revert_changed_status(self):
+        for key in self.keys():
+            cached_data_item = self.object_cache.get(key)
+            cached_data_item.revert_change_mode()
+            self.object_cache.update(cached_data_item)
 
     def get(
         self,
@@ -116,18 +146,32 @@ class ObjectStore:
         )
         cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args)
 
-        self.object_cache.update(cached_data_item, key=definition_with_args.key,
+        self.object_cache.update(cached_data_item
                                  )
 
         return cached_data_item
 
-    def add_dependents(self, definition_with_args_depended_on: DefinitionWithArgs, definition_with_args_depends_on: DefinitionWithArgs,):
+    def add_dependents(self, definition_with_args_depended_on: DefinitionWithArgs,
+                       definition_with_args_depends_on_other_definition: DefinitionWithArgs, ):
         cached_item_depended_on = self.object_cache.get(definition_with_args_depended_on.key, default =NOT_IN_STORE)
         if cached_item_depended_on is NOT_IN_STORE:
             raise Exception("Can only add dependents for item in cache already")
 
-        cached_item_depended_on.add_dependents(definition_with_args_depends_on)
-        self.object_cache.update(cached_item_depended_on, key=cached_item_depended_on.key)
+        cached_item_depended_on.add_dependents(definition_with_args_depends_on_other_definition)
+        self.object_cache.update(cached_item_depended_on)
+
+        print("Add dependency of %s on %s" % (definition_with_args_depends_on_other_definition.key,
+                                              definition_with_args_depended_on.key))
+
+    def drop_dependents(self, definition_with_args_depended_on: DefinitionWithArgs,
+                       definition_with_args_depends_on_other_definition: DefinitionWithArgs, ):
+        cached_item_depended_on = self.object_cache.get(definition_with_args_depended_on.key, default =NOT_IN_STORE)
+        if cached_item_depended_on is NOT_IN_STORE:
+            raise Exception("Can only drop dependents for item in cache already")
+
+        cached_item_depended_on.drop_dependents(definition_with_args_depends_on_other_definition)
+        self.object_cache.update(cached_item_depended_on)
+
 
     def keys(self):
         return self.object_cache.keys()
@@ -176,11 +220,11 @@ def compose_object_for_object_store(
         )
     elif type(object_definition) is IterableObjectDefinition:
         return compose_iterable_object_from_object_store(
-            object_store=object_store, definition_with_args=definition_with_args
+            object_store=object_store, definition_with_args_of_iterated_object=definition_with_args
         )
     elif type(object_definition) is DerivedObjectDefinition:
         return compose_derived_object_from_object_store(
-            object_store=object_store, definition_with_args=definition_with_args
+            object_store=object_store, definition_with_args_derived_object=definition_with_args
         )
     else:
         raise Exception(
@@ -201,10 +245,10 @@ def compose_underyling_object_from_data_api(
 
 
 def compose_derived_object_from_object_store(
-    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
+    object_store: ObjectStore, definition_with_args_derived_object: DefinitionWithArgs
 ):
-    object_definition = definition_with_args.object_definition
-    kwargs = definition_with_args.kwargs
+    object_definition = definition_with_args_derived_object.object_definition
+    kwargs = definition_with_args_derived_object.kwargs
 
     composition_function = object_definition.composition_function
     dict_of_arguments = (
@@ -214,14 +258,15 @@ def compose_derived_object_from_object_store(
     kwargs_to_pass = copy(matching_kwargs)
 
     for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
+        required_kwargs = object_definition_for_keyword.matching_kwargs(**kwargs)
         underyling_data_object = object_store.get(object_definition=object_definition_for_keyword,
-                                                               **kwargs)
+                                                               **required_kwargs)
         kwargs_to_pass[keyword_name] = underyling_data_object
 
         definition_with_args_of_underlying_object = DefinitionWithArgs(object_definition=object_definition_for_keyword,
-                                                                       kwargs=kwargs)
+                                                                       kwargs=required_kwargs)
 
-        object_store.add_dependents(definition_with_args_depends_on=definition_with_args,
+        object_store.add_dependents(definition_with_args_depends_on_other_definition=definition_with_args_derived_object,
                                     definition_with_args_depended_on=definition_with_args_of_underlying_object)
 
 
@@ -229,10 +274,10 @@ def compose_derived_object_from_object_store(
 
 
 def compose_iterable_object_from_object_store(
-    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
+    object_store: ObjectStore, definition_with_args_of_iterated_object: DefinitionWithArgs
 ):
-    object_definition = definition_with_args.object_definition
-    kwargs = copy(definition_with_args.kwargs)
+    object_definition = definition_with_args_of_iterated_object.object_definition
+    kwargs = copy(definition_with_args_of_iterated_object.kwargs)
 
     key_to_iterate_over = object_definition.required_key_for_iteration
     list_of_keys = kwargs.pop(key_to_iterate_over)
@@ -244,13 +289,14 @@ def compose_iterable_object_from_object_store(
     for key in list_of_keys:
         kwargs_this_element = {underlying_object_key: key}
         kwargs_this_element.update(kwargs)
+        required_kwargs = underlying_object_definition.matching_kwargs(**kwargs_this_element)
 
-        underyling_object_this_key = object_store.get(underlying_object_definition, **kwargs_this_element)
+        underyling_object_this_key = object_store.get(underlying_object_definition, **required_kwargs)
 
         definition_with_args_of_underlying_object = DefinitionWithArgs(object_definition=underlying_object_definition,
-                                                                       kwargs=kwargs_this_element)
+                                                                       kwargs=required_kwargs)
 
-        object_store.add_dependents(definition_with_args_depends_on=definition_with_args,
+        object_store.add_dependents(definition_with_args_depends_on_other_definition=definition_with_args_of_iterated_object,
                                     definition_with_args_depended_on=definition_with_args_of_underlying_object)
 
         dict_of_output[key] = underyling_object_this_key
@@ -300,6 +346,7 @@ def update_component_objects_in_store_with_changed_iterable_object(
     object_definition = definition_with_args.object_definition
     kwargs_to_use = copy(definition_with_args.kwargs)
     kwargs_to_use.pop(object_definition.required_key_for_iteration)
+
     underlying_object_key_name = object_definition.key_for_underlying_object
     underyling_object_definition = object_definition.underlying_object_definition
 
@@ -308,10 +355,13 @@ def update_component_objects_in_store_with_changed_iterable_object(
     for key in list_of_keys:
         kwargs_this_element = {underlying_object_key_name: key}
         kwargs_this_element.update(kwargs_to_use)
+        required_kwargs = underyling_object_definition.matching_kwargs(**kwargs_this_element)
+
         new_underyling_object = new_object[key]
         object_store.update(new_object=new_underyling_object,
                             object_definition=underyling_object_definition,
-                            **kwargs_this_element)
+                            called_by_component_change=True,
+                            **required_kwargs)
 
 
 def update_component_objects_in_store_with_changed_derived_object(
@@ -330,30 +380,40 @@ def update_component_objects_in_store_with_changed_derived_object(
         underlying_object_definition,
     ) in dict_of_objects_to_modify.items():
         new_underyling_object = getattr(new_object, property_name)
+        required_kwargs = underlying_object_definition.matching_kwargs(**kwargs)
+
         object_store.update(
             new_object=new_underyling_object,
             object_definition=underlying_object_definition,
-            **kwargs,
+            called_by_component_change= True,
+            **required_kwargs,
         )
 
-def clear_unchanged_dependents_of_changed_object(definition_with_args: DefinitionWithArgs, object_store: ObjectStore):
+def clear_unchanged_items_that_depend_on_changed_object(definition_with_args: DefinitionWithArgs, object_store: ObjectStore):
     changed_cached_item = object_store.object_cache.get(definition_with_args.key, default=NOT_IN_STORE)
     if changed_cached_item is NOT_IN_STORE:
         raise Exception("Cannot clear the dependents of an item that has vanished")
 
-    list_of_dependents = copy(changed_cached_item.is_depended_on_by)
+    list_of_dependees = copy(changed_cached_item.is_depended_on_by)
+    if len(list_of_dependees)>0:
+        print("%s has %d dependees, %s" % (definition_with_args.key, len(list_of_dependees), str([x.key for x in list_of_dependees])))
 
-    for definition_with_args_of_dependent in list_of_dependents:
-        dependent_item = object_store.object_cache.get(definition_with_args_of_dependent.key, default=NOT_IN_STORE)
-        if dependent_item is NOT_IN_STORE:
+    for definition_with_args_of_dependeee in list_of_dependees:
+        dependee_item = object_store.object_cache.get(definition_with_args_of_dependeee.key, default=NOT_IN_STORE)
+        if dependee_item is NOT_IN_STORE:
         ## we might already have cleared this
+            print("%s not in store" % definition_with_args_of_dependeee.key)
             continue
-        elif dependent_item.changed:
+        elif dependee_item.changed:
+            print("%s has changed, not deleting" % dependee_item.key)
             ## things that have changed do not require clearing. anything upstream of this will be cleared later
             continue
         else:
-            clear_unchanged_dependents_of_changed_object(definition_with_args_of_dependent, object_store=object_store)
-            object_store.object_cache.pop(definition_with_args_of_dependent.key)
+            print("deleting %s and it's dependees" % (dependee_item.key))
+            clear_unchanged_items_that_depend_on_changed_object(definition_with_args_of_dependeee, object_store=object_store)
+            object_store.object_cache.pop_from_memcache_and_persistent_storage(definition_with_args_of_dependeee.key)
+            object_store.drop_dependents(definition_with_args_depends_on_other_definition=definition_with_args_of_dependeee,
+                                    definition_with_args_depended_on=definition_with_args)
 
 
 
@@ -365,11 +425,12 @@ def write_modified_underlying_object_to_data_api(
     object_definition = saved_data_item.object_definition
     kwargs = saved_data_item.kwargs
 
-    print("Writing %s" % saved_data_item.key)
-
-    data_access_method = get_data_access_method(
-        object_store=object_store, object_definition=object_definition, **kwargs
-    )
+    try:
+        data_access_method = get_data_access_method(
+            object_store=object_store, object_definition=object_definition, **kwargs
+        )
+    except Exception as e:
+        raise Exception("issues %s with %s %s" % (str(e), str(object_definition), str(kwargs)))
     data_access_write_method = data_access_method.write_method
     kwargs = data_access_method.method_kwargs
     data_access_write_method(new_object, **kwargs)

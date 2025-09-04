@@ -29,17 +29,17 @@ class SimpleObjectCache():
     def is_locked_by_another_thread(self):
         return False
 
-    def save_cache(self):
-        ## simple does not persist
-        pass
-
     def get(self, key,  default = NOT_IN_STORE) -> CachedDataItem:
         return self.cache.get(key, default)
 
-    def update(self, new_object: CachedDataItem, key):
-        self.cache[key] = new_object
+    def update(self, new_object: CachedDataItem):
+        self.cache[new_object.key] = new_object
 
-    def pop(self, key):
+    def pop_from_memcache_and_persistent_storage(self, key):
+        self.pop_from_memcache(key)
+        self.pop_from_persistent(key)
+
+    def pop_from_memcache(self, key):
         self.cache.pop(key)
 
     def clear_persistent_and_in_memory(self):
@@ -55,7 +55,15 @@ class SimpleObjectCache():
     def values(self) -> List[CachedDataItem]:
         return list(self.cache.values())
 
+    ## methods need overriding for persistent cache
     def clear_persistent(self):
+        pass
+
+    def save_cache(self):
+        ## simple does not persist
+        pass
+
+    def pop_from_persistent(self, key:str):
         pass
 
     @property
@@ -98,13 +106,9 @@ class PickledObjectCache(SimpleObjectCache):
         return lock
 
     ## CACHE OPERATIONS
-    def clear_in_memory_only(self):
-        self._cache = {}
-
     def clear_persistent(self):
         self.force_cache_unlock()
         self.delete_all_cache_files_from_disk()
-
 
     def get(self, key, default:  [CachedDataItem, object]= NOT_IN_STORE) -> CachedDataItem:
         underyling_store = self.cache
@@ -115,6 +119,10 @@ class PickledObjectCache(SimpleObjectCache):
         return self.get_and_return_object_from_disk_and_refresh_mem_cache(key, default=NOT_IN_STORE)
 
     def get_and_return_object_from_disk_and_refresh_mem_cache(self, key: str, default: [CachedDataItem, object]=NOT_IN_STORE)-> CachedDataItem:
+        if key in self.list_of_keys_to_delete_on_save:
+            ## treat as deleted
+            return default
+
         object_from_disk = self.get_cached_on_disk_object_or_default_for_key(key, default=default)
         if object_from_disk is default:
             return default
@@ -142,20 +150,22 @@ class PickledObjectCache(SimpleObjectCache):
         self.update_mem_cache(new_data_item.key, new_data_item)
         self.update_timestamp_held_in_memory(new_data_item.key, datetime.datetime.now())
 
-
     def update_mem_cache(self, key, new_object):
         self.cache[key] = new_object
 
     def save_cache(self):
+
         if self.is_locked_by_another_thread:
             raise CacheIsLocked("Can't save to a locked cache")
 
         for key in self.cache.keys():
             self.save_cache_for_key_in_memory(key)
 
+        self.bulk_deletion_of_popped_items()
+
     def save_cache_for_key_in_memory(self, key):
         local_object = self.cache[key]
-        if not local_object.changed:
+        if not local_object.changed_vs_persistent:
             return
 
         local_timestamp =self.timestamps_of_cache_held_in_memory[key]
@@ -204,7 +214,7 @@ class PickledObjectCache(SimpleObjectCache):
         return key in self.cache.keys()
 
     @property
-    def cache(self) -> dict:
+    def cache(self) -> Dict[str, CachedDataItem]:
         cache = getattr(self, "_cache", None)
         if cache is None:
             return self.setup_and_return_in_memory_cache()
@@ -216,6 +226,20 @@ class PickledObjectCache(SimpleObjectCache):
         self.timestamps_of_cache_held_in_memory = {}
 
         return self._cache
+
+    ## disk operations
+    def pop_from_persistent(self, key:str):
+        self.add_key_to_delete_on_save(key)
+
+    def bulk_deletion_of_popped_items(self):
+        while len(self.list_of_keys_to_delete_on_save)>0:
+            key = self.list_of_keys_to_delete_on_save[0]
+            filename = self.filename_for_cached_value_of_key(key)
+            try:
+                os.remove(filename)
+            except:
+                pass
+            self.mark_key_as_deleted(key)
 
     def delete_all_cache_files_from_disk(self):
         delete_all_files_in_directory(self.pickle_directory)
@@ -245,6 +269,26 @@ class PickledObjectCache(SimpleObjectCache):
         with open(self.filename_for_timestamps, "wb") as f:
             pickle.dump(new_dict , f)
 
+    @property
+    def list_of_keys_to_delete_on_save(self):
+        return getattr(self, "_keys_to_delete", [])
+
+    def add_key_to_delete_on_save(self, new_key: str):
+        original_list = self.list_of_keys_to_delete_on_save
+        original_list.append(new_key)
+        self._keys_to_delete = original_list
+
+    def mark_key_as_deleted(self, key: str):
+        original_list = self.list_of_keys_to_delete_on_save
+        try:
+            original_list.remove(key)
+        except:
+            pass
+
+        self._filenames_to_delete = original_list
+
+
+
     def filename_for_cached_value_of_key(self, key:str):
         fname = os.path.join(self.pickle_directory, "stored_value_for_%s.pck" % key)
 
@@ -267,3 +311,4 @@ class PickledObjectCache(SimpleObjectCache):
     @property
     def pickle_directory(self) -> str:
         return self._pickle_directory
+

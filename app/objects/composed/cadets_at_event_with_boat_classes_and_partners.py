@@ -280,7 +280,7 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
     def create_fresh_two_handed_partnership(
         self, cadet: Cadet, partner_cadet: Cadet, day: Day
     ):
-        print("PArtnering original cadet %s and new cadet %s" % (cadet.name, partner_cadet.name))
+        print("Partnering original cadet %s and new cadet %s" % (cadet.name, partner_cadet.name))
         original_cadet_details = self.boat_classes_and_partner_for_cadet(cadet).boat_class_and_partner_on_day(day)
         self.update_boat_class_and_sail_number_on_day(cadet=partner_cadet,
                                                       day=day,

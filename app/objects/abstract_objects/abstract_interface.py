@@ -42,6 +42,9 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
+    def clear_in_memory_cache(self):
+        self.object_store.clear_memory_cache_in_store()
+
     def clear_persistent_cache(self):
         self.object_store.clear_store_including_persistent_cache()
         self.log_error("Cleared object cache")
@@ -77,12 +80,15 @@ class abstractInterface:
             ## should never get here, but heyho
             self.log_error("Can't save whilst someone else is saving, make changes and try again")
         else:
-            try:
-                self.object_store.save_changed_data_and_unlock_cache()
-            except Exception as e:
-                self.log_error("Unexpected error %s whilst saving data, contact support" % str(e))
+            ##FIXME
+            #try:
+            self.object_store.save_changed_data_and_unlock_cache()
+            #except Exception as e:
+            #    self.log_error("Unexpected error %s whilst saving data, contact support" % str(e))
 
         self.unlock_cache_ignoring_errors() ## leaving a locked cache is the worst sin, avoid at all costs
+
+
 
     @property
     def store_is_locked_by_another_thread(self):

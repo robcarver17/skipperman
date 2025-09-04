@@ -138,12 +138,12 @@ def matching_kwargs(
     **kwargs,
 ) -> dict:
     required_keys = object_with_kwargs.required_keys
-    if required_keys is arg_not_passed:
+    if required_keys == arg_not_passed:
         required_keys = []
 
     try:
         new_kwargs = dict([(key, kwargs[key]) for key in required_keys])
-    except KeyError as e:
+    except Exception as e:
         raise Exception("%s missing argument when calling object definition" % str(e))
 
     return new_kwargs

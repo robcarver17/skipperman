@@ -681,7 +681,6 @@ def get_potential_partner_to_be_added_or_missing_data(
     )
     potential_partner = registration_data.two_handed_partner(default=missing_data)
 
-    print("%s: (%s)" % (cadet, potential_partner))
     if looks_like_cadet_already_has_allocated_partner(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     ):

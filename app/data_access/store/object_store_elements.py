@@ -13,6 +13,9 @@ class DefinitionWithArgs:
     object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition]
     kwargs: dict
 
+    def __repr__(self):
+        return "Definition, object_defintion %s, kwarg keys %s" % ((self.object_definition), str(list(self.kwargs.keys())))
+
     @property
     def key(self):
         return get_store_key(self.object_definition, **self.kwargs)
@@ -25,6 +28,18 @@ class CachedDataItem:
     contents: [object, dict] ## dict if iterated
     definition_with_args: DefinitionWithArgs
     changed: bool = False
+    changed_vs_persistent: bool = False
+
+    def change_contents(self, contents:  [object, dict]):
+        self.contents = contents
+        self.changed = True
+        self.changed_vs_persistent = True
+
+    def revert_change_mode(self):
+        self.changed = False
+
+    def flag_as_saved_to_persistent(self):
+        self.changed_vs_persistent = False
 
     @property
     def object_definition(self):
@@ -46,11 +61,19 @@ class CachedDataItem:
     def is_depended_on_by(self):
         return getattr(self, "_depended_on_by", [])
 
+    @is_depended_on_by.setter
+    def is_depended_on_by(self, list_of_dependents: List[DefinitionWithArgs]):
+        setattr(self, "_depended_on_by", list_of_dependents)
+
     def add_dependents(self, new_thing_depending_on_us: DefinitionWithArgs):
         depended_on_list =self.is_depended_on_by
         depended_on_list.append(new_thing_depending_on_us)
-        self._depended_on_by = depended_on_list
+        self.is_depended_on_by = depended_on_list
 
+    def drop_dependents(self, thing_depending_on_us_which_we_are_deleting: DefinitionWithArgs):
+        depended_on_list =self.is_depended_on_by
+        depended_on_list.remove(thing_depending_on_us_which_we_are_deleting)
+        self.is_depended_on_by = depended_on_list
 
 def get_store_key(
         object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],

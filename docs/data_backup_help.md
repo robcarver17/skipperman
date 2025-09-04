@@ -18,10 +18,3 @@ Only the last 10 snapshots are kept.
 
 A full backup creates a .zip file containing all the data which is then downloaded to your local machine. This can then be uploaded from the local machine. This is useful for testing and code development, and to take a copy of the data should something happen to the remote server.
 
-# Data lock
-
-A data lock occurs when someone starts saving something to Skipperman, and then something goes wrong. The system assumes they are still saving, and won't allow anyone else to do so. Normally this is cleared by the system automatically but if it isn't you can clear the data lock here.
-
-# Clear on disk cache
-
-The cache is used to speed up page loading. There is a slim possibility it could get corrupted and cause weird behaviour. Clearing it is a good step to clear any unusual data.

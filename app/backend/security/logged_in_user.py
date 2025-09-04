@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.objects.volunteers import Volunteer
+from app.objects.volunteers import Volunteer, default_volunteer
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.backend.security.list_of_users import get_list_of_users
 
@@ -35,6 +35,9 @@ def get_volunteer_name_for_logged_in_user(
 
 def get_loggged_in_volunteer(interface: abstractInterface) -> Volunteer:
     user = get_logged_in_skipperman_user(interface)
+
+    if user.no_volunteer:
+        return default_volunteer
 
     volunteer = get_volunteer_from_id(
         object_store=interface.object_store, volunteer_id=user.volunteer_id

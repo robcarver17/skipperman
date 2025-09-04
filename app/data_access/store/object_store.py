@@ -61,7 +61,7 @@ class ObjectStore:
         self.save_underlying_data()
         self.unlock_store()
 
-        ## FIXME CACHE NOT WORKING BETWEEN SESSIONS
+        ## FIXME CACHE NOT WORKING BETWEEN SESSIONS SO CLEAR EVERY TIME
         self.clear_store_including_persistent_cache()
 
     def save_underlying_data(self):
@@ -87,7 +87,7 @@ class ObjectStore:
         self.object_cache.update(cached_data_item, key=definition_with_args.key)
 
         update_components_of_changed_object(object_store=self, new_object=new_object, definition_with_args=definition_with_args)
-
+        clear_unchanged_dependents_of_changed_object(definition_with_args=definition_with_args, object_store=self)
 
     def get(
         self,
@@ -121,6 +121,13 @@ class ObjectStore:
 
         return cached_data_item
 
+    def add_dependents(self, definition_with_args_depended_on: DefinitionWithArgs, definition_with_args_depends_on: DefinitionWithArgs,):
+        cached_item_depended_on = self.object_cache.get(definition_with_args_depended_on.key, default =NOT_IN_STORE)
+        if cached_item_depended_on is NOT_IN_STORE:
+            raise Exception("Can only add dependents for item in cache already")
+
+        cached_item_depended_on.add_dependents(definition_with_args_depends_on)
+        self.object_cache.update(cached_item_depended_on, key=cached_item_depended_on.key)
 
     def keys(self):
         return self.object_cache.keys()
@@ -155,6 +162,100 @@ class ObjectStore:
     def object_cache(self) -> SimpleObjectCache:
         return self._object_cache
 
+
+
+
+def compose_object_for_object_store(
+    object_store: ObjectStore,
+    definition_with_args: DefinitionWithArgs
+):
+    object_definition = definition_with_args.object_definition
+    if type(object_definition) is UnderlyingObjectDefinition:
+        return compose_underyling_object_from_data_api(
+            object_store=object_store, definition_with_args=definition_with_args
+        )
+    elif type(object_definition) is IterableObjectDefinition:
+        return compose_iterable_object_from_object_store(
+            object_store=object_store, definition_with_args=definition_with_args
+        )
+    elif type(object_definition) is DerivedObjectDefinition:
+        return compose_derived_object_from_object_store(
+            object_store=object_store, definition_with_args=definition_with_args
+        )
+    else:
+        raise Exception(
+            "Object definition type %s not recognised" % str(object_definition)
+        )
+
+
+def compose_underyling_object_from_data_api(
+    object_store: ObjectStore,  definition_with_args: DefinitionWithArgs
+):
+    object_definition = definition_with_args.object_definition
+    kwargs = definition_with_args.kwargs
+
+    data_access_method = get_data_access_method(
+        object_store=object_store, object_definition=object_definition, **kwargs
+    )
+    return data_access_method.read_method(**data_access_method.method_kwargs)
+
+
+def compose_derived_object_from_object_store(
+    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
+):
+    object_definition = definition_with_args.object_definition
+    kwargs = definition_with_args.kwargs
+
+    composition_function = object_definition.composition_function
+    dict_of_arguments = (
+        object_definition.dict_of_arguments_and_underlying_object_definitions
+    )
+    matching_kwargs = object_definition.matching_kwargs(**kwargs)
+    kwargs_to_pass = copy(matching_kwargs)
+
+    for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
+        underyling_data_object = object_store.get(object_definition=object_definition_for_keyword,
+                                                               **kwargs)
+        kwargs_to_pass[keyword_name] = underyling_data_object
+
+        definition_with_args_of_underlying_object = DefinitionWithArgs(object_definition=object_definition_for_keyword,
+                                                                       kwargs=kwargs)
+
+        object_store.add_dependents(definition_with_args_depends_on=definition_with_args,
+                                    definition_with_args_depended_on=definition_with_args_of_underlying_object)
+
+
+    return composition_function(**kwargs_to_pass)
+
+
+def compose_iterable_object_from_object_store(
+    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
+):
+    object_definition = definition_with_args.object_definition
+    kwargs = copy(definition_with_args.kwargs)
+
+    key_to_iterate_over = object_definition.required_key_for_iteration
+    list_of_keys = kwargs.pop(key_to_iterate_over)
+
+    underlying_object_key = object_definition.key_for_underlying_object
+    underlying_object_definition = object_definition.underlying_object_definition
+
+    dict_of_output = {}
+    for key in list_of_keys:
+        kwargs_this_element = {underlying_object_key: key}
+        kwargs_this_element.update(kwargs)
+
+        underyling_object_this_key = object_store.get(underlying_object_definition, **kwargs_this_element)
+
+        definition_with_args_of_underlying_object = DefinitionWithArgs(object_definition=underlying_object_definition,
+                                                                       kwargs=kwargs_this_element)
+
+        object_store.add_dependents(definition_with_args_depends_on=definition_with_args,
+                                    definition_with_args_depended_on=definition_with_args_of_underlying_object)
+
+        dict_of_output[key] = underyling_object_this_key
+
+    return dict_of_output
 
 
 
@@ -235,86 +336,24 @@ def update_component_objects_in_store_with_changed_derived_object(
             **kwargs,
         )
 
+def clear_unchanged_dependents_of_changed_object(definition_with_args: DefinitionWithArgs, object_store: ObjectStore):
+    changed_cached_item = object_store.object_cache.get(definition_with_args.key, default=NOT_IN_STORE)
+    if changed_cached_item is NOT_IN_STORE:
+        raise Exception("Cannot clear the dependents of an item that has vanished")
 
+    list_of_dependents = copy(changed_cached_item.is_depended_on_by)
 
-def compose_object_for_object_store(
-    object_store: ObjectStore,
-    definition_with_args: DefinitionWithArgs
-):
-    object_definition = definition_with_args.object_definition
-    if type(object_definition) is UnderlyingObjectDefinition:
-        return compose_underyling_object_from_data_api(
-            object_store=object_store, definition_with_args=definition_with_args
-        )
-    elif type(object_definition) is IterableObjectDefinition:
-        return compose_iterable_object_from_object_store(
-            object_store=object_store, definition_with_args=definition_with_args
-        )
-    elif type(object_definition) is DerivedObjectDefinition:
-        return compose_derived_object_from_object_store(
-            object_store=object_store, definition_with_args=definition_with_args
-        )
-    else:
-        raise Exception(
-            "Object definition type %s not recognised" % str(object_definition)
-        )
-
-
-def compose_underyling_object_from_data_api(
-    object_store: ObjectStore,  definition_with_args: DefinitionWithArgs
-):
-    object_definition = definition_with_args.object_definition
-    kwargs = definition_with_args.kwargs
-
-    data_access_method = get_data_access_method(
-        object_store=object_store, object_definition=object_definition, **kwargs
-    )
-    return data_access_method.read_method(**data_access_method.method_kwargs)
-
-
-def compose_derived_object_from_object_store(
-    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
-):
-    object_definition = definition_with_args.object_definition
-    kwargs = definition_with_args.kwargs
-
-    composition_function = object_definition.composition_function
-    dict_of_arguments = (
-        object_definition.dict_of_arguments_and_underlying_object_definitions
-    )
-    matching_kwargs = object_definition.matching_kwargs(**kwargs)
-    kwargs_to_pass = copy(matching_kwargs)
-
-    for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
-        underyling_data_object = object_store.get(object_definition=object_definition_for_keyword,
-                                                               **kwargs)
-        kwargs_to_pass[keyword_name] = underyling_data_object
-
-    return composition_function(**kwargs_to_pass)
-
-
-def compose_iterable_object_from_object_store(
-    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
-):
-    object_definition = definition_with_args.object_definition
-    kwargs = copy(definition_with_args.kwargs)
-
-    key_to_iterate_over = object_definition.required_key_for_iteration
-    list_of_keys = kwargs.pop(key_to_iterate_over)
-
-    underlying_object_key = object_definition.key_for_underlying_object
-    underlying_object_definition = object_definition.underlying_object_definition
-
-    dict_of_output = {}
-    for key in list_of_keys:
-        kwargs_this_element = {underlying_object_key: key}
-        kwargs_this_element.update(kwargs)
-
-        underyling_object_this_key = object_store.get(underlying_object_definition, **kwargs_this_element)
-
-        dict_of_output[key] = underyling_object_this_key
-
-    return dict_of_output
+    for definition_with_args_of_dependent in list_of_dependents:
+        dependent_item = object_store.object_cache.get(definition_with_args_of_dependent.key, default=NOT_IN_STORE)
+        if dependent_item is NOT_IN_STORE:
+        ## we might already have cleared this
+            continue
+        elif dependent_item.changed:
+            ## things that have changed do not require clearing. anything upstream of this will be cleared later
+            continue
+        else:
+            clear_unchanged_dependents_of_changed_object(definition_with_args_of_dependent, object_store=object_store)
+            object_store.object_cache.pop(definition_with_args_of_dependent.key)
 
 
 
@@ -325,6 +364,8 @@ def write_modified_underlying_object_to_data_api(
     new_object = saved_data_item.contents
     object_definition = saved_data_item.object_definition
     kwargs = saved_data_item.kwargs
+
+    print("Writing %s" % saved_data_item.key)
 
     data_access_method = get_data_access_method(
         object_store=object_store, object_definition=object_definition, **kwargs

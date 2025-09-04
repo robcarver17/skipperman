@@ -87,7 +87,6 @@ def summarise_registrations_for_event(
     summary_data["Total active in event data (excludes cancelled)"] = len(
         cadets_at_event.list_of_active_cadets()
     )
-    print(summary_data)
     summary_data = pd.DataFrame(summary_data, index=["Count"]).transpose()
     return summary_data
 

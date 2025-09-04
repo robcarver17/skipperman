@@ -30,6 +30,10 @@ class SkipperManUser(GenericSkipperManObject):
     email_address: str  ## not currently used
     volunteer_id: str
 
+    @property
+    def no_volunteer(self):
+        return self.volunteer_id == NO_VOLUNTEER_ID
+
     @classmethod
     def create(
         cls,

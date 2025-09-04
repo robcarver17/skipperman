@@ -39,6 +39,9 @@ class SimpleObjectCache():
     def update(self, new_object: CachedDataItem, key):
         self.cache[key] = new_object
 
+    def pop(self, key):
+        self.cache.pop(key)
+
     def clear_persistent_and_in_memory(self):
         self.clear_in_memory_only()
         self.clear_persistent()

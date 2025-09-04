@@ -1,5 +1,6 @@
 
 from dataclasses import dataclass
+from typing import List
 
 from app.data_access.store.object_definitions import DerivedObjectDefinition, UnderlyingObjectDefinition, \
     IterableObjectDefinition
@@ -40,6 +41,15 @@ class CachedDataItem:
     @property
     def is_underyling_object(self):
         return type(self.object_definition) is UnderlyingObjectDefinition
+
+    @property
+    def is_depended_on_by(self):
+        return getattr(self, "_depended_on_by", [])
+
+    def add_dependents(self, new_thing_depending_on_us: DefinitionWithArgs):
+        depended_on_list =self.is_depended_on_by
+        depended_on_list.append(new_thing_depending_on_us)
+        self._depended_on_by = depended_on_list
 
 
 def get_store_key(

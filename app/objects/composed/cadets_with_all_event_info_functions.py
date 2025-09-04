@@ -180,10 +180,6 @@ def update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
     ):
-        print(
-            "Availablity is bad - not updating %s"
-            % cadet_boat_class_group_club_dinghy_and_partner_on_day
-        )
 
         return required_dict_for_allocation
 
@@ -211,7 +207,6 @@ def availability_is_bad_for_sailor_or_partner(
     cadet_availability = required_dict_for_allocation.availability_dict[cadet]
 
     if not cadet_availability.available_on_day(day):
-        print("Cadet %s not available on %s" % (cadet, day.name))
         return True
 
     if valid_partnership_given_partner_cadet(partner_cadet):
@@ -219,7 +214,6 @@ def availability_is_bad_for_sailor_or_partner(
             partner_cadet
         ]
         if not partner_availabilty.available_on_day(day):
-            print("Partner %s not available on %s" % (cadet, day.name))
             return True
 
     return False

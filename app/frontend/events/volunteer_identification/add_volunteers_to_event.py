@@ -93,11 +93,11 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
     )
     if already_added:
         print("Already added %s to event, updating connections" % volunteer)
-        interface.lock_cache()
+        
         update_cadet_connections_when_volunteer_already_at_event(
             object_store=interface.object_store, event=event, volunteer=volunteer
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return next_volunteer_in_event(interface)
 
     else:
@@ -150,7 +150,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
     any_issues: bool,
 ) -> Union[Form, NewForm]:
 
-    interface.lock_cache()
+    
     list_of_associated_cadets = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
         object_store=interface.object_store, volunteer=volunteer, event=event
     )
@@ -173,5 +173,5 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
     return next_volunteer_in_event(interface)

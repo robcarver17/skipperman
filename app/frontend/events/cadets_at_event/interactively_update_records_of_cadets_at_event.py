@@ -210,13 +210,13 @@ def post_form_interactively_update_cadets_at_event(
         ## nothing to do, no change to master file
         return process_next_cadet_at_event(interface)
 
-    interface.lock_cache()
+    
     if use_new_data_button.pressed(last_button_pressed):
         update_cadets_at_event_with_new_data(interface)
     elif use_data_in_form_button.pressed(last_button_pressed):
         update_cadets_at_event_with_form_data(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return process_next_cadet_at_event(interface)
 
@@ -280,14 +280,14 @@ def process_update_to_cadet_new_to_event_with_registration_row(
     interface: abstractInterface, event: Event, cadet: Cadet, relevant_row: RowInRegistrationData
 ):
 
-    interface.lock_cache()
+    
     add_new_cadet_to_event_from_row_in_registration_data(
         object_store=interface.object_store,
         event=event,
         row_in_registration_data=relevant_row,
         cadet=cadet,
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     print("Added %s with reg row %s" % (cadet, relevant_row))
 

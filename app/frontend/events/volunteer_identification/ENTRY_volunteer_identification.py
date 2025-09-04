@@ -374,7 +374,7 @@ def process_identification_when_volunteer_matched(
         "Adding volunteer %s as identified for event %s, row_id %s, volunteer index %d"
         % (str(volunteer), str(event), current_row_id, current_index)
     )
-    interface.lock_cache()
+    
     try:
         add_identified_volunteer(
             object_store=interface.object_store,
@@ -389,7 +389,7 @@ def process_identification_when_volunteer_matched(
             % (volunteer.name, str(e))
         )
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return next_volunteer_in_current_row(interface)
 

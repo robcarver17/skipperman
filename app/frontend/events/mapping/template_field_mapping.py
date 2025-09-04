@@ -132,11 +132,11 @@ def post_form_when_template_chosen(
         return initial_state_form
 
     event = get_event_from_state(interface)
-    interface.lock_cache()
+
     save_field_mapping_for_event(
         object_store=interface.object_store, event=event, mapping=mapping
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return form_with_message_and_finished_button(
         "Selected mapping template %s for event %s" % (template_name, str(event)),

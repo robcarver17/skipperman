@@ -434,10 +434,10 @@ def save_print_options_from_form(
         interface.log_error("Couldn't get print options from form")
         return
 
-    interface.lock_cache()
+    
     save_print_options(
         report_type=specific_parameters_for_type_of_report.report_type,
         print_options=print_options,
         interface=interface,
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()

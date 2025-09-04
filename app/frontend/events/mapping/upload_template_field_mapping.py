@@ -77,13 +77,13 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
         interface.log_error("Something went wrong uploading file: error %s" % str(e))
         return display_form_for_upload_template_field_mapping(interface)
 
-    interface.lock_cache()
+    
     save_field_mapping_template(
         template_name=template_name,
         object_store=interface.object_store,
         template=template,
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return form_with_message_and_finished_button(
         "Uploaded new template %s" % (template_name),

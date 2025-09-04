@@ -26,21 +26,16 @@ BACKUP_FILES = "Backup all data to local machine"
 UPLOAD_DATA = "Upload data from local machine"
 RESTORE_DATA = "Restore data from data snapshot"
 MAKE_SNAPSHOT = "Write a snapshot of data now"
-CLEAR_LOCK = "Clear data lock"
-CLEAR_CACHED_DATA = "Clear cached data"
 
 backup_files_button = Button(BACKUP_FILES, tile=True)
 upload_data_button = Button(UPLOAD_DATA, tile=True)
 restore_data_button = Button(RESTORE_DATA, tile=True)
 snapshot_data_button = Button(MAKE_SNAPSHOT, tile=True)
-clear_lock_button = Button(CLEAR_LOCK, tile=True)
-clear_cache_button = Button(CLEAR_CACHED_DATA, tile=True)
 help_button = HelpButton("data_backup_help")
 
 
 list_of_menu_buttons = Line(
-    [backup_files_button, upload_data_button, restore_data_button, snapshot_data_button,
-     clear_cache_button, clear_lock_button]
+    [backup_files_button, upload_data_button, restore_data_button, snapshot_data_button]
 )
 
 nav_buttons = ButtonBar([main_menu_button, back_menu_button, help_button])
@@ -69,16 +64,6 @@ def post_form_data_and_backups(
     elif snapshot_data_button.pressed(button_pressed):
         snapshot_data(interface)
         return display_form_data_and_backups(interface)
-    elif clear_lock_button.pressed(button_pressed):
-        interface.force_cache_unlock()
-        return interface.get_new_display_form_for_parent_of_function(
-            display_form_data_and_backups
-        )
-    elif clear_cache_button.pressed(button_pressed):
-        interface.clear_persistent_cache()
-        return interface.get_new_display_form_for_parent_of_function(
-            display_form_data_and_backups
-        )
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

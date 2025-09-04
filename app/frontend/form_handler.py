@@ -23,8 +23,6 @@ class FormHandler:
     interface: abstractInterface
 
     def get_form(self) -> Form:
-        self.interface.unlock_cache_ignoring_errors()
-        self.interface.clear_in_memory_cache()
         if self.interface.is_posted_form:
             print("posted form")
             form = self.get_posted_form()
@@ -192,7 +190,6 @@ initial_state_form = NewForm(INITIAL_STATE)
 def button_error_and_back_to_initial_state_form(
     interface: abstractInterface,
 ) -> NewForm:
-    interface.unlock_cache_ignoring_errors()
     try:
         button = interface.last_button_pressed()
         interface.log_error("Button %s not recognised!" % button)

@@ -206,9 +206,9 @@ def previous_form(interface: abstractInterface) -> NewForm:
 def clear_wa_event_id_mapping_from_data(interface: abstractInterface):
 
     event = get_event_from_state(interface)
-    interface.lock_cache()
+    
     clear_wa_event_id_mapping(object_store=interface.object_store, event=event)
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
     interface.log_error(
         "Cleared WA ID for %s - make sure you upload the right file!" % event
     )

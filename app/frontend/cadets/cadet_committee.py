@@ -220,7 +220,7 @@ def post_form_cadet_committee(
     if cancel_menu_button.pressed(button_pressed):
         return previous_form(interface)
 
-    interface.lock_cache()
+    
     if add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
 
@@ -232,7 +232,7 @@ def post_form_cadet_committee(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return display_form_cadet_committee(interface)
 

@@ -143,19 +143,19 @@ def add_connection_from_form(interface: abstractInterface):
 
     volunteer = get_volunteer_from_state(interface)
 
-    interface.lock_cache()
+    
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         object_store=interface.object_store, cadet=selected_cadet, volunteer=volunteer
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def delete_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
 
-    interface.lock_cache()
+    
     delete_cadet_connection(
         object_store=interface.object_store, cadet=cadet, volunteer=volunteer
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()

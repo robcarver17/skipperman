@@ -54,7 +54,7 @@ def post_form_edit_qualification_details(
             display_form_edit_qualification_details
         )
 
-    interface.lock_cache()
+    
     if button_for_new_substage.pressed(last_button_pressed):
         add_new_substage_to_qualification_from_form(interface)
 
@@ -67,6 +67,6 @@ def post_form_edit_qualification_details(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return display_form_edit_qualification_details(interface)

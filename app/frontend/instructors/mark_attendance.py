@@ -126,7 +126,7 @@ def post_instructor_attendance(interface: abstractInterface):
 def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     interface: abstractInterface, last_button: str
 ):
-    interface.lock_cache()
+
     if initial_mark_all_as_attending_or_absence_button.pressed(last_button):
         final_save_of_initial_registration(interface)
 
@@ -137,7 +137,7 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 
@@ -145,7 +145,7 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
 def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     interface: abstractInterface, last_button: str
 ):
-    interface.lock_cache()
+
     if is_button_cadet_selection(last_button):
         cadet_button_pressed(interface, last_button)
 
@@ -205,7 +205,7 @@ def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     ## Now save any changes to ticks
     save_any_changes_to_ticks(interface, initial_stage=False)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 

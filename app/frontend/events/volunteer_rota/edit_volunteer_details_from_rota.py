@@ -75,14 +75,14 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
         interface.log_error("Availability not in form for %s" % volunteer)
         return
 
-    interface.lock_cache()
+    
     update_volunteer_availability_at_event(
         object_store=interface.object_store,
         event=event,
         volunteer=volunteer,
         availability=availability,
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 AVAILABILITY = "Availability"

@@ -98,7 +98,6 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
 
 
 def process_uploaded_zip_file(interface: abstractInterface, file):
-    interface.clear_persistent_cache()
     master_data_path = interface.object_store.master_data_path
     temp_filename = os.path.join(download_directory, "tempzipfile.zip")
     file.save(temp_filename)
@@ -113,5 +112,3 @@ def process_uploaded_zip_file(interface: abstractInterface, file):
     shutil.rmtree(temp_dir)
     interface.log_error("Restore backup done")
 
-    ## otherwise backup won't be seen
-    interface.clear_persistent_cache()

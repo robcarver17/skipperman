@@ -77,12 +77,12 @@ def add_cadet_to_event_and_return_form(
 ) -> NewForm:
     event = get_event_from_state(interface)
 
-    interface.lock_cache()
+    
     add_new_cadet_manually_to_event(
         object_store=interface.object_store, event=event, new_cadet=cadet
     )
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return return_to_allocation_pages(
         interface=interface, calling_function=calling_function

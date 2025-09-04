@@ -31,7 +31,6 @@ def display_form_import_event_file(
     except Exception as e:
         # will have to upload again
         delete_staged_file_for_current_event(interface)
-        interface.unlock_cache_ignoring_errors()
         interface.log_error(
             "Problem with file importing data %s try uploading again" % e
         )
@@ -51,11 +50,11 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     filename = get_staged_file_raw_event_filename(event)
     print("Working on %s " % filename)
 
-    interface.lock_cache()
+    
     process_uploaded_wa_event_file(
         filename=filename, event=event, object_store=interface.object_store
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return import_controller_form(interface)
 

@@ -81,7 +81,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     if is_ready_to_swap(interface):
         return
 
-    interface.lock_cache()
+    
     update_boat_labels(interface)
     update_skills_checkbox(interface)
     update_role_dropdowns(interface)
@@ -90,7 +90,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     )  ## must come last or will confuse role and skills
     save_warnings_from_table(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def update_boat_labels(interface: abstractInterface):

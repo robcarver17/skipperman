@@ -190,7 +190,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
     interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("Changing underlying data")
-    interface.lock_cache()
+    
     if last_button_pressed_was_make_available_button(last_button_pressed):
         update_if_make_available_button_pressed(
             available_button=last_button_pressed, interface=interface
@@ -233,20 +233,20 @@ def post_form_view_for_volunteer_rota_if_data_changed(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(display_form_view_for_volunteer_rota)
 
 
 def save_all_information_across_forms(interface: abstractInterface):
-    interface.lock_cache()
+    
     save_all_information_in_rota_page(interface)
     interface.log_error("Not saving volunteer targets")
     #save_volunteer_targets(interface)
     save_group_notes_from_form(interface)
     save_warnings_from_table(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def add_new_volunteer_form(interface: abstractInterface):

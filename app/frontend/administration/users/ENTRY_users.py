@@ -34,7 +34,7 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     if cancel_menu_button.pressed(last_button):
         return interface.get_new_display_form_for_parent_of_function(post_form_security)
 
-    interface.lock_cache()
+    
     save_changes_to_existing_users(interface)
 
     if save_entry_button.pressed(last_button):
@@ -56,6 +56,6 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return display_form_security(interface)

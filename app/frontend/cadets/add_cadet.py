@@ -61,16 +61,15 @@ def previous_form(interface: abstractInterface) -> NewForm:
 def process_form_when_cadet_verified(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    interface.lock_cache()
+    
     try:
         cadet = add_cadet_from_form_to_data(interface)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error("Can't add this sailor, error code %s, try again" % str(e))
-        interface.unlock_cache_ignoring_errors()
         return initial_state_form
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return form_with_message_and_finished_button(
         "Added sailor %s" % str(cadet),

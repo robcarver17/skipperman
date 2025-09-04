@@ -40,12 +40,12 @@ def post_deleting_volunteers_process(interface: abstractInterface):
     button_pressed = interface.last_button_pressed()
     print("pressed %s" % button_pressed)
     if yes_button.pressed(button_pressed):
-        interface.lock_cache()
+        
         volunteer_to_delete = get_volunteer_to_delete_from_state(interface)
         delete_volunteer_in_data_and_return_warnings(
             interface.object_store, volunteer_to_delete=volunteer_to_delete
         )
-        interface.save_changes_in_cached_data_to_disk()  ## saves
+        interface.flush_and_clear()  ## saves
         message = "Deletion done, click to return to menu"
     elif cancel_button.pressed(button_pressed):
         message = "Deletion cancelled, click to return to menu"

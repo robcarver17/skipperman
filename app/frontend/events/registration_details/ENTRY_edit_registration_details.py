@@ -89,13 +89,13 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 
 
 def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLines:
-    interface.lock_cache()
+
     warnings = (
         refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
             object_store=interface.object_store, event=event
         )
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     warnings_detail = display_warnings_tables(warnings)
 
@@ -165,11 +165,11 @@ def post_form_edit_registration_details(
 
 def save_details_from_form(interface: abstractInterface):
     event = get_event_from_state(interface)
-    interface.lock_cache()
+
     parse_registration_details_from_form(interface=interface, event=event)
     save_warnings_from_table(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def previous_form(interface: abstractInterface):

@@ -52,7 +52,7 @@ help_button = HelpButton("copy_menu_rota_help")
 def post_form_volunteer_copy_menu(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
 
-    interface.lock_cache()
+    
     if back_menu_button.pressed(button_pressed):
         pass
     elif copy_all_roles_from_first_role_button.pressed(button_pressed):
@@ -63,7 +63,7 @@ def post_form_volunteer_copy_menu(interface: abstractInterface) -> Union[Form, N
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_display_form_for_parent_of_function(
         post_form_volunteer_copy_menu

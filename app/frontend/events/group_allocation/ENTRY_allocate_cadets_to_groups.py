@@ -190,7 +190,7 @@ def post_form_allocate_cadets_when_changing_data(
     interface: abstractInterface, last_button: str
 ) -> Union[Form, NewForm]:
     ## save existing form changes first, might be overwritten later by button actions
-    interface.lock_cache()
+    
     if save_menu_button.pressed(last_button):
         pass  # already saved
 
@@ -213,18 +213,18 @@ def post_form_allocate_cadets_when_changing_data(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return display_form_allocate_cadets(interface)
 
 
 def save_all_information_in_forms_on_page(interface: abstractInterface):
-    interface.lock_cache()
+    
     update_data_given_allocation_form(interface)
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def previous_form(interface: abstractInterface):

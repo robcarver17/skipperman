@@ -38,7 +38,7 @@ def post_form_config_patrol_boats_page(
 ) -> Union[Form, NewForm]:
     list_of_boats = get_list_of_patrol_boats(interface.object_store)
 
-    interface.lock_cache()
+    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
         interface=interface,
@@ -55,7 +55,7 @@ def post_form_config_patrol_boats_page(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(display_form_config_patrol_boats_page)
 

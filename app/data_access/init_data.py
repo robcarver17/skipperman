@@ -2,7 +2,7 @@
 from app.data_access.csv.csv_api import CsvDataApi
 from app.data_access.configuration.configuration import DATAPATH, PICKLE_STORE
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_cache import PickledObjectCache, SimpleObjectCache
+from app.data_access.store.object_cache import  SimpleObjectCache
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path
 import os
@@ -33,7 +33,6 @@ def make_data():
 
 
 underling_data_api = make_data()
-#object_cache = PickledObjectCache(pickle_directory)
 object_cache = SimpleObjectCache()
 
 object_store = ObjectStore( data_api=underling_data_api,

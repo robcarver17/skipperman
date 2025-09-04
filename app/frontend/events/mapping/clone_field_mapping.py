@@ -121,11 +121,11 @@ def clone_field_mapping_for_selected_event_and_return_message(
 
         return "No mapping set up for event of mapping file is corrupted - try another event"
 
-    interface.lock_cache()
+    
     save_field_mapping_for_event(
         object_store=interface.object_store, event=current_event, mapping=mapping
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     message = "Mapping copied from event %s to %s" % (
         event_description_selected,

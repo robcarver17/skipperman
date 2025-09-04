@@ -38,7 +38,7 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
         )
     )
 
-    interface.lock_cache()
+    
 
     for (
         cadet,
@@ -50,7 +50,7 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
             cadet=cadet,
             registration_data=registration_data,
         )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
     return return_to_controller(interface)
 
 

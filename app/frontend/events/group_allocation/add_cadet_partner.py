@@ -114,7 +114,7 @@ def process_form_when_cadet_chosen_as_partner(
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet
 ) -> NewForm:
-    interface.lock_cache()
+
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
 
@@ -124,7 +124,7 @@ def add_matched_partner_cadet_with_duplicate_registration(
         original_cadet=primary_cadet,
         new_cadet=new_cadet,
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return return_to_allocation_pages(interface)
 

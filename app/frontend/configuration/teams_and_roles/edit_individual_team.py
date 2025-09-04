@@ -131,7 +131,7 @@ def post_form_edit_individual_team_page(
             post_form_edit_individual_team_page
         )
 
-    interface.lock_cache()
+
     if add_button.pressed(last_button):
         add_new_role_to_team(interface=interface, team=team)
     elif is_button_arrow_button(last_button):
@@ -141,7 +141,7 @@ def post_form_edit_individual_team_page(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(display_form_edit_individual_team_page)
 
@@ -173,4 +173,3 @@ def add_new_role_to_team(interface: abstractInterface, team: Team):
         )
     except Exception as e:
         interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))
-        interface.unlock_cache_ignoring_errors()

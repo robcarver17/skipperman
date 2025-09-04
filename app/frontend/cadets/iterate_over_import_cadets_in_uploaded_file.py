@@ -121,9 +121,9 @@ def mark_existing_cadet_as_member_and_log(interface: abstractInterface, cadet: C
             % (cadet.name, describe_status(cadet.membership_status))
         )
 
-    interface.lock_cache()
+    
     confirm_cadet_is_member(object_store=interface.object_store, cadet=cadet)
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
 
 def next_iteration_over_rows_in_temp_cadet_file(
@@ -158,12 +158,12 @@ def process_when_cadet_is_in_membership_list_and_not_in_system(
 def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
-    interface.lock_cache()
+    
     add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -375,7 +375,7 @@ def finishing_processing_file(interface: abstractInterface) -> NewForm:
 
 
 def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
-    interface.lock_cache()
+    
     lapsed_members = set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(
         object_store=interface.object_store
     )
@@ -388,7 +388,7 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     not_members = set_all_user_unconfirmed_members_to_non_members_and_return_list(
         object_store=interface.object_store
     )
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     for cadet in not_members:
         interface.log_error(

@@ -218,9 +218,9 @@ def post_form_for_generic_report_all_options(
         return additional_options_form(interface, report_generator)
 
     elif reset_all_options_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         reset_all_report_options(interface, report_generator_with_specific_parameters)
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return display_form_for_generic_report_all_options(interface, report_generator)
 
     elif back_menu_button.pressed(last_button_pressed):
@@ -326,33 +326,33 @@ def post_form_for_generic_report_additional_options(
 
 
     if reset_specific_options_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         reset_specific_report_options(
             interface, report_generator_with_specific_parameters
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return display_form_for_generic_report_additional_options(
             interface=interface, report_generator=report_generator
         )
 
     elif create_report_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         report_generator.get_additional_parameters_from_form_and_save(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
     elif save_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         report_generator.get_additional_parameters_from_form_and_save(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return previous_form
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -423,35 +423,35 @@ def post_form_for_generic_report_print_options(
         return previous_form
 
     elif reset_print_options_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         reset_print_report_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return display_form_for_generic_report_print_options(
             interface=interface, report_generator=report_generator
         )
 
     elif create_report_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         save_print_options_from_form(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
 
     elif save_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         save_print_options_from_form(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return previous_form
 
     else:
@@ -541,12 +541,12 @@ def post_form_for_generic_report_arrangement_options(
         )
 
     elif reset_layout_options_button.pressed(last_button_pressed):
-        interface.lock_cache()
+        
         reset_arrangement_report_options(
             object_store=interface.object_store,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
         return display_form_for_generic_report_arrangement_options(
             interface=interface, report_generator=report_generator
         )

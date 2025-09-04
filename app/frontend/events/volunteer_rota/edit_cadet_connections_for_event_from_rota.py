@@ -102,7 +102,7 @@ def post_form_edit_cadet_connections_from_rota(
     if back_menu_button.pressed(last_button=button):
         return previous_form(interface)
 
-    interface.lock_cache()
+    
     if add_connection_button.pressed(button):
         add_cadet_connection_from_form(interface)
 
@@ -112,7 +112,7 @@ def post_form_edit_cadet_connections_from_rota(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return display_form_edit_cadet_connections_from_rota(interface)
 

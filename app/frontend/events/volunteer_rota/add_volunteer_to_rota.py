@@ -71,7 +71,7 @@ def action_when_volunteer_known_for_rota(
     volunteer: Volunteer, interface: abstractInterface, no_availability: bool
 ) -> Union[Form, NewForm]:
     event = get_event_from_state(interface)
-    interface.lock_cache()
+    
     not_at_event = get_list_of_volunteers_except_those_already_at_event(
         object_store=interface.object_store, event=event
     )
@@ -83,7 +83,7 @@ def action_when_volunteer_known_for_rota(
             volunteer=volunteer,
             no_availability=no_availability,
         )
-        interface.save_changes_in_cached_data_to_disk()
+        interface.flush_and_clear()
     else:
         interface.log_error(
             "Volunteer %s is already at event %s!" % (volunteer.name, event.name)

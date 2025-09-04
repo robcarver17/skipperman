@@ -120,7 +120,7 @@ def post_form_view_for_patrol_boat_allocation(
         return interface.get_new_form_given_function(display_form_patrol_boat_copy_menu)
 
     ## remaining options do something and then return current form
-    interface.lock_cache()
+    
     if save_menu_button.pressed(last_button_pressed):
         pass  # already done
 
@@ -156,7 +156,7 @@ def post_form_view_for_patrol_boat_allocation(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return interface.get_new_form_given_function(
         display_form_view_for_patrol_boat_allocation

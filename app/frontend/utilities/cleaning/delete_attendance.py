@@ -104,9 +104,9 @@ def action_when_event_button_clicked(interface: abstractInterface) -> Form:
         value_of_button_pressed=interface.last_button_pressed(),
         object_store=interface.object_store,
     )
-    interface.lock_cache()
+    
     clean_attendance_data_for_event(object_store=interface.object_store, event=event)
-    interface.save_changes_in_cached_data_to_disk()
+    interface.flush_and_clear()
 
     return form_with_message_and_finished_button(
         "Cleaned attendance data for event %s" % str(event),

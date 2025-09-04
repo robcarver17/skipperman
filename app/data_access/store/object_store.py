@@ -101,7 +101,7 @@ class ObjectStore:
             cached_item = self.compose_from_scratch_and_store_object_in_cache(
                 definition_with_args
             )
-            
+
 
         return cached_item.contents
 

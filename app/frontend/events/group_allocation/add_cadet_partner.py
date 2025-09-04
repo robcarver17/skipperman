@@ -117,13 +117,17 @@ def add_matched_partner_cadet_with_duplicate_registration(
     interface.lock_cache()
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    add_unregistered_partner_cadet(
-        object_store=interface.object_store,
-        event=event,
-        original_cadet=primary_cadet,
-        new_cadet=new_cadet,
-    )
-    interface.save_changes_in_cached_data_to_disk()
+    try:
+        add_unregistered_partner_cadet(
+            object_store=interface.object_store,
+            event=event,
+            original_cadet=primary_cadet,
+            new_cadet=new_cadet,
+        )
+        interface.save_changes_in_cached_data_to_disk()
+    except Exception as e:
+        interface.log_error("Error %s while adding cadet %s as partnter" % (str(e), new_cadet) )
+        interface.unlock_cache_ignoring_errors()
 
     return return_to_allocation_pages(interface)
 

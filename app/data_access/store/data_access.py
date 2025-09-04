@@ -1,6 +1,42 @@
+from copy import copy
+from typing import Callable
 
 from app.data_access.csv.csv_api import CsvDataApi
-from app.data_access.store.underyling_data_cache import DataAccessMethod
+
+
+class DataAccessMethod:
+    def __init__(self, key, data_object_with_methods, **kwargs):
+        try:
+            self._read_method = data_object_with_methods.read
+            self._write_method = data_object_with_methods.write
+        except:
+            raise Exception("Data object identified with key %s should have read and write methods" % key)
+
+        copied_key = copy(key)
+        if len(kwargs) == 0:
+            self._method_kwargs = {}
+        else:
+            self._method_kwargs = kwargs
+            kwargs_described = ",".join(["%s:%s" % (key, item) for key, item in kwargs.items()])
+            copied_key = "%s_(%s)" % (copied_key, kwargs_described)
+
+        self._key = copied_key
+
+    @property
+    def read_method(self) -> Callable:
+        return self._read_method
+
+    @property
+    def write_method(self) -> Callable:
+        return self._write_method
+
+    @property
+    def key(self) -> str:
+        return self._key
+
+    @property
+    def method_kwargs(self) -> dict:
+        return self._method_kwargs
 
 
 def get_data_access_for_list_of_users(data: CsvDataApi) -> DataAccessMethod:

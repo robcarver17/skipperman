@@ -285,9 +285,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 def get_sorted_list_of_groups_at_event(
     object_store: ObjectStore, event: Event, include_unallocated: bool = True
 ):
-    cadet_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     all_groups_at_event = (
         cadet_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
     )

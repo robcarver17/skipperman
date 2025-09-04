@@ -58,9 +58,7 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event, active_only=True
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
     list_of_cadets = dict_of_all_event_data.list_of_cadets
     day_from_state = get_day_from_state_or_none(interface)
 

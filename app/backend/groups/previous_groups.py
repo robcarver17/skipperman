@@ -222,9 +222,7 @@ def get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
 def get_group_allocations_for_event_active_cadets_only(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
-    all_cadet_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     return all_cadet_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
 

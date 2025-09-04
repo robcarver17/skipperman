@@ -1,4 +1,5 @@
 from copy import copy
+from typing import Dict, List
 
 from app.data_access.csv.csv_api import CsvDataApi
 from app.data_access.store.object_definitions import (
@@ -7,19 +8,19 @@ from app.data_access.store.object_definitions import (
     IterableObjectDefinition,
 )
 
-from app.data_access.store.underyling_data_cache import UnderylingDataCache, DataAccessMethod
 from app.data_access.store.object_cache import SimpleObjectCache, NOT_IN_STORE
+from app.data_access.store.object_store_elements import CachedDataItem, DefinitionWithArgs, get_store_key
+from app.data_access.store.data_access import DataAccessMethod
 from app.objects.utilities.exceptions import arg_not_passed, CacheIsLocked
 
 
 class ObjectStore:
-    def __init__(self, underlying_data_cache: UnderylingDataCache, data_api: CsvDataApi,
+    def __init__(self, data_api: CsvDataApi,
                  object_cache: SimpleObjectCache = arg_not_passed):
         if object_cache is arg_not_passed:
             object_cache = SimpleObjectCache()
 
         self._object_cache = object_cache
-        self._underlying_data_cache = underlying_data_cache
         self._data_api = data_api
 
     def delete_all_data(self, are_you_sure: bool = False):
@@ -28,7 +29,6 @@ class ObjectStore:
             ## REDUDANT CODE AS YOU CAN'T BE TOO CAREFUL
             self.data_api.delete_all_master_data(are_you_sure)
             self.object_cache.clear_persistent_and_in_memory()
-
 
     def backup_underlying_data(self):
         self.data_api.make_backup()
@@ -58,68 +58,75 @@ class ObjectStore:
             raise CacheIsLocked("Can't save changes, someone else is trying to save")
 
         self.object_cache.save_cache() ## save object first, as this will also throw a lock error, just in case
-        self.underlying_data_cache.save_cache()
+        self.save_underlying_data()
         self.unlock_store()
 
+        ## FIXME CACHE NOT WORKING BETWEEN SESSIONS
+        self.clear_store_including_persistent_cache()
+
+    def save_underlying_data(self):
+        for  saved_data_item in self.values():
+            if saved_data_item.is_underyling_object:
+                if saved_data_item.changed:
+                    write_modified_underlying_object_to_data_api(
+                        saved_data_item=saved_data_item,
+                        object_store=self,
+                    )
+
     def clear_store_including_persistent_cache(self):
-        self.underlying_data_cache.clear_stored_items()
         self.object_cache.clear_persistent_and_in_memory()
 
     def update(
         self,
         new_object,
-        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition],
+        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
         **kwargs,
     ):
-        self._update_object_in_cache(
-            new_object=new_object, object_definition=object_definition, **kwargs
-        )
+        definition_with_args = DefinitionWithArgs(object_definition, kwargs)
+        cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args, changed=True)
+        self.object_cache.update(cached_data_item, key=definition_with_args.key)
 
-        update_data_and_underlying_objects_in_store_with_changed_object(
-            new_object=new_object,
-            object_definition=object_definition,
-            object_store=self,
-            **kwargs,
-        )
+        update_components_of_changed_object(object_store=self, new_object=new_object, definition_with_args=definition_with_args)
+
 
     def get(
         self,
-        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition],
+        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
         **kwargs,
     ):
-        key = get_store_key(object_definition=object_definition, **kwargs)
-        stored_object = self.object_cache.get(key, default =NOT_IN_STORE)
+        definition_with_args = DefinitionWithArgs(object_definition, kwargs)
+        cached_item = self.object_cache.get(definition_with_args.key, default =NOT_IN_STORE)
 
-        if stored_object is NOT_IN_STORE:
-            stored_object = self._call_and_store_object_in_cache(
-                object_definition=object_definition, key=key, **kwargs
+        if cached_item is NOT_IN_STORE:
+            cached_item = self.compose_from_scratch_and_store_object_in_cache(
+                definition_with_args
             )
+            
 
-        return stored_object
+        return cached_item.contents
 
-    def _update_object_in_cache(
+
+
+    def compose_from_scratch_and_store_object_in_cache(
         self,
-        new_object,
-        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition],
-        **kwargs,
-    ):
-        key = get_store_key(object_definition=object_definition, **kwargs)
-        self.object_cache.update(key=key, new_object=new_object)
-
-    def _call_and_store_object_in_cache(
-        self,
-        object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition],
-        key: str,
-        **kwargs,
-    ):
-        stored_object = compose_object_for_object_store(
-            object_definition=object_definition, object_store=self, **kwargs
+        definition_with_args: DefinitionWithArgs,
+    ) -> CachedDataItem:
+        new_object = compose_object_for_object_store(
+             object_store=self,definition_with_args=definition_with_args
         )
+        cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args)
 
-        self.object_cache.update(key=key, new_object=stored_object)
+        self.object_cache.update(cached_data_item, key=definition_with_args.key,
+                                 )
 
-        return stored_object
+        return cached_data_item
 
+
+    def keys(self):
+        return self.object_cache.keys()
+
+    def values(self):
+        return self.object_cache.values()
 
     ## Expose some data API stuff
     @property
@@ -143,54 +150,37 @@ class ObjectStore:
     def data_api(self) -> CsvDataApi:
         return self._data_api
 
-    @property
-    def underlying_data_cache(self) -> UnderylingDataCache:
-        return self._underlying_data_cache
 
     @property
     def object_cache(self) -> SimpleObjectCache:
         return self._object_cache
 
 
-def get_store_key(
-    object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition], **kwargs
+
+
+def update_components_of_changed_object(
+        new_object,
+        definition_with_args: DefinitionWithArgs,
+        object_store: ObjectStore,
 ):
-    key = object_definition.key + str(kwargs)
 
-    return key
-
-
-def update_data_and_underlying_objects_in_store_with_changed_object(
-    new_object,
-    object_store: ObjectStore,
-    object_definition: [
-        DerivedObjectDefinition,
-        UnderlyingObjectDefinition,
-        IterableObjectDefinition,
-    ],
-    **kwargs,
-):
+    ## save objects below
+    object_definition = definition_with_args.object_definition
     if type(object_definition) is UnderlyingObjectDefinition:
-        update_data_store_with_changed_underlying_object(
-            new_object=new_object,
-            object_store=object_store,
-            object_definition=object_definition,
-            **kwargs,
-        )
+        ## no objects below
+        pass
     elif type(object_definition) is IterableObjectDefinition:
-        update_objects_in_store_with_changed_iterable_object(
+        update_component_objects_in_store_with_changed_iterable_object(
             new_object=new_object,
+            definition_with_args=definition_with_args,
             object_store=object_store,
-            object_definition=object_definition,
-            **kwargs,
         )
 
     elif type(object_definition) is DerivedObjectDefinition:
-        update_objects_in_store_with_changed_derived_object(
+        update_component_objects_in_store_with_changed_derived_object(
             new_object=new_object,
+            definition_with_args=definition_with_args,
             object_store=object_store,
-            object_definition=object_definition,
-            **kwargs,
         )
     else:
         raise Exception(
@@ -198,46 +188,39 @@ def update_data_and_underlying_objects_in_store_with_changed_object(
         )
 
 
-def update_data_store_with_changed_underlying_object(
-    new_object,
+
+
+def update_component_objects_in_store_with_changed_iterable_object(
+    new_object: dict,
     object_store: ObjectStore,
-    object_definition: UnderlyingObjectDefinition,
-    **kwargs,
+        definition_with_args: DefinitionWithArgs,
+
 ):
-    data_access_method = get_data_access_method(
-        object_store=object_store, object_definition=object_definition, **kwargs
-    )
-    data_store = object_store.underlying_data_cache
+    object_definition = definition_with_args.object_definition
+    kwargs_to_use = copy(definition_with_args.kwargs)
+    kwargs_to_use.pop(object_definition.required_key_for_iteration)
+    underlying_object_key_name = object_definition.key_for_underlying_object
+    underyling_object_definition = object_definition.underlying_object_definition
 
-    data_store.write(new_object, data_access_method=data_access_method)
-
-
-def update_objects_in_store_with_changed_iterable_object(
-    new_object,
-    object_store: ObjectStore,
-    object_definition: IterableObjectDefinition,
-    **kwargs,
-):
     list_of_keys = list(new_object.keys())
-    underlying_object_key = object_definition.key_for_underlying_object
 
     for key in list_of_keys:
-        kwargs_this_element = {underlying_object_key: key}
-        kwargs_this_element.update(kwargs)
-        update_data_store_with_changed_underlying_object(
-            new_object=new_object[key],
-            object_store=object_store,
-            object_definition=object_definition.underlying_object_definition,
-            **kwargs_this_element,
-        )
+        kwargs_this_element = {underlying_object_key_name: key}
+        kwargs_this_element.update(kwargs_to_use)
+        new_underyling_object = new_object[key]
+        object_store.update(new_object=new_underyling_object,
+                            object_definition=underyling_object_definition,
+                            **kwargs_this_element)
 
 
-def update_objects_in_store_with_changed_derived_object(
+def update_component_objects_in_store_with_changed_derived_object(
     new_object,
     object_store: ObjectStore,
-    object_definition: DerivedObjectDefinition,
-    **kwargs,
+        definition_with_args: DefinitionWithArgs,
 ):
+    object_definition = definition_with_args.object_definition
+    kwargs = definition_with_args.kwargs
+
     dict_of_objects_to_modify = (
         object_definition.dict_of_properties_and_underlying_object_definitions_if_modified
     )
@@ -245,7 +228,6 @@ def update_objects_in_store_with_changed_derived_object(
         property_name,
         underlying_object_definition,
     ) in dict_of_objects_to_modify.items():
-        ## if only one source of truth, should be fine
         new_underyling_object = getattr(new_object, property_name)
         object_store.update(
             new_object=new_underyling_object,
@@ -254,26 +236,23 @@ def update_objects_in_store_with_changed_derived_object(
         )
 
 
+
 def compose_object_for_object_store(
     object_store: ObjectStore,
-    object_definition: [
-        DerivedObjectDefinition,
-        IterableObjectDefinition,
-        UnderlyingObjectDefinition,
-    ],
-    **kwargs,
+    definition_with_args: DefinitionWithArgs
 ):
+    object_definition = definition_with_args.object_definition
     if type(object_definition) is UnderlyingObjectDefinition:
-        return compose_underyling_object_from_data_store(
-            object_store=object_store, object_definition=object_definition, **kwargs
+        return compose_underyling_object_from_data_api(
+            object_store=object_store, definition_with_args=definition_with_args
         )
     elif type(object_definition) is IterableObjectDefinition:
         return compose_iterable_object_from_object_store(
-            object_store=object_store, object_definition=object_definition, **kwargs
+            object_store=object_store, definition_with_args=definition_with_args
         )
     elif type(object_definition) is DerivedObjectDefinition:
         return compose_derived_object_from_object_store(
-            object_store=object_store, object_definition=object_definition, **kwargs
+            object_store=object_store, definition_with_args=definition_with_args
         )
     else:
         raise Exception(
@@ -281,52 +260,79 @@ def compose_object_for_object_store(
         )
 
 
-def compose_derived_object_from_object_store(
-    object_store: ObjectStore, object_definition: DerivedObjectDefinition, **kwargs
+def compose_underyling_object_from_data_api(
+    object_store: ObjectStore,  definition_with_args: DefinitionWithArgs
 ):
+    object_definition = definition_with_args.object_definition
+    kwargs = definition_with_args.kwargs
+
+    data_access_method = get_data_access_method(
+        object_store=object_store, object_definition=object_definition, **kwargs
+    )
+    return data_access_method.read_method(**data_access_method.method_kwargs)
+
+
+def compose_derived_object_from_object_store(
+    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
+):
+    object_definition = definition_with_args.object_definition
+    kwargs = definition_with_args.kwargs
+
     composition_function = object_definition.composition_function
     dict_of_arguments = (
         object_definition.dict_of_arguments_and_underlying_object_definitions
     )
     matching_kwargs = object_definition.matching_kwargs(**kwargs)
     kwargs_to_pass = copy(matching_kwargs)
+
     for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
-        kwargs_to_pass[keyword_name] = object_store.get(
-            object_definition_for_keyword, **kwargs
-        )
+        underyling_data_object = object_store.get(object_definition=object_definition_for_keyword,
+                                                               **kwargs)
+        kwargs_to_pass[keyword_name] = underyling_data_object
 
     return composition_function(**kwargs_to_pass)
 
 
 def compose_iterable_object_from_object_store(
-    object_store: ObjectStore, object_definition: IterableObjectDefinition, **kwargs
+    object_store: ObjectStore, definition_with_args: DefinitionWithArgs
 ):
+    object_definition = definition_with_args.object_definition
+    kwargs = copy(definition_with_args.kwargs)
+
     key_to_iterate_over = object_definition.required_key_for_iteration
     list_of_keys = kwargs.pop(key_to_iterate_over)
 
     underlying_object_key = object_definition.key_for_underlying_object
+    underlying_object_definition = object_definition.underlying_object_definition
+
     dict_of_output = {}
     for key in list_of_keys:
         kwargs_this_element = {underlying_object_key: key}
         kwargs_this_element.update(kwargs)
-        underyling_data_this_key = compose_underyling_object_from_data_store(
-            object_store=object_store,
-            object_definition=object_definition.underlying_object_definition,
-            **kwargs_this_element,
-        )
-        dict_of_output[key] = underyling_data_this_key
+
+        underyling_object_this_key = object_store.get(underlying_object_definition, **kwargs_this_element)
+
+        dict_of_output[key] = underyling_object_this_key
 
     return dict_of_output
 
 
-def compose_underyling_object_from_data_store(
-    object_store: ObjectStore, object_definition: UnderlyingObjectDefinition, **kwargs
+
+def write_modified_underlying_object_to_data_api(
+    saved_data_item: CachedDataItem,
+    object_store: ObjectStore,
 ):
+    new_object = saved_data_item.contents
+    object_definition = saved_data_item.object_definition
+    kwargs = saved_data_item.kwargs
+
     data_access_method = get_data_access_method(
         object_store=object_store, object_definition=object_definition, **kwargs
     )
-    data_store = object_store.underlying_data_cache
-    return data_store.read(data_access_method)
+    data_access_write_method = data_access_method.write_method
+    kwargs = data_access_method.method_kwargs
+    data_access_write_method(new_object, **kwargs)
+
 
 
 def get_data_access_method(

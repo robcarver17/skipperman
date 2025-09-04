@@ -50,9 +50,7 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
     day: Day,
         group_switch_allowed: bool
 ) -> List[str]:
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     list_of_existing_cadets_boats_groups_club_dinghies_and_partners = dict_of_all_event_info_for_cadets.list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         day
     )
@@ -345,9 +343,7 @@ def update_boat_info_for_updated_cadets_at_event(
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
         group_switch_allowed: bool
 ) -> List[str]:
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     messages = []
     for (

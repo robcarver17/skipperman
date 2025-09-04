@@ -679,7 +679,7 @@ object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition
         dict_of_cadets_with_clothing_at_event=object_definition_for_dict_of_cadets_with_clothing_at_event,
         dict_of_cadets_with_food_required_at_event=object_definition_for_dict_of_cadets_with_food_requirements_at_event,
     ),
-    required_keys=["event_id", "active_only"],
+    required_keys=["event_id"],
 )
 
 # object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id

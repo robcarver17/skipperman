@@ -105,9 +105,8 @@ def get_body_of_table_at_event(
     dict_of_volunteers_at_event_with_event_data: DictOfAllEventDataForVolunteers,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event
-    )
+    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store,
+                                                                         event=event)
 
     other_rows = [
         get_row_for_volunteer_at_event(

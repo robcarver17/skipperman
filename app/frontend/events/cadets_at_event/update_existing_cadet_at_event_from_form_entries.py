@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import ATTENDANCE
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import ATTENDANCE, ROW_STATUS
 from app.objects.cadets import Cadet
 
 from app.frontend.forms.form_utils import (
@@ -181,7 +181,6 @@ def update_comparing_new_and_existing_cadet_at_event(
         existing_cadet_at_event_data=existing_cadet_at_event,
     )
 
-    interface.lock_cache()
     if reg_status_change == status_unchanged:
         ## Must be an availability change
         update_cadet_at_event_when_status_unchanged_and_availability_has_probably_changed(
@@ -240,7 +239,6 @@ def update_comparing_new_and_existing_cadet_at_event(
             )
         )
 
-    interface.save_changes_in_cached_data_to_disk()
 
 
 def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_changed(

@@ -1,9 +1,6 @@
 from datetime import datetime
 from typing import Union
 
-from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
-    update_registration_details_for_existing_cadet_at_event_who_was_manual,
-)
 from app.backend.events.event_warnings import (
     add_new_event_warning_checking_for_duplicate,
 )
@@ -12,7 +9,6 @@ from app.objects.cadets import Cadet
 
 from app.backend.registration_data.update_cadets_at_event import (
     no_important_difference_between_cadets_at_event,
-    registration_replacing_manual,
 )
 from app.backend.registration_data.cadet_registration_data import (
     is_cadet_already_at_event,
@@ -49,7 +45,6 @@ from app.objects.cadet_with_id_at_event import (
     get_cadet_at_event_from_row_in_event_raw_registration_data,
 )
 from app.objects.events import Event
-from app.objects.registration_status import manual_status
 from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 
@@ -57,7 +52,6 @@ from app.objects.event_warnings import (
     CADET_REGISTRATION,
 )
 from app.data_access.configuration.fixed import (
-    LOWEST_PRIORITY,
     LOW_PRIORITY,
     MEDIUM_PRIORITY,
     HIGH_PRIORITY,
@@ -98,10 +92,12 @@ def process_update_to_cadet_data(
     )
 
     if cadet_already_at_event:
+        print("%s already at event" % cadet)
         return process_update_to_existing_cadet_in_event_data(
             event=event, cadet=cadet, interface=interface
         )
     else:
+        print("%s new to event" % cadet)
         return process_update_to_cadet_new_to_event(
             event=event, cadet=cadet, interface=interface
         )
@@ -120,6 +116,8 @@ def process_update_to_existing_cadet_in_event_data(
             )
         )
     except DuplicateCadets:
+        ## Cadet in registration data multiple times
+        print("Existing cadet %s is duplicated no action" % cadet)
         message = (
             "ACTION REQUIRED: Cadet %s appears more than once in WA file with multiple active registrations - ignoring any possible changes made to registration - go to WA and cancel one of the registrations please!"
             % cadet
@@ -134,6 +132,8 @@ def process_update_to_existing_cadet_in_event_data(
         return process_next_cadet_at_event(interface)
 
     except NoMoreData:
+        print("Existing cadet missing from reg data, could be manual %s" % cadet)
+        ## Cadet not in registration data
         cadet_at_event = get_cadet_at_event(
             object_store=interface.object_store, event=event, cadet=cadet
         )
@@ -205,19 +205,25 @@ def post_form_interactively_update_cadets_at_event(
 ) -> Union[Form, NewForm]:
     ## Called by post on view events form, so both stage and event name are set
     last_button_pressed = interface.last_button_pressed()
+
     if use_original_data_button.pressed(last_button_pressed):
         ## nothing to do, no change to master file
-        pass
-    elif use_new_data_button.pressed(last_button_pressed):
+        return process_next_cadet_at_event(interface)
+
+    interface.lock_cache()
+    if use_new_data_button.pressed(last_button_pressed):
         update_cadets_at_event_with_new_data(interface)
     elif use_data_in_form_button.pressed(last_button_pressed):
         update_cadets_at_event_with_form_data(interface)
+
+    interface.save_changes_in_cached_data_to_disk()
 
     return process_next_cadet_at_event(interface)
 
 
 def process_update_to_cadet_new_to_event(
-    interface: abstractInterface, event: Event, cadet: Cadet
+    interface: abstractInterface, event: Event, cadet: Cadet,
+raise_error_on_duplicate=True
 ) -> Form:
     print("New row in master data for cadet with id %s" % cadet.id)
 
@@ -226,9 +232,13 @@ def process_update_to_cadet_new_to_event(
             object_store=interface.object_store,
             cadet=cadet,
             event=event,
-            raise_error_on_duplicate=True,
+            raise_error_on_duplicate=raise_error_on_duplicate,
         )
+        process_update_to_cadet_new_to_event_with_registration_row(interface=interface, event=event,
+                                                                   cadet=cadet, relevant_row=relevant_row)
+
     except DuplicateCadets:
+        print("Duplicate cadet %s, trying again with 1st row only" % cadet)
         message = (
             "ACTION REQUIRED: Cadet %s appears more than once in imported file with an active registration - using the first registration found - go to WA and cancel all but one of the registrations please, and then check details here are correct!"
             % cadet
@@ -239,14 +249,17 @@ def process_update_to_cadet_new_to_event(
             priority=HIGH_PRIORITY,
             log_as_warning=True,
         )
-
-        relevant_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store=interface.object_store,
-            cadet=cadet,
+        ## try again this time allowing duplicates
+        return process_update_to_cadet_new_to_event(
+            interface=interface,
             event=event,
-            raise_error_on_duplicate=False,  ## try again this time allowing duplicates
+            cadet=cadet,
+            raise_error_on_duplicate = False
         )
+
+
     except NoMoreData:
+        print("Vanished cadet %s" % cadet)
         message = (
             "ACTION REQUIRED: Cadet %s vanished from raw registration data file - should not happen: contact support"
             % cadet
@@ -259,7 +272,13 @@ def process_update_to_cadet_new_to_event(
             log_as_warning=True,
         )
 
-        return process_next_cadet_at_event(interface)
+
+    return process_next_cadet_at_event(interface)
+
+
+def process_update_to_cadet_new_to_event_with_registration_row(
+    interface: abstractInterface, event: Event, cadet: Cadet, relevant_row: RowInRegistrationData
+):
 
     interface.lock_cache()
     add_new_cadet_to_event_from_row_in_registration_data(
@@ -270,7 +289,8 @@ def process_update_to_cadet_new_to_event(
     )
     interface.save_changes_in_cached_data_to_disk()
 
-    return process_next_cadet_at_event(interface)
+    print("Added %s with reg row %s" % (cadet, relevant_row))
+
 
 
 def finished_looping_return_to_controller(interface: abstractInterface) -> NewForm:

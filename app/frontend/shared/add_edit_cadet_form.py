@@ -226,30 +226,30 @@ final_submit_button = Button(FINAL_ADD_BUTTON_LABEL, nav_button=True)
 check_details_button = Button(CHECK_BUTTON_LABEL, nav_button=True)
 
 
-def get_cadet_from_form(interface: abstractInterface) -> Cadet:
+def get_cadet_from_form(interface: abstractInterface, as_non_member: bool = False) -> Cadet:
     first_name = interface.value_from_form(FIRST_NAME, default=MISSING_FROM_FORM)
     surname = interface.value_from_form(SURNAME, default=MISSING_FROM_FORM)
     date_of_birth = interface.value_from_form(
         DOB, default=MISSING_FROM_FORM, value_is_date=True
     )
     dob_status = interface.value_from_form(DOB_UNSURE_FIELD, default=MISSING_FROM_FORM)
+    membership_status = interface.value_from_form(MEMBERSHIP_STATUS, default=MISSING_FROM_FORM)
 
-    if MISSING_FROM_FORM in [first_name, surname, dob_status, date_of_birth]:
+    if MISSING_FROM_FORM in [first_name, surname, dob_status, date_of_birth, membership_status]:
         return MISSING_FROM_FORM
-
-    membership_status = MembershipStatus[interface.value_from_form(MEMBERSHIP_STATUS)]
 
     return Cadet.new(
         first_name=first_name.strip().title(),
         surname=surname.strip().title(),
         date_of_birth=date_of_birth,
-        membership_status=membership_status,
+        membership_status=MembershipStatus[membership_status],
         dob_status=dob_status,
+        as_non_member =as_non_member
     )
 
 
-def add_cadet_from_form_to_data(interface: abstractInterface) -> Cadet:
-    cadet = get_cadet_from_form(interface)
+def add_cadet_from_form_to_data(interface: abstractInterface, as_non_member: bool = False) -> Cadet:
+    cadet = get_cadet_from_form(interface, as_non_member=as_non_member)
     if cadet is MISSING_FROM_FORM:
         raise MissingData("Can't get cadet from form")
     interface.lock_cache()

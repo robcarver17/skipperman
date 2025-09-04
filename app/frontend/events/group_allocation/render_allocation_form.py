@@ -245,9 +245,7 @@ def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Table:
     object_store = interface.object_store
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
         object_store=object_store,
@@ -446,9 +444,7 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
 
 def get_list_of_all_cadets_with_event_data(interface: abstractInterface):
     event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event, active_only=True
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
     list_of_cadets = dict_of_all_event_data.list_of_cadets
 
     return list_of_cadets

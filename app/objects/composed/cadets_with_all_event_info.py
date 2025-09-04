@@ -173,7 +173,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def update_boat_info_for_updated_cadet_at_event(
         self,
         cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-    ) -> Union[None, str]:
+    ):
         availability_dict = (
             self.dict_of_cadets_with_registration_data.availability_dict()
         )
@@ -477,7 +477,7 @@ def compose_dict_of_all_event_info_for_cadet(
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
-    active_only: bool,
+
 ) -> DictOfAllEventInfoForCadets:
     event = list_of_events.event_with_id(event_id)
     raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
@@ -487,7 +487,6 @@ def compose_dict_of_all_event_info_for_cadet(
         dict_of_cadets_and_boat_class_and_partners=dict_of_cadets_and_boat_class_and_partners,
         dict_of_cadets_with_food_required_at_event=dict_of_cadets_with_food_required_at_event,
         dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
-        active_only=active_only,
     )
     return DictOfAllEventInfoForCadets(
         raw_dict=raw_dict,
@@ -508,16 +507,10 @@ def compose_raw_dict_of_all_event_info_for_cadet(
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
-    active_only: bool,
 ) -> Dict[Cadet, AllEventInfoForCadet]:
-    if active_only:
-        list_of_all_cadets_with_event_data = (
-            dict_of_cadets_with_registration_data.list_of_active_cadets()
-        )
-    else:
-        list_of_all_cadets_with_event_data = (
-            dict_of_cadets_with_registration_data.list_of_cadets()
-        )
+    list_of_all_cadets_with_event_data = (
+        dict_of_cadets_with_registration_data.list_of_active_cadets()
+    )
 
     return dict(
         [

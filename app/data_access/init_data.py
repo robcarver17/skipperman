@@ -5,7 +5,6 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_cache import PickledObjectCache, SimpleObjectCache
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path
-from app.data_access.store.underyling_data_cache import UnderylingDataCache
 import os
 
 home_directory = os.path.expanduser("~")
@@ -34,8 +33,9 @@ def make_data():
 
 
 underling_data_api = make_data()
-underlying_data_cache = UnderylingDataCache()
-object_cache = PickledObjectCache(pickle_directory)
+#object_cache = PickledObjectCache(pickle_directory)
+object_cache = SimpleObjectCache()
 
-object_store = ObjectStore(underlying_data_cache=underlying_data_cache, data_api=underling_data_api,
+object_store = ObjectStore( data_api=underling_data_api,
                            object_cache=object_cache)
+

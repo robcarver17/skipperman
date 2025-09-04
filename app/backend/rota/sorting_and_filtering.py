@@ -223,11 +223,8 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadet
     object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
 ) -> ListOfVolunteers:
-    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store,
-        event=dict_of_all_event_data_for_volunteers.event,
-        active_only=True,
-    )
+    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store,
+                                                                         event=dict_of_all_event_data_for_volunteers.event)
     list_of_locations = [
         get_cadet_location_string_for_volunteer(
             volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get_data_for_volunteer(

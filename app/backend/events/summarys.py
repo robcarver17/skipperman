@@ -27,9 +27,7 @@ from app.objects.groups import Group
 def summarise_allocations_for_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     availability_dict = get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event

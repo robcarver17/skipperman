@@ -35,9 +35,7 @@ def get_joint_attendance_matrix_for_cadets_in_group_at_event(
     list_of_cadets: ListOfCadets = arg_not_passed,
 ):
     if list_of_cadets is arg_not_passed:
-        all_cadet_event_data = get_dict_of_all_event_info_for_cadets(
-            object_store=object_store, event=event, active_only=True
-        )
+        all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
         list_of_cadets = all_cadet_event_data.dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(
             group
         )
@@ -58,9 +56,7 @@ def get_joint_attendance_matrix_for_cadets_in_group_at_event(
 def get_attendance_matrix_for_group_at_event(
     object_store: ObjectStore, event: Event, group: Group
 ) -> DictOfDaySelectors:
-    all_cadet_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     cadets_in_group_during_event = all_cadet_event_data.dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(
         group
     )

@@ -33,9 +33,7 @@ def get_group_info_table(
     cadets_in_group = all_group_allocations_at_event.cadets_in_group_during_event(group)
     cadets_in_group = cadets_in_group.sort_by_firstname()
 
-    all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     club_boats = get_boat_ownership_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,

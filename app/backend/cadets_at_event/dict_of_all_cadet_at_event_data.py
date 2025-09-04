@@ -35,9 +35,7 @@ def cadet_is_active(
 def get_health_notes_for_list_of_cadets_at_event(
     object_store: ObjectStore, list_of_cadets: ListOfCadets, event: Event
 ) -> List[str]:
-    all_event_info = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    all_event_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     health_notes = []
     for cadet_at_event in list_of_cadets:
@@ -54,9 +52,7 @@ def get_health_notes_for_list_of_cadets_at_event(
 def get_health_notes_for_cadet_at_event(
     object_store: ObjectStore, cadet: Cadet, event: Event
 ) -> str:
-    all_event_info = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    all_event_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     registration_data = all_event_info.dict_of_cadets_with_registration_data.registration_data_for_cadet(
         cadet
@@ -74,9 +70,7 @@ def get_attendance_matrix_for_list_of_cadets_at_event(
     event: Event,
     list_of_cadets: ListOfCadets = arg_not_passed,
 ) -> DictOfDaySelectors:
-    all_event_info = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    all_event_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_availability = {}
     if list_of_cadets is arg_not_passed:
         list_of_cadets = all_event_info.list_of_cadets
@@ -116,13 +110,10 @@ def get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
     return DictOfDaySelectors(dict_of_availability)
 
 
-def get_dict_of_all_event_info_for_cadets(
-    object_store: ObjectStore, event: Event, active_only: bool = True
-) -> DictOfAllEventInfoForCadets:
+def get_dict_of_all_event_info_for_cadets(object_store: ObjectStore, event: Event) -> DictOfAllEventInfoForCadets:
     data = object_store.get(
         object_definition=object_definition_for_dict_of_all_event_info_for_cadet,
-        event_id=event.id,
-        active_only=active_only,
+        event_id=event.id
     )
 
     return data
@@ -142,18 +133,14 @@ def update_dict_of_all_event_info_for_cadets(
 def get_list_of_all_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfGroups:
-    event_info = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    event_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     return event_info.dict_of_cadets_with_days_and_groups.all_groups_at_event()
 
 
 def get_availability_dict_for_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> Dict[Cadet, DaySelector]:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     active_cadets_at_event = get_list_of_active_cadets_at_event(
         object_store=object_store, event=event
@@ -171,9 +158,7 @@ def get_availability_dict_for_active_cadets_at_event(
 def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadets:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     active_cadets_at_event = cadets_at_event_data.list_of_cadets
 
@@ -237,9 +222,7 @@ def delete_cadet_from_event_and_return_messages(
     if not areyousure:
         return []
 
-    event_info = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    event_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     messages = event_info.delete_cadet_from_event_and_return_messages(cadet)
     update_dict_of_all_event_info_for_cadets(
         dict_of_all_event_info_for_cadets=event_info,

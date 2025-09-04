@@ -253,6 +253,7 @@ def get_parameters_for_form(interface: abstractInterface):
         help_string="identify_cadets_at_event_help",
         extra_buttons=[permanent_skip_button, temporary_skip_button],
         sort_by=SORT_BY_SIMILARITY_BOTH,
+        button_for_non_members=True
     )
 
     return parameters_to_get_or_select_cadet

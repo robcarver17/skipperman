@@ -244,7 +244,6 @@ def get_sailor_attendance_selection_from_event_row(
             day_selection, days_in_event=days_in_event
         )
     else:
-        print("Selector not found, doing all days")
         day_selector_for_all_days_at_event = event.day_selector_for_days_in_event()
         return day_selector_for_all_days_at_event
 

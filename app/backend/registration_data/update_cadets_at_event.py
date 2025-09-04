@@ -126,9 +126,7 @@ def replace_existing_cadet_at_event_where_original_cadet_was_inactive(
 def update_notes_for_existing_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet, new_notes: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_data.update_notes_for_existing_cadet_at_event(
         cadet=cadet, notes=new_notes
     )
@@ -141,9 +139,7 @@ def update_notes_for_existing_cadet_at_event(
 def update_health_for_existing_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet, new_health: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_data.update_health_for_existing_cadet_at_event(
         cadet=cadet, new_health=new_health
     )
@@ -160,9 +156,7 @@ def update_data_row_for_existing_cadet_at_event(
     column_name: str,
     new_value_for_column,
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_data.update_data_row_for_existing_cadet_at_event(
         cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column
     )

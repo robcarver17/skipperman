@@ -36,9 +36,7 @@ def get_dict_of_df_for_boat_report(
     event: Event,
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> Dict[str, pd.DataFrame]:
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_info_for_volunteers = get_dict_of_all_event_data_for_volunteers(
         object_store=object_store, event=event
     )

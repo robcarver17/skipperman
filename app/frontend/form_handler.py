@@ -84,11 +84,15 @@ class FormHandler:
             )
             return self.get_posted_form_with_finished_button_pressed()
 
+        """
         try:
             form_contents = form_function(self.interface)
         except Exception as e:
-            self.interface.log_error("Unexpected error %s in the bagging area - contact support" % str(e))
+            self.interface.log_error("Unexpected error %s - contact support" % str(e))
             return self.get_posted_form_with_finished_button_pressed()
+        """
+
+        form_contents = form_function(self.interface)
 
         return form_contents
 

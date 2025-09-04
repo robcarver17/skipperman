@@ -51,6 +51,7 @@ class ParametersForGetOrSelectCadetForm:
     default_cadet_passed: bool = False
     sort_by: str = SORT_BY_SIMILARITY_BOTH
     similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
+    button_for_non_members: bool = False
 
     @property
     def list_of_extra_buttons(self):
@@ -166,7 +167,7 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
         ## nothing to check, so can put add button up
         parameters.final_add_button = True
 
-    main_buttons = get_list_of_main_buttons(parameters=parameters)
+    main_buttons = get_list_of_main_buttons(parameters=parameters, cadet=cadet)
 
     cadet_buttons = get_list_of_cadet_buttons(
         interface=interface, cadet=cadet, parameters=parameters
@@ -175,11 +176,13 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
     return ListOfLines([main_buttons, extra_buttons, _______________] + cadet_buttons)
 
 
-def get_list_of_main_buttons(parameters: ParametersForGetOrSelectCadetForm) -> Line:
+def get_list_of_main_buttons(parameters: ParametersForGetOrSelectCadetForm, cadet: Cadet) -> Line:
     if parameters.default_cadet_passed:
         main_buttons = [check_cadet_for_me_button]
     elif parameters.final_add_button:
         main_buttons = [check_cadet_for_me_button, add_cadet_button]
+    elif parameters.button_for_non_members:
+        main_buttons = [check_confirm_allow_to_add_cadet_button, add_non_member_cadet]
     else:
         main_buttons = [check_confirm_allow_to_add_cadet_button]
 
@@ -304,6 +307,15 @@ def generic_post_response_to_add_or_select_cadet(
             button_pressed=parameters.which_button_pressed(last_button_pressed),
             is_button=True,
         )
+    elif add_non_member_cadet.pressed(last_button_pressed):
+        try:
+            cadet = add_cadet_from_form_to_data(interface, as_non_member= True)
+        except Exception as e:
+            interface.log_error("Error %s when adding non member cadet to data" % str(e))
+            return form_as_result(interface=interface, parameters=parameters)
+
+        return ResultFromAddOrSelect(cadet=cadet, cadet_was_added=True)
+
 
     elif add_cadet_button.pressed(last_button_pressed):
         try:
@@ -402,10 +414,13 @@ CHECK_CADET_CONFIRM_BUTTON_LABEL = (
     "I have double checked these details - allow me to add"
 )
 FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new cadet"
+SINGLE_NONMEMBER_ADD_BUTTON_LABEL = "Add this cadet as a non-member"
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
+
 SKIP_BUTTON_LABEL = "Skip"
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
+
 
 
 add_cadet_button = Button(FINAL_CADET_ADD_BUTTON_LABEL)
@@ -413,5 +428,6 @@ check_cadet_for_me_button = Button(CHECK_CADET_FOR_ME_BUTTON_LABEL)
 check_confirm_allow_to_add_cadet_button = Button(CHECK_CADET_CONFIRM_BUTTON_LABEL)
 see_similar_cadets_only_button = Button(SEE_SIMILAR_CADETS_ONLY_LABEL)
 see_all_cadets_button = Button(SEE_ALL_CADETS_BUTTON_LABEL)
+add_non_member_cadet = Button(SINGLE_NONMEMBER_ADD_BUTTON_LABEL)
 skip_button = Button(SKIP_BUTTON_LABEL)
 refresh_button = Button(REFRESH_LIST_BUTTON_LABEL)

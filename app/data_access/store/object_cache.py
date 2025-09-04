@@ -1,11 +1,11 @@
 import datetime
 import os
 import pickle
-import random
-import shutil
-from typing import Dict
+from typing import Dict, List
 
 from app.data_access.file_access import delete_all_files_in_directory
+from app.data_access.store.file_lock import LockFileWithAFile
+from app.data_access.store.object_store_elements import CachedDataItem
 from app.objects.utilities.exceptions import CacheIsLocked
 
 NOT_IN_STORE = object()
@@ -33,10 +33,10 @@ class SimpleObjectCache():
         ## simple does not persist
         pass
 
-    def get(self, key, default = NOT_IN_STORE):
+    def get(self, key,  default = NOT_IN_STORE) -> CachedDataItem:
         return self.cache.get(key, default)
 
-    def update(self, key, new_object):
+    def update(self, new_object: CachedDataItem, key):
         self.cache[key] = new_object
 
     def clear_persistent_and_in_memory(self):
@@ -46,6 +46,11 @@ class SimpleObjectCache():
     def clear_in_memory_only(self):
         self._cache = {}
 
+    def keys(self) -> List[CachedDataItem]:
+        return list(self.cache.keys())
+
+    def values(self) -> List[CachedDataItem]:
+        return list(self.cache.values())
 
     def clear_persistent(self):
         pass
@@ -58,125 +63,47 @@ class SimpleObjectCache():
 FILENAME_OF_STORAGE = "storage.pck"
 FILENAME_OF_LOCK = "lockfile.pck"
 FILENAME_OF_TIMESTAMPS = "timestamps.pck"
-NOT_LOCKED = -1
 ARBITRARY_OLD_DATE=datetime.datetime(1990,1,1)
 
 class PickledObjectCache(SimpleObjectCache):
     def __init__(self, pickle_directory: str):
         self._pickle_directory = pickle_directory
+
         super().__init__()
 
     ## LOCKING
     def lock(self):
-        if self.is_locked_by_another_thread:
-            raise CacheIsLocked("Can't lock, already locked by someone else")
-
-        if self.is_locked_by_me:
-            ## can't lock twice
-            return
-
-        assert self.is_unlocked
-
-        self.create_lockfile_and_store_lock()
+        self.lock_in_file.lock()
 
     def force_cache_unlock(self):
-        ## allows anyone to clear the cache lock
-        self.remove_lockfile_and_stored_lock()
+        self.lock_in_file.force_cache_unlock()
 
     def unlock(self):
-        if self.is_unlocked:
-            ## can't unlock twice
-            return
-
-        if self.is_locked_by_another_thread:
-            raise CacheIsLocked("Can't unlock, already locked by someone else")
-
-        assert self.is_locked_by_me
-
-        self.remove_lockfile_and_stored_lock()
-
+        self.lock_in_file.unlock()
 
     @property
     def is_locked_by_another_thread(self):
-        if self.is_unlocked:
-            return False
-        locked_by_me = self.my_lock_id_matches_file_lock
-
-        return not locked_by_me
+        return self.lock_in_file.is_locked_by_another_thread
 
     @property
-    def is_locked_by_me(self):
-        if self.is_unlocked:
-            return False
-        locked_by_me = self.my_lock_id_matches_file_lock
-        return locked_by_me
+    def lock_in_file(self) -> LockFileWithAFile:
+        lock =  getattr(self, "_lock_file", None)
+        if lock is None:
+            lock = LockFileWithAFile(self.filename_for_lock)
+            self._lock_file = lock
 
-    def create_lockfile_and_store_lock(self):
-        id =random.randint(0, 1000000)
-        self.create_lock_file_with_id(id)
-        self.my_lock_id = id
-
-    def remove_lockfile_and_stored_lock(self):
-        self.clear_lock_file()
-        self.clear_my_lock_id()
-
-    @property
-    def is_locked_by_anyone(self):
-        return not self.is_unlocked
-
-    @property
-    def is_unlocked(self):
-        lock_id = self.read_lock_id_from_file(default = NOT_LOCKED)
-        return lock_id is NOT_LOCKED
-
-    @property
-    def my_lock_id_matches_file_lock(self):
-        file_id = self.read_lock_id_from_file()
-        my_id = self.my_lock_id
-
-        return file_id == my_id
-
-    def create_lock_file_with_id(self, new_id: int):
-        assert self.is_unlocked
-        with open(self.filename_for_lock, "wb") as f:
-            pickle.dump(new_id , f)
-
-    def read_lock_id_from_file(self, default=NOT_LOCKED):
-        fname = self.filename_for_lock
-        try:
-            with open(fname, "rb") as f:
-                return pickle.load(f)
-        except:
-            return default
-
-    def clear_lock_file(self):
-        filename = self.filename_for_lock
-        try:
-            os.remove(filename)
-        except:
-            pass
-
-    def clear_my_lock_id(self):
-        self.my_lock_id = NOT_LOCKED
-
-    @property
-    def my_lock_id(self) -> int:
-        return getattr(self, "_lock_id", NOT_LOCKED)
-
-    @my_lock_id.setter
-    def my_lock_id(self, new_id:int ):
-        self._lock_id = new_id
+        return lock
 
     ## CACHE OPERATIONS
     def clear_in_memory_only(self):
         self._cache = {}
 
     def clear_persistent(self):
-        self.remove_lockfile_and_stored_lock()
+        self.force_cache_unlock()
         self.delete_all_cache_files_from_disk()
 
 
-    def get(self, key, default = NOT_IN_STORE):
+    def get(self, key, default:  [CachedDataItem, object]= NOT_IN_STORE) -> CachedDataItem:
         underyling_store = self.cache
         if self.key_exists_in_underyling_cache(key):
             if self.data_we_have_for_key_is_fresh(key):
@@ -184,7 +111,7 @@ class PickledObjectCache(SimpleObjectCache):
 
         return self.get_and_return_object_from_disk_and_refresh_mem_cache(key, default=NOT_IN_STORE)
 
-    def get_and_return_object_from_disk_and_refresh_mem_cache(self, key: str, default=NOT_IN_STORE):
+    def get_and_return_object_from_disk_and_refresh_mem_cache(self, key: str, default: [CachedDataItem, object]=NOT_IN_STORE)-> CachedDataItem:
         object_from_disk = self.get_cached_on_disk_object_or_default_for_key(key, default=default)
         if object_from_disk is default:
             return default
@@ -196,20 +123,22 @@ class PickledObjectCache(SimpleObjectCache):
 
         return object_from_disk
 
-    def update(self, key, new_object):
-        object_exists_already = not self.key_exists_in_underyling_cache(key)
+    def update(self, new_data_item: CachedDataItem):
+        object_exists_already = self.key_exists_in_underyling_cache(new_data_item.key)
 
         if object_exists_already:
-            existing_object = self.cache.get(key)
-            if existing_object == new_object:
+            existing_object = self.cache.get(new_data_item.key)
+            if existing_object.contents == new_data_item.contents:
                 ## no change
                 return
 
-        self.perform_update_of_new_or_modified_object(key, new_object)
+        self.perform_update_of_new_or_modified_object(new_data_item)
 
-    def perform_update_of_new_or_modified_object(self, key, new_object):
-        self.update_mem_cache(key, new_object)
-        self.update_timestamp_held_in_memory(key, datetime.datetime.now())
+    def perform_update_of_new_or_modified_object(self, new_data_item: CachedDataItem):
+        new_data_item.changed = True
+        self.update_mem_cache(new_data_item.key, new_data_item)
+        self.update_timestamp_held_in_memory(new_data_item.key, datetime.datetime.now())
+
 
     def update_mem_cache(self, key, new_object):
         self.cache[key] = new_object
@@ -222,11 +151,10 @@ class PickledObjectCache(SimpleObjectCache):
             self.save_cache_for_key_in_memory(key)
 
     def save_cache_for_key_in_memory(self, key):
-        has_not_changed = not self.data_we_have_for_key_is_newer_than_on_disk(key)
-        if has_not_changed:
+        local_object = self.cache[key]
+        if not local_object.changed:
             return
 
-        local_object = self.cache[key]
         local_timestamp =self.timestamps_of_cache_held_in_memory[key]
 
         self.update_shared_cache_for_key(new_object=local_object, key=key)

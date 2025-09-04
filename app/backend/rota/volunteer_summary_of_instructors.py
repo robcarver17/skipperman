@@ -391,9 +391,7 @@ def get_cadet_count_for_group_over_days(
 def get_cadet_count_for_group_over_days_as_dict(
     object_store: ObjectStore, event: Event, group: Group
 ) -> Dict[str, int]:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_cadets_with_days_and_groups = (
         cadets_at_event_data.dict_of_cadets_with_days_and_groups
     )

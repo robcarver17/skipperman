@@ -52,7 +52,12 @@ class Cadet(GenericSkipperManObjectWithIds):
         membership_status: MembershipStatus,
         dob_status: str = DOB_SURE,
         id: str = arg_not_passed,
+            as_non_member: bool = False
     ):
+        if as_non_member:
+            membership_status = none_member
+            dob_status = DOB_IRRELEVANT
+
         return cls(
             first_name=first_name.strip(" ").title(),
             surname=surname.strip(" ").title(),

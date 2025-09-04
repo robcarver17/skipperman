@@ -49,9 +49,7 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
     include_emergency_contacts: bool,
     include_health_data: bool,
 ) -> Dict[str, pd.DataFrame]:
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     list_of_groups = (
         dict_of_all_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
     )

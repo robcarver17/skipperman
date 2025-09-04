@@ -232,9 +232,7 @@ def get_list_of_cadets_associated_with_volunteer_at_event(
     list_of_cadets = get_list_of_cadets_associated_with_volunteer(
         volunteer=volunteer, object_store=object_store
     )
-    event_data_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event
-    )
+    event_data_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     active_cadets_at_event = event_data_for_cadets.list_of_cadets
     list_of_cadets_at_event = [
         cadet for cadet in list_of_cadets if cadet in active_cadets_at_event

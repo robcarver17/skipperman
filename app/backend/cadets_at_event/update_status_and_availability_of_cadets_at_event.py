@@ -29,9 +29,7 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
     cadet: Cadet,
     new_status: RegistrationStatus,
 ) -> List[str]:
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     messages = dict_of_all_event_info_for_cadets.update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
         cadet=cadet, new_status=new_status
@@ -53,9 +51,7 @@ from app.backend.registration_data.cadet_registration_data import (
 def make_cadet_available_on_day(
     object_store: ObjectStore, event: Event, cadet: Cadet, day: Day
 ):
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_info_for_cadets.make_cadet_available_on_day(cadet=cadet, day=day)
     update_dict_of_all_event_info_for_cadets(
         dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
@@ -78,9 +74,7 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
             % cadet.name
         ]
 
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
     messages = dict_of_all_event_info_for_cadets.update_availability_of_existing_cadet_at_event_and_return_messages(
         cadet=cadet, new_availabilty=new_availabilty
@@ -100,9 +94,7 @@ def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
     cadet: Cadet,
     new_status: RegistrationStatus,
 ):
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_info_for_cadets.update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
         cadet=cadet, new_status=new_status
     )
@@ -118,9 +110,7 @@ def update_registration_details_for_existing_cadet_at_event_who_was_manual(
     cadet: Cadet,
     row_in_registration_data: RowInRegistrationData,
 ):
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
-        object_store=object_store, event=event, active_only=True
-    )
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_info_for_cadets.update_registration_data_for_existing_cadet(
         cadet=cadet, row_in_registration_data=row_in_registration_data
     )

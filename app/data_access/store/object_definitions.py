@@ -61,6 +61,8 @@ from app.objects.composed.volunteers_at_event_with_patrol_boats import (
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     compose_dict_of_registration_data_for_volunteer_at_event,
 )
+from app.objects.composed.volunteers_last_role_across_events import \
+    compose_dict_of_volunteers_with_last_role_and_group_across_events
 from app.objects.composed.volunteers_with_all_event_data import (
     compose_dict_of_all_event_data_for_volunteers,
 )
@@ -204,6 +206,9 @@ object_definition_for_volunteers_with_ids_and_club_dinghies_at_event = Underlyin
     required_keys=["event_id"],
 )
 
+object_definition_for_list_of_most_common_role_for_volunteers_across_events_with=UnderlyingObjectDefinition(
+    data_store_method_function=get_access_for_list_of_last_roles_across_events_for_volunteers
+)
 
 object_definition_for_volunteers = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_volunteers
@@ -379,6 +384,10 @@ object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_i
 
 
 ## DERIVED
+
+
+
+#object_definition_for_list_of_last_roles_across_events_for_volunteers
 
 
 object_definition_for_list_of_cadet_committee_members = DerivedObjectDefinition(
@@ -659,6 +668,20 @@ object_definition_for_dict_of_notes_for_groups_at_event = DerivedObjectDefinitio
 
 ## Second level
 
+dict_of_volunteers_with_most_common_role_and_group_across_events = DerivedObjectDefinition(
+    composition_function=compose_dict_of_volunteers_with_last_role_and_group_across_events,
+    dict_of_arguments_and_underlying_object_definitions=dict(
+        list_of_groups=object_definition_for_list_of_groups,
+list_of_roles_with_skills=object_definition_for_list_of_roles_with_skills,
+list_of_most_common_role_for_volunteers_across_events_with_id=object_definition_for_list_of_most_common_role_for_volunteers_across_events_with,
+list_of_volunteers=object_definition_for_volunteers,
+dict_of_teams_and_roles=object_definition_for_dict_of_teams_with_roles
+),
+    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+        list_of_most_common_role_for_volunteers_across_events_with_id=object_definition_for_list_of_most_common_role_for_volunteers_across_events_with,
+    ),
+)
+
 
 object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition(
     composition_function=compose_dict_of_all_event_info_for_cadet,
@@ -747,6 +770,7 @@ object_definition_for_dict_of_all_event_data_for_volunteers = DerivedObjectDefin
         dict_of_cadets_associated_with_volunteers=object_definition_for_dict_of_cadets_associated_with_volunteers,
         dict_of_volunteers_with_food_at_event=object_definition_for_dict_of_volunteers_with_food_requirements_at_event,
         dict_of_people_and_club_dinghies_at_event=object_definition_for_dict_of_people_and_club_dinghies_at_event,
+dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         dict_of_registration_data_for_volunteers_at_event=object_definition_for_dict_of_registration_data_for_volunteers_at_event,

@@ -258,7 +258,7 @@ SORT_BY_START_DSC = "Sort by start date, descending"
 
 def list_of_events_excluding_one_event_and_past_events(
     list_of_events: ListOfEvents,
-    event_to_exclude: Event,
+    event_to_exclude: Event =arg_not_passed,
     sort_by: str = SORT_BY_START_ASC,
 ) -> ListOfEvents:
     list_of_events = ListOfEvents(
@@ -266,9 +266,18 @@ def list_of_events_excluding_one_event_and_past_events(
             event
             for event in list_of_events
             if event.start_date < datetime.date.today()
-            and not event.event_description == event_to_exclude.event_description
         ]
     )
+
+    if not event_to_exclude is arg_not_passed:
+        list_of_events = ListOfEvents(
+            [
+                event
+                for event in list_of_events
+                if not event.event_description == event_to_exclude.event_description
+            ]
+        )
+
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events

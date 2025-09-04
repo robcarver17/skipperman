@@ -6,6 +6,8 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.volunteer_roles import RoleWithSkills
+from app.objects.composed.volunteers_last_role_across_events import \
+    DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
 from app.objects.day_selectors import Day
 
 from app.objects.cadets import ListOfCadets
@@ -58,9 +60,11 @@ class AllEventDataForVolunteer:
     volunteer: Volunteer
     food_requirements: FoodRequirements
     club_boats: DictOfDaysAndClubDinghiesAtEventForPerson
+    most_common_role_group_and_team_at_previous_events: RoleAndGroupAndTeam
 
     def not_on_patrol_boat_on_given_day(self, day: Day) -> bool:
         return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
+
 
 
 class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer]):
@@ -75,6 +79,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
         dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
         dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+            dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
     ):
         super().__init__(raw_dict)
         self._dict_of_registration_data_for_volunteers_at_event = (
@@ -96,6 +101,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self._dict_of_people_and_club_dinghies_at_event = (
             dict_of_people_and_club_dinghies_at_event
         )
+        self._dict_of_volunteers_with_most_common_role_and_group_across_events = dict_of_volunteers_with_most_common_role_and_group_across_events
         self._event = event
 
     def copy_club_dinghy_for_instructor_across_all_days(
@@ -420,6 +426,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             dict_of_cadets_associated_with_volunteers=self.dict_of_cadets_associated_with_volunteers,
             dict_of_volunteers_with_food_at_event=self.dict_of_volunteers_with_food_at_event,
             dict_of_people_and_club_dinghies_at_event=self.dict_of_people_and_club_dinghies_at_event,
+            dict_of_volunteers_with_most_common_role_and_group_across_events=self.dict_of_volunteers_with_most_common_role_and_group_across_events,
             event=self.event,
         )
 
@@ -447,6 +454,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             club_boats=self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
                 volunteer
             ),
+            most_common_role_group_and_team_at_previous_events=self._dict_of_volunteers_with_most_common_role_and_group_across_events.get_most_common_role_and_group_for_volunteer_or_none(volunteer),
             event=self.event,
         )
 
@@ -471,6 +479,10 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self,
     ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
         return self._dict_of_volunteers_at_event_with_days_and_roles
+
+    @property
+    def dict_of_volunteers_with_most_common_role_and_group_across_events(self) -> DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents:
+        return self._dict_of_volunteers_with_most_common_role_and_group_across_events
 
     @property
     def dict_of_volunteers_at_event_with_patrol_boats(
@@ -508,6 +520,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
     dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
 ) -> DictOfAllEventDataForVolunteers:
     event = list_of_events.event_with_id(event_id)
 
@@ -519,7 +532,9 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
         dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
         dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
-        event=event,
+        dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events,
+
+    event=event,
     )
 
     return DictOfAllEventDataForVolunteers(
@@ -532,6 +547,7 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
         dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
         dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
+        dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events
     )
 
 
@@ -543,6 +559,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
     dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
     event: Event,
 ) -> Dict[Volunteer, AllEventDataForVolunteer]:
     ## THis construction means if we delete from registration data they won't be seen elsewhere
@@ -577,6 +594,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                     club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
                         volunteer
                     ),
+                    most_common_role_group_and_team_at_previous_events=dict_of_volunteers_with_most_common_role_and_group_across_events.get_most_common_role_and_group_for_volunteer_or_none(volunteer),
                     event=event,
                 ),
             )

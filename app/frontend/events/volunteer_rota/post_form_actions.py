@@ -16,7 +16,7 @@ from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     add_volunteer_button,
     last_button_pressed_was_copy_button,
     access_copy_menu,
-    quick_report_button,
+    quick_report_button, update_most_common_role_button,
 )
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
     save_targets_button,
@@ -53,6 +53,7 @@ def is_a_form_change_that_changes_underlying_data(last_button_pressed: str):
         or save_targets_button.pressed(last_button_pressed)
         or save_group_notes_button.pressed(last_button_pressed)
         or is_save_warnings_button_pressed(last_button_pressed)
+        or update_most_common_role_button.pressed(last_button_pressed)
     )
 
 

@@ -13,7 +13,9 @@ from app.data_access.resolve_paths_and_filenames import (
     VOLUNTEER_TEAMS_FILE_ID,
     VOLUNTEER_ROLE_AND_TEAMS_FILE_ID,
     NOTES_FILE_ID,
+    LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS
 )
+from app.objects.last_role_for_volunteer import ListOfMostCommonRoleForVolunteersAcrossEventsWithId
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
 )
@@ -227,3 +229,14 @@ class CsvDataListOfNotes( GenericCsvData):
 
     def write(self, list_of_notes: ListOfNotes):
         self.write_object(list_of_notes, file_identifier=NOTES_FILE_ID)
+
+class CsvDataListOfLastRolesAcrossEventsForVolunteers( GenericCsvData):
+    def read(self) -> ListOfMostCommonRoleForVolunteersAcrossEventsWithId:
+        return self.read_and_return_object_of_type(
+            ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
+            file_identifier=LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS,
+        )
+
+    def write(self, list_of_roles: ListOfMostCommonRoleForVolunteersAcrossEventsWithId):
+        self.write_object(list_of_roles, file_identifier=LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS)
+

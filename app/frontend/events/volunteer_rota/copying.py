@@ -6,9 +6,6 @@ from app.backend.rota.changes import (
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available,
 )
 from app.backend.volunteers.volunteers_at_event import load_list_of_volunteers_at_event
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_last_role_or_none_for_volunteer_at_previous_events,
-)
 from app.frontend.events.volunteer_rota.button_values import (
     from_previous_role_copy_button_to_volunteer,
     from_copyoverwrite_button_to_volunteer_and_day,
@@ -23,6 +20,7 @@ from app.frontend.events.volunteer_rota.button_values import (
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import *
 
 
 def update_if_copy_button_pressed(interface: abstractInterface, copy_button: str):
@@ -81,8 +79,8 @@ def update_if_copy_previous_role_button_pressed(
         object_store=interface.object_store, previous_role_copy_button_name=copy_button
     )
     event = get_event_from_state(interface)
-    previous_role_and_group = get_last_role_or_none_for_volunteer_at_previous_events(
-        object_store=interface.object_store, avoid_event=event, volunteer=volunteer
+    previous_role_and_group = get_most_common_role_and_group_or_none_for_volunteer_at_previous_events(
+        object_store=interface.object_store, volunteer=volunteer
     )
 
     if previous_role_and_group is None:

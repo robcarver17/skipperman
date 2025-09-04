@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import \
+    update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data
 from app.frontend.events.volunteer_rota.copy_menu import (
     display_form_volunteer_copy_menu,
 )
@@ -215,6 +217,9 @@ def post_form_view_for_volunteer_rota_if_data_changed(
         update_if_swap_button_pressed(
             interface=interface, swap_button=last_button_pressed
         )
+    elif update_most_common_role_button.pressed(last_button_pressed):
+        update_most_common_role_data(interface)
+
 
     ## SAVES
 
@@ -277,3 +282,6 @@ def create_quick_report(interface: abstractInterface) -> File:
         override_print_options=dict(publish_to_public=False),
         ignore_stored_print_option_values_and_use_default=True,
     )
+
+def update_most_common_role_data(interface: abstractInterface):
+    update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(interface.object_store)

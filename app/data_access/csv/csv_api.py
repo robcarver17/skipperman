@@ -391,6 +391,12 @@ class CsvDataApi(object):
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 
+    @property
+    def data_list_of_last_roles_across_events_for_volunteers(self) -> CsvDataListOfLastRolesAcrossEventsForVolunteers:
+        return CsvDataListOfLastRolesAcrossEventsForVolunteers(
+            self.master_data_path, backup_data_path=self.backup_data_path
+        )
+
     #### USERS
 
     @property

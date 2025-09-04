@@ -1,8 +1,5 @@
 from typing import Union
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_last_role_or_none_for_volunteer_at_previous_events,
-)
 
 from app.data_access.configuration.fixed import (
     COPY_OVERWRITE_SYMBOL,
@@ -90,12 +87,8 @@ def copy_previous_role_button_or_blank(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Union[Button, str]:
     ready_to_swap = is_ready_to_swap(interface)
-    previous_role = get_last_role_or_none_for_volunteer_at_previous_events(
-        object_store=interface.object_store,
-        avoid_event=volunteer_data_at_event.event,
-        volunteer=volunteer_data_at_event.volunteer,
-    )
-    if previous_role is None:
+    previous_role = volunteer_data_at_event.most_common_role_group_and_team_at_previous_events
+    if previous_role is None or previous_role.is_unallocated:
         return ""
 
     if ready_to_swap:

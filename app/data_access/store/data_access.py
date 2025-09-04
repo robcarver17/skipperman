@@ -270,6 +270,13 @@ def get_data_access_for_list_of_volunteers_at_event_with_club_dinghies(
         event_id=event_id,
     )
 
+def get_access_for_list_of_last_roles_across_events_for_volunteers(
+        data: CsvDataApi
+) -> DataAccessMethod:
+    return DataAccessMethod(
+        key= "list_of_last_roles_across_events_for_volunteers",
+        data_object_with_methods=data.data_list_of_last_roles_across_events_for_volunteers
+    )
 
 def get_data_access_for_list_of_cadets_at_event_with_dinghies(
     data: CsvDataApi, event_id: str

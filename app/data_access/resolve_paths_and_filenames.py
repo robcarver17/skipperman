@@ -118,6 +118,7 @@ LIST_OF_TICK_SHEET_ITEMS = "list_of_tick_sheet_items"
 LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET = (
     "list_of_cadets_with_tick_list_items_for_cadet"
 )
+LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS = "list_of_volunteers_most_common_role_at_event"
 LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT = "list_of_cadets_with_clothing_at_event"
 LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
@@ -129,6 +130,7 @@ EVENT_MAPPING_FILE_ID = "wa_event_mapping"
 FIELD_MAPPING_FILE_ID = "wa_field_mapping"
 TEMPLATES_FIELD_MAPPING_FILE_ID = "wa_field_mapping_templates"
 USERLIST_FILE_ID = "userlist"
+
 
 ## MODIFY THE FOLLOWING LINES TO CHANGE WHERE FILES LIVE AND THEIR
 ## THE FIRST ITEM IN EACH TUPLE IS THE PATH, THE SECOND IS THE FILENAME
@@ -227,6 +229,10 @@ _dict_of_filenames_and_paths = {
     LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT: (
         "mapped_events",
         "list_of_volunteers_with_food_at_event_%s",
+    ),
+    LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS: (
+        "lists",
+        "list_of_volunteers_with_most_common_role_across_events"
     ),
     CLUB_BOAT_LIMIT: ("lists", "club_boat_limit.parquet"),
     CLUB_BOAT_LIMIT_CSV: ("lists", "club_boat_limit.csv"),

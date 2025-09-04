@@ -33,7 +33,7 @@ ALL_EVENTS = 999999999999
 def get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
     object_store: ObjectStore,
     volunteer: Volunteer,
-    avoid_event: Event,
+    avoid_event: Event = arg_not_passed,
     N_events=ALL_EVENTS,
 ) -> Dict[Event, RoleAndGroupAndTeam]:
     return get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
@@ -162,17 +162,3 @@ def is_volunteer_senior_instructor_at_event(
     return volunteer_days_and_roles.contains_si()
 
 
-def get_last_role_or_none_for_volunteer_at_previous_events(
-    object_store: ObjectStore, volunteer: Volunteer, avoid_event: Event
-):
-    previous_roles = (
-        get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
-            object_store=object_store, volunteer=volunteer, avoid_event=avoid_event
-        )
-    )
-    if len(previous_roles) == 0:
-        return None
-
-    previous_role = list(previous_roles.values())[0]  ## latest first
-
-    return previous_role

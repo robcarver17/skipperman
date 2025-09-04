@@ -69,17 +69,12 @@ def add_unregistered_partner_cadet(
     new_cadet: Cadet,
     event: Event,
 ):
-    try:
-        new_row = add_cloned_row_to_raw_registration_data_and_return_row(
-            object_store=object_store,
-            original_cadet=original_cadet,
-            new_cadet=new_cadet,
-            event=event,
-        )
-    except:
-        raise MissingData(
-            "Event has probably been cleaned, original registration data not available"
-        )
+    new_row = add_cloned_row_to_raw_registration_data_and_return_row(
+        object_store=object_store,
+        original_cadet=original_cadet,
+        new_cadet=new_cadet,
+        event=event,
+    )
 
     add_identified_cadet_and_row(
         object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet

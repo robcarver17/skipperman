@@ -29,7 +29,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.utilities.exceptions import NoMoreData, MissingData
+from app.objects.utilities.exceptions import NoMoreData, MissingData, DuplicateCadets
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import manual_status
 from app.backend.registration_data.cadet_registration_data import (
@@ -107,7 +107,8 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
 ) -> RowInRegistrationData:
     try:
         existing_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store=object_store, cadet=original_cadet, event=event
+            object_store=object_store, cadet=original_cadet, event=event,
+            raise_error_on_duplicate=False
         )
     except NoMoreData:
         print(

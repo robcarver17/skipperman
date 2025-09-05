@@ -70,7 +70,7 @@ Click the events you want to show; this can be as few or as many as you like (al
 
 Then click on `Save changes to event selection` or `Use default (last 3 events)`.
 
-Note: The previous group information isn't updated every time we update the page, as this is slow. It is updated when we perform an event import. If you want to refresh it in between times, click on the 'update past groups for cadets' button.
+Note: The previous group information isn't updated every time we update the page, as this is slow. If you want to refresh it, because groups for a given event are missing, click on the 'update past groups for cadets' button.
 
 
 # Allocating groups, club boats and boat classes; and editing sail numbers.

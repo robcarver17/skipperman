@@ -223,7 +223,7 @@ If instead we start with the rota in the previous section, and this time press '
 
 Finally, if a volunteer is doing the same job as they have done most commonly in the past, then pressing the button in the most common role column will *copy and overwrite* that role across all days when a volunteer is available. Eg if we press the most common role for Beth, it would put 'Ramp' for all 3 days, irrespective of what was already there.
 
-The most common role information isn't updated every time we update the page, as this is slow. It is updated when we perform an event import. If you want to refresh it, eg because you have a newly added volunteer with no most common role showing, then click on 'Update most common role' in the top menu.
+The most common role information isn't updated every time we update the page, as this is slow.  If you want to refresh it, eg because you have a newly added volunteer with no most common role showing, then click on 'Update most common role' in the top menu.
 
 # Swaps
 

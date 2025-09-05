@@ -1,5 +1,7 @@
 from typing import Union
 
+from app.backend.groups.previous_groups import \
+    update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data
 from app.frontend.events.group_allocation.change_sort_order import (
     display_change_sort_order,
 )
@@ -56,7 +58,7 @@ from app.frontend.events.group_allocation.render_allocation_form import (
     add_button,
     sort_order_change_button,
     quick_group_report_button,
-    quick_spotters_report_button,
+    quick_spotters_report_button, update_group_names_button,
 )
 from app.frontend.events.group_allocation.buttons import (
     reset_day_button,
@@ -138,6 +140,8 @@ def button_clicked_changes_data(last_button: str):
         or is_make_available_button(last_button)
         or was_remove_partner_button(last_button)
         or guess_boat_button.pressed(last_button)
+        or update_group_names_button.pressed(last_button)
+
     )
 
 
@@ -210,6 +214,9 @@ def post_form_allocate_cadets_when_changing_data(
 
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
+    elif update_group_names_button.pressed(last_button):
+        update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(interface.object_store)
+
     else:
         return button_error_and_back_to_initial_state_form(interface)
 

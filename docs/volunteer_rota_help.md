@@ -29,7 +29,7 @@ Each row shows a volunteer who has been imported to the event automatically. You
 - Preferred duties: the duties that the volunteer wants to do, from their registration form. NOTE: If someone says they have a PB2 or instructor qualification, it does not mean they do!
 - Same / different preferences: for some events (primarily cadet week), volunteers can say if they want to do one role or several.
 - Skills recorded in the Skipperman database. This is more likely to accurate, but you should still check it.
-- Previous volunteer role at the last event they did - very helpful for allocating.
+- Most common volunteer role at other events they have done - very helpful for allocating.
 - For each day the role they are doing, and the buttons you can use to give them roles.
 - Notes which you can edit.
 - Other information from their registration form.
@@ -219,9 +219,11 @@ If instead we start with the rota in the previous section, and this time press '
 
 ![volunteer_After_global_overwrite.png](/static/volunteer_After_global_overwrite.png)
 
-## Previous role copy
+## Most common role copy
 
-Finally, if a volunteer is doing the same job as at their last event, then pressing the button in the previous role column will *copy and overwrite* that role across all days when a volunteer is available. Eg if we press the previous role for Beth, it would put 'Ramp' for all 3 days, irrespective of what was already there.
+Finally, if a volunteer is doing the same job as they have done most commonly in the past, then pressing the button in the most common role column will *copy and overwrite* that role across all days when a volunteer is available. Eg if we press the most common role for Beth, it would put 'Ramp' for all 3 days, irrespective of what was already there.
+
+The most common role information isn't updated every time we update the page, as this is slow. It is updated when we perform an event import. If you want to refresh it, eg because you have a newly added volunteer with no most common role showing, then click on 'Update most common role' in the top menu.
 
 # Swaps
 

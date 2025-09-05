@@ -399,6 +399,13 @@ def get_data_access_for_list_of_club_dinghies_with_limits(
         data_object_with_methods=data.data_List_of_club_dinghy_limits
     )
 
+def get_data_access_for_list_of_group_names_for_events_and_cadets_persistent_version(    data: CsvDataApi,
+) -> DataAccessMethod:
+    return DataAccessMethod(
+        "list_of_group_names_for_events_and_cadets_persistent_version",
+        data_object_with_methods=data.data_list_of_group_names_for_events_and_cadets_persistent_version
+    )
+
 
 def get_data_access_for_list_of_groups(data: CsvDataApi) -> DataAccessMethod:
     return DataAccessMethod(

@@ -10,7 +10,7 @@ from app.backend.groups.group_allocation_info import (
 from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
     DictOfEventAllocations,
-    get_dict_of_event_allocations_given_list_of_events,
+    get_dict_of_event_allocations_given_list_of_events_from_stored_data,
 )
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
@@ -126,6 +126,8 @@ add_button = Button(
 )
 quick_group_report_button = Button("Quick group report", nav_button=True)
 quick_spotters_report_button = Button("Quick spotters report", nav_button=True)
+update_group_names_button = Button("Update past groups for cadets", nav_button=True)
+
 
 def get_nav_bar_top(interface: abstractInterface):
     if is_admin_or_skipper(interface):
@@ -137,6 +139,7 @@ def get_nav_bar_top(interface: abstractInterface):
         add_button,
         quick_group_report_button,
         quick_spotters_report_button,
+        update_group_names_button,
         help_button,
     ]
 )
@@ -254,12 +257,10 @@ def get_inner_form_for_cadet_allocation(
         day_or_none=day_or_none,
     )
     prior_events = get_prior_events_to_show(interface=interface, event=event)
-    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events(
+    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events_from_stored_data(
         object_store=object_store,
         list_of_cadets=list_of_cadets,
         list_of_events=prior_events,
-        remove_unallocated=False,
-        pad=True,
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
     top_row = get_top_row(

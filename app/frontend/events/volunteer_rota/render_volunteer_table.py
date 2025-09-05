@@ -92,7 +92,7 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
             "Same/different preference from form",
             "Status from form",
             "Skills (click to edit)",
-            "Previous role (click to fill and overwrite over all days at this event)",
+            "Most common role (click to fill and overwrite over all days at this event)",
         ]
         + buttons_for_days_at_event_as_str
         + ["Volunteer notes (editable)", "Other information from registration"]

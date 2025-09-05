@@ -70,6 +70,7 @@ def file_from_generic(generic_name_of_file_required):
 
 PATROL_BOAT_LABELS = "patrol_boat_labels"
 ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
+GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY = "group_names_across_events_for_cadets"
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
 CADETS_AT_EVENT_ID = "cadets_at_event"
 LIST_OF_CADETS_ON_COMMITTEE = "cadets_on_committee"
@@ -139,6 +140,7 @@ USERLIST_FILE_ID = "userlist"
 _dict_of_filenames_and_paths = {
     LIST_OF_CADETS_FILE_ID: ("lists", "list_of_cadets.csv"),
     LIST_OF_CADETS_ON_COMMITTEE: ("lists", "list_of_cadets_on_committee.csv"),
+    GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY: ("lists", "group_names_across_cadet_events_for_speed_up.csv"),
     EVENT_FILE_IDENTIFIER: ("lists", "list_of_events.csv"),
     LIST_OF_SKILLS_FILE_ID: ("lists", "skills.csv"),
     EVENT_MAPPING_FILE_ID: ("mapped_events", "wa_event_mapping.csv"),

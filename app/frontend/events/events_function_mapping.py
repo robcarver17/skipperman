@@ -14,6 +14,8 @@ from app.frontend.events.add_event import (
     display_form_view_for_add_event,
     post_form_view_for_add_event,
 )
+from app.frontend.events.import_data.background_processses import display_call_to_update_background_data_during_import, \
+    post_call_to_update_background_data_during_import
 from app.frontend.events.view_individual_events import (
     display_form_view_individual_event,
     post_form_view_individual_event,
@@ -199,6 +201,10 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                         display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
                                         post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
                                     ): 0,
+                                    (display_call_to_update_background_data_during_import,
+post_call_to_update_background_data_during_import,
+
+                                    ):0,
                                 },
                             },
                             (

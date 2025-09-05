@@ -8,6 +8,8 @@ from app.objects.composed.cadets_with_all_event_info import (
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     compose_dict_of_cadets_and_boat_classes_and_partners,
 )
+from app.objects.composed.dict_of_previous_cadet_groups import \
+    compose_dict_of_group_names_for_events_and_cadets_persistent_version
 from app.objects.composed.people_at_event_with_club_dinghies import (
     compose_dict_of_people_and_club_dinghies_at_event,
 )
@@ -242,6 +244,9 @@ object_definition_for_list_of_club_dinghy_limits_with_ids = UnderlyingObjectDefi
     data_store_method_function=get_data_access_for_list_of_club_dinghies_with_limits
 )
 
+object_definition_for_list_of_group_names_for_events_and_cadets_persistent_version = UnderlyingObjectDefinition(
+    data_store_method_function=get_data_access_for_list_of_group_names_for_events_and_cadets_persistent_version
+)
 
 object_definition_for_list_of_patrol_boats = UnderlyingObjectDefinition(
     data_store_method_function=get_data_access_for_list_of_patrol_boats
@@ -388,6 +393,20 @@ object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_i
 
 
 #object_definition_for_list_of_last_roles_across_events_for_volunteers
+
+object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version = \
+ DerivedObjectDefinition(
+composition_function=compose_dict_of_group_names_for_events_and_cadets_persistent_version,
+     dict_of_arguments_and_underlying_object_definitions=dict(
+list_of_group_names_for_events_and_cadet_persistent_version_with_ids=object_definition_for_list_of_group_names_for_events_and_cadets_persistent_version,
+list_of_cadets=object_definition_for_list_of_cadets,
+list_of_events=object_definition_for_list_of_events,
+     ),
+     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
+         list_of_group_names_for_events_and_cadet_persistent_version_with_ids=object_definition_for_list_of_group_names_for_events_and_cadets_persistent_version
+     ),
+ )
+
 
 
 object_definition_for_list_of_cadet_committee_members = DerivedObjectDefinition(

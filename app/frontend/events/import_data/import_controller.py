@@ -14,6 +14,7 @@ from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
     display_form_identify_cadets_during_import,
 )
+from app.frontend.events.import_data.background_processses import display_call_to_update_background_data_during_import
 from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
     display_add_volunteers_to_event,
 )
@@ -40,6 +41,7 @@ import_stages_in_order = [
     display_add_volunteers_to_event,
     display_call_to_update_cadet_clothing_at_event_during_import,
     display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
+display_call_to_update_background_data_during_import
 ]
 
 

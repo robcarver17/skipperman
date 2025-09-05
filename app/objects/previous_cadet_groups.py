@@ -11,7 +11,7 @@ from app.objects.utilities.generic_list_of_objects import get_idx_of_unique_obje
 @dataclass
 class GroupNamesForEventsAndCadetPersistentVersionWithIds(GenericSkipperManObject):
     cadet_id: str
-    dict_of_event_ids_and_group_names: dict[str, str]
+    dict_of_event_ids_and_group_names: Dict[str, str]
 
     @classmethod
     def from_dict_of_str(cls, dict_with_str: Dict[str,str]):
@@ -20,6 +20,13 @@ class GroupNamesForEventsAndCadetPersistentVersionWithIds(GenericSkipperManObjec
         dict_of_event_ids_and_group_names = dict_from_str(dict_of_event_ids_and_group_names)
 
         return cls(cadet_id=cadet_id, dict_of_event_ids_and_group_names=dict_of_event_ids_and_group_names)
+
+    def as_str_dict(self):
+        new_dict = dict(cadet_id=self.cadet_id)
+        new_dict['dict_of_event_ids_and_group_names'] = dict_as_str(self.dict_of_event_ids_and_group_names)
+
+        return new_dict
+
 
 class ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(GenericListOfObjects):
     @property

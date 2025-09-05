@@ -38,6 +38,17 @@ class GenericSkipperManObject:
         as_str_dict = self.as_str_dict()
         return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
 
+
+    def as_str_dict(self) -> dict:
+        as_dict = self.as_dict()
+        transform_class_dict_into_str_dict(self, as_dict)
+
+        return as_dict
+
+    def as_dict(self) -> dict:
+        return data_object_as_dict(self)
+
+
     ######
     # THIS METHOD USED WHEN READING .CSV FROM DISK
     ######
@@ -50,20 +61,14 @@ class GenericSkipperManObject:
 
         return self.from_dict_of_str(as_dict)
 
-    def as_str_dict(self) -> dict:
-        as_dict = self.as_dict()
-        transform_class_dict_into_str_dict(self, as_dict)
-
-        return as_dict
-
-    def as_dict(self) -> dict:
-        return data_object_as_dict(self)
 
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
         class_instance = get_class_instance_from_str_dict(cls, dict_with_str)
 
         return class_instance
+
+
 
 
 def transform_class_instance_into_string(class_instance):

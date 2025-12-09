@@ -1,0 +1,87 @@
+#
+homepage: "https://bsccadetskipper.pythonanywhere.com"
+#homepage: http://127.0.0.1:5000/
+datapath: "skipperman_data" ## directory in users home directory where data stored; only change for test purposes
+backuppath: "skipperman_backup"
+userdata: "skipperman_user_data" ## special directory for username and password hashes (plus maybe user specific config)
+download_subdirectory: "Downloads" ## non public downloads
+public_reporting_subdirectory: "file" ## make sure mapped and exposed in pythonanywhere
+uploads: "uploads" ## directory in users home directory where uploads are temporarily stored; only change for test purposes
+pickle_store: "pickle_store" ## shared store
+#
+WA_field_list_file: WA_field_list.xlsx
+#
+support_email: rob@systematicmoney.org
+#
+#
+## needs to be large enough to upload a zip with everything - ## this is in Megabytes
+max_file_size: 20
+#
+upload_extensions: ".csv, .xls, .zip"
+number_of_backups_to_keep: 10
+#
+#
+#
+# Filtering cadet inputs
+similarity_level_to_warn_when_comparing_names_on_event_import: 0.7 # change if too many/too few similars coming through
+similarity_level_to_match_a_very_similar_cadet_first_name_on_event_import: 0.9 # probably shouldn't change
+similarity_level_to_warn_when_comparing_names_in_membership_list: 0.6
+#
+# volunteer inputs
+similarity_level_to_warn_when_comparing_volunteer_names_on_event_import: 0.7
+similarity_level_to_match_a_very_similar_volunteer_name_on_event_import: 0.85
+#
+# Only change the following whenclub rules change
+minimum_cadet_age: 7
+maximium_cadet_age: 18
+minimum_age_when_cadet_can_be_at_event_without_parent: 11
+#
+# Wild apricot
+# Should only be used when WA change their status - hopefully never!
+#
+wild_apricot_payment_fields_which_are_active_and_paid_status:
+  - "Paid"
+  - "Free"
+  - "No invoice"
+wild_apricot_payment_fields_which_are_unpaid_status:
+  - "Unpaid"
+wild_apricot_payment_fields_which_are_part_paid_status:
+  - "Partially paid"
+wild_apricot_payment_fields_which_are_cancelled_status:
+  - "Canceled"
+  - "Cancelled"
+#
+wild_apricot_event_id: "Event ID"
+allowed_upload_file_types: ".csv, .xls"
+#
+#
+if_volunteer_unable_to_volunteer_contains:
+  - 'unable' ## if volunteer status contains this, can't volunteer
+  - 'cannot'
+#
+pytz_timezone: 'GB'
+#
+weblink_for_qualifications: "https://docs.google.com/spreadsheets/d/1a0ov-KN8zzG2mdFQCfLK-I6AD1tLihU-z_3tPF2vlV4/edit?usp=sharing"
+#
+min_colour_groups_to_distribute: 6
+cadet_committee_shirt_colour: "Navy Blue"
+#
+#
+import_skills_csv: ## names have to correspond to configuration names
+  first_name: 'First Name'
+  last_name: 'Last Name'
+  date_format: '%d-%b-%Y'
+  skills:
+    DI:
+      expires: 'Dinghy Instructor (DI) '
+    SI:
+      expires: 'Senior Instructor (SI)'
+    RCL2:
+      expires: 'Racing Coach 2 (RC)'
+    AI:
+      valid_from: 'Assistant Dinghy Instructor (ADI)'
+    First aid:
+      starts_from: 'First Aid (FA)'
+      expiry_limit_years: 3
+#
+max_group_size_training_per_instructor: 6

@@ -1,0 +1,61 @@
+Metadata-Version: 2.1
+Name: skipperman
+Version: 0.1
+Summary: BSC Cadet skipper management system
+Home-page: https://github.com/robcarver17/skipperman
+Author: Robert Carver
+Author-email: Robert Carver <rob@systematicmoney.org>
+Project-URL: Homepage, https://github.com/robcarver17/skipperman
+Project-URL: Bug Tracker, https://github.com/robcarver17/skipperman/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: GNU v3
+Classifier: Operating System :: Linux
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# 'SKIPPERMAN'
+
+Blackwater Sailing Club Cadet SKIPPER MANagement system
+
+Version 3.1
+
+2025-06-19
+
+Author: Robert Carver AKA Skipperman
+
+## Use and documentation
+
+See [main menu guide](/docs/main-menu.md)
+
+
+## Release notes
+
+See [change log](CHANGELOG.md) for release notes, and future plans.
+
+
+## Description
+
+
+SKIPPERMAN is a piece of software to ease the admin burden on the cadet skipper and their team, which is considerable and historically involves lots of manual hacking of spreadsheets. 
+
+
+## Dependencies
+
+See [requirements.txt](requirements.txt) for full details.
+
+
+## Installation
+
+Most users won't need to install Skipperman, they can just access it from [the website: https://bsccadetskipper.pythonanywhere.com](https://bsccadetskipper.pythonanywhere.com/)
+
+There is a more complete installation guide [here](docs/technical/installation.md)
+
+
+## Licensing and legal stuff
+
+GNU v3
+( See [LICENSE](LICENSE) )
+
+Absolutely no warranty is implied with this product. Use at your own risk.  
+
+

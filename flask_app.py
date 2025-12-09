@@ -8,12 +8,9 @@ from app.data_access.init_data import home_directory
 from app.web.end_points.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
 from app.web.end_points.get_file import get_file_given_location
-from app.web.flask.session_data_for_action import (
-    clear_all_action_state_data_from_session,
-)
 from app.web.html.config_html import PROFILE
 
-from flask import session, Flask, redirect
+from flask import session, Flask, redirect, request
 from flask_login import login_required, LoginManager
 from werkzeug import Request
 
@@ -158,20 +155,19 @@ def logout():
         return generate_menu_page_html()
 
 
-@app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])
-def action(action_option):
+@app.route("/%s/<action_option>/<form_name>" % ACTION_PREFIX, methods=["GET", "POST"])
+def action(action_option:str, form_name: str):
     if not authenticated_user():
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
-    else:
-        return generate_action_page_html(action_name=action_option)
 
+    args_passed = request.args
 
+    return generate_action_page_html(action_name=action_option, form_name=form_name, args_passed=args_passed)
 
 
 @app.route(MAIN_MENU_URL, methods=["GET", "POST"])
 def main_menu():
-    clear_all_action_state_data_from_session()
     return generate_menu_page_html()
 
 

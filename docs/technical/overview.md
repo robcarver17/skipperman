@@ -81,18 +81,18 @@ Once we create the `FlaskInterface`, we use this to create a `FormHandler`. This
 
 ### An example of what happens with an action - inside FormHandler
 
-It might be worth quickly running through what happens when a specific action page is displayed from the main menu. This will be helpful if you are unfamiliar with Flask, and will expose more of the internals. Assume we begin by click on the 'Sailors' button on the main menu, which redirects the url to `/action/view_master_list_of_cadets`
+It might be worth quickly running through what happens when a specific action page is displayed from the main menu. This will be helpful if you are unfamiliar with Flask, and will expose more of the internals. Assume we begin by click on the 'Sailors' button on the main menu, which redirects the url to `/action/view_master_list_of_cadets/index`
 
 1- The flask server goes to `flask_app.py` and works out what to do depending on the URL that is passed, eg `/action/view_master_list_of_cadets`
-2- This code `@app.route("/%s/<action_option>" % ACTION_PREFIX, methods=["GET", "POST"])` indicates that if `/action/` (which is ACTION_PREFIX) is at the start of the URL path, then we call the following function, passing the tail of the URL as the argument `action_option` (which will be `view_master_list_of_cadets` in this case) as a variable
-3- The function `action(action_option)` is called, which calls [`generate_action_page_html(action_option)`](/app/web/end_points/action_pages.py) after a security check
+2- This code `@app.route("/%s/<action_option>/<form_name>" % ACTION_PREFIX, methods=["GET", "POST"])` indicates that if `/action/` (which is ACTION_PREFIX) is at the start of the URL path, then we call the following function, passing the tail of the URL as the arguments `action_option` (which will be `view_master_list_of_cadets` in this case) and `index` as the `form_name` (which defaults to `index` for the top level of any set of menu options) 
+3- The function `action(action_option:str, form_name: str)` is called, which calls [`generate_action_page_html(action_option)`](/app/web/end_points/action_pages.py) after a security check. We also pass `request.args` which is a dict containing individual arguments, eg `.../action/view_master_list_of_cadets/display_form_view_individual_cadet?Selected_Cadet=1` then the dict would contain `{Selected_Cadet=1}`. These arguments are used to setup the state.
 4- We call `get_abstract_form_for_specific_action` to get the abstract objects to convert to an HTML form
   - We get a `FormHandler` for the specific action
-    - We create a `FlaskInterface`, including the default data access option
+    - We create a `FlaskInterface`, including the default data access option, and with any state from `request.args` (none in this case)
       - We find the appropriate form mapping dictionary for this action
   - We call the `get_form` method of the form handler
   - This works out if we are doing a GET ('displayed form') or POST ('posted form'). On this first call we are doing a GET
-    - It looks up the appropriate function to call to get the displayed form, from the form mapping dictionary (which for the Cadet actions is `app/logic/cadets/cadet_function_mapping.py`). As we have no state information, this will be the 'initial form' for which the appropriate function here is `app.frontend.cadets.ENTRY_view_cadets.display_form_view_of_cadets`
+    - It looks up the appropriate function to call to get the displayed form, from the form mapping dictionary (which for the Cadet actions is `app/logic/cadets/cadet_function_mapping.py`). If the form name is `index` we call the top level function which here is `app.frontend.cadets.ENTRY_view_cadets.display_form_view_of_cadets`
     - That function returns an abstract `Form`
 5- The abstract `Form` is converted into an HTML form by `from_abstract_to_laid_out_html`
 6- This is then wrapped in the master layout and returned to the client by the flask server
@@ -101,13 +101,13 @@ What happens if we then click on a button, say 'Add cadet'?
 
 1 - We use the same flask endpoint, as the URL is unchanged and this is still an action
 2- As a button has been pressed, this is now a POST
-3 -`action(action_option)` is called
+3 -` action(action_option:str, form_name: str)` is called
 4 - ... the early steps remain the same
   - We call the `get_form` method of the form handler
   - This works out if we are doing a GET ('displayed form') or POST ('posted form'). We are now doing a POST, so we look for the posted form.
-    - It looks up the appropriate function to call to get the posted form, from the form mapping dictionary. As we still have no state information, this will be the 'initial form' for which the appropriate function here is `app.frontend.cadets.ENTRY_view_cadets.post_form_view_of_cadets`
-    - That function returns an abstract `NewForm`, which is a simple object that when returned sets the state information so that we know we have moved to a different page within this action.  
-  - We then redirect to the display form name specified by the `NewForm`, which should also be in the form mapping. From here we proceed as if we are getting the function for a displayed form above.  
+    - It looks up the appropriate function to call to get the *posted* form, from the form mapping dictionary. Again as the form name is `index`, this will be the 'initial form' for which the appropriate function here is `app.frontend.cadets.ENTRY_view_cadets.post_form_view_of_cadets`
+    - That function returns an abstract `NewForm` telling us we now need form name `display_form_add_cadet` 
+5  We do a URL redirect to the appropriate web page that NewForm relates to, passing as `request.args` any stored state information eg the event ID (none in this case).   
 
 Steps 5 and 6 are the same.
 

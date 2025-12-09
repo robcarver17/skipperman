@@ -76,11 +76,13 @@ Menu option pages usually include one or more of the following elemnts:
 
 # Skipperman navigation
 
-**Never use the 'Back' button on your browser** Instead, use the relevant buttons on the navigation bar:
+**Avoid using 'Back' button on your browser** Instead, use the relevant buttons on the navigation bar:
 
 - Main menu - return to the main menu. Only available in the first 'level' of a menu option.
 - Cancel - return to the previous page without saving any of the most recent changes made in text boxes or dropdowns.
 - Back - return to the previous page. Only available on pages when no editing can be done.
+
+Don't use the back button in the middle of an import as it will cause unusual behaviour and may result in data corruption. If you use the back button at other times your changes won't be saved.
 
 The way that edits are made and saved can be slightly confusing. Where you have to type something, or enter a value in a dropdown menu, then you will need to click a save button. But where edits are made using buttons, then they are saved immediately. Any button apart from 'cancel' will save any text field or dropdown edits made. There is no 'undo' and subsequently pressing 'cancel' won't undo the edit.
 For simplicity, get in the habit of pressing save after typing or selecting anything.
@@ -96,5 +98,5 @@ Certain buttons have keyboard shortcuts, shown with eg [Alt-c] after the button.
 
 In most browsers (Explorer, Chrome, Opera version 15 onwards, and Safari) you would use the Alt key plus the relevant (lowercase) letter. In Firefox use Alt, Shift and key. In Opera prior to version 12 use Shift, Escape and key; for later versions Alt and key should work. On a Mac, use Ctrl/Alt/Key in Chrome, Firefox and Safari. 
 
-Also **never use the 'refresh' button on your browser** Instead press cancel or back.
+Also **never use the 'refresh' button on your browser to update the data** Instead press cancel or back.
 

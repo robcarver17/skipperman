@@ -1,6 +1,7 @@
 ## In the unlikely event of switching to eg a database change here
 from app.data_access.csv.csv_api import CsvDataApi
 from app.data_access.configuration.configuration import DATAPATH, PICKLE_STORE
+from app.data_access.sql.sql_and_csv_api import MixedSqlAndCsvDataApi
 from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_cache import  SimpleObjectCache
 from app.data_access.user_data import user_data_path
@@ -25,7 +26,7 @@ except:
 
 ## IF YOU WANT TO USE A DIFFERENT KIND OF DATA, EG DATABASE, CREATE AN API AND MODIFY THIS
 def make_data():
-    return CsvDataApi(
+    return MixedSqlAndCsvDataApi(
         master_data_path=master_data_path,
         user_data_path=user_data_path,
         backup_data_path=backup_data_path,

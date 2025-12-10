@@ -24,7 +24,7 @@ from app.data_access.csv.qualifications import *
 from app.data_access.sql.groups import SqlDataListOfCadetsWithGroups
 
 
-class CsvDataApi(object):
+class MixedSqlAndCsvDataApi(object):
     def __init__(
         self, master_data_path: str, user_data_path: str, backup_data_path: str
     ):

@@ -14,7 +14,7 @@ home_directory = os.path.expanduser("~")
 master_data_path = os.path.join(home_directory, DATAPATH)
 
 
-def do_transfer():
+def transfer_from_csv_to_sql():
     csv_api = CsvDataApi(
         master_data_path=master_data_path,
         user_data_path=user_data_path,
@@ -30,4 +30,22 @@ def do_transfer():
         list_of_cadets_with_groups = csv_api.data_list_of_cadets_with_groups.read(event_id)
         if len(list_of_cadets_with_groups)>0:
             sql_groups.write(list_of_cadets_with_groups, event_id)
+
+
+def transfer_from_sql_to_csv():
+    csv_api = CsvDataApi(
+        master_data_path=master_data_path,
+        user_data_path=user_data_path,
+        backup_data_path=backup_data_path,
+    )
+
+    events = csv_api.data_list_of_events.read()
+
+    sql_groups = SqlDataListOfCadetsWithGroups(master_data_path=master_data_path, backup_data_path=backup_data_path)
+
+    for event in events:
+        event_id = event.id
+        list_of_cadets_with_groups = sql_groups.read(event_id)
+        if len(list_of_cadets_with_groups)>0:
+            csv_api.data_list_of_cadets_with_groups.write(list_of_cadets_with_groups, event_id)
 

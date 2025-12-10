@@ -201,5 +201,7 @@ def from_bool_to_str(class_instance: bool) -> str:
         return FALSE
 
 
-def from_str_to_bool(string: str) -> bool:
+def from_str_to_bool(string: Union[str, bool]) -> bool:
+    if type(string) is bool:
+        return string
     return string == TRUE

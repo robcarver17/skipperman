@@ -239,6 +239,7 @@ app/data_access/csv/wa_event_mapping.py
 app/data_access/csv/wa_field_mapping.py
 app/data_access/csv/../configuration/configuration.yaml
 app/data_access/sql/__init__.py
+app/data_access/sql/cadets.py
 app/data_access/sql/generic_sql_data.py
 app/data_access/sql/groups.py
 app/data_access/sql/shared_column_names.py

@@ -232,19 +232,16 @@ class SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(GenericSqlData):
             ## NEEDS TO DELETE OLD
             ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % PERSISTENT_CADETS_WITH_GROUP_ID_TABLE)
-            list_of_cadet_ids_with_group_names =  list_of_cadet_ids_with_group_names.sort_by_list_of_cadet_ids()
 
             for cadet_id_with_group_names_dict in list_of_cadet_ids_with_group_names:
                 cadet_id = str(cadet_id_with_group_names_dict.cadet_id)
                 group_names_dict =  dict_as_str(cadet_id_with_group_names_dict.dict_of_event_ids_and_group_names)
-                print("try:     insert %s %s" % (cadet_id, group_names_dict))
 
                 insertion = "INSERT INTO %s (%s, %s) VALUES (?, ?)" % (
                     PERSISTENT_CADETS_WITH_GROUP_ID_TABLE,
                     CADET_ID, DICT_OF_EVENT_IDS_AND_GROUP_NAMES)
                 self.cursor.execute(insertion,
                                     (cadet_id, group_names_dict))
-                print("success: insert %s %s" % (cadet_id, group_names_dict))
 
             self.conn.commit()
         except Exception as e1:

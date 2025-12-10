@@ -45,16 +45,20 @@ def transfer_from_csv_to_sql():
             sql_groups_at_events.write(list_of_cadets_with_groups, event_id)
 
     
-    csv_groups = csv_api.data_list_of_groups.read()
-    sql_groups.write(csv_groups)
 
     
     list_of_cadets =csv_api.data_list_of_cadets.read()
     sql_cadets.write(list_of_cadets)
-    """
 
     list_of_persistent_groups = csv_api.data_list_of_group_names_for_events_and_cadets_persistent_version.read()
     sql_persistent_groups.write(list_of_persistent_groups)
+
+    """
+
+    sql_groups.delete_table()
+    csv_groups = csv_api.data_list_of_groups.read()
+    sql_groups.write(csv_groups)
+
 
 
 def transfer_from_sql_to_csv():

@@ -77,6 +77,11 @@ class SqlDataListOfGroups(GenericSqlData):
         finally:
             self.close()
 
+    def delete_table(self):
+        self.conn.execute("DROP TABLE %s" % GROUPS_TABLE)
+        self.conn.commit()
+        self.close()
+
     def create_table(self):
 
         table_creation_query = """
@@ -87,7 +92,7 @@ class SqlDataListOfGroups(GenericSqlData):
                 %s INTEGER,
                 %s STR,
                 %s STR,
-                %s STR
+                %s INTEGER
             );
         """ % (GROUPS_TABLE,
                 GROUP_NAME, LOCATION, PROTECTED, HIDDEN, STREAMER, GROUP_ID,GROUP_ORDER)

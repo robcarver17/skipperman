@@ -34,7 +34,7 @@ def get_day_buttons(interface: abstractInterface) -> Line:
         message = "  Choose day to edit (if you want to allocate cadets to different groups, boats or partners on specific days): "
     else:
         day = get_day_from_state_or_none(interface)
-        message = "Currently editing %s: " % day.name
+        message = "Currently editing %s: ** CHANGES WON'T BE APPLIED TO ALL DAYS! ** " % day.name
         idx_of_current_day = event_weekdays.index(day)
         all_buttons.pop(idx_of_current_day)
         all_buttons = [reset_day_button] + all_buttons

@@ -180,3 +180,9 @@ def get_random_string(length: int) -> str:
     letters = string.ascii_lowercase
     result_str = "".join(choice(letters) for i in range(length))
     return result_str
+
+
+CAN_DO_BACKUPS = [ADMIN_GROUP, SKIPPER_GROUP]
+
+def group_is_admin_or_skipper(group):
+    return group in [ADMIN_GROUP, SKIPPER_GROUP]

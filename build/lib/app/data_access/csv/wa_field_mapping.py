@@ -3,7 +3,7 @@ from typing import List
 import pandas as pd
 
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     FIELD_MAPPING_FILE_ID,
     TEMPLATES_FIELD_MAPPING_FILE_ID,
 )

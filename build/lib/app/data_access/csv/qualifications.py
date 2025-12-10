@@ -4,7 +4,7 @@ from app.objects.qualifications import (
     ListOfQualifications,
     ListOfCadetsWithIdsAndQualifications,
 )
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     LIST_OF_QUALIFICATIONS,
     LIST_OF_CADETS_WITH_QUALIFICATIONS,
     LIST_OF_TICK_SHEET_ITEMS,

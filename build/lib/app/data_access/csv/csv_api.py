@@ -21,6 +21,8 @@ from app.data_access.csv.dinghies_at_events import (
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
 
+from app.data_access.sql.groups import SqlDataListOfCadetsWithGroups
+
 
 class CsvDataApi(object):
     def __init__(

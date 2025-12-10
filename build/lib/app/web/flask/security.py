@@ -8,8 +8,7 @@ from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
     UserGroup,
-    ADMIN_GROUP,
-    SKIPPER_GROUP,
+    CAN_DO_BACKUPS,
 )
 
 
@@ -87,6 +86,6 @@ def allow_user_to_make_snapshots():
         return False
 
     access_group = get_access_group_for_current_user()
-    CAN_DO_BACKUPS = [ADMIN_GROUP, SKIPPER_GROUP]
 
     return access_group in CAN_DO_BACKUPS
+

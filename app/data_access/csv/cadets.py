@@ -1,5 +1,5 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     IDENTIFIED_CADETS_AT_EVENT_ID,
     CADETS_AT_EVENT_ID,
     CADETS_WITH_GROUPS_ID,
@@ -16,8 +16,7 @@ from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent
 from app.objects.group_notes_at_event import ListOfGroupNotesAtEventWithIds
 from app.objects.identified_cadets_at_event import ListOfIdentifiedCadetsAtEvent
 from app.objects.committee import ListOfCadetsWithIdOnCommittee
-from app.objects.previous_cadet_groups import GroupNamesForEventsAndCadetPersistentVersionWithIds, \
-    ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds
+from app.objects.previous_cadet_groups import ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds
 
 
 class CsvDataListOfCadets(GenericCsvData):

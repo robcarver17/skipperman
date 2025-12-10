@@ -1,5 +1,5 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     MAPPED_REGISTRATION_DATA_FILE_ID,
     EVENT_WARNINGS_FILE_ID,
 )

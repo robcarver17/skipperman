@@ -1,6 +1,6 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT,
     LIST_OF_CADETS_WITH_FOOD_AT_EVENT,
     LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT,

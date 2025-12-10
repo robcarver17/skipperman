@@ -3,7 +3,7 @@ from app.backend.reporting.arrangement.arrange_options import (
 )
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     PRINT_OPTIONS_FILE_ID,
     ARRANGEMENT_OPTIONS_FILE_ID,
     GROUPS_FILE_ID,

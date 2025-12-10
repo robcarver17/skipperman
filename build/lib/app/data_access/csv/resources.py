@@ -1,6 +1,6 @@
 from app.data_access.csv.generic_csv_data import GenericCsvData
 
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     LIST_OF_PATROL_BOATS_FILE_ID,
     LIST_OF_CLUB_DINGHIES_FILE_ID,
     LIST_OF_PATROL_BOATS_AND_VOLUNTEERS_FILE_ID,
@@ -110,7 +110,7 @@ class CsvDataListOfVolunteersAtEventWithClubDinghies(
         )
 
 
-from app.data_access.resolve_paths_and_filenames import CLUB_BOAT_LIMIT_CSV
+from app.data_access.csv.resolve_paths_and_filenames import CLUB_BOAT_LIMIT_CSV
 
 
 class CsvDataListOfClubDinghyLimits(GenericCsvData):

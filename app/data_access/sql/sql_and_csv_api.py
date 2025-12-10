@@ -167,8 +167,8 @@ class CsvDataApi(object):
     @property
     def data_list_of_cadets_with_groups(
         self,
-    ) -> CsvDataListOfCadetsWithGroups:
-        return CsvDataListOfCadetsWithGroups(
+    ) -> SqlDataListOfCadetsWithGroups:
+        return SqlDataListOfCadetsWithGroups(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )

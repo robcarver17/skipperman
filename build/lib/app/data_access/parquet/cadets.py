@@ -1,6 +1,6 @@
 from app.data_access.classes.cadets import DataAttendanceAtEventsForSpecificCadet
 from app.data_access.parquet.generic_parquet_data import GenericParquetData
-from app.data_access.resolve_paths_and_filenames import (
+from app.data_access.csv.resolve_paths_and_filenames import (
     ATTENDANCE_FILE_FOR_SPECIFIC_CADET,
 )
 from app.objects.attendance import ListOfRawAttendanceItemsForSpecificCadet

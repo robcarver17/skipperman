@@ -266,7 +266,7 @@ class MixedSqlAndCsvDataApi(object):
             backup_data_path=self.backup_data_path
         )
     """
-
+    @property
     def data_list_of_group_names_for_events_and_cadets_persistent_version(
             self) -> CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion:
         return CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion(

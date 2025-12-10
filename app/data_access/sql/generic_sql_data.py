@@ -61,7 +61,7 @@ def int2bool(some_int: int):
 
 def date2int(some_datetime: Union[datetime.date, datetime.datetime]) -> int:
     if type(some_datetime) is datetime.date:
-        some_datetime = datetime.datetime(some_datetime.year, some_datetime.month, some_datetime.day, tzinfo=datetime.UTC)
+        some_datetime = datetime.datetime(some_datetime.year, some_datetime.month, some_datetime.day, tzinfo=datetime.timezone.utc)
     return int(some_datetime.timestamp())
 
 def int2date(some_int: int) -> Union[datetime.date, datetime.datetime]:

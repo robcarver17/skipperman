@@ -6,7 +6,7 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject, dict_from_str, dict_as_str
-from app.objects.utilities.generic_list_of_objects import get_idx_of_unique_object_with_multiple_attr_in_list
+from app.objects.utilities.generic_list_of_objects import get_idx_of_unique_object_with_multiple_attr_in_list, get_idx_of_unique_object_with_attr_in_list
 
 @dataclass
 class GroupNamesForEventsAndCadetPersistentVersionWithIds(GenericSkipperManObject):
@@ -33,6 +33,12 @@ class ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(GenericListOfObj
     def _object_class_contained(self):
         return GroupNamesForEventsAndCadetPersistentVersionWithIds
 
+    def sort_by_list_of_cadet_ids(self):
+        return ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(sorted(self, key=lambda x: x.cadet_id))
+
+    def list_of_cadet_ids(self):
+        return [obj.cadet_id for obj in self]
+
     def get_dict_for_cadet_id(self, cadet_id: str) -> Dict[str,str]:
         idx = get_idx_of_unique_object_with_multiple_attr_in_list(some_list=self,
                                                                   dict_of_attributes={
@@ -44,13 +50,12 @@ class ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(GenericListOfObj
         return self[idx].dict_of_event_ids_and_group_names
 
     def update_does_not_update_core_data(self, cadet_id: str, dict_of_event_ids_and_group_names:  Dict[str, str]):
-        idx = get_idx_of_unique_object_with_multiple_attr_in_list(some_list=self,
-                                                                  dict_of_attributes={
-                                                                      'cadet_id': cadet_id
-                                                                  }, default=None)
+        idx = get_idx_of_unique_object_with_attr_in_list(some_list=self,
+                                                         attr_name='cadet_id',
+                                                         attr_value=str(cadet_id), default=None)
         if idx is None:
             self.append(GroupNamesForEventsAndCadetPersistentVersionWithIds(
-                cadet_id=cadet_id,
+                cadet_id=str(cadet_id),
                 dict_of_event_ids_and_group_names=dict_of_event_ids_and_group_names))
         else:
             existing = self[idx]

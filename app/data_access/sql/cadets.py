@@ -57,7 +57,7 @@ class SqlDataListOfCadets(GenericSqlData):
                 surname = cadet.surname
                 dob = date2int(cadet.date_of_birth)
                 status = cadet.membership_status.name
-                id = cadet.id
+                id = str(cadet.id)
 
                 insertion = "INSERT INTO %s ( %s, %s, %s, %s, %s) VALUES ( ?,?,?,?,?)" % (
                     CADETS_TABLE,

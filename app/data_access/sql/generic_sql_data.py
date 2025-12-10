@@ -35,7 +35,7 @@ class GenericSqlData(object):
     def conn(self):
         conn = getattr(self, "_conn", None)
         if conn is None:
-            conn = sqlite3.connect(self.db_file_name)
+            conn = sqlite3.connect(self.db_file_name,  check_same_thread=False)
             self._conn = conn
 
         return conn

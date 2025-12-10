@@ -28,7 +28,7 @@ class DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds(
         self[cadet] = dict_of_group_names_by_event
         dict_with_ids = dict([(event.id, group_name) for event, group_name in dict_of_group_names_by_event.items()])
         self.list_of_group_names_for_events_and_cadet_persistent_version_with_ids.update_does_not_update_core_data(
-            cadet_id=cadet.id,
+            cadet_id=str(cadet.id),
             dict_of_event_ids_and_group_names=dict_with_ids
         )
 
@@ -39,7 +39,7 @@ class DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds(
 def compose_dict_of_group_names_for_events_and_cadets_persistent_version(
     list_of_cadets: ListOfCadets,
 list_of_group_names_for_events_and_cadet_persistent_version_with_ids: ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds,
-        list_of_events: ListOfEvents):
+        list_of_events: ListOfEvents) -> DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
 
 
     raw_dict = compose_raw_dict_of_group_names_for_events_and_cadets_persistent_version(

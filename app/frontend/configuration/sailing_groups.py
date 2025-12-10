@@ -7,7 +7,7 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
-from app.objects.groups import Group, ListOfGroups, all_locations_for_input
+from app.objects.groups import Group, ListOfGroups, all_locations_for_input, GroupLocation
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -152,7 +152,7 @@ def get_group_from_form(
         return existing_object
 
     new_group = Group(
-        name=new_group_name, location=new_location, protected=False, hidden=is_hidden,
+        name=new_group_name, location=GroupLocation[new_location], protected=False, hidden=is_hidden,
         streamer=new_streamer
     )
     return new_group

@@ -20,6 +20,7 @@ from app.data_access.csv.dinghies_at_events import (
 )
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
+from app.data_access.sql.dinghies_at_event import SqlDataListOfDinghies
 
 from app.data_access.sql.groups import *
 from app.data_access.sql.cadets import SqlDataListOfCadets
@@ -265,15 +266,6 @@ class MixedSqlAndCsvDataApi(object):
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path
         )
-    """
-    @property
-    def data_list_of_group_names_for_events_and_cadets_persistent_version(
-            self) -> CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion:
-        return CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path
-        )
-    """
 
     @property
     def data_attendance_at_events_for_specific_cadet(
@@ -321,8 +313,8 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_dinghies(self) -> CsvDataListOfDinghies:
-        return CsvDataListOfDinghies(
+    def data_list_of_dinghies(self) -> SqlDataListOfDinghies:
+        return SqlDataListOfDinghies(
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 

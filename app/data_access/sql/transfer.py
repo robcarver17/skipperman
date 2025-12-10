@@ -33,7 +33,6 @@ def transfer_from_csv_to_sql():
         backup_data_path=backup_data_path,
     )
 
-    """
     events = csv_api.data_list_of_events.read()
 
 
@@ -53,7 +52,6 @@ def transfer_from_csv_to_sql():
     list_of_cadets =csv_api.data_list_of_cadets.read()
     sql_cadets.write(list_of_cadets)
 
-    """
     list_of_persistent_groups = csv_api.data_list_of_group_names_for_events_and_cadets_persistent_version.read()
     sql_persistent_groups.write(list_of_persistent_groups)
 

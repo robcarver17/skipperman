@@ -241,6 +241,7 @@ app/data_access/csv/../configuration/configuration.yaml
 app/data_access/sql/__init__.py
 app/data_access/sql/generic_sql_data.py
 app/data_access/sql/groups.py
+app/data_access/sql/shared_column_names.py
 app/data_access/sql/sql_and_csv_api.py
 app/data_access/sql/transfer.py
 app/data_access/sql/../configuration/configuration.yaml

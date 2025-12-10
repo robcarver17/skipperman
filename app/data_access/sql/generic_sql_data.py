@@ -38,3 +38,13 @@ class GenericSqlData(object):
     @property
     def db_file_name(self):
         return self._db_file_name
+
+def bool2int(some_bool: bool):
+    if some_bool:
+        return 1
+    else:
+        return 0
+
+def int2bool(some_int: int):
+    return some_int==1
+

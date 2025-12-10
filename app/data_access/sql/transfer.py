@@ -14,7 +14,7 @@ home_directory = os.path.expanduser("~")
 master_data_path = os.path.join(home_directory, DATAPATH)
 
 
-if __name__ == "__main__":
+def do_transfer():
     csv_api = CsvDataApi(
         master_data_path=master_data_path,
         user_data_path=user_data_path,

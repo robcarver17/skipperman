@@ -55,7 +55,6 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
                 CADETS_WITH_GROUP_ID_TABLE,
                     EVENT_ID, CADET_ID, DAY,    GROUP_ID,
                     event_id, cadet_id, day_name, group_id)
-            print(insertion)
             self.cursor.execute(insertion)
 
         self.conn.commit()

@@ -21,7 +21,7 @@ from app.data_access.csv.dinghies_at_events import (
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
 
-from app.data_access.sql.groups import SqlDataListOfCadetsWithGroups
+from app.data_access.sql.groups import SqlDataListOfCadetsWithGroups, SqlDataListOfGroups
 
 
 class MixedSqlAndCsvDataApi(object):
@@ -98,8 +98,8 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_groups(self) -> csvDataListOfGroups:
-        return csvDataListOfGroups(
+    def data_list_of_groups(self) -> SqlDataListOfGroups:
+        return SqlDataListOfGroups(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )

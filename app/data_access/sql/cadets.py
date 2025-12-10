@@ -53,7 +53,7 @@ class SqlDataListOfCadets(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (CADETS_TABLE))
 
             for cadet in list_of_cadets:
-                name = cadet.name
+                name = cadet.first_name
                 surname = cadet.surname
                 dob = date2int(cadet.date_of_birth)
                 status = cadet.membership_status.name

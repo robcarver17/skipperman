@@ -243,6 +243,7 @@ app/data_access/sql/cadets.py
 app/data_access/sql/dinghies_at_event.py
 app/data_access/sql/generic_sql_data.py
 app/data_access/sql/groups.py
+app/data_access/sql/qualifications.py
 app/data_access/sql/shared_column_names.py
 app/data_access/sql/sql_and_csv_api.py
 app/data_access/sql/transfer.py

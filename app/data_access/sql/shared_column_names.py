@@ -1,4 +1,4 @@
-### Must match object names
+####### DO NOT CHANGE THESE AS IT WILL REQUIRE DATA TO BE REWRITTEN
 
 CADET_ID = "cadet_id"
 GROUP_ID = "group_id"
@@ -23,3 +23,9 @@ DINGHY_ORDER = "dinghy_order"
 
 PARTNER_CADET_ID = "partner_cadet_id"
 SAIL_NUMBER = "sail_number"
+
+QUALIFICATION_NAME = "qualification_name"
+QUALIFICATION_ORDER = "qualification_order"
+QUALIFICATION_ID = "qualification_id"
+AWARDED_BY = "awarded_by"
+QUALIFICATION_DATE = "qualification_date"

@@ -24,6 +24,8 @@ from app.data_access.sql.dinghies_at_event import SqlDataListOfDinghies, SqlData
 
 from app.data_access.sql.groups import *
 from app.data_access.sql.cadets import SqlDataListOfCadets
+from app.data_access.sql.qualifications import SqlDataListOfQualifications, SqlListOfCadetsWithQualifications
+
 
 class MixedSqlAndCsvDataApi(object):
     def __init__(
@@ -319,16 +321,16 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_qualifications(self) -> CsvDataListOfQualifications:
-        return CsvDataListOfQualifications(
+    def data_list_of_qualifications(self) -> SqlDataListOfQualifications:
+        return SqlDataListOfQualifications(
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 
     @property
     def data_list_of_cadets_with_qualifications(
         self,
-    ) -> CsvListOfCadetsWithQualifications:
-        return CsvListOfCadetsWithQualifications(
+    ) -> SqlListOfCadetsWithQualifications:
+        return SqlListOfCadetsWithQualifications(
             self.master_data_path, backup_data_path=self.backup_data_path
         )
 

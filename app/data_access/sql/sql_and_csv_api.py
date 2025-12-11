@@ -288,8 +288,8 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_cadets_at_event_with_club_dinghies(
         self,
-    ) -> SqlDataListOfCadetAtEventWithDinghies:
-        return SqlDataListOfCadetAtEventWithDinghies(
+    ) -> CsvDataListOfCadetAtEventWithClubDinghies:
+        return CsvDataListOfCadetAtEventWithClubDinghies(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )
@@ -306,8 +306,8 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_cadets_with_dinghies_at_event(
         self,
-    ) -> CsvDataListOfCadetAtEventWithDinghies:
-        return CsvDataListOfCadetAtEventWithDinghies(
+    ) -> SqlDataListOfCadetAtEventWithDinghies:
+        return SqlDataListOfCadetAtEventWithDinghies(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
         )

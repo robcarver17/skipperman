@@ -20,3 +20,6 @@ DICT_OF_EVENT_IDS_AND_GROUP_NAMES = "dict_of_event_ids_and_group_names"
 DINGHY_NAME = "dinghy_name"
 DINGHY_ID = "dinghy_id"
 DINGHY_ORDER = "dinghy_order"
+
+PARTNER_CADET_ID = "partner_cadet_id"
+SAIL_NUMBER = "sail_number"

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from app.objects.utilities.generic_list_of_objects import (
-    GenericListOfObjects,
+    GenericListOfObjects, get_idx_of_multiple_object_with_multiple_attr_in_list,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject, dict_from_str, dict_as_str
 from app.objects.utilities.generic_list_of_objects import get_idx_of_unique_object_with_multiple_attr_in_list, get_idx_of_unique_object_with_attr_in_list
@@ -32,6 +32,20 @@ class ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(GenericListOfObj
     @property
     def _object_class_contained(self):
         return GroupNamesForEventsAndCadetPersistentVersionWithIds
+
+    def unique_list(self):
+        keys = list(set(self.list_of_cadet_ids()))
+        new_list = []
+        for cadet_id in keys:
+            list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
+                some_list=self, dict_of_attributes={'cadet_id': cadet_id}
+            )
+            if len(list_of_idx)==0:
+                continue
+
+            new_list.append(self[list_of_idx[0]])
+
+        return ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(new_list)
 
     def sort_by_list_of_cadet_ids(self):
         return ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds(sorted(self, key=lambda x: x.cadet_id))

@@ -51,7 +51,6 @@ def transfer_from_csv_to_sql():
     events = csv_api.data_list_of_events.read()
     sql_events.write(events)
 
-    """
 
     for event in events:
         event_id = event.id
@@ -65,25 +64,22 @@ def transfer_from_csv_to_sql():
     list_of_cadets =csv_api.data_list_of_cadets.read()
     sql_cadets.write(list_of_cadets)
 
-    list_of_persistent_groups = csv_api.data_list_of_group_names_for_events_and_cadets_persistent_version.read()
+    list_of_persistent_groups = csv_api.data_list_of_group_names_for_events_and_cadets_persistent_version.read().unique_list()
+
     sql_persistent_groups.write(list_of_persistent_groups)
 
 
-    sql_groups.delete_table()
     csv_groups = csv_api.data_list_of_groups.read()
     sql_groups.write(csv_groups)
     
     list_of_dinghies=csv_api.data_list_of_dinghies.read()
     sql_list_of_dinghies.write(list_of_dinghies)
-    """
-    sql_cadets_and_dinghies_at_event.delete_table()
+
     for event in events:
         event_id = str(event.id)
-        """
         list_of_cadets_with_groups = csv_api.data_list_of_cadets_with_groups.read(event_id)
         if len(list_of_cadets_with_groups)>0:
             sql_groups_at_events.write(list_of_cadets_with_groups, event_id)
-        """
 
         list_of_cadets_with_dinghies = csv_api.data_list_of_cadets_with_dinghies_at_event.read(event_id)
         sql_cadets_and_dinghies_at_event.write(list_of_cadets_with_dinghies, event_id=event_id)
@@ -91,13 +87,11 @@ def transfer_from_csv_to_sql():
         list_of_cadets_at_event = csv_api.data_cadets_at_event.read(event_id)
         sql_cadets_at_event.write(list_of_cadets_at_event, event_id=event_id)
 
-    #list_of_qualifications = csv_api.data_list_of_qualifications.read()
-    #sql_qualifications.delete_table()
-    #sql_qualifications.write(list_of_qualifications)
+    list_of_qualifications = csv_api.data_list_of_qualifications.read()
+    sql_qualifications.write(list_of_qualifications)
 
-    #sql_cadets_with_qualifications.delete_table()
-    #list_of_cadets_with_qualifications = csv_api.data_list_of_cadets_with_qualifications.read()
-    #sql_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
+    list_of_cadets_with_qualifications = csv_api.data_list_of_cadets_with_qualifications.read()
+    sql_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
 
     sql_cadets_on_committee.write(csv_api.data_list_of_cadets_on_committee.read())
 
@@ -108,8 +102,8 @@ def transfer_from_sql_to_csv():
         backup_data_path=backup_data_path,
     )
 
-    events = csv_api.data_list_of_events.read()
-
+    events = sql_events.read()
+    csv_api.data_list_of_events.write(events)
 
     for event in events:
         event_id = event.id

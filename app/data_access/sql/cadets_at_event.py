@@ -82,7 +82,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
 
             self.conn.commit()
         except Exception as e1:
-            raise Exception("Error %s when writing to groups at event table" % str(e1))
+            raise Exception("Error %s when writing to groups at event table event# %s" % (str(e1), event_id))
         finally:
             self.close()
 

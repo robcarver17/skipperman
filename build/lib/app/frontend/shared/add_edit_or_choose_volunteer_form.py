@@ -50,7 +50,7 @@ def add_volunteer_from_form_to_data(interface: abstractInterface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
     
     add_new_verified_volunteer(volunteer=volunteer, object_store=interface.object_store)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return volunteer
 

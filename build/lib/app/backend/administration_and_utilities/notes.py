@@ -34,13 +34,13 @@ def add_quick_note(object_store: ObjectStore, text: str, volunteer_author: Volun
 def get_list_of_notes_with_volunteers(
     object_store: ObjectStore,
 ) -> ListOfNotesWithVolunteers:
-    return object_store.get(object_definition_for_list_of_notes_with_volunteers)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_notes_with_volunteers)
 
 
 def update_list_of_notes_with_volunteers(
     object_store: ObjectStore, updated_list_of_notes: ListOfNotesWithVolunteers
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_notes,
         object_definition=object_definition_for_list_of_notes_with_volunteers,
     )

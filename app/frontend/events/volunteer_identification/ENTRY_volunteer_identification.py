@@ -401,7 +401,7 @@ def process_identification_when_volunteer_matched(
             % (volunteer.name, str(e))
         )
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return next_volunteer_in_current_row(interface)
 

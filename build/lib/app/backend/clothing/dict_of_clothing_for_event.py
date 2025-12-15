@@ -21,7 +21,7 @@ from app.objects.clothing import ClothingAtEvent
 def get_dict_of_cadets_with_clothing_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithClothingAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_dict_of_cadets_with_clothing_at_event, event_id=event.id
     )
 
@@ -31,7 +31,7 @@ def update_dict_of_cadets_with_clothing_at_event(
     event: Event,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_cadets_with_clothing_at_event,
         new_object=dict_of_cadets_with_clothing_at_event,
         event_id=event.id,

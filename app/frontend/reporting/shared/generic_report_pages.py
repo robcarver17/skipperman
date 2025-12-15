@@ -219,7 +219,7 @@ def post_form_for_generic_report_all_options(
 
     elif reset_all_options_button.pressed(last_button_pressed):
         reset_all_report_options(interface, report_generator_with_specific_parameters)
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return interface.get_new_form_given_function(report_generator.all_options_display_form_function)
 
     elif back_menu_button.pressed(last_button_pressed):
@@ -301,7 +301,7 @@ def post_form_for_generic_report_additional_options(
         reset_specific_report_options(
             interface, report_generator_with_specific_parameters
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return interface.get_new_form_given_function(report_generator.additional_options_display_form_function)
 
     elif create_report_button.pressed(last_button_pressed):
@@ -309,7 +309,7 @@ def post_form_for_generic_report_additional_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -320,7 +320,7 @@ def post_form_for_generic_report_additional_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return previous_form
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -396,7 +396,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return interface.get_new_form_given_function(report_generator.print_options_display_form_function)
 
     elif create_report_button.pressed(last_button_pressed):
@@ -405,7 +405,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return create_generic_report(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -417,7 +417,7 @@ def post_form_for_generic_report_print_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return previous_form
 
     else:
@@ -512,7 +512,7 @@ def post_form_for_generic_report_arrangement_options(
             object_store=interface.object_store,
             report_generator=report_generator_with_specific_parameters,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return interface.get_new_form_given_function(report_generator.arrangement_options_display_form_function)
 
     else:

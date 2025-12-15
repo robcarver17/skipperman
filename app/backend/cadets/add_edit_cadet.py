@@ -5,9 +5,10 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_similar_cadets_from_data,
-    get_list_of_cadets,
+    DEPRECATE_get_list_of_cadets,
     update_list_of_cadets,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import (
     Cadet,
     is_cadet_age_surprising,
@@ -17,7 +18,7 @@ from app.objects.cadets import (
 
 
 def add_new_verified_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
-    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
     cadet = list_of_cadets.add(cadet)
     update_list_of_cadets(
         object_store=object_store, updated_list_of_cadets=list_of_cadets
@@ -26,12 +27,8 @@ def add_new_verified_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     return cadet
 
 
-def modify_cadet(object_store: ObjectStore, existing_cadet: Cadet, new_cadet: Cadet):
-    list_of_cadets = get_list_of_cadets(object_store)
-    list_of_cadets.update_cadet(existing_cadet=existing_cadet, new_cadet=new_cadet)
-    update_list_of_cadets(
-        object_store=object_store, updated_list_of_cadets=list_of_cadets
-    )
+def modify_cadet(interface: abstractInterface, existing_cadet: Cadet, new_cadet: Cadet):
+    interface.update(interface.object_store.data_api.data_list_of_cadets.modify_cadet, existing_cadet=existing_cadet, new_cadet=new_cadet)
 
 
 def modify_cadet_date_of_birth(
@@ -39,7 +36,7 @@ def modify_cadet_date_of_birth(
 ):
     new_cadet = copy(existing_cadet)
     new_cadet.date_of_birth = new_date_of_birth
-    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
     list_of_cadets.update_cadet(existing_cadet=existing_cadet, new_cadet=new_cadet)
     update_list_of_cadets(
         object_store=object_store, updated_list_of_cadets=list_of_cadets

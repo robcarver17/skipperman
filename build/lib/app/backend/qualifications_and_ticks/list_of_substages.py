@@ -61,4 +61,4 @@ def get_substage_given_id(
 
 
 def get_list_of_tick_substages(object_store: ObjectStore) -> ListOfTickSubStages:
-    return object_store.get(object_definition_for_list_of_tick_sub_stages)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_tick_sub_stages)

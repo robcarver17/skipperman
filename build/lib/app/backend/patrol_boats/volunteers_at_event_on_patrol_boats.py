@@ -76,7 +76,7 @@ def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Eve
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         event_id=event.id,
     )
@@ -86,7 +86,7 @@ def update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
     object_store: ObjectStore,
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         event_id=dict_of_volunteers_at_event_with_patrol_boats.event.id,
         new_object=dict_of_volunteers_at_event_with_patrol_boats,

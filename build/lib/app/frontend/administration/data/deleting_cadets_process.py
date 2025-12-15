@@ -43,7 +43,7 @@ def post_deleting_cadets_process(interface: abstractInterface):
         delete_cadet_in_data_and_return_warnings(
             interface.object_store, cadet_to_delete=cadet_to_delete
         )
-        interface.flush_and_clear()  ## saves
+        interface.DEPRECATE_flush_and_clear()  ## saves
         message = "Deletion done"
     elif cancel_button.pressed(button_pressed):
         message = "Deletion cancelled"

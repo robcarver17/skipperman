@@ -168,7 +168,7 @@ def get_list_of_active_cadets_at_event(
 def get_dict_of_cadets_with_registration_data(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithRegistrationData:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_cadets_with_registration_data_at_event,
         event_id=event.id,
     )
@@ -179,7 +179,7 @@ def update_dict_of_cadets_with_registration_data(
     event: Event,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_cadets_with_registration_data,
         object_definition=object_definition_for_dict_of_cadets_with_registration_data_at_event,
         event_id=event.id,
@@ -202,7 +202,7 @@ def is_cadet_already_at_event(
 def get_list_of_cadets_with_id_and_registration_data_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadetsWithIDAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_cadets_with_ids_and_registration_data_at_event,
         event_id=event.id,
     )
@@ -213,7 +213,7 @@ def update_list_of_cadets_with_id_and_registration_data_at_event(
     event: Event,
     list_of_cadets_with_id_at_event: ListOfCadetsWithIDAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         list_of_cadets_with_id_at_event,
         object_definition=object_definition_for_cadets_with_ids_and_registration_data_at_event,
         event_id=event.id,

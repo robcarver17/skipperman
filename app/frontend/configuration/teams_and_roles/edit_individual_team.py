@@ -142,7 +142,7 @@ def post_form_edit_individual_team_page(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return interface.get_new_form_given_function(display_form_edit_individual_team_page)
 

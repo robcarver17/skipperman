@@ -128,7 +128,7 @@ def modify_volunteer_given_form_contents(interface: abstractInterface):
     get_and_save_volunteer_skills_from_form(
         interface=interface, volunteer=original_volunteer
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
 
 def get_and_save_core_volunteer_details_from_form(

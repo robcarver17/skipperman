@@ -29,3 +29,20 @@ QUALIFICATION_ORDER = "qualification_order"
 QUALIFICATION_ID = "qualification_id"
 AWARDED_BY = "awarded_by"
 QUALIFICATION_DATE = "qualification_date"
+
+REGISTRATION_ROW_NAME = "row_in_registration_name"
+REGISTRATION_ROW_VALUE = "row_in_registration_value"
+
+CADET_AVAILABLITY= "cadet_availability"
+CADET_REGISTRATION_STATUS = "cadet_registration_status"
+CADET_REGISTRATION_NOTES = "cadet_registration_notes"
+CADET_HEALTH = "cadet_health"
+
+COMMITTEE_DATE_STARTS = "committee_date_starts"
+COMMITTEE_DATE_ENDS = "commitee_date_ends"
+COMMITTEE_DESLECTED = "committee_deselected"
+
+EVENT_NAME = "event_name"
+EVENT_START_DATE = "event_start_date"
+EVENT_END_DATE = "event_end_date"
+EVENT_ID = "event_id"

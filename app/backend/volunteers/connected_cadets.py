@@ -27,7 +27,7 @@ from app.data_access.store.object_definitions import (
 def get_dict_of_cadets_associated_with_volunteers(
     object_store: ObjectStore,
 ) -> DictOfCadetsAssociatedWithVolunteer:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_dict_of_cadets_associated_with_volunteers
     )
 
@@ -35,7 +35,7 @@ def get_dict_of_cadets_associated_with_volunteers(
 def get_dict_of_volunteers_associated_with_cadets(
     object_store: ObjectStore,
 ) -> DictOfVolunteersAssociatedWithCadet:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_dict_of_volunteers_associated_with_cadets
     )
 
@@ -220,14 +220,14 @@ def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
 def get_list_of_cadet_volunteer_association(
     object_store: ObjectStore,
 ) -> ListOfCadetVolunteerAssociations:
-    return object_store.get(object_definition_for_volunteer_and_cadet_associations)
+    return object_store.DEPRECATE_get(object_definition_for_volunteer_and_cadet_associations)
 
 
 def update_list_of_cadet_volunteer_association(
     object_store: ObjectStore,
     list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=list_of_cadet_volunteer_associations,
         object_definition=object_definition_for_volunteer_and_cadet_associations,
     )

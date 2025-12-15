@@ -50,13 +50,13 @@ def modify_club_dinghy(
 
 
 def get_list_of_club_dinghies(object_store: ObjectStore) -> ListOfClubDinghies:
-    return object_store.get(object_definition_for_list_of_club_dinghies)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_club_dinghies)
 
 
 def update_list_of_club_dinghies(
     object_store: ObjectStore, updated_list_of_club_dinghies: ListOfClubDinghies
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_club_dinghies,
         object_definition=object_definition_for_list_of_club_dinghies,
     )

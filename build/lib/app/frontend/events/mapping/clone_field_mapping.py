@@ -127,7 +127,7 @@ def clone_field_mapping_for_selected_event_and_return_message(
     save_field_mapping_for_event(
         object_store=interface.object_store, event=current_event, mapping=mapping
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     message = "Mapping copied from event %s to %s" % (
         event_description_selected,

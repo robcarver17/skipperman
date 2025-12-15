@@ -67,7 +67,7 @@ def process_form_when_cadet_verified(
         interface.log_error("Can't add this sailor, error code %s, try again" % str(e))
         return initial_state_form
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     interface.log_error("Added sailor %s" % str(cadet))
 

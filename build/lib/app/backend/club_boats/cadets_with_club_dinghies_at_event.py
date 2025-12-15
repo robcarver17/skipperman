@@ -48,7 +48,7 @@ def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
 def get_dict_of_people_and_club_dinghies_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfPeopleAndClubDinghiesAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,
         event_id=event.id,
     )
@@ -59,7 +59,7 @@ def update_dict_of_people_and_club_dinghies_at_event(
     event: Event,
     dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,
         event_id=event.id,
         new_object=dict_of_cadets_and_club_dinghies_at_event,

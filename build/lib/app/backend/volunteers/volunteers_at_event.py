@@ -151,7 +151,7 @@ def add_volunteer_at_event(
 def get_dict_of_all_event_data_for_volunteers(
     object_store: ObjectStore, event: Event
 ) -> DictOfAllEventDataForVolunteers:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
         event_id=event.id,
     )
@@ -160,7 +160,7 @@ def get_dict_of_all_event_data_for_volunteers(
 def update_dict_of_all_event_data_for_volunteers(
     object_store: ObjectStore, dict_of_all_event_data: DictOfAllEventDataForVolunteers
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
         event_id=dict_of_all_event_data.event.id,
         new_object=dict_of_all_event_data,

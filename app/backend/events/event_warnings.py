@@ -11,7 +11,7 @@ from app.objects.events import Event
 def get_list_of_event_warnings(
     object_store: ObjectStore, event: Event
 ) -> ListOfEventWarnings:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_list_of_event_warnings, event_id=event.id
     )
 
@@ -19,7 +19,7 @@ def get_list_of_event_warnings(
 def update_list_of_event_warnings(
     object_store: ObjectStore, event: Event, list_of_event_warnings: ListOfEventWarnings
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         list_of_event_warnings,
         object_definition=object_definition_for_list_of_event_warnings,
         event_id=event.id,

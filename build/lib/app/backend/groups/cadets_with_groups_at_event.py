@@ -74,7 +74,7 @@ def get_attendance_matrix_for_group_at_event(
 def get_dict_of_cadets_with_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_cadets_with_groups_at_event,
         event_id=event.id,
     )
@@ -85,7 +85,7 @@ def update_dict_of_cadets_with_groups_at_event(
     event: Event,
     dict_of_cadets_with_groups_at_event: DictOfCadetsWithDaysAndGroupsAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_cadets_with_groups_at_event,
         object_definition=object_definition_for_dict_of_cadets_with_groups_at_event,
         event_id=event.id,
@@ -95,7 +95,7 @@ def update_dict_of_cadets_with_groups_at_event(
 def get_list_of_cadets_with_ids_with_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadetIdsWithGroups:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_cadets_with_ids_and_groups_at_event,
         event_id=event.id,
     )
@@ -106,7 +106,7 @@ def update_list_of_cadets_with_ids_with_groups_at_event(
     event: Event,
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=list_of_cadet_ids_with_groups,
         object_definition=object_definition_for_cadets_with_ids_and_groups_at_event,
         event_id=event.id,

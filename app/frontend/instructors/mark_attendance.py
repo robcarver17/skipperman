@@ -137,7 +137,7 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 
@@ -205,7 +205,7 @@ def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     ## Now save any changes to ticks
     save_any_changes_to_ticks(interface, initial_stage=False)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 

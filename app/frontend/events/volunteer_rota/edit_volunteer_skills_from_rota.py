@@ -81,7 +81,7 @@ def modify_volunteer_from_rota_given_form_contents(interface: abstractInterface)
     volunteer = get_volunteer_from_state(interface)
 
     get_and_save_volunteer_skills_from_form(interface=interface, volunteer=volunteer)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
 
 def previous_form(interface: abstractInterface):

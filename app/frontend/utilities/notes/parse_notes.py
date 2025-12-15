@@ -35,7 +35,7 @@ def save_all_notes(interface: abstractInterface):
     
     save_quick_note(interface)
     update_all_existing_notes(interface)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
 
 def save_quick_note(interface: abstractInterface):

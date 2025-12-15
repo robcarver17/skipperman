@@ -111,7 +111,7 @@ def get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info(
 
 
 def get_dict_of_all_event_info_for_cadets(object_store: ObjectStore, event: Event) -> DictOfAllEventInfoForCadets:
-    data = object_store.get(
+    data = object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_all_event_info_for_cadet,
         event_id=event.id
     )
@@ -123,7 +123,7 @@ def update_dict_of_all_event_info_for_cadets(
     object_store: ObjectStore,
     dict_of_all_event_info_for_cadets: DictOfAllEventInfoForCadets,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_all_event_info_for_cadets,
         object_definition=object_definition_for_dict_of_all_event_info_for_cadet,
         event_id=dict_of_all_event_info_for_cadets.event.id,

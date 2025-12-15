@@ -35,7 +35,17 @@ class abstractInterface:
     display_and_post_form_function_maps: DisplayAndPostFormFunctionMaps = arg_not_passed
     action_name: str = ""
 
-    def flush_and_clear(self):
+    def update(self, data_api_property_and_method: Callable, **kwargs):
+        ### does not update cache, so after use will need to clear cache without flushing
+        if self.read_only:
+            self.log_error("Read only mode - not saving changes")
+        else:
+            self.object_store.update(data_api_property_and_method, **kwargs)
+
+    def clear(self):
+        self.object_store.clear_memory_cache_in_store()
+
+    def DEPRECATE_flush_and_clear(self):
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
         else:

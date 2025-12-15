@@ -6,7 +6,7 @@ from app.data_access.store.object_store import ObjectStore
 def get_default_print_options(
     object_store: ObjectStore, report_name: str
 ) -> PrintOptions:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_print_options, report_name="%s_default" % report_name
     )
 
@@ -21,7 +21,7 @@ def get_print_options(
             object_store=object_store, report_name=report_name
         )
 
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_print_options, report_name=report_name
     )
 
@@ -38,7 +38,7 @@ def reset_print_options_to_default(object_store: ObjectStore, report_name: str):
 def update_print_options(
     object_store: ObjectStore, report_name: str, print_options: PrintOptions
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_print_options,
         report_name=report_name,
         new_object=print_options,

@@ -219,7 +219,7 @@ def post_skills_editing_form_when_mismatch(interface: abstractInterface):
         get_and_save_volunteer_skills_from_form(
             interface=interface, volunteer=volunteer
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
 
     clear_volunteer_id_in_state(interface)
 

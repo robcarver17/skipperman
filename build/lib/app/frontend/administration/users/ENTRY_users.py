@@ -56,6 +56,6 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return display_form_security(interface)

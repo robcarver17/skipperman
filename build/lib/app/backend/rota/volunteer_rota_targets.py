@@ -65,7 +65,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
 def get_volunteer_targets_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfTargetsForRolesAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_list_of_targets_for_role_at_event, event_id=event.id
     )
 
@@ -111,7 +111,7 @@ def save_new_volunteer_target(
 def update_volunteer_targets_at_event(
     object_store: ObjectStore, dict_of_targets: DictOfTargetsForRolesAtEvent
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_targets,
         event_id=dict_of_targets.event.id,
         object_definition=object_definition_for_list_of_targets_for_role_at_event,

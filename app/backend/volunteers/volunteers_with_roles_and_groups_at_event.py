@@ -133,7 +133,7 @@ def get_role_and_group_for_event_and_volunteer(
 def get_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
         event_id=event.id,
     )
@@ -143,7 +143,7 @@ def update_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore,
     dict_of_volunteers_with_roles_and_groups_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 ):
-    return object_store.update(
+    return object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
         event_id=dict_of_volunteers_with_roles_and_groups_at_event.event.id,
         new_object=dict_of_volunteers_with_roles_and_groups_at_event,

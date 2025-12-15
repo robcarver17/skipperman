@@ -71,7 +71,7 @@ def post_form_merge_delete_volunteers(
     ## note we don't need to handle help and menu buttons
 
     if back_menu_button.pressed(button_pressed):
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
         return interface.get_new_display_form_for_parent_of_function(
             display_form_merge_delete_volunteers
         )

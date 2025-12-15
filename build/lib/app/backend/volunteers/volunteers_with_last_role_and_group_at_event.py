@@ -19,7 +19,7 @@ def get_most_common_role_and_group_or_none_for_volunteer_at_previous_events(
 def get_dict_of_volunteers_with_last_role_and_group_across_events(
     object_store: ObjectStore
 ) -> DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=dict_of_volunteers_with_most_common_role_and_group_across_events
     )
 
@@ -29,7 +29,7 @@ def update_dict_of_volunteers_with_last_role_and_group_across_events(
 dict_of_volunteers_with_last_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
 
 ):
-    return object_store.update(
+    return object_store.DEPRECATE_update(
         object_definition=dict_of_volunteers_with_most_common_role_and_group_across_events,
         new_object=dict_of_volunteers_with_last_role_and_group_across_events
     )

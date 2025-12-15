@@ -107,13 +107,13 @@ def delete_volunteer(object_store: ObjectStore, volunteer: Volunteer, areyousure
 
 
 def get_list_of_volunteers(object_store: ObjectStore) -> ListOfVolunteers:
-    return object_store.get(object_definition_for_volunteers)
+    return object_store.DEPRECATE_get(object_definition_for_volunteers)
 
 
 def update_list_of_volunteers(
     object_store: ObjectStore, list_of_volunteers: ListOfVolunteers
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=list_of_volunteers,
         object_definition=object_definition_for_volunteers,
     )

@@ -11,7 +11,7 @@ from app.data_access.configuration.fixed import (
 )
 from app.objects.membership_status import current_member
 
-from app.backend.cadets.list_of_cadets import get_list_of_cadets
+from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets
 from app.objects.composed.committee import ListOfCadetsOnCommittee
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -26,7 +26,7 @@ from app.objects.utilities.exceptions import MissingData, missing_data
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    all_cadets = get_list_of_cadets(object_store)
+    all_cadets = DEPRECATE_get_list_of_cadets(object_store)
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
 
     list_of_cadets = ListOfCadets(
@@ -74,7 +74,7 @@ def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_brac
 def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
 
     list_of_cadets = ListOfCadets(
         [
@@ -170,14 +170,14 @@ def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCad
 def get_list_of_cadets_on_committee(
     object_store: ObjectStore,
 ) -> ListOfCadetsOnCommittee:
-    return object_store.get(object_definition_for_list_of_cadet_committee_members)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_cadet_committee_members)
 
 
 def update_list_of_cadets_on_committee(
     object_store: ObjectStore,
     updated_list_of_cadets_on_committee: ListOfCadetsOnCommittee,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_cadets_on_committee,
         object_definition=object_definition_for_list_of_cadet_committee_members,
     )

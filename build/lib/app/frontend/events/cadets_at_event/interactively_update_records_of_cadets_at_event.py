@@ -247,7 +247,7 @@ def post_form_interactively_update_cadets_at_event(
     elif use_data_in_form_button.pressed(last_button_pressed):
         update_cadets_at_event_with_form_or_new_data(interface, use_form_data=True)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return process_next_cadet_at_event(interface)
 
@@ -318,7 +318,7 @@ def process_update_to_cadet_new_to_event_with_registration_row(
         row_in_registration_data=relevant_row,
         cadet=cadet,
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     print("Added %s with reg row %s" % (cadet, relevant_row))
 

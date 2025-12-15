@@ -64,7 +64,7 @@ def get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
 def get_dict_of_cadets_with_qualifications_and_ticks(
     object_store: ObjectStore, list_of_cadet_ids: List[str]
 ) -> DictOfCadetsWithQualificationsAndTicks:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
         list_of_cadet_ids=list_of_cadet_ids,
     )
@@ -77,7 +77,7 @@ def update_dict_of_cadets_with_qualifications_and_ticks(
     list_of_cadet_ids = (
         new_dict_of_cadets_with_qualifications_and_ticks.list_of_cadets.list_of_ids
     )
-    return object_store.update(
+    return object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
         list_of_cadet_ids=list_of_cadet_ids,
         new_object=new_dict_of_cadets_with_qualifications_and_ticks,
@@ -93,12 +93,12 @@ def delete_ticks_for_cadet(
     if not areyousure:
         return
 
-    ticks = object_store.get(
+    ticks = object_store.DEPRECATE_get(
         object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
         cadet_id=cadet.id,
     ).list_of_tick_list_item_ids()
 
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=ListOfTickListItemsAndTicksForSpecificCadet([]),
         object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
         cadet_id=cadet.id,

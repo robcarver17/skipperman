@@ -127,11 +127,11 @@ class SqlDataListOfCadetAtEventWithDinghies(
             return ListOfCadetAtEventWithBoatClassAndPartnerWithIds.create_empty()
 
         raw_dict = {
-            'cadet_id': [ans[0] for ans in raw_list],
-            'day': [ans[1] for ans in raw_list],
-            'sail_number': [ans[2] for ans in raw_list],
-            'partner_cadet_id': [ans[3] for ans in raw_list],
-        'boat_class_id': [ans[4] for ans in raw_list]
+            'cadet_id': [str(ans[0]) for ans in raw_list],
+            'day': [str(ans[1]) for ans in raw_list],
+            'sail_number': [str(ans[2]) for ans in raw_list],
+            'partner_cadet_id': [str(ans[3]) for ans in raw_list],
+        'boat_class_id': [str(ans[4]) for ans in raw_list]
         }
 
         df = pd.DataFrame(raw_dict)
@@ -151,12 +151,14 @@ class SqlDataListOfCadetAtEventWithDinghies(
             event_id = str(event_id)
             ## NEEDS TO DELETE OLD
             ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s" % (CADETS_AND_DINGHIES_TABLE))
+            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADETS_AND_DINGHIES_TABLE,
+                                                                 EVENT_ID,
+                                                                 event_id))
 
             for idx, cadet_and_boat in enumerate(people_and_boats):
-                cadet_id = cadet_and_boat.cadet_id
+                cadet_id = str(cadet_and_boat.cadet_id)
                 day = cadet_and_boat.day.name
-                sail_number = cadet_and_boat.sail_number
+                sail_number = str(cadet_and_boat.sail_number)
                 partner_cadet_id = str(cadet_and_boat.partner_cadet_id)
                 boat_class_id = str(cadet_and_boat.boat_class_id)
 
@@ -172,6 +174,11 @@ class SqlDataListOfCadetAtEventWithDinghies(
             raise Exception("Error %s when writing dinghies" % str(e1))
         finally:
             self.close()
+
+    def delete_table(self):
+        self.conn.execute("DROP TABLE %s" % CADETS_AND_DINGHIES_TABLE)
+        self.conn.commit()
+        self.close()
 
     def create_table(self):
 

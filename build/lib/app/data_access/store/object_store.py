@@ -1,7 +1,7 @@
 from copy import copy
-from typing import Dict, List
+from typing import Dict, List, Callable
 
-from app.data_access.csv.csv_api import CsvDataApi
+from app.data_access.sql.sql_and_csv_api import MixedSqlAndCsvDataApi
 from app.data_access.store.object_definitions import (
     UnderlyingObjectDefinition,
     DerivedObjectDefinition,
@@ -9,13 +9,14 @@ from app.data_access.store.object_definitions import (
 )
 
 from app.data_access.store.object_cache import SimpleObjectCache, NOT_IN_STORE
-from app.data_access.store.object_store_elements import CachedDataItem, DefinitionWithArgs, get_store_key
+from app.data_access.store.object_store_elements import DEPRECATE_CachedDataItem, DEPRECATE_DefinitionWithArgs, \
+    DEPRECATE_get_store_key, DefinitionWithArgsAndMethod, CachedDataItem
 from app.data_access.store.data_access import DataAccessMethod
 from app.objects.utilities.exceptions import arg_not_passed
 
 
 class ObjectStore:
-    def __init__(self, data_api: CsvDataApi,
+    def __init__(self, data_api: MixedSqlAndCsvDataApi,
                  object_cache: SimpleObjectCache = arg_not_passed):
         if object_cache is arg_not_passed:
             object_cache = SimpleObjectCache()
@@ -48,44 +49,72 @@ class ObjectStore:
     def clear_memory_cache_in_store(self):
         self.object_cache.clear()
 
-    def update(
+    def DEPRECATE_update(
         self,
         new_object,
         object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
         **kwargs,
     ):
-        definition_with_args = DefinitionWithArgs(object_definition, kwargs)
+        definition_with_args = DEPRECATE_DefinitionWithArgs(object_definition, kwargs)
         self.update_in_cache(new_object, definition_with_args=definition_with_args)
 
         update_components_of_changed_object(object_store=self, new_object=new_object, definition_with_args=definition_with_args)
 
+    def update(self, data_api_property_and_method: Callable, **kwargs):
+        ### does not update cache, so after use will need to clear cache without flushing
+        data_api_property_and_method(**kwargs)
 
     def update_in_cache(
         self,
         new_object,
-        definition_with_args:DefinitionWithArgs
+        definition_with_args:DEPRECATE_DefinitionWithArgs
     ):
-        cached_data_item = self.object_cache.get(definition_with_args.key, NOT_IN_STORE)
+        cached_data_item = self.object_cache.DEPRECATE_get(definition_with_args.key, NOT_IN_STORE)
         if cached_data_item is NOT_IN_STORE:
-            cached_data_item = CachedDataItem(contents=new_object,
-                                              definition_with_args=definition_with_args,
-                                              changed=True)
+            cached_data_item = DEPRECATE_CachedDataItem(contents=new_object,
+                                                        definition_with_args=definition_with_args,
+                                                        changed=True)
         else:
             cached_data_item.change_contents(contents=new_object)
 
-        self.object_cache.update(cached_data_item)
+        self.object_cache.DEPRECATE_update(cached_data_item)
+
+    def get(self, data_api_property_and_method: Callable, **kwargs):
+        definition_with_args = DefinitionWithArgsAndMethod(data_api_property_and_method,
+                                                           kwargs=kwargs)
+
+        cached_item = self.object_cache.get(definition_with_args.key, default=NOT_IN_STORE)
+
+        if cached_item is NOT_IN_STORE:
+            cached_item = self.compose_from_scratch_and_store_object_in_cache(
+                definition_with_args
+            )
+
+        return cached_item.contents
+
+    def compose_from_scratch_and_store_object_in_cache(
+        self,
+        definition_with_args: DefinitionWithArgsAndMethod,
+    ) -> CachedDataItem:
+        new_object_method = definition_with_args.data_api_property_and_method
+        new_object = new_object_method(**definition_with_args.kwargs)
+        cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args)
+
+        self.object_cache.update(cached_data_item
+                                           )
+        return cached_data_item
 
 
-    def get(
+    def DEPRECATE_get(
         self,
         object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
         **kwargs,
     ):
-        definition_with_args = DefinitionWithArgs(object_definition, kwargs)
-        cached_item = self.object_cache.get(definition_with_args.key, default =NOT_IN_STORE)
+        definition_with_args = DEPRECATE_DefinitionWithArgs(object_definition, kwargs)
+        cached_item = self.object_cache.DEPRECATE_get(definition_with_args.key, default =NOT_IN_STORE)
 
         if cached_item is NOT_IN_STORE:
-            cached_item = self.compose_from_scratch_and_store_object_in_cache(
+            cached_item = self.DEPRECATE_compose_from_scratch_and_store_object_in_cache(
                 definition_with_args
             )
 
@@ -94,17 +123,17 @@ class ObjectStore:
 
 
 
-    def compose_from_scratch_and_store_object_in_cache(
+    def DEPRECATE_compose_from_scratch_and_store_object_in_cache(
         self,
-        definition_with_args: DefinitionWithArgs,
-    ) -> CachedDataItem:
+        definition_with_args: DEPRECATE_DefinitionWithArgs,
+    ) -> DEPRECATE_CachedDataItem:
         new_object = compose_object_for_object_store(
              object_store=self,definition_with_args=definition_with_args
         )
-        cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args)
+        cached_data_item = DEPRECATE_CachedDataItem(new_object, definition_with_args=definition_with_args)
 
-        self.object_cache.update(cached_data_item
-                                 )
+        self.object_cache.DEPRECATE_update(cached_data_item
+                                           )
 
         return cached_data_item
 
@@ -131,7 +160,7 @@ class ObjectStore:
 
     ## underlying objects
     @property
-    def data_api(self) -> CsvDataApi:
+    def data_api(self) -> MixedSqlAndCsvDataApi:
         return self._data_api
 
 
@@ -144,7 +173,7 @@ class ObjectStore:
 
 def compose_object_for_object_store(
     object_store: ObjectStore,
-    definition_with_args: DefinitionWithArgs
+    definition_with_args: DEPRECATE_DefinitionWithArgs
 ):
     object_definition = definition_with_args.object_definition
     if type(object_definition) is UnderlyingObjectDefinition:
@@ -166,7 +195,7 @@ def compose_object_for_object_store(
 
 
 def compose_underyling_object_from_data_api(
-    object_store: ObjectStore,  definition_with_args: DefinitionWithArgs
+    object_store: ObjectStore,  definition_with_args: DEPRECATE_DefinitionWithArgs
 ):
     object_definition = definition_with_args.object_definition
     kwargs = definition_with_args.kwargs
@@ -178,7 +207,7 @@ def compose_underyling_object_from_data_api(
 
 
 def compose_derived_object_from_object_store(
-    object_store: ObjectStore, definition_with_args_derived_object: DefinitionWithArgs
+    object_store: ObjectStore, definition_with_args_derived_object: DEPRECATE_DefinitionWithArgs
 ):
     object_definition = definition_with_args_derived_object.object_definition
     kwargs = definition_with_args_derived_object.kwargs
@@ -192,8 +221,8 @@ def compose_derived_object_from_object_store(
 
     for keyword_name, object_definition_for_keyword in dict_of_arguments.items():
         required_kwargs = object_definition_for_keyword.matching_kwargs(**kwargs)
-        underyling_data_object = object_store.get(object_definition=object_definition_for_keyword,
-                                                               **required_kwargs)
+        underyling_data_object = object_store.DEPRECATE_get(object_definition=object_definition_for_keyword,
+                                                            **required_kwargs)
         kwargs_to_pass[keyword_name] = underyling_data_object
 
 
@@ -201,7 +230,7 @@ def compose_derived_object_from_object_store(
 
 
 def compose_iterable_object_from_object_store(
-    object_store: ObjectStore, definition_with_args_of_iterated_object: DefinitionWithArgs
+    object_store: ObjectStore, definition_with_args_of_iterated_object: DEPRECATE_DefinitionWithArgs
 ):
     object_definition = definition_with_args_of_iterated_object.object_definition
     kwargs = copy(definition_with_args_of_iterated_object.kwargs)
@@ -218,7 +247,7 @@ def compose_iterable_object_from_object_store(
         kwargs_this_element.update(kwargs)
         required_kwargs = underlying_object_definition.matching_kwargs(**kwargs_this_element)
 
-        underyling_object_this_key = object_store.get(underlying_object_definition, **required_kwargs)
+        underyling_object_this_key = object_store.DEPRECATE_get(underlying_object_definition, **required_kwargs)
 
         dict_of_output[key] = underyling_object_this_key
 
@@ -228,7 +257,7 @@ def compose_iterable_object_from_object_store(
 
 def update_components_of_changed_object(
         new_object,
-        definition_with_args: DefinitionWithArgs,
+        definition_with_args: DEPRECATE_DefinitionWithArgs,
         object_store: ObjectStore,
 ):
 
@@ -261,7 +290,7 @@ def update_components_of_changed_object(
 def update_component_objects_in_store_with_changed_iterable_object(
     new_object: dict,
     object_store: ObjectStore,
-        definition_with_args: DefinitionWithArgs,
+        definition_with_args: DEPRECATE_DefinitionWithArgs,
 
 ):
     object_definition = definition_with_args.object_definition
@@ -279,15 +308,15 @@ def update_component_objects_in_store_with_changed_iterable_object(
         required_kwargs = underyling_object_definition.matching_kwargs(**kwargs_this_element)
 
         new_underyling_object = new_object[key]
-        object_store.update(new_object=new_underyling_object,
-                            object_definition=underyling_object_definition,
-                            **required_kwargs)
+        object_store.DEPRECATE_update(new_object=new_underyling_object,
+                                      object_definition=underyling_object_definition,
+                                      **required_kwargs)
 
 
 def update_component_objects_in_store_with_changed_derived_object(
     new_object,
     object_store: ObjectStore,
-        definition_with_args: DefinitionWithArgs,
+        definition_with_args: DEPRECATE_DefinitionWithArgs,
 ):
     object_definition = definition_with_args.object_definition
     kwargs = definition_with_args.kwargs
@@ -302,7 +331,7 @@ def update_component_objects_in_store_with_changed_derived_object(
         new_underyling_object = getattr(new_object, property_name)
         required_kwargs = underlying_object_definition.matching_kwargs(**kwargs)
 
-        object_store.update(
+        object_store.DEPRECATE_update(
             new_object=new_underyling_object,
             object_definition=underlying_object_definition,
             **required_kwargs,
@@ -310,7 +339,7 @@ def update_component_objects_in_store_with_changed_derived_object(
 
 
 def write_modified_underlying_object_to_data_api(
-    saved_data_item: CachedDataItem,
+    saved_data_item: DEPRECATE_CachedDataItem,
     object_store: ObjectStore,
 ):
     new_object = saved_data_item.contents

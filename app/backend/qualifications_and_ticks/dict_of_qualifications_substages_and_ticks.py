@@ -94,14 +94,14 @@ def get_tick_items_as_dict_for_qualification(
 def get_qualifications_and_tick_items_as_dict(
     object_store: ObjectStore,
 ) -> QualificationsAndTickItemsAsDict:
-    return object_store.get(object_definition_for_qualifications_and_tick_items_as_dict)
+    return object_store.DEPRECATE_get(object_definition_for_qualifications_and_tick_items_as_dict)
 
 
 def update_qualifications_and_tick_items_as_dict(
     object_store: ObjectStore,
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=qualifications_and_tick_items_as_dict,
         object_definition=object_definition_for_qualifications_and_tick_items_as_dict,
     )

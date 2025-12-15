@@ -208,7 +208,7 @@ def clear_wa_event_id_mapping_from_data(interface: abstractInterface):
     event = get_event_from_state(interface)
     
     clear_wa_event_id_mapping(object_store=interface.object_store, event=event)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
     interface.log_error(
         "Cleared WA ID for %s - make sure you upload the right file!" % event
     )

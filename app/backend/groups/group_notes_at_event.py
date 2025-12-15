@@ -22,7 +22,7 @@ def update_group_notes_at_event_for_group(
 def get_dict_of_group_notes_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfNotesForGroupsAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_dict_of_notes_for_groups_at_event, event_id=event.id
     )
 
@@ -30,7 +30,7 @@ def get_dict_of_group_notes_at_event(
 def update_dict_of_group_notes_at_event(
     object_store: ObjectStore, event: Event, dict_of_notes: DictOfNotesForGroupsAtEvent
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         dict_of_notes,
         object_definition=object_definition_for_dict_of_notes_for_groups_at_event,
         event_id=event.id,

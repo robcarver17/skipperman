@@ -193,7 +193,7 @@ def process_form_when_event_verified(interface: abstractInterface) -> Form:
         event = get_event_from_form(interface)
         
         add_new_verified_event(interface.object_store, event=event)
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(

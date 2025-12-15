@@ -83,7 +83,7 @@ def action_when_volunteer_known_for_rota(
             volunteer=volunteer,
             no_availability=no_availability,
         )
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
     else:
         interface.log_error(
             "Volunteer %s is already at event %s!" % (volunteer.name, event.name)

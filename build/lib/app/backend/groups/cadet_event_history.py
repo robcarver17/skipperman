@@ -8,7 +8,7 @@ from app.backend.qualifications_and_ticks.progress import (
 )
 from app.data_access.init_directories import download_directory
 from app.data_access.store.object_store import ObjectStore
-from app.backend.cadets.list_of_cadets import get_list_of_cadets
+from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets
 from app.backend.groups.previous_groups import (
     get_dict_of_group_allocations_for_all_events_active_cadets_only,
 )
@@ -23,7 +23,7 @@ from app.objects.utilities.exceptions import missing_data
 def write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename(
     object_store: ObjectStore,
 ) -> str:
-    list_of_cadets = get_list_of_cadets(object_store=object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store=object_store)
     list_of_cadets = list_of_cadets.current_members_only()
 
     df_of_qualifications = get_expected_qualifications_for_list_of_cadets_as_df(

@@ -11,7 +11,7 @@ from app.backend.reporting.report_generator import ReportGenerator
 def get_stored_arrangement_and_group_order(
     object_store: ObjectStore, report_type: str
 ) -> ArrangementOptionsAndGroupOrder:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_report_arrangement_and_group_order_options,
         report_name=report_type,
     )
@@ -22,7 +22,7 @@ def update_arrangement_and_group_order(
     arrangement_and_group_options: ArrangementOptionsAndGroupOrder,
     report_type: str,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_report_arrangement_and_group_order_options,
         report_name=report_type,
         new_object=arrangement_and_group_options,

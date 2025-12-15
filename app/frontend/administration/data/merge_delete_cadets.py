@@ -117,7 +117,7 @@ def display_form_merge_delete_individual_cadet(interface: abstractInterface):
         ]
     )
 
-    return contents_of_form
+    return Form(contents_of_form)
 
 
 delete_button = Button("Delete the sailor completely")

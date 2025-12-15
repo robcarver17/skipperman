@@ -136,7 +136,7 @@ def post_form_when_template_chosen(
     save_field_mapping_for_event(
         object_store=interface.object_store, event=event, mapping=mapping
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     interface.log_error("Selected mapping template %s for event %s" % (template_name, str(event)))
 

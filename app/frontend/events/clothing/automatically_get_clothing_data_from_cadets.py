@@ -50,7 +50,7 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
             cadet=cadet,
             registration_data=registration_data,
         )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
     return return_to_controller(interface)
 
 

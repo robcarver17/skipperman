@@ -54,13 +54,13 @@ def get_sorted_list_of_events(
 
 
 def get_list_of_events(object_store: ObjectStore) -> ListOfEvents:
-    return object_store.get(object_definition_for_list_of_events)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_events)
 
 
 def update_list_of_events(
     object_store: ObjectStore, updated_list_of_events: ListOfEvents
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_events,
         object_definition=object_definition_for_list_of_events,
     )

@@ -224,7 +224,7 @@ def post_form_for_group_arrangement_options(
 
     last_button_pressed = interface.last_button_pressed()
 
-    
+
     if is_auto_layout_button(last_button_pressed):
         change_arrangement_given_method_and_current_order(
             interface=interface, reporting_options=reporting_options
@@ -253,7 +253,7 @@ def post_form_for_group_arrangement_options(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     return interface.get_new_form_given_function(current_form_function)
 

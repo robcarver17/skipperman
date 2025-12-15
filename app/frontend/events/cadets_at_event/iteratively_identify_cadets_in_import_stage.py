@@ -181,7 +181,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
     add_identified_cadet_and_row(
         object_store=interface.object_store, event=event, row_id=row_id, cadet=cadet
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
     ## run recursively until no more data
     return identify_cadets_on_next_row(interface)
 
@@ -349,7 +349,7 @@ def process_form_when_skipping_cadet_permanently(interface: abstractInterface) -
         event=event, row_id=row_id, object_store=interface.object_store
     )
     log_warning_when_skipping_permanently(interface, row_id=row_id, event=event)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
     ## run recursively until no more data
     return identify_cadets_on_next_row(interface)
 

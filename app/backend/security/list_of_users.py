@@ -38,12 +38,12 @@ def list_of_admin_users(object_store: ObjectStore) -> ListOfSkipperManUsers:
 def get_list_of_users_could_be_empty(
     object_store: ObjectStore,
 ) -> ListOfSkipperManUsers:
-    return object_store.get(object_definition_for_list_of_users)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_users)
 
 
 def update_list_of_users(
     object_store: ObjectStore, list_of_users: ListOfSkipperManUsers
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_list_of_users, new_object=list_of_users
     )

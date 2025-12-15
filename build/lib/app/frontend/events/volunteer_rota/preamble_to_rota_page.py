@@ -152,7 +152,7 @@ def get_volunteer_warning_table(
     event = get_event_from_state(interface)
     
     process_all_warnings_for_rota(object_store=interface.object_store, event=event)
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     all_warnings = get_all_saved_warnings_for_volunteer_rota(
         object_store=interface.object_store, event=event

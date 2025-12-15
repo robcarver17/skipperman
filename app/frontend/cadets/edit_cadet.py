@@ -72,9 +72,8 @@ def post_form_edit_individual_cadet(
     if cancel_menu_button.pressed(button_pressed):
         return previous_form(interface)
     elif save_menu_button.pressed(button_pressed):
-
         modify_cadet_given_form_contents(interface)
-        interface.flush_and_clear()
+        interface.clear()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)
@@ -93,7 +92,7 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
         interface.log_error("Can't find cadet details in form")
         return
     modify_cadet(
-        object_store=interface.object_store,
+        interface=interface,
         existing_cadet=existing_cadet,
         new_cadet=new_cadet,
     )

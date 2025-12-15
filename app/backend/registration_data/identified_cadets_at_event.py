@@ -215,7 +215,7 @@ def cadet_at_event_given_row_id(
 def get_list_of_identified_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfIdentifiedCadetsAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_identified_cadets_at_event,
         event_id=event.id,
     )
@@ -226,7 +226,7 @@ def update_list_of_identified_cadets_at_event(
     event: Event,
     identified_cadets_at_event: ListOfIdentifiedCadetsAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=identified_cadets_at_event,
         object_definition=object_definition_for_identified_cadets_at_event,
         event_id=event.id,

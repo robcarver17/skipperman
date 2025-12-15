@@ -39,8 +39,7 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
-    get_sorted_list_of_cadets,
-    all_sort_types,
+    all_sort_types, get_sorted_list_of_cadets_from_raw_data,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -114,7 +113,7 @@ def get_table_of_cadets_with_buttons(
     exclude_cadet: Cadet = arg_not_passed,
     similar_cadet: Cadet = arg_not_passed,
 ) -> Table:
-    list_of_cadets = get_sorted_list_of_cadets(
+    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(
         object_store=interface.object_store,
         sort_by=sort_order,
         similar_cadet=similar_cadet,

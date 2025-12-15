@@ -127,13 +127,13 @@ def add_wa_to_event_mapping(object_store: ObjectStore, event: Event, wa_id: str)
 
 
 def get_event_id_mapping_for_wa_files(object_store: ObjectStore) -> ListOfWAEventMaps:
-    return object_store.get(object_definition_for_wa_event_mapping)
+    return object_store.DEPRECATE_get(object_definition_for_wa_event_mapping)
 
 
 def update_event_id_mapping_for_wa_files(
     object_store: ObjectStore, list_of_wa_event_id_maps: ListOfWAEventMaps
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=list_of_wa_event_id_maps,
         object_definition=object_definition_for_wa_event_mapping,
     )

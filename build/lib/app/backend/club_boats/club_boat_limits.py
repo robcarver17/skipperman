@@ -40,14 +40,14 @@ def clear_and_set_generic_limit(
 
 
 def get_dict_of_club_dinghy_limits(object_store: ObjectStore) -> DictOfClubDinghyLimits:
-    return object_store.get(object_definition_for_club_dinghy_limits)
+    return object_store.DEPRECATE_get(object_definition_for_club_dinghy_limits)
 
 
 def update_dict_of_club_dinghy_limits(
     object_store: ObjectStore,
     updated_dict_of_club_dinghy_limits: DictOfClubDinghyLimits,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_dict_of_club_dinghy_limits,
         object_definition=object_definition_for_club_dinghy_limits,
     )

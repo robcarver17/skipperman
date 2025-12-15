@@ -155,7 +155,7 @@ def volunteer_for_this_row_and_index_already_identified_or_permanently_skipped(
 def get_list_of_identified_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfIdentifiedVolunteersAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_identified_volunteers_at_event,
         event_id=event.id,
     )
@@ -166,7 +166,7 @@ def update_list_of_identified_volunteers_at_event(
     event: Event,
     list_of_identified_volunteers_at_event: ListOfIdentifiedVolunteersAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_identified_volunteers_at_event,
         new_object=list_of_identified_volunteers_at_event,
         event_id=event.id,

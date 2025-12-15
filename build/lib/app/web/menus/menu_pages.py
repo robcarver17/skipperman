@@ -104,7 +104,7 @@ def filter_menu_for_user_permissions(menu_definition: dict) -> dict:
 
 
 def can_action_be_seen(action_name: str) -> bool:
-    list_of_allowed_groups = menu_security_dict.get(action_name, None)
+    list_of_allowed_groups = menu_security_dict.DEPRECATE_get(action_name, None)
     if list_of_allowed_groups is None:
         raise Exception("menu_security_dict doesn't include %s" % action_name)
 

@@ -29,7 +29,7 @@ def is_wa_field_mapping_setup_for_event(
 def save_field_mapping_for_event(
     object_store: ObjectStore, event: Event, mapping: ListOfWAFieldMappings
 ):
-    return object_store.update(
+    return object_store.DEPRECATE_update(
         object_definition=object_definition_for_field_mappings_at_event,
         event_id=event.id,
         new_object=mapping,
@@ -39,7 +39,7 @@ def save_field_mapping_for_event(
 def get_field_mapping_for_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfWAFieldMappings:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition_for_field_mappings_at_event, event_id=event.id
     )
 
@@ -54,7 +54,7 @@ def does_event_already_have_mapping(object_store: ObjectStore, event: Event):
 
 
 def get_list_of_field_mapping_template_names(object_store: ObjectStore) -> List[str]:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_list_of_field_mapping_templates
     )
 
@@ -62,7 +62,7 @@ def get_list_of_field_mapping_template_names(object_store: ObjectStore) -> List[
 def get_field_mapping_template(
     object_store: ObjectStore, template_name: str
 ) -> ListOfWAFieldMappings:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_field_mapping_templates,
         template_name=template_name,
     )
@@ -71,7 +71,7 @@ def get_field_mapping_template(
 def save_field_mapping_template(
     object_store: ObjectStore, template_name: str, template: ListOfWAFieldMappings
 ):
-    return object_store.update(
+    return object_store.DEPRECATE_update(
         object_definition=object_definition_for_field_mapping_templates,
         template_name=template_name,
         new_object=template,

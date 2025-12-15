@@ -14,17 +14,19 @@ from app.data_access.csv.registration_data import *
 from app.data_access.csv.configuration import *
 from app.data_access.csv.volunteers import *
 from app.data_access.csv.resources import *
-from app.data_access.csv.dinghies_at_events import (
-    CsvDataListOfCadetAtEventWithDinghies,
-    CsvDataListOfDinghies,
-)
+
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
+from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
+from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.dinghies_at_event import SqlDataListOfDinghies, SqlDataListOfCadetAtEventWithDinghies
+from app.data_access.sql.events import SqlDataListOfEvents
+from app.data_access.sql.generic_sql_data import DBConnection
 
 from app.data_access.sql.groups import *
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.qualifications import SqlDataListOfQualifications, SqlListOfCadetsWithQualifications
+
 
 
 class MixedSqlAndCsvDataApi(object):
@@ -34,6 +36,13 @@ class MixedSqlAndCsvDataApi(object):
         self._master_data_path = master_data_path
         self._user_data_path = user_data_path
         self._backup_data_path = backup_data_path
+
+        db_connection =DBConnection(master_data_path)
+        self._db_connection = db_connection
+
+    @property
+    def db_connection(self) -> DBConnection:
+        return self._db_connection
 
     @property
     def global_read_only(self):
@@ -52,22 +61,19 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_cadets(self):
         return SqlDataListOfCadets(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+            self.db_connection
         )
 
     @property
-    def data_list_of_cadets_on_committee(self) -> CsvDataListOfCadetsOnCommitte:
-        return CsvDataListOfCadetsOnCommitte(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_list_of_cadets_on_committee(self) -> SqlDataListOfCadetsOnCommitte:
+        return SqlDataListOfCadetsOnCommitte(
+            self.db_connection
         )
 
     @property
     def data_list_of_events(self):
-        return CsvDataListOfEvents(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+        return SqlDataListOfEvents(
+            self.db_connection
         )
 
     @property
@@ -103,8 +109,7 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_groups(self) -> SqlDataListOfGroups:
         return SqlDataListOfGroups(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+            self.db_connection
         )
 
     @property
@@ -161,10 +166,9 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_cadets_at_event(
         self,
-    ) -> CsvDataListOfCadetsAtEvent:
-        return CsvDataListOfCadetsAtEvent(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfCadetsAtEvent:
+        return SqlDataListOfCadetsAtEvent(
+            self.db_connection
         )
 
     @property
@@ -172,8 +176,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithGroups:
         return SqlDataListOfCadetsWithGroups(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+            self.db_connection
         )
 
     @property
@@ -265,8 +268,7 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_group_names_for_events_and_cadets_persistent_version(self) -> SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion:
         return SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path
+            self.db_connection
         )
 
     @property
@@ -310,20 +312,19 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetAtEventWithDinghies:
         return SqlDataListOfCadetAtEventWithDinghies(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+            self.db_connection
         )
 
     @property
     def data_list_of_dinghies(self) -> SqlDataListOfDinghies:
         return SqlDataListOfDinghies(
-            self.master_data_path, backup_data_path=self.backup_data_path
+            self.db_connection
         )
 
     @property
     def data_list_of_qualifications(self) -> SqlDataListOfQualifications:
         return SqlDataListOfQualifications(
-            self.master_data_path, backup_data_path=self.backup_data_path
+            self.db_connection
         )
 
     @property
@@ -331,7 +332,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlListOfCadetsWithQualifications:
         return SqlListOfCadetsWithQualifications(
-            self.master_data_path, backup_data_path=self.backup_data_path
+            self.db_connection
         )
 
     @property

@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.backend.cadets.list_of_cadets import get_list_of_cadets
+from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets
 from app.backend.groups.previous_groups import (
     get_group_allocations_for_event_active_cadets_only,
 )
@@ -27,7 +27,7 @@ from app.objects.groups import Group
 
 
 def clean_attendance_data_for_event(object_store: ObjectStore, event: Event):
-    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
     attendance = get_attendance_across_events_for_list_of_cadets(
         object_store, list_of_cadets=list_of_cadets)
     attendance.clean_attendance_data_for_event(event)
@@ -44,7 +44,7 @@ def delete_raw_attendance_for_cadet_and_return_list_of_events(
         cadet
     ).list_of_events
 
-    object_store.update(
+    object_store.DEPRECATE_update(
         ListOfRawAttendanceItemsForSpecificCadet([]),
         object_definition=object_definition_for_attendance_of_cadets_for_cadet_id,
         cadet_id=cadet.id,
@@ -56,7 +56,7 @@ def delete_raw_attendance_for_cadet_and_return_list_of_events(
 def get_attendance_across_events_for_list_of_cadets(
     object_store: ObjectStore, list_of_cadets: ListOfCadets
 ) -> DictOfAttendanceAcrossEvents:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_cadets_with_attendance,
         list_of_cadet_ids=list_of_cadets.list_of_ids,
     )
@@ -67,7 +67,7 @@ def update_attendance_across_events_for_list_of_cadets(
     list_of_cadets: ListOfCadets,
     dict_of_attendance_across_events_for_list_of_cadets: DictOfAttendanceAcrossEvents,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_cadets_with_attendance,
         new_object=dict_of_attendance_across_events_for_list_of_cadets,
         list_of_cadet_ids=list_of_cadets.list_of_ids,

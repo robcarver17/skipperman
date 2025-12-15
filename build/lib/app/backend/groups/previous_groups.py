@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from app.backend.cadets.list_of_cadets import get_list_of_cadets
+from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
@@ -111,11 +111,11 @@ def get_dict_of_event_allocations_given_list_of_events_from_stored_data(
     return DictOfEventAllocations(raw_dict, list_of_events=list_of_events)
 
 def get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store: ObjectStore) -> DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
-    return object_store.get(object_definition=object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version)
+    return object_store.DEPRECATE_get(object_definition=object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version)
 
 
 def update_dict_of_group_names_for_events_and_cadets_persistent_version(object_store: ObjectStore, dict_of_group_names_for_events_and_cadets: DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds):
-    object_store.update(
+    object_store.DEPRECATE_update(
         dict_of_group_names_for_events_and_cadets,
         object_definition=object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version
     )
@@ -165,7 +165,7 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
 
 def update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(object_store: ObjectStore):
     dict_of_group_names_for_events_and_cadets_persistent_version =get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store)
-    list_of_cadets = get_list_of_cadets(object_store)
+    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
     list_of_events = get_list_of_events(object_store)
 
     for cadet in list_of_cadets:

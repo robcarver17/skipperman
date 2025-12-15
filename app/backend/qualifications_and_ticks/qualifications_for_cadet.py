@@ -105,13 +105,13 @@ def get_list_of_qualifications_for_cadet(
 def get_dict_of_qualifications_for_all_cadets(
     object_store: ObjectStore,
 ) -> DictOfQualificationsForCadets:
-    return object_store.get(object_definition_for_dict_of_qualifications_for_cadets)
+    return object_store.DEPRECATE_get(object_definition_for_dict_of_qualifications_for_cadets)
 
 
 def update_dict_of_qualifications_for_all_cadets(
     object_store: ObjectStore, dict_of_qualifications: DictOfQualificationsForCadets
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_qualifications_for_cadets,
         new_object=dict_of_qualifications,
     )

@@ -77,7 +77,7 @@ def post_form_view_for_food_requirements(
     
     if save_menu_button.pressed(last_button_pressed):
         save_food_data_in_form(interface)
-        interface.flush_and_clear()
+        interface.DEPRECATE_flush_and_clear()
 
     elif download_food_button.pressed(last_button_pressed):
         return download_food_data(interface)

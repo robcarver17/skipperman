@@ -1,6 +1,6 @@
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Callable
 
 from app.data_access.store.object_definitions import DerivedObjectDefinition, UnderlyingObjectDefinition, \
     IterableObjectDefinition
@@ -9,7 +9,39 @@ NO_OBJECT = object()
 
 
 @dataclass
-class DefinitionWithArgs:
+class DefinitionWithArgsAndMethod:
+    data_api_property_and_method: Callable
+    kwargs: dict
+
+    @property
+    def key(self):
+        return get_store_key(self.data_api_property_and_method, **self.kwargs)
+
+    def __hash__(self):
+        return hash(self.key)
+
+def get_store_key(
+        data_api_property_and_method: Callable,
+        **kwargs):
+
+    key = data_api_property_and_method.__qualname__+"_" + str(kwargs)
+
+    return key
+
+@dataclass
+class CachedDataItem:
+    contents: [object, dict] ## dict if iterated
+    definition_with_args: DefinitionWithArgsAndMethod
+    changed: bool = False
+
+    @property
+    def key(self):
+        return self.definition_with_args.key
+
+
+
+@dataclass
+class DEPRECATE_DefinitionWithArgs:
     object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition]
     kwargs: dict
 
@@ -18,15 +50,15 @@ class DefinitionWithArgs:
 
     @property
     def key(self):
-        return get_store_key(self.object_definition, **self.kwargs)
+        return DEPRECATE_get_store_key(self.object_definition, **self.kwargs)
 
     def __hash__(self):
         return hash(self.key)
 
 @dataclass
-class CachedDataItem:
+class DEPRECATE_CachedDataItem:
     contents: [object, dict] ## dict if iterated
-    definition_with_args: DefinitionWithArgs
+    definition_with_args: DEPRECATE_DefinitionWithArgs
     changed: bool = False
 
     def change_contents(self, contents:  [object, dict]):
@@ -53,10 +85,11 @@ class CachedDataItem:
         return type(self.object_definition) is UnderlyingObjectDefinition
 
 
-def get_store_key(
+def DEPRECATE_get_store_key(
         object_definition: [DerivedObjectDefinition, UnderlyingObjectDefinition, IterableObjectDefinition],
         **kwargs
 ):
     key = object_definition.key + str(kwargs)
 
     return key
+

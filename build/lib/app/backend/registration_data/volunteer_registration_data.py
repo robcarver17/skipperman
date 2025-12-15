@@ -30,7 +30,7 @@ def get_availability_dict_for_volunteers_at_event(
 def get_dict_of_registration_data_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfRegistrationDataForVolunteerAtEvent:
-    return object_store.get(
+    return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_registration_data_for_volunteers_at_event,
         event_id=event.id,
     )
@@ -41,7 +41,7 @@ def update_dict_of_registration_data_for_volunteers_at_event(
     event: Event,
     dict_of_registration_data: DictOfRegistrationDataForVolunteerAtEvent,
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_registration_data,
         object_definition=object_definition_for_dict_of_registration_data_for_volunteers_at_event,
         event_id=event.id,

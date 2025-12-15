@@ -69,13 +69,13 @@ def get_dict_of_existing_skills_for_volunteer(
 def get_dict_of_volunteers_with_skills(
     object_store: ObjectStore,
 ) -> DictOfVolunteersWithSkills:
-    return object_store.get(object_definition_for_dict_of_volunteers_with_skills)
+    return object_store.DEPRECATE_get(object_definition_for_dict_of_volunteers_with_skills)
 
 
 def update_dict_of_volunteers_with_skills(
     object_store: ObjectStore, dict_of_volunteer_skills: DictOfVolunteersWithSkills
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=dict_of_volunteer_skills,
         object_definition=object_definition_for_dict_of_volunteers_with_skills,
     )
@@ -101,11 +101,11 @@ def delete_volunteer_from_skills_and_return_skills(
 
 
 def get_list_of_skills(object_store: ObjectStore) -> ListOfSkills:
-    return object_store.get(object_definition_for_list_of_skills)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_skills)
 
 
 def update_list_of_skills(object_store: ObjectStore, list_of_skills: ListOfSkills):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=list_of_skills,
         object_definition=object_definition_for_list_of_skills,
     )

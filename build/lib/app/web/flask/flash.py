@@ -28,6 +28,7 @@ def get_html_block_for_flash(
     category_filter: str, html_transform: Callable
 ) -> List[Html]:
     all_items_as_str = get_flashed_messages(category_filter=[category_filter])
+    all_items_as_str = list(dict.fromkeys(all_items_as_str)) ## makes unique preserves order
     all_items_as_html = [html_transform(html_str) for html_str in all_items_as_str]
 
     return all_items_as_html

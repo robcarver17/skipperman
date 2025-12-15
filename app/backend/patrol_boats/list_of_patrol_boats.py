@@ -31,13 +31,13 @@ def modify_patrol_boat(
 
 
 def get_list_of_patrol_boats(object_store: ObjectStore) -> ListOfPatrolBoats:
-    return object_store.get(object_definition_for_list_of_patrol_boats)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_patrol_boats)
 
 
 def update_list_of_patrol_boats(
     object_store: ObjectStore, updated_list_of_patrol_boats: ListOfPatrolBoats
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_patrol_boats,
         object_definition=object_definition_for_list_of_patrol_boats,
     )

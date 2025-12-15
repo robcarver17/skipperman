@@ -41,13 +41,13 @@ def modify_boat_class(
 
 
 def get_list_of_boat_classes(object_store: ObjectStore) -> ListOfBoatClasses:
-    return object_store.get(object_definition_for_list_of_boat_classes)
+    return object_store.DEPRECATE_get(object_definition_for_list_of_boat_classes)
 
 
 def update_list_of_boat_classes(
     object_store: ObjectStore, updated_list_of_boat_classes: ListOfBoatClasses
 ):
-    object_store.update(
+    object_store.DEPRECATE_update(
         new_object=updated_list_of_boat_classes,
         object_definition=object_definition_for_list_of_boat_classes,
     )

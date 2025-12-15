@@ -441,4 +441,4 @@ def save_print_options_from_form(
         print_options=print_options,
         interface=interface,
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()

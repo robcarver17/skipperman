@@ -82,7 +82,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
         object_store=interface.object_store,
         template=template,
     )
-    interface.flush_and_clear()
+    interface.DEPRECATE_flush_and_clear()
 
     interface.log_error("Uploaded new template %s" % (template_name))
 

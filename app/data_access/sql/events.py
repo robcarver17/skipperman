@@ -53,7 +53,7 @@ class SqlDataListOfEvents(GenericSqlData):
                 event_name = event.event_name
                 start_date = date2int(event.start_date)
                 end_date = date2int(event.end_date)
-                event_id = str(event.id)
+                event_id = int(event.id)
 
                 insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
                     EVENTS_TABLE, EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENT_ID)
@@ -73,7 +73,7 @@ class SqlDataListOfEvents(GenericSqlData):
                 %s STR, 
                 %s INTEGER,
                 %s INTEGER,
-                %s STR
+                %s INTEGER
             );
         """ % (EVENTS_TABLE,
                EVENT_NAME,

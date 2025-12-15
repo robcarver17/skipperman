@@ -253,7 +253,5 @@ def add_cadet_from_form_to_data(interface: abstractInterface, as_non_member: boo
     if cadet is MISSING_FROM_FORM:
         raise MissingData("Can't get cadet from form")
     
-    cadet = add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
-    interface.DEPRECATE_flush_and_clear()
-
+    cadet = add_new_verified_cadet(interface=interface, cadet=cadet)
     return cadet

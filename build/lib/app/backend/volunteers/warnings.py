@@ -23,7 +23,7 @@ from app.backend.registration_data.identified_cadets_at_event import (
 )
 
 from app.backend.groups.previous_groups import (
-    get_dict_of_all_event_allocations_for_single_cadet,
+    DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet,
 )
 from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
@@ -547,7 +547,7 @@ def is_first_event_for_cadet(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
     previous_allocation = copy(
-        get_dict_of_all_event_allocations_for_single_cadet(
+        DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
             object_store=object_store,
             cadet=cadet,
             excluding_event=event,

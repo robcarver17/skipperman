@@ -1,5 +1,6 @@
 from typing import List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import (
     ListOfCadets,
     Cadet,
@@ -26,21 +27,20 @@ from app.data_access.configuration.configuration import (
 )
 
 
-def delete_cadet(object_store: ObjectStore, cadet: Cadet, areyousure=False):
+def DEPRECATE_delete_cadet(interface: abstractInterface, cadet: Cadet, areyousure=False):
     if not areyousure:
         return
 
-    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
+    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(interface.object_store)
     list_of_cadets.pop_cadet(cadet)
     update_list_of_cadets(
-        object_store=object_store, updated_list_of_cadets=list_of_cadets
+        interface=interface, updated_list_of_cadets=list_of_cadets
     )
+    interface.clear() ## move up to next level
 
 
 def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
-    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
-
-    return list_of_cadets.matching_cadet(cadet=cadet)
+    return object_store.get(object_store.data_api.data_list_of_cadets.get_matching_cadet, cadet=cadet)
 
 
 def are_there_no_similar_cadets(
@@ -60,7 +60,7 @@ def get_list_of_very_similar_cadets_from_data(
     cadet: Cadet,
     first_name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES,
 ):
-    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
+    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
     return get_list_of_very_similar_cadets(
         list_of_cadets, other_cadet=cadet, first_name_threshold=first_name_threshold
     )
@@ -96,7 +96,6 @@ def get_cadet_from_list_of_cadets_given_name_of_cadet(
 ) -> Cadet:
     list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
     cadet = list_of_cadets.matching_cadet_with_name(cadet_selected, default=default)
-    list_of_cadets.cadet_with_id()
     return cadet
 
 
@@ -164,12 +163,9 @@ def get_sorted_list_of_cadets_from_raw_data(object_store: ObjectStore, sort_by: 
 
 
 def update_list_of_cadets(
-    object_store: ObjectStore, updated_list_of_cadets: ListOfCadets
+    interface: abstractInterface, updated_list_of_cadets: ListOfCadets
 ):
-    object_store.DEPRECATE_update(
-        new_object=updated_list_of_cadets,
-        object_definition=DEPRECATE_object_definition_for_list_of_cadets,
-    )
+    interface.update(interface.object_store.data_api.data_list_of_cadets.write, list_of_cadets=updated_list_of_cadets)
 
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]

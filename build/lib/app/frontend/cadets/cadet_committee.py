@@ -232,7 +232,7 @@ def post_form_cadet_committee(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return display_form_cadet_committee(interface)
 
@@ -263,7 +263,7 @@ def add_new_cadet_to_committee_from_form(interface: abstractInterface):
     )
 
     add_new_cadet_to_committee(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         date_term_starts=date_term_starts,
         date_term_ends=date_term_ends,
@@ -278,7 +278,8 @@ def select_or_deselect_cadet_from_committee(
         interface=interface, button_name=button_name
     )
     toggle_selection_for_cadet_committee_member(
-        object_store=interface.object_store, cadet=cadet
+        interface=interface,
+     cadet=cadet
     )
 
 

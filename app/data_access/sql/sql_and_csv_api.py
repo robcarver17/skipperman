@@ -7,7 +7,6 @@ from app.data_access.csv.global_read_only import (
     is_global_read_only,
     set_global_read_only,
 )
-from app.data_access.csv.list_of_events import CsvDataListOfEvents
 from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
 from app.data_access.csv.wa_field_mapping import *
 from app.data_access.csv.registration_data import *
@@ -19,14 +18,17 @@ from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.csv.qualifications import *
 from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
-from app.data_access.sql.dinghies_at_event import SqlDataListOfDinghies, SqlDataListOfCadetAtEventWithDinghies
+from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
+from app.data_access.sql.boat_classes import SqlDataListOfDinghies
 from app.data_access.sql.events import SqlDataListOfEvents
 from app.data_access.sql.generic_sql_data import DBConnection
 
 from app.data_access.sql.groups import *
 from app.data_access.sql.cadets import SqlDataListOfCadets
-from app.data_access.sql.qualifications import SqlDataListOfQualifications, SqlListOfCadetsWithQualifications
-
+from app.data_access.sql.groups_at_event import SqlDataListOfCadetsWithGroups
+from app.data_access.sql.persistent_groups_at_events import SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion
+from app.data_access.sql.qualifications import SqlDataListOfQualifications
+from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
 
 
 class MixedSqlAndCsvDataApi(object):

@@ -13,8 +13,6 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    ButtonBar,
-    HelpButton,
 )
 
 from app.objects.abstract_objects.abstract_interface import (
@@ -67,9 +65,8 @@ def process_form_when_cadet_verified(
         interface.log_error("Can't add this sailor, error code %s, try again" % str(e))
         return initial_state_form
 
-    interface.DEPRECATE_flush_and_clear()
-
     interface.log_error("Added sailor %s" % str(cadet))
+    interface.clear()
 
     return interface.get_new_display_form_for_parent_of_function(display_form_add_cadet)
 

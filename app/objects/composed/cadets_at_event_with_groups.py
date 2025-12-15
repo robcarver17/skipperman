@@ -171,6 +171,15 @@ class DaysAndGroups(Dict[Day, Group]):
         return cls()
 
 
+
+class DaysAndGroupNames(Dict[Day, str]):
+    def most_common(self) -> Group:
+        return most_common(self.list_of_group_names, default=unallocated_group.name)
+
+    @property
+    def list_of_group_names(self):
+        return list(self.values())
+
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def __init__(
         self,

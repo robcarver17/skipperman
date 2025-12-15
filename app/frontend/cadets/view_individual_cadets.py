@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.groups.previous_groups import (
-    get_dict_of_all_event_allocations_for_single_cadet,
+    DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet, get_dict_of_all_event_allocations_for_single_cadet,
 )
 from app.objects.cadets import Cadet
 
@@ -74,8 +74,7 @@ def list_of_lines_with_allocations(
 ) -> ListOfLines:
     dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(
         object_store=interface.object_store,
-        cadet=cadet,
-        remove_unallocated=False,
+        cadet=cadet
     )
     return ListOfLines(
         ["Events registered at:", _______________]

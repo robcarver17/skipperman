@@ -19,7 +19,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             cursor = self.cursor
             cursor.execute('''SELECT %s, %s, %s, %s, %s FROM %s WHERE %s='%s' ''' % (
                 CADET_ID, CADET_AVAILABLITY, CADET_REGISTRATION_STATUS, CADET_REGISTRATION_NOTES, CADET_HEALTH,
-                CADETS_AT_EVENT_TABLE, EVENT_ID, event_id
+                CADETS_AT_EVENT_TABLE, EVENT_ID, int(event_id)
             ))
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -74,7 +74,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
                     CADETS_AT_EVENT_TABLE,
                     EVENT_ID, CADET_ID, CADET_AVAILABLITY, CADET_REGISTRATION_STATUS, CADET_REGISTRATION_NOTES, CADET_HEALTH)
                 self.cursor.execute(insertion,
-                                    (event_id, cadet_id, availability, status, notes, health))
+                                    (int(event_id), int(cadet_id), availability, status, notes, health))
 
                 self._write_row_of_registration_data_for_cadet_at_event(cadet_id=cadet_id,
                                                                         event_id=event_id,
@@ -90,8 +90,8 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
     def create_table(self):
         table_creation_query = """
             CREATE TABLE %s (
-                %s STR, 
-                %s STR,
+                %s INTEGER, 
+                %s INTEGER,
                 %s STR,
                 %s STR,
                 %s STR,
@@ -131,8 +131,8 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             cursor.execute("SELECT %s, %s FROM %s WHERE %s='%s' AND %s='%s'" % (
                 REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE,
                 REGISTRATION_ROW_FOR_CADETS_TABLE,
-                CADET_ID, cadet_id,
-                EVENT_ID, event_id
+                CADET_ID, int(cadet_id),
+                EVENT_ID, int(event_id)
             ))
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -156,9 +156,9 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (REGISTRATION_ROW_FOR_CADETS_TABLE,
                                                                               CADET_ID,
-                                                                              cadet_id,
+                                                                              int(cadet_id),
                                                                               EVENT_ID,
-                                                                              event_id))
+                                                                              int(event_id)))
             as_str_dict = row_in_registration_data.as_str_dict()
 
             for key, value in as_str_dict.items():
@@ -168,7 +168,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
                     CADET_ID, EVENT_ID, REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE)
 
                 self.cursor.execute(insertion, (
-                    str(cadet_id), str(event_id), str(key), str(value)))
+                    int(cadet_id), int(event_id), str(key), str(value)))
 
 
         except Exception as e1:
@@ -179,8 +179,8 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
     def _create_registration_row_data_table(self):
         table_creation_query = """
             CREATE TABLE %s (
-                %s STR, 
-                %s STR,
+                %s INTEGER, 
+                %s INTEGER,
                 %s STR,
                 %s STR
             );

@@ -9,9 +9,10 @@ from app.data_access.configuration.fixed import (
     YEARS_ON_CADET_COMMITTEE,
     MONTH_WHEN_EGM_HAPPENS,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.membership_status import current_member
 
-from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets
+from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets, get_sorted_list_of_cadets_from_raw_data
 from app.objects.composed.committee import ListOfCadetsOnCommittee
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -26,7 +27,7 @@ from app.objects.utilities.exceptions import MissingData, missing_data
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    all_cadets = DEPRECATE_get_list_of_cadets(object_store)
+    all_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
 
     list_of_cadets = ListOfCadets(
@@ -74,7 +75,7 @@ def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_brac
 def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    list_of_cadets = DEPRECATE_get_list_of_cadets(object_store)
+    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
 
     list_of_cadets = ListOfCadets(
         [
@@ -112,47 +113,49 @@ def is_cadet_member_not_on_committee_and_in_right_age_bracket_to_join(
 
 
 def add_new_cadet_to_committee(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     cadet: Cadet,
     date_term_starts: datetime.date,
     date_term_ends: datetime.date,
+    deselected: bool = False
 ):
-    list_of_committee_members = get_list_of_cadets_on_committee(object_store)
-    list_of_committee_members.add_new_member(
-        cadet=cadet,
-        date_term_starts=date_term_starts,
-        date_term_ends=date_term_ends,
-    )
-    update_list_of_cadets_on_committee(
-        object_store=object_store,
-        updated_list_of_cadets_on_committee=list_of_committee_members,
-    )
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadets_on_committee.add_new_cadet_to_committee,
+                         cadet_id=cadet.id,
+                         date_term_starts=date_term_starts,
+                         date_term_ends=date_term_ends,
+                         deselected=deselected
+                         )
+    except Exception as e:
+        interface.log_error("Error %s when adding %s to committee" % (str(e), str(cadet)))
 
 
 def toggle_selection_for_cadet_committee_member(
-    object_store: ObjectStore, cadet: Cadet
+    interface: abstractInterface, cadet: Cadet
 ):
-    list_of_committee_members = get_list_of_cadets_on_committee(object_store)
-    list_of_committee_members.toggle_selection_for_cadet(cadet)
-    update_list_of_cadets_on_committee(
-        object_store=object_store,
-        updated_list_of_cadets_on_committee=list_of_committee_members,
-    )
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_on_committee.toggle_selection_for_cadet_committee_member,
+            cadet_id=cadet.id
+        )
+    except Exception as e:
+        interface.log_error("Error %s when modifying cadet committee member %s" % (str(e), str(cadet)))
 
 
-def delete_cadet_from_committee_data(
-    object_store: ObjectStore, cadet: Cadet, areyousure=False
+
+def DEPRECATE_delete_cadet_from_committee_data(
+    interface: abstractInterface, cadet: Cadet, areyousure=False
 ):
     if not areyousure:
         return
 
-    list_of_committee_members = get_list_of_cadets_on_committee(object_store)
+    list_of_committee_members = get_list_of_cadets_on_committee(interface.object_store)
     existing_membership = list_of_committee_members.get_cadet_on_committee(
         cadet, default=missing_data
     )
 
     list_of_committee_members.delete_cadet_from_data(cadet)
-    update_list_of_cadets_on_committee(
+    DEPRECATE_update_list_of_cadets_on_committee(
         object_store=object_store,
         updated_list_of_cadets_on_committee=list_of_committee_members,
     )
@@ -170,10 +173,10 @@ def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCad
 def get_list_of_cadets_on_committee(
     object_store: ObjectStore,
 ) -> ListOfCadetsOnCommittee:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_cadet_committee_members)
+    return object_store.get(object_store.data_api.data_list_of_cadets_on_committee.get_list_of_cadets_on_committee)
 
 
-def update_list_of_cadets_on_committee(
+def DEPRECATE_update_list_of_cadets_on_committee(
     object_store: ObjectStore,
     updated_list_of_cadets_on_committee: ListOfCadetsOnCommittee,
 ):

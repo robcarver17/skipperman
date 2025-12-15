@@ -1,16 +1,18 @@
 
 ## In the unlikely event of switching to eg a database change here
 from app.data_access.csv.csv_api import CsvDataApi
-from app.data_access.configuration.configuration import DATAPATH, PICKLE_STORE
-from app.data_access.sql.dinghies_at_event import SqlDataListOfDinghies, SqlDataListOfCadetAtEventWithDinghies
+from app.data_access.configuration.configuration import DATAPATH
+from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
+from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
+from app.data_access.sql.boat_classes import SqlDataListOfDinghies
 from app.data_access.sql.events import SqlDataListOfEvents
-from app.data_access.sql.groups import SqlDataListOfCadetsWithGroups, SqlDataListOfGroups, SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion
+from app.data_access.sql.groups import SqlDataListOfGroups
+from app.data_access.sql.persistent_groups_at_events import SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion
+from app.data_access.sql.groups_at_event import SqlDataListOfCadetsWithGroups
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.qualifications import *
-from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_cache import  SimpleObjectCache
 from app.data_access.sql.sql_and_csv_api import MixedSqlAndCsvDataApi
 from app.data_access.user_data import user_data_path
 from app.data_access.backups.backup_data import backup_data_path
@@ -51,16 +53,6 @@ def transfer_from_csv_to_sql():
     events = csv_api.data_list_of_events.read()
     sql_events.write(events)
 
-
-    for event in events:
-        event_id = event.id
-        list_of_cadets_with_groups = csv_api.data_list_of_cadets_with_groups.read(event_id)
-        if len(list_of_cadets_with_groups)>0:
-            sql_groups_at_events.write(list_of_cadets_with_groups, event_id)
-
-    
-
-    
     list_of_cadets =csv_api.data_list_of_cadets.read()
     sql_cadets.write(list_of_cadets)
 

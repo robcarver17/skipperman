@@ -1,5 +1,5 @@
-from app.backend.cadets.cadet_committee import delete_cadet_from_committee_data
-from app.backend.cadets.list_of_cadets import delete_cadet
+from app.backend.cadets.cadet_committee import DEPRECATE_delete_cadet_from_committee_data
+from app.backend.cadets.list_of_cadets import DEPRECATE_delete_cadet
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     delete_cadet_from_event_and_return_messages,
 )
@@ -27,8 +27,8 @@ def delete_cadet_in_data_and_return_warnings(
     messages = []
 
     ## list of cadets on committee - just delete
-    existing_membership = delete_cadet_from_committee_data(
-        object_store=object_store, cadet=cadet_to_delete, areyousure=True
+    existing_membership = DEPRECATE_delete_cadet_from_committee_data(
+        interface=id(), cadet=cadet_to_delete, areyousure=True
     )
     if existing_membership is not missing_data:
         committee_message = "Will delete record from committee"
@@ -111,7 +111,7 @@ def delete_cadet_in_data_and_return_warnings(
         messages += event_messages
 
     ## list of cadets - HAVE TO DO THIS LAST
-    delete_cadet(object_store=object_store, cadet=cadet_to_delete, areyousure=True)
+    DEPRECATE_delete_cadet(object_store=object_store, cadet=cadet_to_delete, areyousure=True)
     messages.append("Will delete cadet %s from list of cadets" % str(cadet_to_delete))
 
     return messages

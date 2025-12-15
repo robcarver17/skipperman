@@ -49,8 +49,14 @@ def get_list_of_previous_groups_as_str(
 
     return list_of_groups_as_str
 
-
 def get_dict_of_all_event_allocations_for_single_cadet(
+    object_store: ObjectStore,
+    cadet: Cadet,
+) -> Dict[Event, str]:
+    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_all_event_allocations_for_single_cadet,
+                            cadet_id=cadet.id)
+
+def DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
     object_store: ObjectStore,
     cadet: Cadet,
     remove_unallocated: bool = False,
@@ -202,11 +208,11 @@ def get_dict_of_event_allocations_for_single_cadet_given_list_of_events(
     pad: bool = False,
 ) -> Dict[Event, Group]:
     previous_allocations_as_dict = (
-        get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+        DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
             object_store=object_store, list_of_events=list_of_events
         )
     )
-    dict_of_previous_groups = most_common_allocation_for_cadet_in_previous_events(
+    dict_of_previous_groups = DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
         cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict, pad=pad
     )
 
@@ -228,12 +234,12 @@ def get_dict_of_group_allocations_for_all_events_active_cadets_only(
     list_of_events = get_list_of_events(object_store)
     list_of_events = list_of_events.sort_by_start_date_asc()
 
-    return get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+    return DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
         object_store=object_store, list_of_events=list_of_events
     )
 
 
-def get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+def DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
     object_store: ObjectStore, list_of_events: list
 ) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
     allocations_as_dict = dict(
@@ -259,7 +265,7 @@ def get_group_allocations_for_event_active_cadets_only(
     return all_cadet_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
 
 
-def most_common_allocation_for_cadet_in_previous_events(
+def DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
     cadet: Cadet,
     previous_allocations_as_dict: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
     pad: bool = False,

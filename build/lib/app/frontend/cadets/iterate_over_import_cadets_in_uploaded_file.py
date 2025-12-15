@@ -53,7 +53,7 @@ def begin_iteration_over_rows_in_temp_cadet_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     set_all_current_members_to_temporary_unconfirmed(
-        object_store=interface.object_store
+        interface
     )
     first_cadet = reset_temp_cadet_file_counter_to_first_value(interface)
 
@@ -122,9 +122,8 @@ def mark_existing_cadet_as_member_and_log(interface: abstractInterface, cadet: C
         )
 
     
-    confirm_cadet_is_member(object_store=interface.object_store, cadet=cadet)
-    interface.DEPRECATE_flush_and_clear()
-
+    confirm_cadet_is_member(interface, cadet=cadet)
+    interface.clear()
 
 def next_iteration_over_rows_in_temp_cadet_file(
     interface: abstractInterface,
@@ -147,7 +146,7 @@ def process_when_cadet_is_in_membership_list_and_not_in_system(
 ) -> Form:
     if is_cadet_age_surprising(cadet):
         ## ignoring, probably not a cadet
-        print("Ignoring the import of %s as too old or young to be a cadet")
+        interface.log_error("Ignoring the import of %s as too old or young to be a cadet - add manually if required" % str(cadet))
         return next_iteration_over_rows_in_temp_cadet_file(interface)
 
     return process_when_cadet_to_be_added_from_membership_list(
@@ -159,11 +158,11 @@ def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
     
-    add_new_verified_cadet(object_store=interface.object_store, cadet=cadet)
+    add_new_verified_cadet(interface=interface, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
 
@@ -171,6 +170,7 @@ def process_when_cadet_to_be_added_from_membership_list(
 def process_when_cadet_already_added_from_form(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
+    interface.clear()
     interface.log_error("Added new cadet  %s" % str(cadet))
 
     return next_iteration_over_rows_in_temp_cadet_file(interface)
@@ -277,10 +277,11 @@ def change_or_warn_on_discrepancy(
                 % (existing_cadet.name, new_date_of_birth)
             )
             modify_cadet_date_of_birth(
-                object_store=interface.object_store,
+interface=interface,
                 existing_cadet=existing_cadet,
                 new_date_of_birth=new_date_of_birth,
             )
+            interface.clear()
         else:
             interface.log_error(
                 "Discrepancy in dates of birth for %s between Skipperman data %s and DOB in membership file %s - find out what is correct and edit Skipperman if required"
@@ -377,7 +378,7 @@ def finishing_processing_file(interface: abstractInterface) -> NewForm:
 def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
     
     lapsed_members = set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(
-        object_store=interface.object_store
+        interface=interface
     )
     for cadet in lapsed_members:
         interface.log_error(
@@ -386,9 +387,9 @@ def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
         )
 
     not_members = set_all_user_unconfirmed_members_to_non_members_and_return_list(
-        object_store=interface.object_store
+        interface=interface
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     for cadet in not_members:
         interface.log_error(

@@ -103,5 +103,4 @@ class SqlDataListOfGroups(GenericSqlData):
             self.close()
 
 
-#### PERSISTENT GROUPS WITH IDS
 

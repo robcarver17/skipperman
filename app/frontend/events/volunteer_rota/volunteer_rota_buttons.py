@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.volunteers.list_of_volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.objects.volunteers import SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.volunteer_rota.button_values import (
     last_button_was_copy_previous_role,

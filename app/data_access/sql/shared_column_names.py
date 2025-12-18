@@ -45,4 +45,27 @@ COMMITTEE_DESLECTED = "committee_deselected"
 EVENT_NAME = "event_name"
 EVENT_START_DATE = "event_start_date"
 EVENT_END_DATE = "event_end_date"
-EVENT_ID = "event_id"
+
+VOLUNTEER_FIRST_NAME = "volunteer_first_name"
+VOLUNTEER_SURNAME = "volunteer_surname"
+VOLUNTEER_ID = "volunteer_id"
+
+SKILL_NAME = "skill_name"
+SKILL_ID = "skill_id"
+SKILL_ORDER = "skill_order"
+
+PATROL_BOAT_NAME = "patrol_boat_name"
+PATROL_BOAT_ID = "patrol_boat_id"
+PATROL_BOAT_ORDER = "patrol_boat_order"
+
+ROLE_NAME = "role_name"
+ROLE_ID = "role_id"
+ROLE_ORDER = "role_order"
+ASSOCIATE_SAILING_GROUP = "associate_with_sailing_group"
+
+TEAM_NAME="team_name"
+TEAM_ID="team_id"
+TEAM_LOCATION = "team_location"
+TEAM_ORDER = "team_order"
+
+TEAM_IDX = "team_idx"

@@ -95,7 +95,7 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
         print("Already added %s to event, updating connections" % volunteer)
         
         update_cadet_connections_when_volunteer_already_at_event(
-            object_store=interface.object_store, event=event, volunteer=volunteer
+            interface=interface, event=event, volunteer=volunteer
         )
         interface.DEPRECATE_flush_and_clear()
         return next_volunteer_in_event(interface)
@@ -170,7 +170,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         registration_data=registration_data,
     )
     update_cadet_connections_when_volunteer_already_at_event(
-        object_store=interface.object_store, event=event, volunteer=volunteer
+        interface=interface, event=event, volunteer=volunteer
     )
 
     interface.DEPRECATE_flush_and_clear()

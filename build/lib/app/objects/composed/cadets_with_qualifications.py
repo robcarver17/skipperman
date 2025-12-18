@@ -57,6 +57,9 @@ class QualificationsForCadet(List[QualificationAndDate]):
 
 
 class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
+    pass
+
+class DEPRECATED_DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
     def __init__(
         self,
         dict_of_qualifications: Dict[Cadet, QualificationsForCadet],
@@ -133,8 +136,8 @@ def create_dict_of_qualifications_for_cadets(
     list_of_qualifications: ListOfQualifications,
     list_of_cadets: ListOfCadets,
     list_of_cadets_with_ids_and_qualifications: ListOfCadetsWithIdsAndQualifications,
-) -> DictOfQualificationsForCadets:
-    dict_of_qualifications_for_cadets = DictOfQualificationsForCadets(
+) -> DEPRECATED_DictOfQualificationsForCadets:
+    dict_of_qualifications_for_cadets = DEPRECATED_DictOfQualificationsForCadets(
         {},
         list_of_cadets_with_ids_and_qualifications=list_of_cadets_with_ids_and_qualifications,
     )
@@ -153,7 +156,7 @@ def update_dict_of_qualifications_for_cadets(
     cadet_with_id_and_qualification,
     list_of_cadets: ListOfCadets,
     list_of_qualifications: ListOfQualifications,
-    dict_of_qualifications_for_cadets: DictOfQualificationsForCadets,
+    dict_of_qualifications_for_cadets: DEPRECATED_DictOfQualificationsForCadets,
 ):
     cadet = list_of_cadets.cadet_with_id(cadet_with_id_and_qualification.cadet_id)
     list_of_qualifications_and_dates_for_cadet = (
@@ -196,7 +199,7 @@ class ListOfNamedCadetsWithQualifications(GenericListOfObjects):
 
     @classmethod
     def from_dict_of_qualifications(
-        cls, dict_of_qualifications: DictOfQualificationsForCadets
+        cls, dict_of_qualifications: DEPRECATED_DictOfQualificationsForCadets
     ):
         list_of_cadets_and_qualifications_and_dates = (
             dict_of_qualifications.list_of_cadets_and_qualifications_and_dates()

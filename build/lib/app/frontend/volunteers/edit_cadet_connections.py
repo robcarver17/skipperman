@@ -79,7 +79,7 @@ def post_form_edit_cadet_volunteer_connections(
     elif add_connection_button.pressed(button):
         add_connection_from_form(interface)
         ## might want to do more, display form again
-        return display_form_edit_cadet_volunteer_connections(interface)
+        return interface.get_new_form_given_function(display_form_edit_cadet_volunteer_connections)
 
     else:
         ## must be delete button
@@ -100,7 +100,7 @@ def post_form_edit_cadet_volunteer_connections_when_delete_button_probably_press
     if last_button_pressed_was_delete_cadet_button(interface=interface):
         delete_connection_given_form(interface=interface)
         ## might want to do more
-        return display_form_edit_cadet_volunteer_connections(interface)
+        return interface.get_new_form_given_function(display_form_edit_cadet_volunteer_connections)
     else:
         ## not a delete button
         return button_error_and_back_to_initial_state_form(interface)
@@ -145,17 +145,16 @@ def add_connection_from_form(interface: abstractInterface):
 
     
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-        object_store=interface.object_store, cadet=selected_cadet, volunteer=volunteer
+        interface=interface, cadet=selected_cadet, volunteer=volunteer
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def delete_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
 
-    
     delete_cadet_connection(
-        object_store=interface.object_store, cadet=cadet, volunteer=volunteer
+        interface=interface, cadet=cadet, volunteer=volunteer
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()

@@ -121,14 +121,13 @@ def post_form_edit_individual_volunteer(
 def modify_volunteer_given_form_contents(interface: abstractInterface):
     original_volunteer = get_volunteer_from_state(interface)
 
-    
     get_and_save_core_volunteer_details_from_form(
         interface=interface, original_volunteer=original_volunteer
     )
     get_and_save_volunteer_skills_from_form(
         interface=interface, volunteer=original_volunteer
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def get_and_save_core_volunteer_details_from_form(
@@ -136,7 +135,7 @@ def get_and_save_core_volunteer_details_from_form(
 ):
     volunteer_details_from_form = get_volunteer_from_form(interface)
     modify_volunteer(
-        object_store=interface.object_store,
+        interface=interface,
         existing_volunteer=original_volunteer,
         updated_volunteer=volunteer_details_from_form,
     )

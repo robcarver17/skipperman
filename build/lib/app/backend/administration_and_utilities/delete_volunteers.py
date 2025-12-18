@@ -4,6 +4,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 from app.backend.volunteers.connected_cadets import delete_all_connections_for_volunteer
 from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 from app.backend.volunteers.list_of_volunteers import delete_volunteer
 from app.backend.volunteers.skills import delete_volunteer_from_skills_and_return_skills
@@ -11,8 +12,9 @@ from app.backend.events.list_of_events import get_list_of_events
 
 
 def delete_volunteer_in_data_and_return_warnings(
-    object_store: ObjectStore, volunteer_to_delete: Volunteer
+    interface: abstractInterface, volunteer_to_delete: Volunteer
 ) -> list:
+    object_store = interface.object_store
     messages = []
 
     skills = delete_volunteer_from_skills_and_return_skills(
@@ -26,7 +28,7 @@ def delete_volunteer_in_data_and_return_warnings(
         )
 
     connections = delete_all_connections_for_volunteer(
-        object_store=object_store, volunteer=volunteer_to_delete, areyousure=True
+        interface=interface, volunteer=volunteer_to_delete, areyousure=True
     )
     if len(connections) == 0:
         messages.append("No connections to delete")
@@ -54,7 +56,7 @@ def delete_volunteer_in_data_and_return_warnings(
 
         messages += event_messages
 
-    delete_volunteer(object_store, volunteer=volunteer_to_delete, areyousure=True)
+    delete_volunteer(interface, volunteer=volunteer_to_delete, areyousure=True)
     messages.append("Will delete from volunteer list")
 
     return messages

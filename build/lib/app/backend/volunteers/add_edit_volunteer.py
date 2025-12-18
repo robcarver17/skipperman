@@ -2,10 +2,9 @@ from app.data_access.configuration.configuration import SIMILARITY_LEVEL_TO_WARN
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_list_of_volunteers,
-    update_list_of_volunteers,
     list_of_similar_volunteers,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.utils import similar
@@ -16,26 +15,25 @@ from app.objects.volunteers import Volunteer
 
 
 def modify_volunteer(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     existing_volunteer: Volunteer,
     updated_volunteer: Volunteer,
 ):
-    list_of_volunteers = get_list_of_volunteers(object_store)
-    list_of_volunteers.update_existing_volunteer(
-        existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer
-    )
-    update_list_of_volunteers(
-        object_store=object_store, list_of_volunteers=list_of_volunteers
-    )
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_volunteers.modify_volunteer,
+                         existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer)
+    except Exception as e:
+        interface.log_error("Error when modifying %s to %s: %s" % (str(existing_volunteer), str(updated_volunteer), str(e)))
 
 
-def add_new_verified_volunteer(object_store: ObjectStore, volunteer: Volunteer):
-    list_of_volunteers = get_list_of_volunteers(object_store)
+def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_volunteers.add_new_volunteer, volunteer=volunteer)
+        interface.log_error("Added volunteer %s" % str(volunteer))
 
-    list_of_volunteers.add(volunteer)
-    update_list_of_volunteers(
-        list_of_volunteers=list_of_volunteers, object_store=object_store
-    )
+    except Exception as e:
+        interface.log_error("Trying to add %s got error: %s " % (str(volunteer), str(e)))
+
 
 
 def warning_str_for_similar_volunteers(

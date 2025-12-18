@@ -1,8 +1,6 @@
 from typing import Union
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_list_of_all_groups_at_event,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_list_of_all_groups_at_event
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
 from app.frontend.reporting.sailors.qualification_status import (

@@ -7,11 +7,11 @@ from app.data_access.configuration.fixed import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_sorted_list_of_volunteers,
-    get_volunteer_from_id,
+
+    get_volunteer_from_id, get_sorted_list_of_volunteers,
 )
 
-from app.backend.volunteers.list_of_volunteers import SORT_BY_FIRSTNAME
+from app.objects.volunteers import SORT_BY_FIRSTNAME
 
 from app.objects.abstract_objects.abstract_form import (
     Form,

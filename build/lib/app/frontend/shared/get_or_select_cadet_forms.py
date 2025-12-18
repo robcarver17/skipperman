@@ -5,7 +5,7 @@ from typing import Union, List
 from app.backend.cadets.list_of_cadets import (
     DEPRECATE_get_list_of_cadets,
     get_list_of_similar_cadets_from_data,
-    get_cadet_from_list_of_cadets_given_str_of_cadet,
+    get_cadet_from_id,
 )
 from app.frontend.shared.buttons import break_up_buttons
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -224,7 +224,7 @@ def get_list_of_cadet_buttons(
     sort_order_buttons = get_sort_order_buttons(
         parameters=parameters, list_of_cadets=list_of_cadets
     )
-    cadet_choice_buttons = [Button(str(cadet)) for cadet in list_of_cadets]
+    cadet_choice_buttons = [cadet_button(cadet) for cadet in list_of_cadets]
     cadet_choice_buttons = break_up_buttons(cadet_choice_buttons)
 
     return ListOfLines(
@@ -236,6 +236,8 @@ def get_list_of_cadet_buttons(
         + cadet_choice_buttons
     ).add_Lines()
 
+def cadet_button(cadet: Cadet):
+    return Button(label=str(cadet), value=from_id_to_label(cadet.id))
 
 def get_sort_order_buttons(
     parameters: ParametersForGetOrSelectCadetForm,
@@ -385,12 +387,10 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
 
 
 def get_existing_cadet_selected_from_button(interface: abstractInterface) -> Cadet:
-    cadet_selected_as_str = interface.last_button_pressed()
-
+    cadet_selected_as_label = interface.last_button_pressed()
+    cadet_id = from_label_to_id(cadet_selected_as_label)
     try:
-        cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-            object_store=interface.object_store, cadet_selected=cadet_selected_as_str
-        )
+        cadet = get_cadet_from_id(interface.object_store, cadet_id=cadet_id)
     except:
         raise Exception(
             "Cadet selected no longer exists - file corruption or someone deleted?",
@@ -431,3 +431,11 @@ see_all_cadets_button = Button(SEE_ALL_CADETS_BUTTON_LABEL)
 add_non_member_cadet = Button(SINGLE_NONMEMBER_ADD_BUTTON_LABEL)
 skip_button = Button(SKIP_BUTTON_LABEL)
 refresh_button = Button(REFRESH_LIST_BUTTON_LABEL)
+
+
+def from_id_to_label(cadet_id:str):
+    return "cadetid_%s" % cadet_id
+
+
+def from_label_to_id(label:str):
+    return label.split("_")[1]

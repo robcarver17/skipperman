@@ -39,7 +39,7 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DaysAndGroups,
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 
@@ -76,7 +76,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
         dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-        dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+        dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
         dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
         dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
         event: Event,
@@ -242,7 +242,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
     def dict_of_cadets_with_groups_for_all_cadets_in_data(
         self,
-    ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+    ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
         return self.dict_of_cadets_with_days_and_groups.subset_for_list_of_cadets(
             self.list_of_cadets
         )
@@ -446,7 +446,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def dict_of_cadets_with_days_and_groups(
         self,
-    ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+    ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
         return self._dict_of_cadets_with_days_and_groups
 
     @property
@@ -474,7 +474,7 @@ def compose_dict_of_all_event_info_for_cadet(
     dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
     dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
 
@@ -504,7 +504,7 @@ def compose_raw_dict_of_all_event_info_for_cadet(
     dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
     dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
 ) -> Dict[Cadet, AllEventInfoForCadet]:

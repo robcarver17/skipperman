@@ -15,7 +15,7 @@ from app.data_access.store.object_definitions import \
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.composed.dict_of_previous_cadet_groups import \
     DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds
@@ -230,7 +230,7 @@ def get_dict_of_event_allocations_for_single_cadet_given_list_of_events(
 
 def get_dict_of_group_allocations_for_all_events_active_cadets_only(
     object_store: ObjectStore,
-) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
+) -> Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent]:
     list_of_events = get_list_of_events(object_store)
     list_of_events = list_of_events.sort_by_start_date_asc()
 
@@ -241,7 +241,7 @@ def get_dict_of_group_allocations_for_all_events_active_cadets_only(
 
 def DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
     object_store: ObjectStore, list_of_events: list
-) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
+) -> Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent]:
     allocations_as_dict = dict(
         [
             (
@@ -260,14 +260,12 @@ def DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_onl
 def get_group_allocations_for_event_active_cadets_only(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
-    all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-
-    return all_cadet_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
+    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_group_allocations_for_event_active_cadets_only, event=event)
 
 
 def DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
     cadet: Cadet,
-    previous_allocations_as_dict: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
+    previous_allocations_as_dict: Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent],
     pad: bool = False,
 ) -> Dict[Event, Group]:
     dict_of_allocations = dict(

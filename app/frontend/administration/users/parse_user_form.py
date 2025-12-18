@@ -6,7 +6,7 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_from_list_of_given_str_of_volunteer,
+    DEPRECATE_get_volunteer_from_list_of_given_str_of_volunteer,
     get_volunteer_from_id,
 )
 
@@ -200,6 +200,7 @@ def get_user_values_from_values_in_form(
         default=user.username,  ## valid if not adding user
     )
 
+    ## FIXME do it differently
     volunteer_name = interface.value_from_form(
         name_for_user_and_input_type(user, VOLUNTEER), default=MISSING_FROM_FORM
     )
@@ -210,7 +211,7 @@ def get_user_values_from_values_in_form(
             object_store=interface.object_store, volunteer_id=volunteer_id
         )
     else:
-        volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
+        volunteer = DEPRECATE_get_volunteer_from_list_of_given_str_of_volunteer(
             object_store=interface.object_store, volunteer_as_str=volunteer_name
         )
 

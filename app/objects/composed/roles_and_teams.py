@@ -4,7 +4,7 @@ from typing import Dict, List
 from app.objects.utilities.exceptions import missing_data, MissingData
 from app.objects.roles_and_teams import Team, ListOfTeams, no_team, RoleLocation
 from app.objects.roles_and_teams import ListOfTeamsAndRolesWithIds, TeamsAndRolesWithIds
-from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
+from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills, RoleWithSkills, ListOfRolesWithSkills
 from app.objects.utilities.utils import in_x_not_in_y
 
 
@@ -33,25 +33,43 @@ class ListOfTeamsAndIndices(List[TeamAndIndex]):
             [team_and_index.team.is_instructor_team() for team_and_index in self]
         )
 
-
 class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
-    def __init__(
-        self,
-        raw_dict: Dict[Team, ListOfRolesWithSkills],
-        list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
-        list_of_teams: ListOfTeams,
-        list_of_roles_with_skills: ListOfRolesWithSkills,
-    ):
-        super().__init__(raw_dict)
-        self._list_of_teams_and_roles_with_ids = list_of_teams_and_roles_with_ids
-        self._list_of_roles_with_skills = list_of_roles_with_skills
-        self._list_of_teams = list_of_teams
+    @property
+    def list_of_teams(self) -> ListOfTeams:
+        return ListOfTeams(list(self.keys()))
+
+
 
     def roles_in_instructor_team(self) -> ListOfRolesWithSkills:
         instructor_team = self.list_of_teams.instructor_team_from_list()
         return self.roles_for_team(instructor_team)
 
     def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
+        roles_for_team = self.get(team, missing_data)
+        if roles_for_team is missing_data:
+            raise MissingData("No roles found for team %s" % team)
+
+        return roles_for_team
+
+
+class DEPRECATE_DictOfTeamsWithRoles(Dict[Team, DEPRECATE_ListOfRolesWithSkills]):
+    def __init__(
+        self,
+        raw_dict: Dict[Team, DEPRECATE_ListOfRolesWithSkills],
+        list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
+        list_of_teams: ListOfTeams,
+        list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+    ):
+        super().__init__(raw_dict)
+        self._list_of_teams_and_roles_with_ids = list_of_teams_and_roles_with_ids
+        self._list_of_roles_with_skills = list_of_roles_with_skills
+        self._list_of_teams = list_of_teams
+
+    def roles_in_instructor_team(self) -> DEPRECATE_ListOfRolesWithSkills:
+        instructor_team = self.list_of_teams.instructor_team_from_list()
+        return self.roles_for_team(instructor_team)
+
+    def roles_for_team(self, team: Team) -> DEPRECATE_ListOfRolesWithSkills:
         roles_for_team = self.get(team, missing_data)
         if roles_for_team is missing_data:
             raise MissingData("No roles found for team %s" % team)
@@ -86,7 +104,7 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         )
 
     def refresh_roles_for_team(
-        self, team: Team, new_list_of_roles: ListOfRolesWithSkills
+        self, team: Team, new_list_of_roles: DEPRECATE_ListOfRolesWithSkills
     ):
         self._refresh_roles_for_team_to_teams_and_roles_with_ids(
             team=team, new_list_of_roles=new_list_of_roles
@@ -94,7 +112,7 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         self[team] = new_list_of_roles
 
     def _refresh_roles_for_team_to_teams_and_roles_with_ids(
-        self, team: Team, new_list_of_roles: ListOfRolesWithSkills
+        self, team: Team, new_list_of_roles: DEPRECATE_ListOfRolesWithSkills
     ):
         self._remove_roles_for_team_to_teams_and_roles_with_ids(team=team)
         self._add_roles_for_team_to_teams_and_roles_with_ids(
@@ -108,7 +126,7 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         )
 
     def _add_roles_for_team_to_teams_and_roles_with_ids(
-        self, team: Team, new_list_of_roles: ListOfRolesWithSkills
+        self, team: Team, new_list_of_roles: DEPRECATE_ListOfRolesWithSkills
     ):
         list_of_teams_and_roles_with_ids = self.list_of_teams_and_roles_with_ids
         order_idx = 0
@@ -136,21 +154,21 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         return self._list_of_teams
 
     @property
-    def list_of_roles_with_skills(self) -> ListOfRolesWithSkills:
+    def list_of_roles_with_skills(self) -> DEPRECATE_ListOfRolesWithSkills:
         return self._list_of_roles_with_skills
 
 
 def compose_dict_of_teams_with_roles(
     list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
     list_of_teams: ListOfTeams,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
-) -> DictOfTeamsWithRoles:
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+) -> DEPRECATE_DictOfTeamsWithRoles:
     raw_dict = compose_raw_dict_of_teams_with_roles(
         list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
         list_of_teams=list_of_teams,
         list_of_roles_with_skills=list_of_roles_with_skills,
     )
-    return DictOfTeamsWithRoles(
+    return DEPRECATE_DictOfTeamsWithRoles(
         raw_dict=raw_dict,
         list_of_teams_and_roles_with_ids=list_of_teams_and_roles_with_ids,
         list_of_teams=list_of_teams,
@@ -161,8 +179,8 @@ def compose_dict_of_teams_with_roles(
 def compose_raw_dict_of_teams_with_roles(
     list_of_teams_and_roles_with_ids: ListOfTeamsAndRolesWithIds,
     list_of_teams: ListOfTeams,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
-) -> Dict[Team, ListOfRolesWithSkills]:
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+) -> Dict[Team, DEPRECATE_ListOfRolesWithSkills]:
     raw_dict = {}
     for team in list_of_teams:
         list_of_role_ids = (
@@ -177,7 +195,7 @@ def compose_raw_dict_of_teams_with_roles(
                 "Missing role ID from list of teams and role ids %s" % str(e)
             )
 
-        raw_dict[team] = ListOfRolesWithSkills.from_list_of_roles_with_skills(
+        raw_dict[team] = DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
             list_of_roles
         )
 
@@ -185,17 +203,18 @@ def compose_raw_dict_of_teams_with_roles(
 
 
 def list_of_all_roles_not_already_in_team(
+list_of_roles_with_skills: ListOfRolesWithSkills,
     dict_of_teams_and_roles: DictOfTeamsWithRoles, team: Team
 ):
     list_of_roles_in_team = dict_of_teams_and_roles[team]
 
     return in_x_not_in_y(
-        dict_of_teams_and_roles.list_of_roles_with_skills, list_of_roles_in_team
+        list_of_roles_with_skills, list_of_roles_in_team
     )
 
 
 def reorder_roles_for_team_given_list_of_names(
-    dict_of_teams_with_roles: DictOfTeamsWithRoles,
+    dict_of_teams_with_roles: DEPRECATE_DictOfTeamsWithRoles,
     team: Team,
     new_order_of_role_names: List[str],
 ):
@@ -206,7 +225,7 @@ def reorder_roles_for_team_given_list_of_names(
     ]
     raw_new_list_of_roles = [roles_for_team[idx] for idx in list_of_indices]
 
-    new_list_of_roles = ListOfRolesWithSkills.from_list_of_roles_with_skills(
+    new_list_of_roles = DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
         raw_new_list_of_roles
     )
 
@@ -216,7 +235,7 @@ def reorder_roles_for_team_given_list_of_names(
 
 
 def add_new_named_role_to_team(
-    dict_of_teams_with_roles: DictOfTeamsWithRoles, team: Team, new_role_name: str
+    dict_of_teams_with_roles: DEPRECATE_DictOfTeamsWithRoles, team: Team, new_role_name: str
 ):
     all_roles = dict_of_teams_with_roles.list_of_roles_with_skills
     list_of_names_in_all_roles = all_roles.list_of_names()

@@ -95,7 +95,7 @@ def view_specific_volunteer_form(interface: abstractInterface):
     )
 
 
-from app.backend.volunteers.list_of_volunteers import SORT_BY_NAME_SIMILARITY
+from app.objects.volunteers import SORT_BY_NAME_SIMILARITY
 
 
 def display_form_merge_delete_individual_volunteer(interface: abstractInterface):

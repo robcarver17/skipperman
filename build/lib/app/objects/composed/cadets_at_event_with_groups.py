@@ -181,6 +181,16 @@ class DaysAndGroupNames(Dict[Day, str]):
         return list(self.values())
 
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
+    def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
+        return ListOfCadets(
+            [
+                cadet
+                for cadet, days_and_groups in self.items()
+                if group in days_and_groups.list_of_groups
+            ]
+        )
+
+class DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, DaysAndGroups],
@@ -318,7 +328,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
     def subset_for_list_of_cadets(
         self, list_of_cadets: ListOfCadets
-    ) -> "DictOfCadetsWithDaysAndGroupsAtEvent":
+    ) -> "DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent":
         raw_dict = dict(
             [
                 (cadet, self.get_days_and_groups_for_cadet(cadet))
@@ -326,7 +336,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
             ]
         )
 
-        return DictOfCadetsWithDaysAndGroupsAtEvent(
+        return DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent(
             raw_dict=raw_dict,
             list_of_groups=self.list_of_groups,
             event=self.event,
@@ -364,7 +374,7 @@ def compose_dict_of_cadets_with_days_and_groups_at_event(
     list_of_groups: ListOfGroups,
     list_of_events: ListOfEvents,
     list_of_cadet_ids_with_groups: ListOfCadetIdsWithGroups,
-) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
     event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_cadets_with_days_and_groups_at_event(
@@ -373,7 +383,7 @@ def compose_dict_of_cadets_with_days_and_groups_at_event(
         list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
     )
 
-    return DictOfCadetsWithDaysAndGroupsAtEvent(
+    return DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent(
         raw_dict=raw_dict,
         list_of_cadet_ids_with_groups=list_of_cadet_ids_with_groups,
         list_of_groups=list_of_groups,

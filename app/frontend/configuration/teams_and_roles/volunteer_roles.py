@@ -21,7 +21,7 @@ from app.frontend.configuration.generic_list_modifier import (
     BUTTON_NOT_KNOWN,
 )
 
-from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
+from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills, RoleWithSkills
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 from app.backend.volunteers.roles_and_teams import (
@@ -224,7 +224,7 @@ def save_from_ordinary_list_of_roles(
 ):
     update_list_of_roles_with_skills(
         object_store=object_store,
-        list_of_roles_with_skills=ListOfRolesWithSkills.from_list_of_roles_with_skills(
+        list_of_roles_with_skills=DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
             list_of_roles_with_skills=new_list
         ),
     )

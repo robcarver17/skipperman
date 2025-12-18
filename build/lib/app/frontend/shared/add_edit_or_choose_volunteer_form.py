@@ -49,8 +49,8 @@ def get_volunteer_from_form(interface: abstractInterface) -> Volunteer:
 def add_volunteer_from_form_to_data(interface: abstractInterface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
     
-    add_new_verified_volunteer(volunteer=volunteer, object_store=interface.object_store)
-    interface.DEPRECATE_flush_and_clear()
+    add_new_verified_volunteer(volunteer=volunteer, interface=interface)
+    interface.clear()
 
     return volunteer
 
@@ -175,7 +175,7 @@ def get_and_save_volunteer_skills_from_form(
         return
 
     save_skills_for_volunteer(
-        object_store=interface.object_store,
+        interface=interface,
         volunteer=volunteer,
         dict_of_skills=dict_of_skills,
     )

@@ -3,12 +3,8 @@ from typing import List, Tuple, Union
 
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteer_skills import ListOfSkills
-from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds
+from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds, NO_ROLE_ALLOCATED, SI_ROLE_NAME
 from app.objects.composed.volunteers_with_skills import SkillsDict
-
-
-SI_ROLE_NAME = "SI"
-NO_ROLE_SET = "No role allocated"
 
 
 @dataclass
@@ -59,7 +55,7 @@ class RoleWithSkills:
 
 
 no_role_set = RoleWithSkills(
-    name=NO_ROLE_SET,
+    name=NO_ROLE_ALLOCATED,
     skills_dict=SkillsDict(),
     protected=True,
     hidden=False,
@@ -87,6 +83,15 @@ from app.objects.utilities.generic_list_of_objects import (
 
 
 class ListOfRolesWithSkills(List[RoleWithSkills]):
+    def role_with_id(self, role_id, default=missing_data) -> RoleWithSkills:
+        idx = get_idx_of_unique_object_with_attr_in_list(self, attr_name='id', attr_value=role_id, default=missing_data)
+        if idx is missing_data:
+            return default
+
+        return self[idx]
+
+
+class DEPRECATE_ListOfRolesWithSkills(List[RoleWithSkills]):
     def __init__(
         self,
         list_of_roles_with_skill_ids: ListOfRolesWithSkillIds = arg_not_passed,
@@ -139,7 +144,7 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         self.append(no_role_set)
 
     def contains_no_role_set(self):
-        exists = self.role_with_name(NO_ROLE_SET, default=missing_data)
+        exists = self.role_with_name(NO_ROLE_ALLOCATED, default=missing_data)
         return exists is not missing_data
 
     def add(self, new_role_name: str):
@@ -184,14 +189,14 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         return [role.name for role in self]
 
     def sort_to_match_other_role_list_order(
-        self, other_list: Union["ListOfRolesWithSkills", ListOfRolesWithSkillIds]
-    ) -> "ListOfRolesWithSkills":
+        self, other_list: Union["DEPRECATE_ListOfRolesWithSkills", ListOfRolesWithSkillIds]
+    ) -> "DEPRECATE_ListOfRolesWithSkills":
         new_list = []
         for role_with_skill in other_list:
             if role_with_skill.name in self.list_of_names():
                 new_list.append(self.role_with_name(role_with_skill.name))
 
-        return ListOfRolesWithSkills.from_list_of_roles_with_skills(new_list)
+        return DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(new_list)
 
     def subset_for_ids(self, subset_list_of_ids: List[str]) -> List[RoleWithSkills]:
         list_of_ids = self.list_of_ids()
@@ -274,9 +279,9 @@ def get_raw_list_of_roles_and_list_of_roles_with_skill_ids_from_list_with_skills
 
 def compose_list_of_roles_with_skills(
     list_of_roles_with_skill_ids: ListOfRolesWithSkillIds, list_of_skills: ListOfSkills
-) -> ListOfRolesWithSkills:
+) -> DEPRECATE_ListOfRolesWithSkills:
     return (
-        ListOfRolesWithSkills.from_raw_list_of_roles_with_skill_ids_and_list_of_skills(
+        DEPRECATE_ListOfRolesWithSkills.from_raw_list_of_roles_with_skill_ids_and_list_of_skills(
             list_of_roles_with_skill_ids=list_of_roles_with_skill_ids,
             list_of_skills=list_of_skills,
         )

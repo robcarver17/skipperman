@@ -4,7 +4,7 @@ import pandas as pd
 from app.objects.cadets import ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_groups import (
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 from app.data_access.store.object_store import ObjectStore
@@ -58,7 +58,7 @@ def summarise_allocations_for_event(
 def get_relevant_cadets_for_group_on_day(
     group: Group,
     event: Event,
-    list_of_ids_with_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    list_of_ids_with_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> Dict[Day, ListOfCadets]:
     result_dict = {}
     for day in event.days_in_event():

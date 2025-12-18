@@ -176,7 +176,7 @@ from app.objects.utilities.exceptions import CadetNotSelected, MISSING_FROM_FORM
 
 
 def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:
-    selected_cadet_id = interface.value_from_form(CONNECTION, default=MISSING_FROM_FORM)
+    selected_cadet_id = get_cadet_id_to_add_from_dropdown(interface, default=MISSING_FROM_FORM)
     if selected_cadet_id is MISSING_FROM_FORM:
         raise "Can't get cadet from form"
 
@@ -187,8 +187,8 @@ def get_selected_cadet_from_form(interface: abstractInterface) -> Cadet:
     return selected_cadet
 
 
-def get_cadet_id_to_add_from_dropdown(interface: abstractInterface):
-    selected_cadet_id = interface.value_from_form(CONNECTION)
+def get_cadet_id_to_add_from_dropdown(interface: abstractInterface, default=MISSING_FROM_FORM):
+    selected_cadet_id = interface.value_from_form(CONNECTION, default)
     if selected_cadet_id == CADET_FILLER:
         raise CadetNotSelected
 

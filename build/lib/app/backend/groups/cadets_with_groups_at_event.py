@@ -13,7 +13,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 from app.objects.events import Event
@@ -25,7 +25,7 @@ from app.data_access.store.object_definitions import (
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 
 from app.data_access.store.object_store import ObjectStore
-from app.objects.groups import Group
+from app.objects.groups import Group, ListOfGroups
 
 
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
@@ -73,7 +73,7 @@ def get_attendance_matrix_for_group_at_event(
 
 def get_dict_of_cadets_with_groups_at_event(
     object_store: ObjectStore, event: Event
-) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
     return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_cadets_with_groups_at_event,
         event_id=event.id,
@@ -83,7 +83,7 @@ def get_dict_of_cadets_with_groups_at_event(
 def update_dict_of_cadets_with_groups_at_event(
     object_store: ObjectStore,
     event: Event,
-    dict_of_cadets_with_groups_at_event: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_groups_at_event: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 ):
     object_store.DEPRECATE_update(
         new_object=dict_of_cadets_with_groups_at_event,
@@ -127,3 +127,9 @@ def get_list_of_groups_at_event_given_list_of_cadets(
         list_of_groups += groups_for_cadet
 
     return list(set(list_of_groups))
+
+
+def get_list_of_all_groups_at_event(
+    object_store: ObjectStore, event: Event
+) -> ListOfGroups:
+    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_list_of_all_groups_at_event, event=event)

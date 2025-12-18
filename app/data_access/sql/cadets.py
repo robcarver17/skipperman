@@ -1,7 +1,5 @@
 from copy import copy
 
-import pandas as pd
-
 from app.data_access.sql.generic_sql_data import GenericSqlData,  int2date, date2int
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadets import ListOfCadets, Cadet, permanent_skip_cadet_id, permanent_skip_cadet, \
@@ -155,7 +153,7 @@ class SqlDataListOfCadets(GenericSqlData):
 
     def read(self, sort_by: str =arg_not_passed, exclude_cadet: Cadet = arg_not_passed) -> ListOfCadets:
         if self.table_does_not_exist(CADETS_TABLE):
-            self.create_table()
+            return ListOfCadets([])
 
         try:
             sort_clause = get_sort_clause(sort_by)
@@ -278,5 +276,5 @@ def get_exclude_clause(exclude_cadet: Cadet = arg_not_passed):
     if exclude_cadet is arg_not_passed:
         return ""
     else:
-        return "WHERE %s IS NOT '%s'" % (CADET_ID, exclude_cadet.id)
+        return "WHERE %s IS NOT '%d'" % (CADET_ID, int(exclude_cadet.id))
 

@@ -1,14 +1,17 @@
-from typing import Dict
+from typing import Dict, List
 
-
-from app.data_access.sql.generic_sql_data import GenericSqlData, int2date
+from app.data_access.sql.generic_sql_data import GenericSqlData, int2date, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.events import EVENTS_TABLE
 from app.data_access.sql.groups import GROUPS_TABLE
+from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
+from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups, CadetIdWithGroup
-from app.objects.composed.cadets_at_event_with_groups import  DaysAndGroupNames
+from app.objects.composed.cadets_at_event_with_groups import DaysAndGroupNames,  \
+    DaysAndGroups, DictOfCadetsWithDaysAndGroupsAtEvent
 from app.objects.day_selectors import Day
 from app.objects.events import Event
+from app.objects.groups import ListOfGroups, Group, GroupLocation
 from app.objects.utilities.exceptions import missing_data
 
 CADETS_WITH_GROUP_ID_TABLE = "list_of_cadet_ids_with_groups"
@@ -16,6 +19,129 @@ INDEX_NAME_CADETS_WITH_GROUP_ID_TABLE = "event_cadet_day"
 
 
 class SqlDataListOfCadetsWithGroups(GenericSqlData):
+    def get_group_allocations_for_event_active_cadets_only(
+    self, event: Event
+) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+        return DictOfCadetsWithDaysAndGroupsAtEvent(
+            [
+                (self.list_of_cadets.cadet_with_id(cadet_id),
+                 self.days_and_group_at_event_for_cadet(event=event, cadet_id=cadet_id))
+                for cadet_id in self.list_of_active_cadet_ids_at_event(event)
+            ]
+        )
+
+    def days_and_group_at_event_for_cadet(self, event: Event, cadet_id: str) -> DaysAndGroups:
+        try:
+            cursor = self.cursor
+
+            query = ("SELECT %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s FROM %s JOIN %s ON %s.%s=%s.%s  WHERE %s.%s=%d AND %s.%s=%d") % (
+                GROUPS_TABLE, GROUP_NAME,
+                GROUPS_TABLE, LOCATION,
+                GROUPS_TABLE, HIDDEN,
+                GROUPS_TABLE, PROTECTED,
+                GROUPS_TABLE, STREAMER,
+                GROUPS_TABLE, GROUP_ID,
+                CADETS_WITH_GROUP_ID_TABLE, DAY,
+
+                CADETS_WITH_GROUP_ID_TABLE,
+
+                GROUPS_TABLE,
+                CADETS_WITH_GROUP_ID_TABLE, GROUP_ID,
+                GROUPS_TABLE, GROUP_ID,
+
+                CADETS_WITH_GROUP_ID_TABLE, EVENT_ID,
+                int(event.id),
+
+                CADETS_WITH_GROUP_ID_TABLE, CADET_ID,
+                int(cadet_id)
+
+            )
+
+            cursor.execute(query)
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadet groups" % str(e1))
+        finally:
+            self.close()
+
+        new_dict = dict(
+            [
+                (Day[str(raw_item[6])],
+                 Group(name=str(raw_item[0]),
+                       location=GroupLocation[raw_item[1]],
+                       hidden=int2bool(raw_item[2]),
+                       protected=int2bool(raw_item[3]),
+                       streamer=str(raw_item[4]),
+                       id=str(raw_item[5]))
+
+                )
+                for raw_item in raw_list
+            ]
+        )
+
+        return DaysAndGroups(new_dict)
+
+    def list_of_active_cadet_ids_at_event(self, event: Event) -> List[str]:
+        list_of_active_ids = getattr(self, "_list_of_active_ids_%s" % event.id, None)
+        if list_of_active_ids is None:
+            list_of_active_ids = SqlDataListOfCadetsAtEvent(db_connection=self.db_connection).get_list_of_active_cadet_ids_at_event(event)
+            setattr(self, "_list_of_active_ids_%s" % event.id, list_of_active_ids)
+
+        return list_of_active_ids
+
+    @property
+    def list_of_cadets(self):
+        list_of_cadets = getattr(self, "_list_of_cadets", None)
+        if list_of_cadets is None:
+            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+
+        return list_of_cadets
+
+    def get_list_of_all_groups_at_event(
+            self, event: Event
+    ) -> ListOfGroups:
+
+        try:
+            cursor = self.cursor
+
+            query = ("SELECT DISTINCT %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s FROM %s JOIN %s ON %s.%s=%s.%s  WHERE %s.%s=%d ") % (
+                GROUPS_TABLE, GROUP_NAME,
+                GROUPS_TABLE, LOCATION,
+                GROUPS_TABLE, HIDDEN,
+                GROUPS_TABLE, PROTECTED,
+                GROUPS_TABLE, STREAMER,
+                GROUPS_TABLE, GROUP_ID,
+
+                CADETS_WITH_GROUP_ID_TABLE,
+
+                GROUPS_TABLE,
+                CADETS_WITH_GROUP_ID_TABLE, GROUP_ID,
+                GROUPS_TABLE, GROUP_ID,
+
+                CADETS_WITH_GROUP_ID_TABLE, EVENT_ID,
+                int(event.id)
+
+            )
+
+            cursor.execute(query)
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadets with qualifications" % str(e1))
+        finally:
+            self.close()
+
+        new_list=[
+            Group(name=str(raw_item[0]),
+                  location=GroupLocation[raw_item[1]],
+                  hidden=int2bool(raw_item[2]),
+                  protected=int2bool(raw_item[3]),
+                  streamer=str(raw_item[4]),
+                  id=str(raw_item[5]))         for raw_item in raw_list]
+
+        return ListOfGroups(new_list)
+
     def get_dict_of_all_event_allocations_for_single_cadet(
            self,cadet_id:str
     ) -> Dict[Event, str]:

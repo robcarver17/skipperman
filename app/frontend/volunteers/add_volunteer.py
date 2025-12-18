@@ -86,7 +86,7 @@ def process_form_when_volunteer_verified(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     try:
-        volunteer = add_volunteer_from_form_to_data(interface)
+        add_volunteer_from_form_to_data(interface)
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(
@@ -95,6 +95,5 @@ def process_form_when_volunteer_verified(
         )
         return initial_state_form
 
-    interface.log_error("Added volunteer %s" % str(volunteer))
 
     return interface.get_new_display_form_for_parent_of_function(display_form_add_volunteer)

@@ -19,7 +19,7 @@ from app.frontend.volunteers.view_individual_volunteer import (
     display_form_view_individual_volunteer,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.volunteers import Volunteer
+from app.objects.volunteers import Volunteer, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
@@ -38,8 +38,6 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.volunteers.list_of_volunteers import (
     get_sorted_list_of_volunteers,
-    SORT_BY_SURNAME,
-    SORT_BY_FIRSTNAME,
 )
 from app.frontend.shared.volunteer_state import update_state_for_specific_volunteer
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable

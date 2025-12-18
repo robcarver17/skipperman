@@ -1,5 +1,6 @@
 from copy import copy
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteer_skills import ListOfSkills, Skill
 from app.objects.volunteers import Volunteer
 
@@ -41,29 +42,21 @@ def modify_volunteer_skill(
 
 
 def save_skills_for_volunteer(
-    object_store: ObjectStore, volunteer: Volunteer, dict_of_skills: SkillsDict
+    interface: abstractInterface, volunteer: Volunteer, dict_of_skills: SkillsDict
 ):
-    dict_of_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
-    dict_of_volunteer_skills.replace_skills_for_volunteer_with_new_skills_dict(
-        volunteer=volunteer, dict_of_skills=dict_of_skills
-    )
-    update_dict_of_volunteers_with_skills(
-        object_store=object_store, dict_of_volunteer_skills=dict_of_volunteer_skills
-    )
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_volunteer_skills.save_skills_for_volunteer,
+                     volunteer=volunteer, dict_of_skills=dict_of_skills)
+    except Exception as e:
+        interface.log_error("Error when saving skills for %s: %s" % (volunteer, str(e)))
+
 
 
 def get_dict_of_existing_skills_for_volunteer(
     object_store: ObjectStore, volunteer: Volunteer
 ) -> SkillsDict:
-    dict_of_all_volunteer_skills = get_dict_of_volunteers_with_skills(object_store)
-    list_of_all_available_skills = get_list_of_skills(object_store)
-
-    dict_of_skills = dict_of_all_volunteer_skills.dict_of_skills_for_volunteer(
-        volunteer
-    )
-    dict_of_skills.pad_with_missing_skills(list_of_all_available_skills)
-
-    return dict_of_skills
+    return object_store.get(object_store.data_api.data_list_of_volunteer_skills.get_dict_of_existing_skills_for_volunteer,
+                            volunteer_id=volunteer.id)
 
 
 def get_dict_of_volunteers_with_skills(

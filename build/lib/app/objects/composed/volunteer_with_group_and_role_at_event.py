@@ -21,8 +21,8 @@ from app.objects.groups import Group, ListOfGroups, unallocated_group
 
 from app.objects.composed.volunteer_roles import RoleWithSkills, no_role_set
 from app.objects.composed.roles_and_teams import (
-    ListOfRolesWithSkills,
-    DictOfTeamsWithRoles,
+    DEPRECATE_ListOfRolesWithSkills,
+    DEPRECATE_DictOfTeamsWithRoles,
     ListOfTeamsAndIndices,
 )
 from app.objects.roles_and_teams import ListOfRolesWithSkillIds
@@ -45,8 +45,8 @@ class VolunteerWithRoleGroupAndTeamAtEvent:
         volunteer_with_id_in_role_at_event: VolunteerWithIdInRoleAtEvent,
         list_of_volunteers: ListOfVolunteers,
         list_of_groups: ListOfGroups,
-        list_of_roles_with_skills: ListOfRolesWithSkills,
-        dict_of_teams_and_roles: DictOfTeamsWithRoles,
+        list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+        dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
     ):
         volunteer = list_of_volunteers.volunteer_with_id(
             volunteer_with_id_in_role_at_event.volunteer_id
@@ -95,7 +95,7 @@ class RoleAndGroup:
     def index_for_sort(
         self,
         list_of_groups: ListOfGroups,
-        list_of_roles: Union[ListOfRolesWithSkills, ListOfRolesWithSkillIds],
+        list_of_roles: Union[DEPRECATE_ListOfRolesWithSkills, ListOfRolesWithSkillIds],
     ):
         ## sort by role first, do names in case objects slightly different
         role_index = list_of_roles.list_of_names().index(self.role.name)
@@ -109,6 +109,10 @@ class RoleAndGroup:
     def create_empty(cls):
         return cls(role=no_role_set, group=unallocated_group)
 
+    @property
+    def is_si(self) -> bool:
+        return self.role.is_si()
+
 
 unallocated_role_and_group = RoleAndGroup.create_empty()
 
@@ -117,7 +121,7 @@ class ListOfRolesAndGroups(List[RoleAndGroup]):
     def sorted(
         self,
         list_of_groups: ListOfGroups,
-        list_of_roles: Union[ListOfRolesWithSkills, ListOfRolesWithSkillIds],
+        list_of_roles: Union[DEPRECATE_ListOfRolesWithSkills, ListOfRolesWithSkillIds],
     ) -> "ListOfRolesAndGroups":
         as_tuple_list = [
             (
@@ -212,6 +216,30 @@ class ListOfRolesAndGroupsAndTeams(List[RoleAndGroupAndTeam]):
 
 
 unallocated_role_and_group_and_team = RoleAndGroupAndTeam.create_unallocated()
+
+class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroup]):
+    def subset_where_role_in_list_of_roles(self, list_of_roles: List[RoleWithSkills]):
+        list_of_ids = [role.id for role in list_of_roles]
+        return DictOfDaysRolesAndGroupsAndTeams(
+            [
+                (day, role_and_group)
+                for day, role_and_group in self.items()
+                if role_and_group.role.id in list_of_ids
+            ]
+        )
+
+    def most_common(self) -> RoleAndGroup:
+        roles_and_groups = list(self.values())
+
+        return most_common(roles_and_groups, RoleAndGroup.create_empty())
+
+    def role_and_group_on_day(self, day: Day) -> RoleAndGroup:
+        return self[day]
+
+    def contains_si(self) -> bool:
+        return any(
+            [role_and_group.is_si for role_and_group in list(self.values())]
+        )
 
 
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
@@ -318,8 +346,8 @@ class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleGroupAndTeamAtEvent]
         list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
         list_of_volunteers: ListOfVolunteers,
         list_of_groups: ListOfGroups,
-        list_of_roles_with_skills: ListOfRolesWithSkills,
-        dict_of_teams_and_roles: DictOfTeamsWithRoles,
+        list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+        dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
     ):
         return cls(
             [
@@ -377,9 +405,9 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         raw_dict: Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams],
         list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
         event: Event,
-        dict_of_teams_and_roles: DictOfTeamsWithRoles,
+        dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
         list_of_groups: ListOfGroups,
-        list_of_roles_with_skills: ListOfRolesWithSkills,
+        list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
     ):
         super().__init__(raw_dict)
         self._list_of_volunteers_with_id_in_role_at_event = (
@@ -535,7 +563,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
 
         return sum(sum_values)
 
-    def roles_for_team(self, team: Team) -> ListOfRolesWithSkills:
+    def roles_for_team(self, team: Team) -> DEPRECATE_ListOfRolesWithSkills:
         return self.dict_of_teams_with_roles.roles_for_team(team)
 
     @property
@@ -558,7 +586,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         return list(set(all_teams))
 
     @property
-    def all_roles_at_event(self) -> ListOfRolesWithSkills:
+    def all_roles_at_event(self) -> DEPRECATE_ListOfRolesWithSkills:
         all_roles_at_event = [
             dict_of_roles_and_group.list_of_roles()
             for dict_of_roles_and_group in self.all_dicts_of_roles_and_groups
@@ -566,7 +594,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         all_roles_at_event = flatten(all_roles_at_event)
         unique_list_of_roles = list(set(all_roles_at_event))
 
-        return ListOfRolesWithSkills.from_list_of_roles_with_skills(
+        return DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
             unique_list_of_roles
         )
 
@@ -650,7 +678,7 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         return self._event
 
     @property
-    def dict_of_teams_with_roles(self) -> DictOfTeamsWithRoles:
+    def dict_of_teams_with_roles(self) -> DEPRECATE_DictOfTeamsWithRoles:
         return self._dict_of_teams_and_roles
 
     @property
@@ -667,8 +695,8 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     list_of_events: ListOfEvents,
     list_of_volunteers: ListOfVolunteers,
     list_of_groups: ListOfGroups,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
-    dict_of_teams_and_roles: DictOfTeamsWithRoles,
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
+    dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
     list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
 ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
     event = list_of_events.event_with_id(event_id)
@@ -693,9 +721,9 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
 def compose_raw_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     list_of_volunteers: ListOfVolunteers,
     list_of_groups: ListOfGroups,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
     list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
-    dict_of_teams_and_roles: DictOfTeamsWithRoles,
+    dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
 ) -> Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams]:
     list_of_volunteers_with_role_in_event = ListOfVolunteersWithRoleAtEvent.from_list_of_volunteers_with_id_in_role_at_event(
         list_of_volunteers_with_id_in_role_at_event=list_of_volunteers_with_id_in_role_at_event,

@@ -2,6 +2,8 @@ import pandas as pd
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
+from app.objects.cadets import Cadet
+from app.objects.composed.cadets_with_qualifications import QualificationsForCadet, QualificationAndDate
 
 from app.objects.qualifications import (
     ListOfQualifications, Qualification,
@@ -11,10 +13,13 @@ QUALIFICATION_TABLE = "qualifications_table"
 INDEX_NAME_QUALIFICATION_TABLE = "qual_id"
 
 class SqlDataListOfQualifications(GenericSqlData):
+
+
     def read(self) -> ListOfQualifications:
+        if self.table_does_not_exist(QUALIFICATION_TABLE):
+            return ListOfQualifications.create_empty()
+
         try:
-            if self.table_does_not_exist(QUALIFICATION_TABLE):
-                self.create_table()
 
             cursor = self.cursor
             cursor.execute('''SELECT %s, %s FROM %s ORDER BY %s''' % (

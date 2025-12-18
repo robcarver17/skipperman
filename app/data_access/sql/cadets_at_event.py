@@ -1,23 +1,48 @@
+from typing import List
+
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent, CadetWithIdAtEvent
 from app.objects.day_selectors import DaySelector
+from app.objects.events import Event
 from app.objects.registration_data import RowInRegistrationData
-from app.objects.registration_status import RegistrationStatus
+from app.objects.registration_status import RegistrationStatus, ACTIVE_STATUS_NAMES
 
 CADETS_AT_EVENT_TABLE = "cadets_at_event"
 INDEX_CADETS_AT_EVENT_TABLE = "index_cadets_at_event"
 REGISTRATION_ROW_FOR_CADETS_TABLE = "registration_row_data_for_cadets_at_event"
 INDEX_REGISTRATION_ROW_FOR_CADETS_TABLE = "index_registration_row_data_for_cadets_at_event"
 
+ACTIVE_STATUS_NAMES_AS_STR="('%s')" % ("','".join(ACTIVE_STATUS_NAMES))
+
 class SqlDataListOfCadetsAtEvent(GenericSqlData):
+    def get_list_of_active_cadet_ids_at_event(self, event: Event) -> List[str]:
+        if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
+            return []
+
+        try:
+            cursor = self.cursor
+            cursor.execute('''SELECT %s  FROM %s WHERE %s=%d AND %s IN %s''' % (
+                CADET_ID,
+                CADETS_AT_EVENT_TABLE,
+                EVENT_ID, int(event.id),
+                CADET_MEMBERSHIP_STATUS, ACTIVE_STATUS_NAMES_AS_STR
+            ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadets at events" % str(e1))
+        finally:
+            self.close()
+
+        return [str(ans[0]) for ans in raw_list]
+
     def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:
         if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
             self.create_table()
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s, %s, %s, %s FROM %s WHERE %s=%d ''' % (
                 CADET_ID, CADET_AVAILABLITY, CADET_REGISTRATION_STATUS, CADET_REGISTRATION_NOTES, CADET_HEALTH,
                 CADETS_AT_EVENT_TABLE, EVENT_ID, int(event_id)
             ))

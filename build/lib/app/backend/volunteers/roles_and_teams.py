@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from app.objects.composed.roles_and_teams import DictOfTeamsWithRoles
+from app.objects.composed.roles_and_teams import DEPRECATE_DictOfTeamsWithRoles, DictOfTeamsWithRoles
 
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_teams,
@@ -9,7 +9,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_teams_with_roles,
 )
 from app.data_access.store.object_store import ObjectStore
-from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
+from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills, RoleWithSkills, ListOfRolesWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     RoleAndGroup,
     ListOfRolesAndGroups,
@@ -118,7 +118,7 @@ def add_to_list_of_roles_with_skills(
 
 
 def update_list_of_roles_with_skills(
-    object_store: ObjectStore, list_of_roles_with_skills: ListOfRolesWithSkills
+    object_store: ObjectStore, list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills
 ):
     object_store.DEPRECATE_update(
         list_of_roles_with_skills,
@@ -126,8 +126,8 @@ def update_list_of_roles_with_skills(
     )
 
 
-def get_list_of_roles_with_skills(object_store: ObjectStore) -> ListOfRolesWithSkills:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_roles_with_skills)
+def get_list_of_roles_with_skills(object_store: ObjectStore) ->ListOfRolesWithSkills:
+    return object_store.get(object_store.data_api.data_list_of_roles.read_list_of_roles_with_skills)
 
 
 def add_new_team(object_store: ObjectStore, name_of_entry_to_add: str):
@@ -184,11 +184,11 @@ def update_list_of_roles(
 
 
 def get_dict_of_teams_and_roles(object_store: ObjectStore) -> DictOfTeamsWithRoles:
-    return object_store.DEPRECATE_get(object_definition_for_dict_of_teams_with_roles)
+    return object_store.get(object_store.data_api.data_list_of_teams_and_roles_with_ids.get_dict_of_teams_and_roles)
 
 
 def update_dict_of_teams_and_roles(
-    object_store: ObjectStore, dict_of_teams_and_roles: DictOfTeamsWithRoles
+    object_store: ObjectStore, dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles
 ):
     object_store.DEPRECATE_update(
         new_object=dict_of_teams_and_roles,

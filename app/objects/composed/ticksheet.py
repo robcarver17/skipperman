@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from app.objects.composed.cadets_with_qualifications import (
-    DictOfQualificationsForCadets,
+    DEPRECATED_DictOfQualificationsForCadets,
     QualificationsForCadet,
 )
 from app.objects.composed.ticks_for_qualification import (
@@ -191,7 +191,7 @@ def compose_dict_of_cadets_with_qualifications_and_ticks(
         str, ListOfTickListItemsAndTicksForSpecificCadet
     ],
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
-    dict_of_qualifications_for_all_cadets: DictOfQualificationsForCadets,
+    dict_of_qualifications_for_all_cadets: DEPRECATED_DictOfQualificationsForCadets,
 ) -> DictOfCadetsWithQualificationsAndTicks:
     ## Because the underlying is iterable, it won't automatically be of the right class
     dict_of_cadet_ids_with_tick_list_items_for_cadet_id = (

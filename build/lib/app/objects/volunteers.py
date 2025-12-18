@@ -125,3 +125,6 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
 
 
 default_volunteer = Volunteer(first_name=" ", surname=" ")
+SORT_BY_SURNAME = "Sort by surname"
+SORT_BY_FIRSTNAME = "Sort by first name"
+SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"

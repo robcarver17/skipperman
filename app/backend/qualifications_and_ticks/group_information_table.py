@@ -7,7 +7,6 @@ from app.backend.groups.previous_groups import (
     get_group_allocations_for_event_active_cadets_only,
 )
 from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
-    highest_qualification_for_cadet,
     name_of_highest_qualification_for_cadet,
 )
 from app.data_access.store.object_store import ObjectStore

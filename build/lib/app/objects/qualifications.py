@@ -144,3 +144,11 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
     def list_of_qualification_ids_for_cadet(self, cadet_id: str) -> List[str]:
         matching = [item.qualification_id for item in self if item.cadet_id == cadet_id]
         return matching
+
+
+class NoQualifications:
+    def name(self):
+        return "No qualification"
+
+
+no_qualifications = NoQualifications()

@@ -168,7 +168,7 @@ def add_cadet_connection_from_form(interface: abstractInterface):
 
     volunteer = get_volunteer_from_state(interface)
     add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-        object_store=interface.object_store,
+        interface=interface,
         volunteer=volunteer,
         cadet=selected_cadet,
     )

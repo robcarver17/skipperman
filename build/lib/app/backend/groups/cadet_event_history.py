@@ -14,7 +14,7 @@ from app.backend.groups.previous_groups import (
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_groups import (
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.events import Event, ListOfEvents
 from app.objects.utilities.exceptions import missing_data
@@ -79,7 +79,7 @@ def get_df_of_history_for_active_cadets(
 
 
 def get_dict_of_group_name_for_cadet_across_events(
-    dict_of_group_allocations: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
+    dict_of_group_allocations: Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent],
     cadet: Cadet,
     list_of_events: ListOfEvents,
 ) -> Dict[str, str]:
@@ -101,7 +101,7 @@ def get_dict_of_group_name_for_cadet_across_events(
 
 
 def get_group_name_for_cadet_at_event(
-    dict_of_group_allocations: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
+    dict_of_group_allocations: Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent],
     cadet: Cadet,
     event: Event,
 ) -> str:

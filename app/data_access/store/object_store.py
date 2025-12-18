@@ -17,11 +17,15 @@ from app.objects.utilities.exceptions import arg_not_passed
 
 class ObjectStore:
     def __init__(self, data_api: MixedSqlAndCsvDataApi,
-                 object_cache: SimpleObjectCache = arg_not_passed):
+                 object_cache: SimpleObjectCache = arg_not_passed,
+                 new_object_cache: SimpleObjectCache =arg_not_passed):
         if object_cache is arg_not_passed:
             object_cache = SimpleObjectCache()
+        if new_object_cache is arg_not_passed:
+            new_object_cache = SimpleObjectCache()
 
         self._object_cache = object_cache
+        self._new_object_cache = new_object_cache
         self._data_api = data_api
 
     def delete_all_data(self, are_you_sure: bool = False):
@@ -48,6 +52,7 @@ class ObjectStore:
 
     def clear_memory_cache_in_store(self):
         self.object_cache.clear()
+        self.new_object_cache.clear()
 
     def DEPRECATE_update(
         self,
@@ -56,7 +61,7 @@ class ObjectStore:
         **kwargs,
     ):
         definition_with_args = DEPRECATE_DefinitionWithArgs(object_definition, kwargs)
-        self.update_in_cache(new_object, definition_with_args=definition_with_args)
+        self.DEPRECATE_update_in_cache(new_object, definition_with_args=definition_with_args)
 
         update_components_of_changed_object(object_store=self, new_object=new_object, definition_with_args=definition_with_args)
 
@@ -64,7 +69,7 @@ class ObjectStore:
         ### does not update cache, so after use will need to clear cache without flushing
         data_api_property_and_method(**kwargs)
 
-    def update_in_cache(
+    def DEPRECATE_update_in_cache(
         self,
         new_object,
         definition_with_args:DEPRECATE_DefinitionWithArgs
@@ -83,7 +88,7 @@ class ObjectStore:
         definition_with_args = DefinitionWithArgsAndMethod(data_api_property_and_method,
                                                            kwargs=kwargs)
 
-        cached_item = self.object_cache.get(definition_with_args.key, default=NOT_IN_STORE)
+        cached_item = self.new_object_cache.get(definition_with_args.key, default=NOT_IN_STORE)
 
         if cached_item is NOT_IN_STORE:
             cached_item = self.compose_from_scratch_and_store_object_in_cache(
@@ -100,7 +105,7 @@ class ObjectStore:
         new_object = new_object_method(**definition_with_args.kwargs)
         cached_data_item = CachedDataItem(new_object, definition_with_args=definition_with_args)
 
-        self.object_cache.update(cached_data_item
+        self.new_object_cache.update(cached_data_item
                                            )
         return cached_data_item
 
@@ -168,6 +173,9 @@ class ObjectStore:
     def object_cache(self) -> SimpleObjectCache:
         return self._object_cache
 
+    @property
+    def new_object_cache(self) -> SimpleObjectCache:
+        return self._new_object_cache
 
 
 

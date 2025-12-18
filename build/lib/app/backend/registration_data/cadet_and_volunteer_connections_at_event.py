@@ -3,6 +3,7 @@ from typing import List, Union
 from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
@@ -48,26 +49,26 @@ def are_all_cadets_in_list_already_connection_to_volunteer(
 
 
 def update_cadet_connections_when_volunteer_already_at_event(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer
+        interface: abstractInterface, event: Event, volunteer: Volunteer
 ):
     list_of_associated_cadets_in_mapped_data = get_list_of_active_associated_cadets_in_mapped_event_data_given_identified_volunteer(
-        object_store=object_store, event=event, volunteer=volunteer
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
     update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets(
-        object_store=object_store,
+        interface=interface,
         volunteer=volunteer,
         list_of_cadets_to_connect=list_of_associated_cadets_in_mapped_data,
     )
 
 
 def update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     volunteer: Volunteer,
     list_of_cadets_to_connect: ListOfCadets,
 ):
     currently_connected_cadets = get_list_of_cadets_associated_with_volunteer(
-        object_store=object_store, volunteer=volunteer
+        object_store=interface.object_store, volunteer=volunteer
     )
     new_cadets = in_x_not_in_y(
         x=list_of_cadets_to_connect,
@@ -75,7 +76,7 @@ def update_cadet_connections_for_volunteer_already_at_event_given_list_of_cadets
     )
 
     add_list_of_cadets_to_volunteer_connection(
-        object_store=object_store,
+        interface=interface,
         volunteer=volunteer,
         list_of_cadets=ListOfCadets(new_cadets),
     )

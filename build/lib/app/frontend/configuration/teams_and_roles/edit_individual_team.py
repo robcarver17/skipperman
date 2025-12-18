@@ -2,7 +2,7 @@ from typing import Union, List, Tuple
 
 from app.objects.composed.roles_and_teams import (
     list_of_all_roles_not_already_in_team,
-    DictOfTeamsWithRoles,
+    DEPRECATE_DictOfTeamsWithRoles, DictOfTeamsWithRoles,
 )
 
 from app.objects.abstract_objects.abstract_tables import RowInTable
@@ -17,6 +17,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 
 from app.objects.roles_and_teams import Team
 
@@ -39,11 +40,13 @@ from app.backend.volunteers.roles_and_teams import get_dict_of_teams_and_roles
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
+from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
 def display_form_edit_individual_team_page(interface: abstractInterface) -> Form:
     team, dict_of_teams_and_roles = get_team_and_dict_of_teams_and_roles(interface)
     names = get_list_of_current_role_names(
         dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
     )
+    list_of_roles_with_skills = get_list_of_roles_with_skills(interface.object_store)
     navbar = ButtonBar([cancel_menu_button])
     heading = Heading(
         "Add, remove or re-order members of volunteer team: %s " % team.name,
@@ -56,7 +59,8 @@ def display_form_edit_individual_team_page(interface: abstractInterface) -> Form
     add_line = RowInTable(
         [
             dropdown_to_add_volunteer_to_team(
-                dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
+                dict_of_teams_and_roles=dict_of_teams_and_roles, team=team,
+                list_of_roles_with_skills=list_of_roles_with_skills
             ),
             "",
             "",
@@ -100,9 +104,11 @@ NEW_ENTRY_ROLE = "newentryrole"
 
 
 def dropdown_to_add_volunteer_to_team(
+list_of_roles_with_skills: ListOfRolesWithSkills,
     dict_of_teams_and_roles: DictOfTeamsWithRoles, team: Team
 ) -> dropDownInput:
     all_roles = list_of_all_roles_not_already_in_team(
+        list_of_roles_with_skills=list_of_roles_with_skills,
         dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
     )
     all_role_names = [role.name for role in all_roles]

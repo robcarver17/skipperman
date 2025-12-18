@@ -7,7 +7,7 @@ from app.backend.volunteers.connected_cadets import get_list_of_similar_voluntee
 from app.backend.volunteers.list_of_volunteers import (
     get_list_of_volunteers,
     sort_list_of_volunteers,
-    get_volunteer_from_list_of_given_str_of_volunteer,
+    DEPRECATE_get_volunteer_from_list_of_given_str_of_volunteer,
 )
 from app.frontend.shared.add_edit_or_choose_volunteer_form import (
     VolunteerAndVerificationText,
@@ -31,13 +31,9 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 from app.objects.cadets import Cadet
-from app.backend.volunteers.list_of_volunteers import (
-    SORT_BY_SURNAME,
-    SORT_BY_FIRSTNAME,
-    SORT_BY_NAME_SIMILARITY,
-)
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.volunteers import Volunteer, default_volunteer
+from app.objects.volunteers import Volunteer, default_volunteer, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
+    SORT_BY_NAME_SIMILARITY
 
 
 @dataclass
@@ -386,7 +382,7 @@ def get_existing_volunteer_selected_from_button(
 ) -> Volunteer:
     volunteer_selected_as_str = interface.last_button_pressed()
 
-    volunteer = get_volunteer_from_list_of_given_str_of_volunteer(
+    volunteer = DEPRECATE_get_volunteer_from_list_of_given_str_of_volunteer(
         object_store=interface.object_store,
         volunteer_as_str=volunteer_selected_as_str,
         default=None,

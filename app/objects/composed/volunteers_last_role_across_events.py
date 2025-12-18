@@ -8,7 +8,7 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.objects.groups import  ListOfGroups
 from app.objects.composed.roles_and_teams import (
-    ListOfRolesWithSkills, DictOfTeamsWithRoles,
+    DEPRECATE_ListOfRolesWithSkills, DEPRECATE_DictOfTeamsWithRoles,
 )
 
 no_role_and_group =RoleAndGroup()
@@ -44,10 +44,10 @@ class DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents(
 
 def compose_dict_of_volunteers_with_last_role_and_group_across_events(
     list_of_groups: ListOfGroups,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
         list_of_most_common_role_for_volunteers_across_events_with_id: ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
         list_of_volunteers: ListOfVolunteers,
-        dict_of_teams_and_roles: DictOfTeamsWithRoles
+        dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles
 ) -> DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents:
 
     raw_dict = compose_raw_dict_of_volunteers_with_most_common_role_and_group_across_events(
@@ -66,10 +66,10 @@ def compose_dict_of_volunteers_with_last_role_and_group_across_events(
 
 def compose_raw_dict_of_volunteers_with_most_common_role_and_group_across_events(
     list_of_groups: ListOfGroups,
-    list_of_roles_with_skills: ListOfRolesWithSkills,
+    list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
         list_of_most_common_role_for_volunteers_across_events_with_id: ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
         list_of_volunteers: ListOfVolunteers,
-        dict_of_teams_and_roles: DictOfTeamsWithRoles
+        dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles
 ) -> Dict[Volunteer, RoleAndGroupAndTeam]:
 
     raw_dict = {}

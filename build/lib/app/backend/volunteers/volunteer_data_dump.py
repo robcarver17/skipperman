@@ -129,14 +129,8 @@ def get_row_data_for_volunteer(
 ) -> VolunteerRowData:
     name = volunteer.name
     list_of_events = get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_DSC)
-    roles_with_teams_as_dict = get_all_roles_for_list_of_events_for_volunteer_as_dict(
+    roles_with_groups_as_dict = get_all_roles_for_list_of_events_for_volunteer_as_dict(
         object_store=object_store, volunteer=volunteer, list_of_events=list_of_events
-    )
-    roles_with_groups_as_dict = dict(
-        [
-            (event, role_with_team.role_and_group())
-            for event, role_with_team in roles_with_teams_as_dict.items()
-        ]
     )
 
     skills = get_dict_of_existing_skills_for_volunteer(

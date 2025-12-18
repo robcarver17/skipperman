@@ -5,10 +5,11 @@ from app.frontend.shared.buttons import (
     cadet_from_button_pressed,
     is_button_cadet_selection,
 )
+from app.frontend.shared.get_or_select_cadet_forms import from_id_to_label, from_label_to_id
 from app.objects.cadets import Cadet
 
 from app.backend.cadets.list_of_cadets import (
-    get_cadet_from_list_of_cadets_given_str_of_cadet,
+    get_cadet_from_id,
 )
 from app.backend.cadets.cadet_committee import (
     get_list_of_cadets_on_committee,
@@ -171,7 +172,7 @@ def dropdown_list_of_cadets_not_on_committee_or_elected_or_none(
 
     dict_of_members = dict(
         [
-            (str(cadet), str(cadet))
+            (str(cadet), from_id_to_label(cadet.id))
             for cadet in list_of_cadets_not_on_committee_ordered_by_age
         ]
     )
@@ -245,7 +246,7 @@ def previous_form(interface: abstractInterface):
 
 ## Add new
 def add_new_cadet_to_committee_from_form(interface: abstractInterface):
-    cadet_selected_as_str = interface.value_from_form(
+    cadet_id_label = interface.value_from_form(
         NEW_COMMITTEE_MEMBER_DROPDOWN, default=MISSING_FROM_FORM
     )
     date_term_starts = interface.value_from_form(
@@ -255,11 +256,13 @@ def add_new_cadet_to_committee_from_form(interface: abstractInterface):
         DATE_TERM_END, default=MISSING_FROM_FORM, value_is_date=True
     )
 
-    if MISSING_FROM_FORM in [cadet_selected_as_str, date_term_ends, date_term_starts]:
+    if MISSING_FROM_FORM in [cadet_id_label, date_term_ends, date_term_starts]:
         interface.log_error("Something went wrong adding new cadet to committee")
 
-    cadet = get_cadet_from_list_of_cadets_given_str_of_cadet(
-        object_store=interface.object_store, cadet_selected=cadet_selected_as_str
+    cadet_id = from_label_to_id(cadet_id_label)
+
+    cadet = get_cadet_from_id(
+        object_store=interface.object_store, cadet_id=cadet_id
     )
 
     add_new_cadet_to_committee(

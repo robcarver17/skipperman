@@ -38,6 +38,8 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
     associate_sailing_group: bool = False
     protected: bool = False
 
+
+
     @classmethod
     def from_dict_of_str(cls, dict_with_str: dict):
         skill_ids_required = str(dict_with_str["skill_ids_required"])
@@ -82,6 +84,10 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
             hidden=False,
             protected=True,
         )
+
+
+    def is_si(self):
+        return self.name == SI_ROLE_NAME
 
 
 no_role_allocated = RolesWithSkillIds.create_empty()
@@ -246,3 +252,6 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
 
     def list_of_role_ids(self):
         return [team_and_role.role_id for team_and_role in self]
+
+
+SI_ROLE_NAME = "SI"

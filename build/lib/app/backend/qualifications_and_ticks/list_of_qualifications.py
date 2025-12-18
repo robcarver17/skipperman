@@ -49,7 +49,7 @@ def get_qualification_given_name(object_store: ObjectStore, name: str) -> Qualif
 
 
 def get_list_of_qualifications(object_store: ObjectStore) -> ListOfQualifications:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_qualifications)
+    return object_store.get(object_store.data_api.data_list_of_qualifications.read)
 
 
 def update_list_of_qualifications(

@@ -13,7 +13,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
-    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
@@ -25,7 +25,7 @@ from app.objects.partners import valid_partnership_given_partner_cadet, NoCadetP
 
 def cadets_not_allocated_to_group_but_attending_on_day(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
     day: Day,
 ) -> ListOfCadets:
     list_of_cadets = []
@@ -55,7 +55,7 @@ def cadets_not_allocated_to_group_but_attending_on_day(
 
 def cadets_not_allocated_to_group_on_at_least_one_day_attending(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> ListOfCadets:
     list_of_cadets = []
     for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
@@ -80,7 +80,7 @@ def cadets_not_allocated_to_group_on_at_least_one_day_attending(
 def cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
     cadet: Cadet,
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> bool:
     availability = dict_of_cadets_with_registration_data.registration_data_for_cadet(
         cadet
@@ -149,7 +149,7 @@ class PartnershipChange:
 class RequiredDictForAllocation:
     dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners
     dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
-    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent
+    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent
     availability_dict: Dict[Cadet, DaySelector]
 
     def add_single_cadet_to_list(self, cadet: Cadet):

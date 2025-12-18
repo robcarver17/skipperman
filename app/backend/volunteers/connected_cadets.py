@@ -2,6 +2,7 @@ from copy import copy
 from typing import List
 
 from app.backend.volunteers.list_of_volunteers import list_of_similar_volunteers
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
 
 from app.objects.cadets import ListOfCadets, Cadet
@@ -12,32 +13,11 @@ from app.objects.utilities.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
     ListOfCadetVolunteerAssociations,
-    DictOfCadetsAssociatedWithVolunteer,
-    DictOfVolunteersAssociatedWithCadet,
 )
 
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import (
-    object_definition_for_volunteer_and_cadet_associations,
-    object_definition_for_dict_of_volunteers_associated_with_cadets,
-    object_definition_for_dict_of_cadets_associated_with_volunteers,
-)
 
 
-def get_dict_of_cadets_associated_with_volunteers(
-    object_store: ObjectStore,
-) -> DictOfCadetsAssociatedWithVolunteer:
-    return object_store.DEPRECATE_get(
-        object_definition_for_dict_of_cadets_associated_with_volunteers
-    )
-
-
-def get_dict_of_volunteers_associated_with_cadets(
-    object_store: ObjectStore,
-) -> DictOfVolunteersAssociatedWithCadet:
-    return object_store.DEPRECATE_get(
-        object_definition_for_dict_of_volunteers_associated_with_cadets
-    )
 
 
 def get_list_of_similar_volunteers(
@@ -97,137 +77,84 @@ def get_list_of_cadets_with_names_similar_to_volunteer(
 def is_cadet_already_associated_with_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, cadet: Cadet
 ) -> bool:
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    return (
-        volunteer
-        in list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(
-            cadet
-        )
-    )
+    return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.is_cadet_associated_with_volunteer,
+                            volunteer=volunteer, cadet=cadet)
 
 
 def get_list_of_cadets_associated_with_volunteer(
     object_store: ObjectStore, volunteer: Volunteer
 ) -> ListOfCadets:
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    return (
-        list_of_cadet_volunteer_associations.list_of_cadets_associated_with_volunteer(
-            volunteer
-        )
-    )
+    return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.get_list_of_cadets_associated_with_volunteer,
+                            volunteer_id=volunteer.id)
 
 
 def get_list_of_volunteers_associated_with_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> ListOfVolunteers:
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    return (
-        list_of_cadet_volunteer_associations.list_of_volunteers_associated_with_cadet(
-            cadet
-        )
-    )
+    return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.get_list_of_volunteers_associated_with_cadet,
+                            cadet_id=cadet.id)
 
 
 ## UPDATES
 def delete_cadet_connection(
-    object_store: ObjectStore, cadet: Cadet, volunteer: Volunteer
+    interface: abstractInterface, cadet: Cadet, volunteer: Volunteer
 ):
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    list_of_cadet_volunteer_associations.delete_association(
-        cadet=cadet, volunteer=volunteer
-    )
-    update_list_of_cadet_volunteer_association(
-        list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
-        object_store=object_store,
-    )
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.delete_cadet_connection,
+                     cadet=cadet, volunteer=volunteer)
+    except Exception as e:
+        interface.log_error("Error deleting connectoin between %s and %s: %s" % (cadet, volunteer, str(e)))
+
 
 
 def delete_all_connections_for_cadet(
-    object_store: ObjectStore, cadet: Cadet, areyousure: bool = False
+    interface: abstractInterface, cadet: Cadet, areyousure: bool = False
 ):
     if not areyousure:
         return
 
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    list_of_associated_volunteers = (
-        list_of_cadet_volunteer_associations.delete_all_associations_for_cadet(cadet)
-    )
-    update_list_of_cadet_volunteer_association(
-        list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
-        object_store=object_store,
-    )
-
-    return list_of_associated_volunteers
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.delete_all_connections_for_cadet,
+                         cadet=cadet)
+    except Exception as e:
+        interface.log_error("Error when deleting cadet connections for %s: %s" % (cadet, str(e)))
 
 
 def delete_all_connections_for_volunteer(
-    object_store: ObjectStore, volunteer: Volunteer, areyousure: bool = False
+        interface: abstractInterface, volunteer: Volunteer, areyousure: bool = False
 ):
     if not areyousure:
         return
 
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    list_of_associated_cadets = (
-        list_of_cadet_volunteer_associations.delete_all_associations_for_volunteer(
-            volunteer
-        )
-    )
-    update_list_of_cadet_volunteer_association(
-        list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
-        object_store=object_store,
-    )
-
-    return list_of_associated_cadets
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.delete_all_connections_for_volunteer,
+                         volunteer=volunteer)
+    except Exception as e:
+        interface.log_error("Error when deleting connections for %s: %s" % (volunteer, str(e)))
 
 
 def add_list_of_cadets_to_volunteer_connection(
-    object_store: ObjectStore, volunteer: Volunteer, list_of_cadets: List[Cadet]
+    interface: abstractInterface, volunteer: Volunteer, list_of_cadets: List[Cadet]
 ):
     for cadet in list_of_cadets:
         add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-            object_store=object_store, volunteer=volunteer, cadet=cadet
+            interface=interface, volunteer=volunteer, cadet=cadet
         )
 
 
 def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
-    object_store: ObjectStore, cadet: Cadet, volunteer: Volunteer
+    interface: abstractInterface, cadet: Cadet, volunteer: Volunteer
 ):
-    list_of_cadet_volunteer_associations = get_list_of_cadet_volunteer_association(
-        object_store
-    )
-    list_of_cadet_volunteer_associations.add_association(
-        cadet=cadet, volunteer=volunteer
-    )
-    update_list_of_cadet_volunteer_association(
-        list_of_cadet_volunteer_associations=list_of_cadet_volunteer_associations,
-        object_store=object_store,
-    )
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
+                         cadet=cadet, volunteer=volunteer)
+    except Exception as e:
+        interface.log_error("Error %s when adding connection between %s and %s" % (str(e), cadet, volunteer))
 
 
 ## RAW DATA
 def get_list_of_cadet_volunteer_association(
     object_store: ObjectStore,
 ) -> ListOfCadetVolunteerAssociations:
-    return object_store.DEPRECATE_get(object_definition_for_volunteer_and_cadet_associations)
+    return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.read)
 
-
-def update_list_of_cadet_volunteer_association(
-    object_store: ObjectStore,
-    list_of_cadet_volunteer_associations: ListOfCadetVolunteerAssociations,
-):
-    object_store.DEPRECATE_update(
-        new_object=list_of_cadet_volunteer_associations,
-        object_definition=object_definition_for_volunteer_and_cadet_associations,
-    )

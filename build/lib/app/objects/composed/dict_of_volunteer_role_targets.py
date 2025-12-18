@@ -1,6 +1,6 @@
 from typing import Dict
 
-from app.objects.composed.volunteer_roles import RoleWithSkills, ListOfRolesWithSkills
+from app.objects.composed.volunteer_roles import RoleWithSkills, DEPRECATE_ListOfRolesWithSkills
 from app.objects.events import Event, ListOfEvents
 from app.objects.volunteer_role_targets import ListOfTargetForRoleWithIdAtEvent
 
@@ -36,7 +36,7 @@ class DictOfTargetsForRolesAtEvent(Dict[RoleWithSkills, int]):
 
 def compose_list_of_targets_for_roles_at_event(
     list_of_targets_with_role_ids: ListOfTargetForRoleWithIdAtEvent,
-    list_of_roles_and_skills: ListOfRolesWithSkills,
+    list_of_roles_and_skills: DEPRECATE_ListOfRolesWithSkills,
     list_of_events: ListOfEvents,
     event_id: str,
 ) -> DictOfTargetsForRolesAtEvent:
@@ -54,7 +54,7 @@ def compose_list_of_targets_for_roles_at_event(
 
 def compose_raw_dict_of_targets_for_roles_at_event(
     list_of_targets_with_role_ids: ListOfTargetForRoleWithIdAtEvent,
-    list_of_roles_and_skills: ListOfRolesWithSkills,
+    list_of_roles_and_skills: DEPRECATE_ListOfRolesWithSkills,
 ) -> Dict[RoleWithSkills, int]:
     raw_dict = dict(
         [

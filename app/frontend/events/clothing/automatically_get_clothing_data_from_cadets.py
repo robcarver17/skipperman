@@ -6,7 +6,7 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 )
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 
 from app.backend.clothing.dict_of_clothing_for_event import (
@@ -33,7 +33,7 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
 ) -> NewForm:
     event = get_event_from_state(interface)
     dict_of_cadets_at_event_with_registration_data = (
-        get_dict_of_cadets_with_registration_data(
+        DEPRECATE_get_dict_of_cadets_with_registration_data(
             object_store=interface.object_store, event=event
         )
     )

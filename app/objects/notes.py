@@ -39,57 +39,9 @@ class Note(GenericSkipperManObjectWithIds):
             completed=False,
         )
 
-    def mark_complete(self):
-        self.completed = True
-
-    def update_attributes(
-        self, text: str, priority: str, assigned_volunteer_id: str, completed: bool
-    ):
-        assert priority in LIST_OF_PRIORITIES
-        self.text = text
-        self.priority = priority
-        self.assigned_volunteer_id = assigned_volunteer_id
-        self.completed = completed
 
 
 class ListOfNotes(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Note
-
-    def update_attributes(
-        self,
-        note_id: str,
-        priority: str,
-        completed: bool,
-        assigned_volunteer_id: str,
-        text: str,
-    ):
-        note = self.note_with_id(note_id)
-        note.update_attributes(
-            text=text,
-            priority=priority,
-            assigned_volunteer_id=assigned_volunteer_id,
-            completed=completed,
-        )
-
-    def note_with_id(self, note_id: str) -> Note:
-        return self.object_with_id(note_id)
-
-    def completed_only(self) -> "ListOfNotes":
-        new_list = [note for note in self if note.completed]
-        return ListOfNotes(new_list)
-
-    def uncompleted_only(self) -> "ListOfNotes":
-        new_list = [note for note in self if not note.completed]
-        return ListOfNotes(new_list)
-
-    def add_quick_note(self, text: str, author_volunteer_id: str) -> Note:
-        note = Note.new_quick_note(
-            text=text,
-            author_volunteer_id=author_volunteer_id,
-        )
-        note.id = self.next_id()
-        self.append(note)
-        print(note)
-        return note

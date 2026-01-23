@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
-    DictOfCadetsWithRegistrationData,
+    DEPRECATE_DictOfCadetsWithRegistrationData,
     CadetRegistrationData,
 )
 
@@ -37,7 +37,7 @@ from app.objects.registration_status import (
 )
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 
 DAYS_ATTENDING = "days_attending_field"
@@ -49,7 +49,7 @@ ROW_STATUS = "row status"
 class RegistrationDetailsForEvent:
     event: Event
     all_columns_excluding_special_fields: list
-    registration_data: DictOfCadetsWithRegistrationData
+    registration_data: DEPRECATE_DictOfCadetsWithRegistrationData
 
 
 def get_registration_details_inner_form_for_event(
@@ -77,7 +77,7 @@ def get_registration_details_inner_form_for_event(
 def get_registration_data(
     interface: abstractInterface, event: Event, sort_order: str = arg_not_passed
 ) -> RegistrationDetailsForEvent:
-    dict_of_registration_data = get_dict_of_cadets_with_registration_data(
+    dict_of_registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=interface.object_store, event=event
     )
     dict_of_registration_data = dict_of_registration_data.sort_by(sort_order)

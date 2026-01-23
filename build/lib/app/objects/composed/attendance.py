@@ -14,6 +14,7 @@ from app.objects.attendance import (
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import ListOfEvents, Event
+from app.objects.utilities.exceptions import arg_not_passed
 
 
 class HistoryOfAttendanceOnDay(Dict[datetime.datetime, Attendance]):
@@ -57,10 +58,11 @@ class AttendanceOnDay:
 
     @classmethod
     def create_from_subset_of_list_of_attendance(
-        cls, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet
+        cls, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
+            day: Day
     ):
         list_as_tuples = (
-            list_of_attendance.list_of_tuple_of_datetime_marked_and_attendance()
+            list_of_attendance.list_of_tuple_of_datetime_marked_and_attendance_on_day(day)
         )
         list_as_tuples.sort(key=lambda x: x[0])
         final_item = list_as_tuples[-1]
@@ -82,19 +84,30 @@ class AttendanceOnDay:
         self.current_attendance = new_attendance
 
 
+
 class AttendanceAcrossDays(Dict[Day, AttendanceOnDay]):
     def attendance_on_day(self, day):
-        return self.get(day)
+        return self.get(day, AttendanceOnDay.create_without_history())
 
     def update_attendance_on_day(
-        self, day: Day, new_attendance: Attendance, datetime_marked: datetime.datetime
+        self, day: Day, new_attendance: Attendance, datetime_marked: datetime.datetime = arg_not_passed
     ):
+        if datetime_marked is arg_not_passed:
+            datetime_marked = datetime.datetime.now(
+                
+            )
         attendance_on_day = self.attendance_on_day(day)
         attendance_on_day.update_attendance(
             new_attendance=new_attendance, datetime_marked=datetime_marked
         )
         self[day] = attendance_on_day
 
+class AttendanceAtEventAcrossCadets(Dict[Cadet, AttendanceAcrossDays]):
+    def attendance_for_cadet(self, cadet: Cadet):
+        return self.get(cadet, AttendanceAcrossDays())
+
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets(list(self.keys()))
 
 class AttendanceAcrossDaysAndEvents(Dict[Event, AttendanceAcrossDays]):
     def clean_attendance_data_for_event(self, event: Event):
@@ -122,16 +135,6 @@ class AttendanceAcrossDaysAndEvents(Dict[Event, AttendanceAcrossDays]):
 
 
 class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
-    def __init__(
-        self,
-        raw_dict: Dict[Cadet, AttendanceAcrossDaysAndEvents],
-        dict_of_list_of_raw_attendance: Dict[
-            str, ListOfRawAttendanceItemsForSpecificCadet
-        ],
-    ):
-        super().__init__(raw_dict)
-        self._dict_of_raw_attendance = dict_of_list_of_raw_attendance
-
     def clean_attendance_data_for_event(self, event: Event):
         for cadet in self.list_of_cadets:
             attendance = self.attendance_for_cadet_across_days_and_events(cadet)
@@ -217,116 +220,5 @@ class DictOfAttendanceAcrossEvents(Dict[Cadet, AttendanceAcrossDaysAndEvents]):
         self._dict_of_raw_attendance[cadet.id] = underlying_raw_attendance
 
     @property
-    def dict_of_list_of_raw_attendance(
-        self,
-    ) -> Dict[str, ListOfRawAttendanceItemsForSpecificCadet]:
-        return self._dict_of_raw_attendance
-
-    @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
-
-def compose_dict_of_attendance_across_events(
-    list_of_cadet_ids: List[str],
-    dict_of_list_of_raw_attendance: Dict[str, ListOfRawAttendanceItemsForSpecificCadet],
-    list_of_events: ListOfEvents,
-    list_of_cadets: ListOfCadets,
-) -> DictOfAttendanceAcrossEvents:
-    list_of_cadets = ListOfCadets(
-        [list_of_cadets.cadet_with_id(cadet_id) for cadet_id in list_of_cadet_ids]
-    )
-    raw_dict = create_raw_dict_of_attendance_at_events(
-        dict_of_list_of_raw_attendance=dict_of_list_of_raw_attendance,
-        list_of_cadets=list_of_cadets,
-        list_of_events=list_of_events,
-    )
-
-    return DictOfAttendanceAcrossEvents(
-        raw_dict=raw_dict,
-        dict_of_list_of_raw_attendance=dict_of_list_of_raw_attendance,
-    )
-
-
-def create_raw_dict_of_attendance_at_events(
-    dict_of_list_of_raw_attendance: Dict[str, ListOfRawAttendanceItemsForSpecificCadet],
-    list_of_events: ListOfEvents,
-    list_of_cadets: ListOfCadets,
-) -> Dict[Cadet, AttendanceAcrossDaysAndEvents]:
-    raw_dict = dict(
-        [
-            (
-                cadet,
-                attendance_for_cadet_across_events(
-                    cadet=cadet,
-                    list_of_events=list_of_events,
-                    dict_of_list_of_raw_attendance=dict_of_list_of_raw_attendance,
-                ),
-            )
-            for cadet in list_of_cadets
-        ]
-    )
-
-    return raw_dict
-
-
-def attendance_for_cadet_across_events(
-    cadet: Cadet,
-    list_of_events: ListOfEvents,
-    dict_of_list_of_raw_attendance: Dict[str, ListOfRawAttendanceItemsForSpecificCadet],
-) -> AttendanceAcrossDaysAndEvents:
-    raw_dict = dict(
-        [
-            (
-                event,
-                attendance_for_cadet_at_event(
-                    cadet=cadet,
-                    event=event,
-                    dict_of_list_of_raw_attendance=dict_of_list_of_raw_attendance,
-                ),
-            )
-            for event in list_of_events
-        ]
-    )
-
-    return AttendanceAcrossDaysAndEvents(raw_dict)
-
-
-def attendance_for_cadet_at_event(
-    cadet: Cadet,
-    event: Event,
-    dict_of_list_of_raw_attendance: Dict[str, ListOfRawAttendanceItemsForSpecificCadet],
-) -> AttendanceAcrossDays:
-    list_of_raw_attendance = dict_of_list_of_raw_attendance.get(
-        cadet.id, ListOfRawAttendanceItemsForSpecificCadet([])
-    )
-    dict_for_cadet = dict(
-        [
-            (
-                day,
-                attendance_on_day_for_cadet_at_event(
-                    event=event, day=day, list_of_raw_attendance=list_of_raw_attendance
-                ),
-            )
-            for day in event.days_in_event()
-        ]
-    )
-
-    return AttendanceAcrossDays(dict_for_cadet)
-
-
-def attendance_on_day_for_cadet_at_event(
-    event: Event,
-    day: Day,
-    list_of_raw_attendance: ListOfRawAttendanceItemsForSpecificCadet,
-) -> AttendanceOnDay:
-    subset_of_attendance = list_of_raw_attendance.subset_for_cadet_at_event_on_day(
-        day=day, event_id=event.id
-    )
-
-    if len(subset_of_attendance) == 0:
-        return AttendanceOnDay.create_without_history()
-    else:
-        return AttendanceOnDay.create_from_subset_of_list_of_attendance(
-            subset_of_attendance
-        )

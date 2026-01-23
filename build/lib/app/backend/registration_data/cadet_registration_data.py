@@ -25,7 +25,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_cadets_with_registration_data_at_event,
 )
 from app.objects.composed.cadets_at_event_with_registration_data import (
-    DictOfCadetsWithRegistrationData,
+    DEPRECATE_DictOfCadetsWithRegistrationData, DictOfCadetsWithRegistrationData,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.registration_data import (
@@ -96,7 +96,7 @@ def is_cadet_available_on_day(
 
 
 def is_cadet_active_at_event(object_store: ObjectStore, event: Event, cadet: Cadet):
-    registration_data = get_dict_of_cadets_with_registration_data(
+    registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
 
@@ -106,7 +106,7 @@ def is_cadet_active_at_event(object_store: ObjectStore, event: Event, cadet: Cad
 def get_availability_dict_for_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> Dict[Cadet, DaySelector]:
-    registration_data = get_dict_of_cadets_with_registration_data(
+    registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     return registration_data.availability_dict()
@@ -159,25 +159,27 @@ def add_new_cadet_to_event(
 def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadets:
-    dict_of_cadets_with_registration_data = get_dict_of_cadets_with_registration_data(
-        object_store=object_store, event=event
-    )
-    return dict_of_cadets_with_registration_data.list_of_active_cadets()
+    return object_store.get(object_store.data_api.data_cadets_at_event.get_list_of_active_cadets_at_event, event=event)
 
 
 def get_dict_of_cadets_with_registration_data(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithRegistrationData:
+    return object_store.get(object_store.data_api.data_cadets_at_event.read_dict_of_cadets_with_registration_data_at_event, event=event)
+
+def DEPRECATE_get_dict_of_cadets_with_registration_data(
+    object_store: ObjectStore, event: Event
+) -> DEPRECATE_DictOfCadetsWithRegistrationData:
     return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_dict_of_cadets_with_registration_data_at_event,
-        event_id=event.id,
+        object_definition_for_dict_of_cadets_with_registration_data_at_event,
+        event_id=event.id
     )
 
 
 def update_dict_of_cadets_with_registration_data(
     object_store: ObjectStore,
     event: Event,
-    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
 ):
     object_store.DEPRECATE_update(
         new_object=dict_of_cadets_with_registration_data,

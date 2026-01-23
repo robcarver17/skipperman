@@ -21,7 +21,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
     get_dict_of_people_and_club_dinghies_at_event,
@@ -75,7 +75,7 @@ def summarise_club_boat_allocations_for_cadets_at_event(
 def get_relevant_cadets_for_club_dinghy(
     group: ClubDinghy,
     event: Event,
-    list_of_ids_with_groups: DictOfPeopleAndClubDinghiesAtEvent,
+    list_of_ids_with_groups: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Dict[Day, List[Cadet]]:
     ## map from generic to specific var names. Event is not used
     dinghy = group
@@ -126,7 +126,7 @@ def summarise_club_boat_allocations_for_volunteers_at_event(
 def get_relevant_volunteers_for_club_dinghy(
     group: ClubDinghy,
     event: Event,
-    list_of_ids_with_groups: DictOfPeopleAndClubDinghiesAtEvent,
+    list_of_ids_with_groups: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Dict[Day, List[Volunteer]]:
     ## map from generic to specific var names. Event is not used
     dinghy = group

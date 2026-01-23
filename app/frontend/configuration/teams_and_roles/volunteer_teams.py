@@ -174,5 +174,5 @@ def get_team_from_form(
     return new_team
 
 
-def save_from_ordinary_list_of_teams(object_store: ObjectStore, new_list: List[Team]):
-    update_list_of_teams(object_store=object_store, list_of_teams=ListOfTeams(new_list))
+def save_from_ordinary_list_of_teams( interface: abstractInterface, new_list: List[Team]):
+    update_list_of_teams(object_store=interface.object_store, list_of_teams=ListOfTeams(new_list))

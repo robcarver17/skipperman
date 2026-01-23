@@ -3,6 +3,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_club_dinghies,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -23,12 +24,12 @@ def get_club_dinghy_with_name(
 
 
 def add_new_club_dinghy_given_string(
-    object_store: ObjectStore, name_of_entry_to_add: str
+    interface: abstractInterface,  name_of_entry_to_add: str
 ):
-    list_of_boats = get_list_of_club_dinghies(object_store)
+    list_of_boats = get_list_of_club_dinghies(interface.object_store)
     list_of_boats.add(name_of_entry_to_add)
     update_list_of_club_dinghies(
-        object_store=object_store, updated_list_of_club_dinghies=list_of_boats
+        object_store=interface.object_store, updated_list_of_club_dinghies=list_of_boats
     )
 
 
@@ -50,7 +51,7 @@ def modify_club_dinghy(
 
 
 def get_list_of_club_dinghies(object_store: ObjectStore) -> ListOfClubDinghies:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_club_dinghies)
+    return object_store.get(object_store.data_api.data_List_of_club_dinghies.read)
 
 
 def update_list_of_club_dinghies(

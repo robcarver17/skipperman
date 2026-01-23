@@ -15,7 +15,7 @@ from app.objects.volunteers import Volunteer, ListOfVolunteers, SORT_BY_SURNAME,
 def get_volunteer_with_matching_name(
     object_store: ObjectStore, volunteer: Volunteer, default=missing_data
 ) -> Union[object, Volunteer]:
-    return object_store.get(object_store.data_api.data_list_of_volunteers.get_matching_volunteer(volunteer, default=default))
+    return object_store.get(object_store.data_api.data_list_of_volunteers.get_matching_volunteer, volunteer=volunteer, default=default)
 
 
 def get_volunteer_from_name(

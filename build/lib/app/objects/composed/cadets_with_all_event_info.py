@@ -25,17 +25,17 @@ from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfDaysBoatClassAndPartners,
-    DictOfCadetsAndBoatClassAndPartners,
+    DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfDaysAndClubDinghiesAtEventForPerson,
-    DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
     CadetRegistrationData,
-    DictOfCadetsWithRegistrationData,
+    DEPRECATE_DictOfCadetsWithRegistrationData,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DaysAndGroups,
@@ -73,9 +73,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, AllEventInfoForCadet],
-        dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
-        dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-        dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+        dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+        dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
         dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
         dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
         dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
@@ -440,7 +440,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_and_club_dinghies_at_event
 
     @property
-    def dict_of_cadets_with_registration_data(self) -> DictOfCadetsWithRegistrationData:
+    def dict_of_cadets_with_registration_data(self) -> DEPRECATE_DictOfCadetsWithRegistrationData:
         return self._dict_of_cadets_with_registration_data
 
     @property
@@ -471,9 +471,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 def compose_dict_of_all_event_info_for_cadet(
     event_id: str,
     list_of_events: ListOfEvents,
-    dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
-    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,
@@ -501,9 +501,9 @@ def compose_dict_of_all_event_info_for_cadet(
 
 
 def compose_raw_dict_of_all_event_info_for_cadet(
-    dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
-    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
     dict_of_cadets_with_clothing_at_event: DictOfCadetsWithClothingAtEvent,
     dict_of_cadets_with_food_required_at_event: DictOfCadetsWithFoodRequirementsAtEvent,

@@ -1,4 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.store.object_definitions import (
@@ -6,18 +7,18 @@ from app.data_access.store.object_definitions import (
 )
 
 
-def add_new_patrol_boat(object_store: ObjectStore, name_of_entry_to_add: str):
-    list_of_patrol_boats = get_list_of_patrol_boats(object_store)
+def add_new_patrol_boat(interface: abstractInterface, name_of_entry_to_add: str):
+    list_of_patrol_boats = get_list_of_patrol_boats(interface.object_store)
     list_of_patrol_boats.add(name_of_entry_to_add)
     update_list_of_patrol_boats(
-        object_store=object_store, updated_list_of_patrol_boats=list_of_patrol_boats
+        object_store=interface.object_store, updated_list_of_patrol_boats=list_of_patrol_boats
     )
 
 
 def modify_patrol_boat(
-    object_store: ObjectStore, existing_object: PatrolBoat, new_object: PatrolBoat
+        interface: abstractInterface, existing_object: PatrolBoat, new_object: PatrolBoat
 ):
-    list_of_patrol_boats = get_list_of_patrol_boats(object_store)
+    list_of_patrol_boats = get_list_of_patrol_boats(interface.object_store)
     list_of_patrol_boats.replace(
         existing_patrol_boat=existing_object, new_patrol_boat=new_object
     )
@@ -26,7 +27,7 @@ def modify_patrol_boat(
     except:
         raise Exception("Duplicate names")
     update_list_of_patrol_boats(
-        object_store=object_store, updated_list_of_patrol_boats=list_of_patrol_boats
+        object_store=interface.object_store, updated_list_of_patrol_boats=list_of_patrol_boats
     )
 
 

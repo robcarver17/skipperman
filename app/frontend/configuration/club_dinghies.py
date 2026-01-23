@@ -179,17 +179,17 @@ def get_modified_dinghy_and_limit_from_form(
 
 
 def modify_club_dinghy_and_limit(
-    object_store: ObjectStore,
-    existing_object: ClubDinghyAndGenericLimit,
+        interface: abstractInterface,
+        existing_object: ClubDinghyAndGenericLimit,
     new_object: ClubDinghyAndGenericLimit,
 ):
     modify_club_dinghy(
-        object_store=object_store,
+        object_store=interface.object_store,
         existing_object=existing_object.club_dinghy,
         new_object=new_object.club_dinghy,
     )
     clear_and_set_generic_limit(
-        object_store=object_store,
+        object_store=interface.object_store,
         original_boat=existing_object.club_dinghy,
         new_boat=new_object.club_dinghy,
         new_limit=new_object.limit,
@@ -197,11 +197,11 @@ def modify_club_dinghy_and_limit(
 
 
 def save_from_ordinary_list_of_club_dinghies_and_limits(
-    object_store: ObjectStore, new_list: List[ClubDinghyAndGenericLimit]
+    interface: abstractInterface, new_list: List[ClubDinghyAndGenericLimit]
 ):
     ## We don't need to do the limits as order doesn't matter - changes to limits will be done in modify
     list_of_club_dinghies = [item.club_dinghy for item in new_list]
     update_list_of_club_dinghies(
-        object_store=object_store,
+        object_store=interface.object_store,
         updated_list_of_club_dinghies=ListOfClubDinghies(list_of_club_dinghies),
     )

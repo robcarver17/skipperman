@@ -54,18 +54,13 @@ def does_event_already_have_mapping(object_store: ObjectStore, event: Event):
 
 
 def get_list_of_field_mapping_template_names(object_store: ObjectStore) -> List[str]:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_list_of_field_mapping_templates
-    )
+    return object_store.get(object_store.data_api.data_wa_field_mapping_templates.list_of_template_names)
 
 
 def get_field_mapping_template(
     object_store: ObjectStore, template_name: str
 ) -> ListOfWAFieldMappings:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_field_mapping_templates,
-        template_name=template_name,
-    )
+    return object_store.get(object_store.data_api.data_wa_field_mapping_templates.read, template_name=template_name)
 
 
 def save_field_mapping_template(

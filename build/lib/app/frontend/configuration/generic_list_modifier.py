@@ -317,7 +317,7 @@ def add_new_entry_from_form(interface: abstractInterface, adding_function: Calla
         ## functions need to take string and return new list of objects_OLD
         try:
             adding_function(
-                object_store=interface.object_store,
+                interface=interface,
                 name_of_entry_to_add=name_of_entry_to_add,
             )
         except Exception as e:
@@ -376,7 +376,7 @@ def edit_specific_object_in_form(
         return
 
     modifying_function(
-        object_store=interface.object_store,
+        interface=interface,
         existing_object=existing_object,
         new_object=new_object,
     )
@@ -391,7 +391,7 @@ def reorder_list_given_form(
         new_list = re_order_return_list(
             button_name=interface.last_button_pressed(), existing_list=existing_list
         )
-        save_function(object_store=interface.object_store, new_list=new_list)
+        save_function(interface=interface, new_list=new_list)
     except Exception as e:
         interface.log_error("Error when reordering entry %s: " % str(e))
         new_list = copy(existing_list)

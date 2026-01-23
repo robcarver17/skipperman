@@ -3,24 +3,25 @@ from app.data_access.store.object_store import ObjectStore
 from app.data_access.store.object_definitions import (
     object_definition_for_list_of_groups,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import ListOfGroups, Group
 
 
 def add_new_sailing_group_given_name(
-    object_store: ObjectStore, name_of_entry_to_add: str
+        interface: abstractInterface, name_of_entry_to_add: str
 ):
-    list_of_groups = get_list_of_groups(object_store)
+    list_of_groups = get_list_of_groups(interface.object_store)
     list_of_groups.add(name_of_entry_to_add)
     update_list_of_groups(
-        object_store=object_store, updated_list_of_groups=list_of_groups
+        object_store=interface.object_store, updated_list_of_groups=list_of_groups
     )
 
 
 def modify_sailing_group(
-    object_store: ObjectStore, existing_object: Group, new_object: Group
+        interface: abstractInterface, existing_object: Group, new_object: Group
 ):
-    list_of_groups = get_list_of_groups(object_store)
+    list_of_groups = get_list_of_groups(interface.object_store)
     list_of_groups.replace(existing_group=existing_object, new_group=new_object)
     try:
         list_of_groups.check_for_duplicated_names()
@@ -28,7 +29,7 @@ def modify_sailing_group(
         raise Exception("Duplicate names - each group must have a unique name")
 
     update_list_of_groups(
-        object_store=object_store, updated_list_of_groups=list_of_groups
+        object_store=interface.object_store, updated_list_of_groups=list_of_groups
     )
 
 
@@ -40,7 +41,7 @@ def get_group_with_name(
 
 
 def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_groups)
+    return object_store.get(object_store.data_api.data_list_of_groups.read)
 
 
 def update_list_of_groups(

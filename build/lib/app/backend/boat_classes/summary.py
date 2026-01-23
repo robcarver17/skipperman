@@ -16,13 +16,13 @@ from app.backend.events.summarys import (
     summarise_generic_counts_for_event_over_days_returning_df,
 )
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    DictOfCadetsAndBoatClassAndPartners,
+    DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
 
 
@@ -30,7 +30,7 @@ def summarise_class_attendance_for_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
     dict_of_cadets_and_boat_classes_and_partners_at_events = (
-        get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+        DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
             object_store=object_store, event=event
         )
     )
@@ -57,7 +57,7 @@ def summarise_class_attendance_for_event(
 def get_relevant_cadet_ids_for_boat_class_id(
     group: BoatClass,
     event: Event,
-    list_of_ids_with_groups: DictOfCadetsAndBoatClassAndPartners,
+    list_of_ids_with_groups: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
 ) -> Dict[Day, List[Cadet]]:
     ## map from generic to specific var names. Event is not used
     boat_class = group

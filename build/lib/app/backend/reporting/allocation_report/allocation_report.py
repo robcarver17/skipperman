@@ -22,7 +22,7 @@ from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
     get_dict_of_people_and_club_dinghies_at_event,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 
@@ -73,7 +73,7 @@ def add_club_boat_asterix(
 
 def add_club_boat_asterix_to_cadet_with_group_on_day(
     cadet_with_group: CadetWithGroupOnDay,
-    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ):
     cadet = cadet_with_group.cadet
     day = cadet_with_group.day

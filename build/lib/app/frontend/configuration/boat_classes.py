@@ -60,9 +60,9 @@ def post_form_config_dinghies_page(
 
 
 def save_from_ordinary_list_of_dinghies(
-    object_store: ObjectStore, new_list: List[BoatClass]
+    interface: abstractInterface, new_list: List[BoatClass]
 ):
     update_list_of_boat_classes(
-        object_store=object_store,
+        interface=interface,
         updated_list_of_boat_classes=ListOfBoatClasses(new_list),
     )

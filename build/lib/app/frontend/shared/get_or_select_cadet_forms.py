@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Union, List
 
 from app.backend.cadets.list_of_cadets import (
-    DEPRECATE_get_list_of_cadets,
+    get_list_of_cadets,
     get_list_of_similar_cadets_from_data,
     get_cadet_from_id,
 )
@@ -200,7 +200,7 @@ def get_list_of_cadet_buttons(
         name_threshold=parameters.similarity_name_threshold,
     )
     no_similar_cadets = len(list_of_similar_cadets) == 0
-    list_of_all_cadets_in_data = DEPRECATE_get_list_of_cadets(object_store=interface.object_store)
+    list_of_all_cadets_in_data = get_list_of_cadets(object_store=interface.object_store)
 
     if no_similar_cadets:
         list_of_cadets = list_of_all_cadets_in_data

@@ -16,26 +16,20 @@ from app.objects.utilities.exceptions import arg_not_passed
 
 
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import (
-    DEPRECATE_object_definition_for_list_of_cadets,
-)
 from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_WARN_NAME,
     SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES,
 )
 
 
-def DEPRECATE_delete_cadet(interface: abstractInterface, cadet: Cadet, areyousure=False):
+def delete_cadet(interface: abstractInterface, cadet: Cadet, areyousure=False):
     if not areyousure:
         return
 
-    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(interface.object_store)
-    list_of_cadets.pop_cadet(cadet)
-    update_list_of_cadets(
-        interface=interface, updated_list_of_cadets=list_of_cadets
-    )
-    interface.clear() ## move up to next level
-
+    try:
+        interface.update(interface.object_store.data_api.data_list_of_cadets.delete_cadet, cadet=cadet)
+    except Exception as e:
+        interface.log_error("error %s when deleting %s" % (str(e), cadet))
 
 def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
     return object_store.get(object_store.data_api.data_list_of_cadets.get_matching_cadet, cadet=cadet)
@@ -90,14 +84,13 @@ def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
 
     return cadet
 
+def get_list_of_cadets(object_store: ObjectStore) -> ListOfCadets:
+    return get_list_of_cadets_sorted_by_surname(object_store)
+
+
 def get_list_of_cadets_sorted_by_surname(object_store: ObjectStore) -> ListOfCadets:
     return get_sorted_list_of_cadets_from_raw_data(object_store=object_store, sort_by=SORT_BY_SURNAME)
 
-
-
-
-def DEPRECATE_get_list_of_cadets(object_store: ObjectStore) -> ListOfCadets:
-    return object_store.DEPRECATE_get(DEPRECATE_object_definition_for_list_of_cadets)
 
 def get_sorted_list_of_cadets_from_raw_data(object_store: ObjectStore, sort_by: str = arg_not_passed,
                                             exclude_cadet: Cadet = arg_not_passed,

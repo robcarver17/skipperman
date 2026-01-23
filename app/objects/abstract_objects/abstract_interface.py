@@ -39,6 +39,7 @@ class abstractInterface:
         ### does not update cache, so after use will need to clear cache without flushing
         if self.read_only:
             self.log_error("Read only mode - not saving changes")
+
         else:
             self.object_store.update(data_api_property_and_method, **kwargs)
 

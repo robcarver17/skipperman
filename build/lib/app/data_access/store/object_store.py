@@ -97,6 +97,13 @@ class ObjectStore:
 
         return cached_item.contents
 
+    def clear_item(self, data_api_property_and_method: Callable, **kwargs):
+        definition_with_args = DefinitionWithArgsAndMethod(data_api_property_and_method,
+                                                           kwargs=kwargs)
+
+        self.new_object_cache.remove(definition_with_args.key)
+
+
     def compose_from_scratch_and_store_object_in_cache(
         self,
         definition_with_args: DefinitionWithArgsAndMethod,

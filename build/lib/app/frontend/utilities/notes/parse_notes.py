@@ -35,7 +35,7 @@ def save_all_notes(interface: abstractInterface):
     
     save_quick_note(interface)
     update_all_existing_notes(interface)
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def save_quick_note(interface: abstractInterface):
@@ -49,7 +49,7 @@ def save_quick_note(interface: abstractInterface):
 
     volunteer_author = get_loggged_in_volunteer(interface)
     add_quick_note(
-        object_store=interface.object_store,
+        interface=interface,
         text=text,
         volunteer_author=volunteer_author,
     )
@@ -76,7 +76,7 @@ def update_existing_note(interface: abstractInterface, note: NoteWithVolunteer):
     )
 
     update_note_with_new_data(
-        interface.object_store,
+        interface=interface,
         note_id=note.id,
         priority=priority,
         assigned_volunteer=assigned_volunteer,

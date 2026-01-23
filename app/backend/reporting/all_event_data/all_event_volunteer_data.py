@@ -119,7 +119,7 @@ def get_df_for_volunteers_event_data_dump(object_store: ObjectStore, event: Even
 
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.backend.volunteers.connected_cadets import (
     get_list_of_cadets_associated_with_volunteer,
@@ -129,7 +129,7 @@ from app.backend.volunteers.connected_cadets import (
 def get_connected_cadet_names(
     object_store: ObjectStore, event: Event, volunteer: Volunteer, default=""
 ):
-    registered_cadets = get_dict_of_cadets_with_registration_data(
+    registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     ).list_of_active_cadets()
     connected_cadets = get_list_of_cadets_associated_with_volunteer(

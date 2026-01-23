@@ -81,9 +81,9 @@ def post_form_config_qualifications_page(
 
 
 def save_from_ordinary_list_of_qualifications(
-    object_store: ObjectStore, new_list: List[Qualification]
+        interface: abstractInterface, new_list: List[Qualification]
 ):
     update_list_of_qualifications(
-        object_store=object_store,
+        object_store=interface.object_store,
         updated_list_of_qualifications=ListOfQualifications(new_list),
     )

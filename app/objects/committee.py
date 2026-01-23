@@ -3,7 +3,7 @@ import datetime
 
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-    get_idx_of_multiple_object_with_multiple_attr_in_list,
+
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
@@ -14,9 +14,6 @@ class CadetWithIdCommitteeMember(GenericSkipperManObject):
     date_term_starts: datetime.date
     date_term_ends: datetime.date
     deselected: bool = False
-
-    def toggle_selection(self):
-        self.deselected = not self.deselected
 
     def status_string(self):
         after_election = self.after_election()
@@ -47,23 +44,3 @@ class ListOfCadetsWithIdOnCommittee(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetWithIdCommitteeMember
-
-    def add(self, cadet_with_id_on_committee: CadetWithIdCommitteeMember):
-        try:
-            assert cadet_with_id_on_committee.cadet_id not in self.list_of_cadet_ids()
-        except:
-            raise Exception("Can't add duplicate cadets to committee")
-
-        self.append(cadet_with_id_on_committee)
-
-    def list_of_cadet_ids(self):
-        return [cadet_with_id.cadet_id for cadet_with_id in self]
-
-    def remove_cadet_with_id(self, cadet_id: str):
-        while True:
-            list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
-                self, dict_of_attributes={"cadet_id": cadet_id}
-            )
-            if len(list_of_idx) == 0:
-                break
-            self.pop(list_of_idx[0])

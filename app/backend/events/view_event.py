@@ -1,14 +1,14 @@
 import pandas as pd
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_raw_mapped_registration_data,
 )
 from app.data_access.configuration.field_list_groups import MAX_CONFIGURABLE_VOLUNTEERS
 from app.objects.composed.cadets_at_event_with_registration_data import (
-    DictOfCadetsWithRegistrationData,
+    DEPRECATE_DictOfCadetsWithRegistrationData,
 )
 from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
@@ -75,7 +75,7 @@ def summarise_registrations_for_event(
         - list_of_identified_cadets.count_of_cadets_in_rows()
     )
 
-    cadets_at_event = get_dict_of_cadets_with_registration_data(
+    cadets_at_event = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     summary_data["(G) Cadets in event data (including cancelled)"] = len(
@@ -92,7 +92,7 @@ def summarise_registrations_for_event(
 
 
 def summarise_status(
-    cadets_with_registration_data_at_event: DictOfCadetsWithRegistrationData,
+    cadets_with_registration_data_at_event: DEPRECATE_DictOfCadetsWithRegistrationData,
 ) -> dict:
     all_status = {}
     for cadet_data in list(cadets_with_registration_data_at_event.values()):

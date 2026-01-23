@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Union, List
+from typing import Union, List, Dict
 from dataclasses import dataclass
 
 import pandas as pd
@@ -170,6 +170,42 @@ class ArrangementOptionsAndGroupOrder:
         return pd.DataFrame(
             dict(method=[method], columns=[columns], group_order=[group_order])
         )
+
+    def as_dict_of_str(self):
+        method = self.arrangement_options.arrangement_method.name
+        columns = self.arrangement_options.arrangement_of_columns.as_str()
+        group_order = self.group_order.as_str()
+
+        return dict(method=method, columns=columns, group_order=group_order)
+
+
+    @classmethod
+    def from_dict_of_str(cls, dict_of_str: Dict[str, str]):
+        method_str = dict_of_str.get('method', None)
+        if method_str is None:
+            method = DEFAULT_ARRANGEMENT
+        else:
+            method = ArrangementMethod[method_str]
+
+        columns_str = dict_of_str.get('columns', None)
+        if columns_str is None:
+            columns = ArrangementOfColumns()
+        else:
+            columns = ArrangementOfColumns.from_str(columns_str)
+
+        group_order_str = dict_of_str.get("group_order", None)
+        if group_order_str is None:
+            group_order = GroupOrder()
+        else:
+            group_order = GroupOrder.from_str(group_order_str)
+
+        return cls(
+            arrangement_options=ArrangeGroupsOptions(
+                arrangement_method=method, arrangement_of_columns=columns
+            ),
+            group_order=group_order,
+        )
+
 
     @classmethod
     def from_df_of_str(cls, df: pd.DataFrame):

@@ -56,43 +56,6 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
 
         return self[index]
 
-    def boat_class_given_name(
-        self, boat_class_name: str, default=arg_not_passed
-    ) -> BoatClass:
-        if boat_class_name == no_boat_class.name:
-            return no_boat_class
-        return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_value=boat_class_name,
-            attr_name="name",
-            default=default,
-        )
-
-    def replace(self, existing_boat_class: BoatClass, new_boat_class: BoatClass):
-        object_idx = self.idx_given_name(existing_boat_class.name)
-        new_boat_class.id = existing_boat_class.id
-        self[object_idx] = new_boat_class
-
-    def idx_given_name(self, boat_name: str, default=arg_not_passed):
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self, attr_value=boat_name, attr_name="name", default=default
-        )
-
-    def add(self, boat_name: str):
-        try:
-            assert boat_name not in self.list_of_names()
-        except:
-            raise Exception("Can't add duplicate dinghy %s already exists" % boat_name)
-        boat = BoatClass(name=boat_name, hidden=False)
-        boat.id = self.next_id()
-
-        self.append(boat)
-
-    def check_for_duplicated_names(self):
-        list_of_names = [role.name for role in self]
-        assert len(list_of_names) == len(set(list_of_names))
-
-
 @dataclass
 class BoatClassAndPartnerAtEventOnDay:
     boat_class: BoatClass

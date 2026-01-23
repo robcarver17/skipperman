@@ -11,8 +11,12 @@ from app.objects.utilities.generic_list_of_objects import (
 
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
-PERMANENT_SKIP_VOLUNTEER_ID = "NO_volunteer_allocated"  ## DO not change
-SKIP_FOR_NOW_VOLUNTEER_ID = "SKip_for_now"  ## do not change
+PERMANENT_SKIP_VOLUNTEER_ID = str(-999901)  ## DO not change
+SKIP_FOR_NOW_VOLUNTEER_ID =   str(-999702)  ## do not change
+
+## FIXME remove once data transfer done
+OLD_PERMANENT_SKIP_VOLUNTEER_ID = "NO_volunteer_allocated"  ## DO not change
+OLD_SKIP_FOR_NOW_VOLUNTEER_ID = "SKip_for_now"  ## do not change
 
 
 @dataclass

@@ -1,8 +1,12 @@
 from typing import List
 
+from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadet_with_id_at_event import ListOfCadetsWithIDAtEvent, CadetWithIdAtEvent
+from app.objects.cadets import ListOfCadets
+from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData, \
+    CadetRegistrationData
 from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.objects.registration_data import RowInRegistrationData
@@ -15,7 +19,16 @@ INDEX_REGISTRATION_ROW_FOR_CADETS_TABLE = "index_registration_row_data_for_cadet
 
 ACTIVE_STATUS_NAMES_AS_STR="('%s')" % ("','".join(ACTIVE_STATUS_NAMES))
 
+
 class SqlDataListOfCadetsAtEvent(GenericSqlData):
+    def get_list_of_active_cadets_at_event(
+        self, event: Event
+    ) -> ListOfCadets:
+        list_of_cadets = self.list_of_cadets
+        list_of_cadet_ids = self.get_list_of_active_cadet_ids_at_event(event)
+
+        return ListOfCadets([list_of_cadets.cadet_with_id(id) for id in list_of_cadet_ids])
+
     def get_list_of_active_cadet_ids_at_event(self, event: Event) -> List[str]:
         if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
             return []
@@ -26,7 +39,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
                 CADET_ID,
                 CADETS_AT_EVENT_TABLE,
                 EVENT_ID, int(event.id),
-                CADET_MEMBERSHIP_STATUS, ACTIVE_STATUS_NAMES_AS_STR
+                CADET_REGISTRATION_STATUS, ACTIVE_STATUS_NAMES_AS_STR
             ))
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -35,6 +48,32 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             self.close()
 
         return [str(ans[0]) for ans in raw_list]
+
+    def read_dict_of_cadets_with_registration_data_at_event(self, event: Event) -> DictOfCadetsWithRegistrationData:
+        list_of_cadets_with_id_at_event = self.read(event.id)
+
+        new_dict = {}
+        for cadet_with_id_at_event in list_of_cadets_with_id_at_event:
+            cadet = self.list_of_cadets.cadet_with_id(cadet_with_id_at_event.cadet_id)
+            registration_data = CadetRegistrationData(
+                availability=cadet_with_id_at_event.availability,
+                status=cadet_with_id_at_event.status,
+                data_in_row=cadet_with_id_at_event.data_in_row,
+                notes=cadet_with_id_at_event.notes,
+                health=cadet_with_id_at_event.health,
+                event=event
+            )
+            new_dict[cadet] = registration_data
+
+        return DictOfCadetsWithRegistrationData(new_dict)
+
+    @property
+    def list_of_cadets(self):
+        list_of_cadets = getattr(self, "_list_of_cadets", None)
+        if list_of_cadets is None:
+            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+
+        return list_of_cadets
 
     def read(self, event_id: str) -> ListOfCadetsWithIDAtEvent:
         if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):

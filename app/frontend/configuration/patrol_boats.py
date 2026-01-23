@@ -61,9 +61,9 @@ def post_form_config_patrol_boats_page(
 
 
 def save_from_ordinary_list_of_patrol_boats(
-    object_store: ObjectStore, new_list: List[PatrolBoat]
+        interface: abstractInterface, new_list: List[PatrolBoat]
 ):
     update_list_of_patrol_boats(
-        object_store=object_store,
+        object_store=interface.object_store,
         updated_list_of_patrol_boats=ListOfPatrolBoats(new_list),
     )

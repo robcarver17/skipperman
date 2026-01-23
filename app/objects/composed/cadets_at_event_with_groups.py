@@ -181,6 +181,9 @@ class DaysAndGroupNames(Dict[Day, str]):
         return list(self.values())
 
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
+    def days_and_groups_for_cadet(self, cadet: Cadet):
+        return self.get(cadet, DaysAndGroups())
+
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         return ListOfCadets(
             [
@@ -189,6 +192,25 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
                 if group in days_and_groups.list_of_groups
             ]
         )
+
+
+    def get_most_common_group_for_cadet(
+        self, cadet: Cadet, default_group=missing_data
+    ) -> Group:
+        group_dict = self.get_days_and_groups_for_cadet(cadet, default=missing_data)
+        if group_dict is missing_data:
+            return default_group
+
+        return group_dict.most_common()
+
+    def get_days_and_groups_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> DaysAndGroups:
+        if default is arg_not_passed:
+            default = DaysAndGroups()
+
+        return self.get(cadet, default)
+
 
 class DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def __init__(

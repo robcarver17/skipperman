@@ -3,7 +3,7 @@ from typing import Dict
 
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteers_last_role_across_events import \
@@ -78,7 +78,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
         dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
         dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-        dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
             dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
     ):
         super().__init__(raw_dict)
@@ -471,7 +471,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     @property
     def dict_of_people_and_club_dinghies_at_event(
         self,
-    ) -> DictOfPeopleAndClubDinghiesAtEvent:
+    ) -> DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent:
         return self._dict_of_people_and_club_dinghies_at_event
 
     @property
@@ -519,7 +519,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-    dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
 ) -> DictOfAllEventDataForVolunteers:
     event = list_of_events.event_with_id(event_id)
@@ -558,7 +558,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
-    dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
     event: Event,
 ) -> Dict[Volunteer, AllEventDataForVolunteer]:

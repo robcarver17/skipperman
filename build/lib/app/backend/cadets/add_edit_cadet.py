@@ -5,7 +5,7 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_similar_cadets_from_data,
-    DEPRECATE_get_list_of_cadets,
+    get_list_of_cadets,
     update_list_of_cadets,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface

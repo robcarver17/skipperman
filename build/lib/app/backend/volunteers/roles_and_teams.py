@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.roles_and_teams import DEPRECATE_DictOfTeamsWithRoles, DictOfTeamsWithRoles
 
 from app.data_access.store.object_definitions import (
@@ -89,16 +90,16 @@ def get_team_from_id(object_store: ObjectStore, team_id: str, default=arg_not_pa
 
 
 def modify_list_of_roles_with_skills(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     existing_object: RoleWithSkills,
     new_object: RoleWithSkills,
 ):
-    list_of_roles_with_skills = get_list_of_roles_with_skills(object_store)
+    list_of_roles_with_skills = get_list_of_roles_with_skills(interface.object_store)
     list_of_roles_with_skills.modify(existing_role=existing_object, new_role=new_object)
     try:
         list_of_roles_with_skills.check_for_duplicated_names()
         update_list_of_roles_with_skills(
-            object_store=object_store,
+            object_store=interface.object_store,
             list_of_roles_with_skills=list_of_roles_with_skills,
         )
     except:
@@ -108,12 +109,12 @@ def modify_list_of_roles_with_skills(
 
 
 def add_to_list_of_roles_with_skills(
-    object_store: ObjectStore, name_of_entry_to_add: str
+        interface: abstractInterface, name_of_entry_to_add: str
 ):
-    list_of_roles_with_skills = get_list_of_roles_with_skills(object_store)
+    list_of_roles_with_skills = get_list_of_roles_with_skills(interface.object_store)
     list_of_roles_with_skills.add(name_of_entry_to_add)
     update_list_of_roles_with_skills(
-        object_store=object_store, list_of_roles_with_skills=list_of_roles_with_skills
+        object_store=interface.object_store, list_of_roles_with_skills=list_of_roles_with_skills
     )
 
 
@@ -130,20 +131,20 @@ def get_list_of_roles_with_skills(object_store: ObjectStore) ->ListOfRolesWithSk
     return object_store.get(object_store.data_api.data_list_of_roles.read_list_of_roles_with_skills)
 
 
-def add_new_team(object_store: ObjectStore, name_of_entry_to_add: str):
-    list_of_teams = get_list_of_teams(object_store)
+def add_new_team(interface: abstractInterface,  name_of_entry_to_add: str):
+    list_of_teams = get_list_of_teams(interface.object_store)
     list_of_teams.add(name_of_entry_to_add)
-    update_list_of_teams(object_store=object_store, list_of_teams=list_of_teams)
+    update_list_of_teams(object_store=interface.object_store, list_of_teams=list_of_teams)
 
 
-def modify_team(object_store: ObjectStore, existing_object: Team, new_object: Team):
-    list_of_teams = get_list_of_teams(object_store)
+def modify_team(interface: abstractInterface, existing_object: Team, new_object: Team):
+    list_of_teams = get_list_of_teams(interface.object_store)
     list_of_teams.replace(existing_team=existing_object, new_team=new_object)
     try:
         list_of_teams.check_for_duplicated_names()
     except:
         raise Exception("Duplicate names - team names have to be unique")
-    update_list_of_teams(object_store=object_store, list_of_teams=list_of_teams)
+    update_list_of_teams(object_store=interface.object_store, list_of_teams=list_of_teams)
 
 
 def get_list_of_teams(object_store: ObjectStore) -> ListOfTeams:

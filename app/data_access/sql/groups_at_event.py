@@ -7,6 +7,7 @@ from app.data_access.sql.groups import GROUPS_TABLE
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups, CadetIdWithGroup
+from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import DaysAndGroupNames,  \
     DaysAndGroups, DictOfCadetsWithDaysAndGroupsAtEvent
 from app.objects.day_selectors import Day
@@ -19,6 +20,15 @@ INDEX_NAME_CADETS_WITH_GROUP_ID_TABLE = "event_cadet_day"
 
 
 class SqlDataListOfCadetsWithGroups(GenericSqlData):
+    def get_list_of_cadets_in_group(self, event: Event, group: Group) -> ListOfCadets:
+        all_group_allocations_at_event = self.get_group_allocations_for_event_active_cadets_only(
+            event=event
+        )
+        cadets_in_group = all_group_allocations_at_event.cadets_in_group_during_event(group)
+        cadets_in_group = cadets_in_group.sort_by_firstname()
+
+        return cadets_in_group
+
     def get_group_allocations_for_event_active_cadets_only(
     self, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:

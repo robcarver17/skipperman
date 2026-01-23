@@ -22,23 +22,23 @@ def is_volunteer_qualified_as_SI(object_store: ObjectStore, volunteer: Volunteer
     return dict_of_skills.is_SI
 
 
-def add_new_volunteer_skill(object_store: ObjectStore, name_of_entry_to_add: str):
-    list_of_skills = get_list_of_skills(object_store)
+def add_new_volunteer_skill(interface: abstractInterface,  name_of_entry_to_add: str):
+    list_of_skills = get_list_of_skills(interface.object_store)
     list_of_skills.add(name_of_entry_to_add)
-    update_list_of_skills(object_store=object_store, list_of_skills=list_of_skills)
+    update_list_of_skills(object_store=interface.object_store, list_of_skills=list_of_skills)
 
 
 def modify_volunteer_skill(
-    object_store: ObjectStore, existing_object: Skill, new_object: Skill
+        interface: abstractInterface, existing_object: Skill, new_object: Skill
 ):
-    list_of_skills = get_list_of_skills(object_store)
+    list_of_skills = get_list_of_skills(interface.object_store)
     list_of_skills.modify(existing_skill=existing_object, new_skill=new_object)
     try:
         list_of_skills.check_for_duplicated_names()
     except:
         raise Exception("Duplicated names")
 
-    update_list_of_skills(object_store=object_store, list_of_skills=list_of_skills)
+    update_list_of_skills(object_store=interface.object_store, list_of_skills=list_of_skills)
 
 
 def save_skills_for_volunteer(

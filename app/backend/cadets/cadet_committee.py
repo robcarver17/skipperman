@@ -12,16 +12,13 @@ from app.data_access.configuration.fixed import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.membership_status import current_member
 
-from app.backend.cadets.list_of_cadets import DEPRECATE_get_list_of_cadets, get_sorted_list_of_cadets_from_raw_data
+from app.backend.cadets.list_of_cadets import  get_sorted_list_of_cadets_from_raw_data
 from app.objects.composed.committee import ListOfCadetsOnCommittee
 
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_cadet_committee_members,
-)
-from app.objects.utilities.exceptions import MissingData, missing_data
+from app.objects.utilities.exceptions import MissingData
 
 
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
@@ -143,24 +140,26 @@ def toggle_selection_for_cadet_committee_member(
 
 
 
-def DEPRECATE_delete_cadet_from_committee_data(
+def delete_cadet_from_committee_data(
     interface: abstractInterface, cadet: Cadet, areyousure=False
-):
+) -> bool:
     if not areyousure:
-        return
+        raise Exception("Have to be sure to delete")
 
-    list_of_committee_members = get_list_of_cadets_on_committee(interface.object_store)
-    existing_membership = list_of_committee_members.get_cadet_on_committee(
-        cadet, default=missing_data
-    )
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_on_committee.delete_cadet_from_committee_data,
+            cadet_id=cadet.id
+        )
+        cadet_was_on_commmittee = True
+    except MissingData:
+        cadet_was_on_commmittee = False
 
-    list_of_committee_members.delete_cadet_from_data(cadet)
-    DEPRECATE_update_list_of_cadets_on_committee(
-        object_store=object_store,
-        updated_list_of_cadets_on_committee=list_of_committee_members,
-    )
+    except Exception as e:
+        interface.log_error("Error %s when deleting cadet committee member %s" % (str(e), str(cadet)))
+        return  False
 
-    return existing_membership
+    return cadet_was_on_commmittee
 
 
 ## STORAGE
@@ -176,14 +175,6 @@ def get_list_of_cadets_on_committee(
     return object_store.get(object_store.data_api.data_list_of_cadets_on_committee.get_list_of_cadets_on_committee)
 
 
-def DEPRECATE_update_list_of_cadets_on_committee(
-    object_store: ObjectStore,
-    updated_list_of_cadets_on_committee: ListOfCadetsOnCommittee,
-):
-    object_store.DEPRECATE_update(
-        new_object=updated_list_of_cadets_on_committee,
-        object_definition=object_definition_for_list_of_cadet_committee_members,
-    )
 
 
 ## DATES

@@ -26,10 +26,10 @@ from app.backend.events.event_warnings import (
     process_warnings_into_warning_list,
 )
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.objects.registration_status import manual_status
 
@@ -65,7 +65,7 @@ def refresh_registration_data_warnings(object_store: ObjectStore, event: Event):
 
 
 def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Event):
-    registered_cadets = get_dict_of_cadets_with_registration_data(
+    registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     active_cadets = registered_cadets.list_of_active_cadets()
@@ -87,7 +87,7 @@ def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Eve
 
 
 def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
-    registered_cadets = get_dict_of_cadets_with_registration_data(
+    registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     active_cadets = registered_cadets.list_of_active_cadets()
@@ -106,7 +106,7 @@ def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
 
 
 def refresh_manually_added_cadet_warnings(object_store: ObjectStore, event: Event):
-    dict_of_registrations = get_dict_of_cadets_with_registration_data(
+    dict_of_registrations = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     warnings = []

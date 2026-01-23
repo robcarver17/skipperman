@@ -180,8 +180,13 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
             ]
         )
 
-
 class DictOfPeopleAndClubDinghiesAtEvent(
+    Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
+):
+    pass
+
+
+class DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent(
     Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
 ):
     def __init__(
@@ -338,7 +343,7 @@ def compose_dict_of_people_and_club_dinghies_at_event(
     list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
     list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
     list_of_volunteers: ListOfVolunteers,
-) -> DictOfPeopleAndClubDinghiesAtEvent:
+) -> DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent:
     event = list_of_events.event_with_id(event_id)
     raw_dict_cadets = compose_raw_dict_of_cadets_and_club_dinghies_at_event(
         list_of_cadets=list_of_cadets,
@@ -354,7 +359,7 @@ def compose_dict_of_people_and_club_dinghies_at_event(
     raw_dict.update(raw_dict_cadets)
     raw_dict.update(raw_dict_volunteers)
 
-    return DictOfPeopleAndClubDinghiesAtEvent(
+    return DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent(
         raw_dict=raw_dict,
         event=event,
         list_of_cadets_at_event_with_id_and_club_dinghy=list_of_cadets_at_event_with_id_and_club_dinghy,

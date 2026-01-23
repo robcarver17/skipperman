@@ -9,7 +9,7 @@ from app.backend.reporting.rollcall_report.configuration import (
     GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.events import Event
 
@@ -160,7 +160,7 @@ def get_names_as_series_group_at_event(
 
 def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
     list_of_cadets: ListOfCadets,
-    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ) -> ListOfCadets:
     return ListOfCadets(
         [
@@ -175,7 +175,7 @@ def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
 
 def add_club_boat_asterix_to_cadet_with_club_boat_on_any_day(
     cadet: Cadet,
-    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Cadet:
     has_dinghy = dict_of_cadets_at_event_with_club_dinghies.club_dinghys_for_person(
         cadet

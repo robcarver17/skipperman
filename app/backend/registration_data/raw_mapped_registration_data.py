@@ -94,10 +94,7 @@ def does_event_have_imported_registration_data(
 def get_raw_mapped_registration_data(
     object_store: ObjectStore, event: Event
 ) -> RegistrationDataForEvent:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_mapped_registration_data,
-        event_id=event.id,
-    )
+    return (object_store.get(object_store.data_api.data_registration_data.read, event_id=event.id))
 
 
 def update_raw_mapped_registration_data(

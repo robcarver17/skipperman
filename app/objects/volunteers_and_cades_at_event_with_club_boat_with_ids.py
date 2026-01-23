@@ -31,6 +31,9 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetAtEventWithClubDinghyWithId
 
+    def list_of_cadet_ids(self):
+        return [item.cadet_id for item in self]
+
     def update_allocation_for_cadet_on_day(
         self, cadet_id: str, day: Day, club_dinghy_id: str
     ):
@@ -103,6 +106,9 @@ class ListOfVolunteerAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return VolunteerAtEventWithClubDinghyWithId
+
+    def list_of_volunteer_ids(self):
+        return [item.volunteer_id for item in self]
 
     def update_allocation_for_volunteer_on_day(
         self, volunteer_id: str, day: Day, club_dinghy_id: str

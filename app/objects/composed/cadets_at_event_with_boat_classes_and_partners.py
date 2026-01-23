@@ -223,8 +223,11 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
             ]
         )
 
-
 class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
+    pass
+
+
+class DEPRECATE_DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, DictOfDaysBoatClassAndPartners],
@@ -446,7 +449,7 @@ def compose_dict_of_cadets_and_boat_classes_and_partners(
     list_of_events: ListOfEvents,
     list_of_boat_classes: ListOfBoatClasses,
     list_of_cadets_at_event_with_boat_class_and_partners_with_ids: ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-) -> DictOfCadetsAndBoatClassAndPartners:
+) -> DEPRECATE_DictOfCadetsAndBoatClassAndPartners:
     event = list_of_events.event_with_id(event_id)
 
     raw_dict = compose_raw_dict_of_cadets_and_boat_classes_and_partners(
@@ -455,7 +458,7 @@ def compose_dict_of_cadets_and_boat_classes_and_partners(
         list_of_cadets_at_event_with_boat_class_and_partners_with_ids=list_of_cadets_at_event_with_boat_class_and_partners_with_ids,
     )
 
-    return DictOfCadetsAndBoatClassAndPartners(
+    return DEPRECATE_DictOfCadetsAndBoatClassAndPartners(
         raw_dict=raw_dict,
         event=event,
         list_of_cadets_at_event_with_boat_class_and_partners_with_ids=list_of_cadets_at_event_with_boat_class_and_partners_with_ids,

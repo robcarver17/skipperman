@@ -74,8 +74,8 @@ class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
             self.remove(item)
 
 
-    def list_of_tuple_of_datetime_marked_and_attendance(self):
-        return [(item.datetime_marked, item.attendance) for item in self]
+    def list_of_tuple_of_datetime_marked_and_attendance_on_day(self, day: Day):
+        return [(item.datetime_marked, item.attendance) for item in self if item.day==day]
 
     def subset_for_cadet_at_event_on_day(self, event_id: str, day: Day):
         subset = get_subset_of_list_that_matches_multiple_attr(
@@ -99,3 +99,9 @@ class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
                 datetime_marked=datetime_marked,
             )
         )
+
+    def list_of_days(self):
+        return list(set([item.day for item in self]))
+
+    def list_of_event_ids(self):
+        return list(set([item.event_id for item in self]))

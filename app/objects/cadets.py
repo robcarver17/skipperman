@@ -119,14 +119,6 @@ class Cadet(GenericSkipperManObjectWithIds):
             membership_status=none_member,
         )
 
-    def replace_all_attributes_except_id_with_those_from_new_cadet(
-        self, new_cadet: "Cadet"
-    ):
-        self.first_name = new_cadet.first_name
-        self.surname = new_cadet.surname
-        self.date_of_birth = new_cadet.date_of_birth
-        self.membership_status = new_cadet.membership_status
-
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
         if at_date is arg_not_passed:
             at_date = datetime.date.today()
@@ -225,35 +217,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
         return self.subset_from_list_of_ids_retaining_order(list_of_ids)
 
-    def add(self, cadet: Cadet):
-        if cadet in self:
-            ## __eq__ compares name, surname, and DOB
-            raise Exception("Cadet %s already in list of existing cadets" % str(cadet))
-
-        cadet_id = self.next_id()
-        cadet.id = cadet_id
-        self.append(cadet)
-
-        return cadet
-
-    def update_cadet(self, existing_cadet: Cadet, new_cadet: Cadet):
-        self.replace_cadet_with_id_with_new_cadet_details(
-            existing_cadet_id=existing_cadet.id, new_cadet=new_cadet
-        )
-
-    def confirm_cadet_as_member(self, existing_cadet: Cadet):
-        existing_cadet.membership_status = current_member
-        self.replace_cadet_with_id_with_new_cadet_details(
-            existing_cadet_id=existing_cadet.id, new_cadet=existing_cadet
-        )
-
-    def replace_cadet_with_id_with_new_cadet_details(
-        self, existing_cadet_id: str, new_cadet: Cadet
-    ):
-        existing_cadet = self.cadet_with_id(existing_cadet_id)
-        existing_cadet.replace_all_attributes_except_id_with_those_from_new_cadet(
-            new_cadet
-        )
 
     def matching_cadet_with_name(
         self, cadet_name: str, default=arg_not_passed
@@ -266,22 +229,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
         elif len(exact_match) > 1:
             raise MultipleMatches(
                 "Multiple matching cadets found looking for %s!" % cadet_name
-            )
-        elif len(exact_match) == 0:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-
-    def matching_cadet(self, cadet: Cadet, default=arg_not_passed) -> Cadet:
-        exact_match = [
-            cadet_in_list for cadet_in_list in self if cadet == cadet_in_list
-        ]
-        if len(exact_match) == 1:
-            return exact_match[0]
-        elif len(exact_match) > 1:
-            raise MultipleMatches(
-                "Multiple matching cadets found looking for %s!" % str(cadet)
             )
         elif len(exact_match) == 0:
             if default is arg_not_passed:
@@ -376,7 +323,9 @@ def get_appropriate_year_for_cadet_start_point():
 
 
 PERMANENT_SKIP_TEST_CADET_ID = str(-9999)
-TEMPORARY_SKIP_TEST_CADET_ID = str(9991)
+TEMPORARY_SKIP_TEST_CADET_ID = str(-9991)
+OLD_TEMPORARY_SKIP_TEST_CADET_ID = str(9991)
+
 
 DEFAULT_DATE_OF_BIRTH = datetime.date(1970, 1, 1)
 UNCONFIRMED_DATE_OF_BIRTH = datetime.date(1950, 1, 1)

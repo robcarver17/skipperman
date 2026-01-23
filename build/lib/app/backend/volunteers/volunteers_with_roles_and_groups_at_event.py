@@ -122,7 +122,8 @@ def get_most_common_role_and_group_for_event_and_volunteer(
 def get_role_and_groups_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
 ) ->  DictOfDaysRolesAndGroups:
-    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_role_and_groups_for_event_and_volunteer, event_id=event.id,
+    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_role_and_groups_for_event_and_volunteer,
+                            event_id=event.id,
                             volunteer_id=volunteer.id)
 
 

@@ -84,3 +84,4 @@ def int2date(some_int: int) -> Union[datetime.date, datetime.datetime]:
             return datetime.date(some_datetime.year, some_datetime.month, some_datetime.day)
 
     return some_datetime
+

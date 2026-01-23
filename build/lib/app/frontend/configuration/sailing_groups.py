@@ -158,7 +158,7 @@ def get_group_from_form(
     return new_group
 
 
-def save_from_ordinary_list_of_groups(object_store: ObjectStore, new_list: List[Group]):
+def save_from_ordinary_list_of_groups( interface: abstractInterface, new_list: List[Group]):
     update_list_of_groups(
-        object_store=object_store, updated_list_of_groups=ListOfGroups(new_list)
+        object_store=interface.object_store, updated_list_of_groups=ListOfGroups(new_list)
     )

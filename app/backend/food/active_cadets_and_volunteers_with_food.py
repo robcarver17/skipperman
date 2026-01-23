@@ -6,7 +6,7 @@ from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
@@ -20,7 +20,7 @@ from app.backend.food.dict_of_food_for_event import (
 def get_dict_of_active_cadets_with_food_requirements_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithFoodRequirementsAtEvent:
-    registration_data = get_dict_of_cadets_with_registration_data(
+    registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     all_food_data = get_dict_of_cadets_with_food_requirements_at_event(

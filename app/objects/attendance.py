@@ -66,36 +66,12 @@ class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
     def _object_class_contained(self):
         return RawAttendanceItem
 
-    def clean_attendance_data_for_event(self, event_id: str):
-        subset = get_subset_of_list_that_matches_multiple_attr(
-            self, dict_of_attributes={"event_id": event_id}
-        )
-        for item in subset:
-            self.remove(item)
+    def list_of_tuple_of_datetime_marked_and_attendance_on_day(self, day: Day):
+        return [(item.datetime_marked, item.attendance) for item in self if item.day==day]
 
 
-    def list_of_tuple_of_datetime_marked_and_attendance(self):
-        return [(item.datetime_marked, item.attendance) for item in self]
+    def list_of_days(self):
+        return list(set([item.day for item in self]))
 
-    def subset_for_cadet_at_event_on_day(self, event_id: str, day: Day):
-        subset = get_subset_of_list_that_matches_multiple_attr(
-            self, dict_of_attributes={"day": day, "event_id": event_id}
-        )
-
-        return ListOfRawAttendanceItemsForSpecificCadet(subset)
-
-    def add_new_attendance_for_cadet_on_day(
-        self,
-        event_id: str,
-        datetime_marked: datetime.datetime,
-        day: Day,
-        attendance: Attendance,
-    ):
-        self.append(
-            RawAttendanceItem(
-                event_id=event_id,
-                day=day,
-                attendance=attendance,
-                datetime_marked=datetime_marked,
-            )
-        )
+    def list_of_event_ids(self):
+        return list(set([item.event_id for item in self]))

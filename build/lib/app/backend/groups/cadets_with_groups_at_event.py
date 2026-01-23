@@ -1,8 +1,5 @@
 from typing import List
 
-from app.backend.groups.previous_groups import (
-    get_group_allocations_for_event_active_cadets_only,
-)
 from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.cadet_attendance import DictOfDaySelectors
@@ -13,7 +10,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 from app.objects.events import Event
@@ -133,3 +130,15 @@ def get_list_of_all_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfGroups:
     return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_list_of_all_groups_at_event, event=event)
+
+
+def get_list_of_cadets_in_group(object_store: ObjectStore, event: Event, group: Group):
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_groups.get_list_of_cadets_in_group,
+        group=group,
+        event=event)
+
+def get_group_allocations_for_event_active_cadets_only(
+    object_store: ObjectStore, event: Event
+) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_group_allocations_for_event_active_cadets_only, event=event)

@@ -8,6 +8,7 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.club_dinghies import no_club_dinghy
 from app.objects.composed.people_at_event_with_club_dinghies import (
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent, DictOfDaysAndClubDinghiesAtEventForPerson,
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.day_selectors import Day
@@ -17,6 +18,7 @@ from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
 from app.backend.club_boats.list_of_club_dinghies import get_club_dinghy_with_name
 from app.objects.volunteers import ListOfVolunteers
+from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import ListOfCadetAtEventWithIdAndClubDinghies
 
 
 def is_a_club_dinghy_allocated_for_list_of_cadets_on_any_day_at_event(
@@ -47,17 +49,27 @@ def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
 
 def get_dict_of_people_and_club_dinghies_at_event(
     object_store: ObjectStore, event: Event
-) -> DictOfPeopleAndClubDinghiesAtEvent:
+) -> DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent:
     return object_store.DEPRECATE_get(
         object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,
         event_id=event.id,
     )
 
+def get_dict_of_cadets_and_club_dinghies_at_event(
+    object_store: ObjectStore, event: Event
+) -> DictOfPeopleAndClubDinghiesAtEvent:
+    return object_store.get(object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.read_dict_of_cadets_and_club_dinghies_at_event, event_id=event.id)
+
+def get_list_of_cadets_and_club_dinghies_at_event(
+    object_store: ObjectStore, event: Event
+) -> ListOfCadetAtEventWithIdAndClubDinghies:
+    return object_store.get(object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.read, event_id =event.id)
+
 
 def update_dict_of_people_and_club_dinghies_at_event(
     object_store: ObjectStore,
     event: Event,
-    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
 ):
     object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_people_and_club_dinghies_at_event,

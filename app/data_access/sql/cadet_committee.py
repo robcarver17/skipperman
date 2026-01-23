@@ -7,12 +7,57 @@ from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.cadets import CADETS_TABLE
 from app.objects.composed.committee import ListOfCadetsOnCommittee, CadetOnCommittee
 from app.objects.membership_status import MembershipStatus
-from app.objects.utilities.exceptions import missing_data, MultipleMatches
+from app.objects.utilities.exceptions import missing_data, MultipleMatches, MissingData, DuplicateCadets
 
 CADETS_ON_COMMITTEE_TABLE ="cadets_on_committee"
 INDEX_CADETS_ON_COMMITTEE_TABLE  = "index_cadets_on_committee"
 
 class SqlDataListOfCadetsOnCommitte(GenericSqlData):
+
+    def delete_cadet_from_committee_data(
+            self, cadet: Cadet
+    ):
+        if not self.is_cadet_on_committe(cadet.id):
+            raise MissingData
+
+        try:
+            sql = "DELETE FROM %s WHERE %s=?" % (
+                CADETS_ON_COMMITTEE_TABLE,
+                CADET_ID
+            )
+
+            self.cursor.execute(sql, int(cadet.id))
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception(str(e1))
+
+        finally:
+            self.close()
+
+
+    def is_cadet_on_committe(self, cadet_id: str):
+        if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute("SELECT %s FROM %s WHERE %s=%d" % (
+                CADET_ID, CADETS_ON_COMMITTEE_TABLE,
+                CADET_ID, int(cadet_id)
+            ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading cadet committee data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return False
+        elif len(raw_list) > 1:
+            raise MultipleMatches("More than one cadet with id %s on committee" % cadet_id)
+        else:
+            return True
 
     def toggle_selection_for_cadet_committee_member(
             self, cadet_id: str
@@ -48,6 +93,9 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
             deselected: bool = False
     ):
         try:
+            if self.is_cadet_on_committe(cadet_id):
+                raise DuplicateCadets("Cadet is already on committee")
+
             cadet_id = int(cadet_id)
             date_term_starts = date2int(date_term_starts)
             date_term_ends = date2int(date_term_ends)
@@ -120,7 +168,7 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
                 )
             id_list.append(cadet_with_id_on_committee)
 
-        return ListOfCadetsOnCommittee(new_list, list_of_cadets_with_id_on_commitee=ListOfCadetsWithIdOnCommittee(id_list))
+        return ListOfCadetsOnCommittee(new_list)
 
     def is_cadet_selected(self, cadet_id:str):
         if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):

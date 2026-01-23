@@ -54,6 +54,12 @@ class FoodRequirements(GenericSkipperManObject):
 
         return True
 
+    def as_dict_except_other_field(self):
+        return dict([
+            (key, getattr(self, key))
+            for key in food_keys
+        ])
+
     @classmethod
     def create_empty(cls):
         return cls()

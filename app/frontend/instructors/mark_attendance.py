@@ -3,8 +3,8 @@ from app.frontend.shared.cadet_state import (
     clear_cadet_state,
 )
 from app.backend.cadets_at_event.instructor_marked_attendance import (
-    get_attendance_across_events_for_cadets_in_group_at_event,
-    update_attendance_across_events_for_list_of_cadets,
+    get_attendance_at_event_for_cadets_in_group_at_event,
+    update_attendance_for_cadet_on_day_at_event,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.attendance_table import *
@@ -32,7 +32,8 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
 )
 from app.objects.abstract_objects.abstract_text import Heading, bold
-from app.objects.composed.attendance import DictOfAttendanceAcrossEvents
+from app.objects.attendance import unknown
+from app.objects.composed.attendance import  AttendanceAtEventAcrossCadets
 
 
 def display_instructor_attendance(interface: abstractInterface):
@@ -137,7 +138,7 @@ def post_instructor_attendance_if_button_pressed_and_is_initial_registration(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 
@@ -205,7 +206,7 @@ def post_instructor_attendance_if_button_pressed_and_not_initial_registration(
     ## Now save any changes to ticks
     save_any_changes_to_ticks(interface, initial_stage=False)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_instructor_attendance)
 
@@ -230,7 +231,7 @@ def save_any_changes_to_ticks(
 ):
     event = get_event_from_state(interface)
     day = day_given_current_day_and_event(interface=interface, event=event)
-    attendance_across_events = get_attendance_across_events_from_state(interface)
+    attendance_across_events = get_attendance_at_event_from_state(interface)
 
     save_any_changes_to_ticks_passing_information(
         interface=interface,
@@ -241,22 +242,17 @@ def save_any_changes_to_ticks(
         force_mark_to_present=force_mark_to_present,
     )
 
-    update_attendance_across_events_for_list_of_cadets(
-        object_store=interface.object_store,
-        dict_of_attendance_across_events_for_list_of_cadets=attendance_across_events,
-        list_of_cadets=attendance_across_events.list_of_cadets,
-    )
 
 
 def save_any_changes_to_ticks_passing_information(
     interface: abstractInterface,
-    attendance_across_events: DictOfAttendanceAcrossEvents,
+    attendance_across_events: AttendanceAtEventAcrossCadets,
     event: Event,
     day: Day,
     initial_stage: bool,
     force_mark_to_present: bool,
 ):
-    for cadet in attendance_across_events.list_of_cadets:
+    for cadet in attendance_across_events.list_of_cadets():
         save_ticks_for_cadet(
             interface=interface,
             event=event,
@@ -270,7 +266,7 @@ def save_any_changes_to_ticks_passing_information(
 
 def save_ticks_for_cadet(
     interface: abstractInterface,
-    attendance_across_events: DictOfAttendanceAcrossEvents,
+    attendance_across_events: AttendanceAtEventAcrossCadets,
     event: Event,
     day: Day,
     cadet: Cadet,
@@ -289,7 +285,6 @@ def save_ticks_for_cadet(
     else:
         save_ticks_for_cadet_after_initial_stage(
             interface=interface,
-            attendance_across_events=attendance_across_events,
             event=event,
             day=day,
             cadet=cadet,
@@ -298,7 +293,7 @@ def save_ticks_for_cadet(
 
 def save_ticks_for_cadet_in_initial_stage(
     interface: abstractInterface,
-    attendance_across_events: DictOfAttendanceAcrossEvents,
+    attendance_across_events: AttendanceAtEventAcrossCadets,
     event: Event,
     day: Day,
     cadet: Cadet,
@@ -307,48 +302,46 @@ def save_ticks_for_cadet_in_initial_stage(
     if should_we_tick_cadet_as_present(
         interface=interface,
         attendance_across_events=attendance_across_events,
-        event=event,
         day=day,
         cadet=cadet,
         force_mark_to_present=force_mark_to_present,
     ):
-        attendance_across_events.update_attendance_for_cadet_on_day_at_event(
-            event=event, cadet=cadet, day=day, new_attendance=present
+        update_attendance_for_cadet_on_day_at_event(
+            interface=interface,
+            event=event, cadet=cadet, day=day, attendance=present
         )
+        attendance_across_events.attendance_for_cadet(cadet).update_attendance_on_day(day=day, new_attendance=present)
 
     if cadet_has_tick_for_late(interface=interface, cadet=cadet):
-        attendance_across_events.update_attendance_for_cadet_on_day_at_event(
-            event=event, cadet=cadet, day=day, new_attendance=will_be_late
+        update_attendance_for_cadet_on_day_at_event(
+            interface=interface, event=event, cadet=cadet, day=day, attendance=will_be_late
         )
+        attendance_across_events.attendance_for_cadet(cadet).update_attendance_on_day(day=day, new_attendance=will_be_late)
 
 
 def save_ticks_for_cadet_after_initial_stage(
     interface: abstractInterface,
-    attendance_across_events: DictOfAttendanceAcrossEvents,
     event: Event,
     day: Day,
     cadet: Cadet,
 ):
     if cadet_has_tick_for_returned(interface=interface, cadet=cadet):
-        attendance_across_events.update_attendance_for_cadet_on_day_at_event(
-            event=event, cadet=cadet, day=day, new_attendance=returned
+        update_attendance_for_cadet_on_day_at_event(
+            interface=interface,
+            event=event, cadet=cadet, day=day, attendance=returned
         )
 
 
 def should_we_tick_cadet_as_present(
     interface: abstractInterface,
-    attendance_across_events: DictOfAttendanceAcrossEvents,
-    event: Event,
+    attendance_across_events: AttendanceAtEventAcrossCadets,
     day: Day,
     cadet: Cadet,
     force_mark_to_present: bool = False,
 ):
     if force_mark_to_present:
         current_attendance = (
-            attendance_across_events.attendance_for_cadet_across_days_and_events(cadet)
-            .attendance_for_cadet_at_event(event)
-            .attendance_on_day(day)
-            .current_attendance
+            attendance_across_events.attendance_for_cadet(cadet).attendance_on_day(day).current_attendance
         )
         if current_attendance == registration_not_taken:
             return True
@@ -380,23 +373,18 @@ def update_attendance_for_cadet_given_button(
     )
     event = get_event_from_state(interface)
     day = day_given_current_day_and_event(interface=interface, event=event)
-    attendance_across_events = get_attendance_across_events_from_state(interface)
 
-    attendance_across_events.update_attendance_for_cadet_on_day_at_event(
-        event=event, cadet=cadet, day=day, new_attendance=new_attendance
+    update_attendance_for_cadet_on_day_at_event(
+        interface=interface,
+        event=event, cadet=cadet, day=day, attendance=new_attendance
     )
 
-    update_attendance_across_events_for_list_of_cadets(
-        object_store=interface.object_store,
-        dict_of_attendance_across_events_for_list_of_cadets=attendance_across_events,
-        list_of_cadets=attendance_across_events.list_of_cadets,
-    )
 
 
 def final_save_of_initial_registration(interface: abstractInterface):
     event = get_event_from_state(interface)
     day = day_given_current_day_and_event(interface=interface, event=event)
-    attendance_across_events = get_attendance_across_events_from_state(interface)
+    attendance_across_events = get_attendance_at_event_from_state(interface)
 
     save_any_changes_to_ticks_passing_information(
         interface=interface,
@@ -407,22 +395,34 @@ def final_save_of_initial_registration(interface: abstractInterface):
         force_mark_to_present=False,
     )
 
-    attendance_across_events.mark_all_unregistered_cadets_as_absent(
-        day=day, event=event
+    mark_all_unregistered_cadets_as_absent(
+        interface=interface,
+        day=day, event=event,
+        attendance_across_events=attendance_across_events
     )
 
-    update_attendance_across_events_for_list_of_cadets(
-        object_store=interface.object_store,
-        dict_of_attendance_across_events_for_list_of_cadets=attendance_across_events,
-        list_of_cadets=attendance_across_events.list_of_cadets,
-    )
+def mark_all_unregistered_cadets_as_absent(    interface: abstractInterface,
+    attendance_across_events: AttendanceAtEventAcrossCadets,
+                                               event: Event,
+    day: Day,
+):
+    for cadet in attendance_across_events.list_of_cadets():
+        current_attendance = attendance_across_events.attendance_for_cadet(cadet).attendance_on_day(day).current_attendance
+        if (
+                current_attendance == unknown
+                or current_attendance == registration_not_taken
+        ):
+            update_attendance_for_cadet_on_day_at_event(
+                interface=interface,
+                event=event, day=day, cadet=cadet, attendance=absent
+            )
 
 
-def get_attendance_across_events_from_state(interface: abstractInterface):
+def get_attendance_at_event_from_state(interface: abstractInterface) -> AttendanceAtEventAcrossCadets:
     event = get_event_from_state(interface)
     group = get_group_from_state(interface)
 
-    return get_attendance_across_events_for_cadets_in_group_at_event(
+    return get_attendance_at_event_for_cadets_in_group_at_event(
         object_store=interface.object_store, event=event, group=group
     )
 

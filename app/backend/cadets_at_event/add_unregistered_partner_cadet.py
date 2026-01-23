@@ -6,8 +6,8 @@ from app.backend.groups.cadets_with_groups_at_event import (
     update_dict_of_cadets_with_groups_at_event,
 )
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
-    update_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    DEPRECATE_update_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
 from app.backend.registration_data.cadet_registration_data import (
     add_new_cadet_to_event_from_row_in_registration_data,
@@ -33,7 +33,7 @@ from app.objects.utilities.exceptions import NoMoreData, MissingData, DuplicateC
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import manual_status
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 
 
@@ -55,7 +55,7 @@ def from_partner_name_to_cadet(partner_name: str) -> Cadet:
 def get_registered_two_handed_partner_name_for_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
-    cadets_at_event_data = get_dict_of_cadets_with_registration_data(
+    cadets_at_event_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
 
@@ -177,7 +177,7 @@ def get_list_of_days_given_original_cadet(
     event: Event,
     original_cadet: Cadet,
 ) -> List[Day]:
-    registration_data = get_dict_of_cadets_with_registration_data(
+    registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     list_of_days = registration_data.registration_data_for_cadet(
@@ -194,7 +194,7 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
     original_cadet: Cadet,
     new_cadet: Cadet,
 ):
-    dinghys_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    dinghys_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
 
@@ -202,7 +202,7 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
         cadet=original_cadet, partner_cadet=new_cadet, day=day
     )
 
-    update_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    DEPRECATE_update_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store,
         event=event,
         dict_of_cadets_and_boat_classes_and_partners_at_events=dinghys_data,

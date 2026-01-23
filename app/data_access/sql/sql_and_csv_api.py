@@ -1,45 +1,63 @@
 import shutil
 
 from app.data_access.backups.make_backup import make_backup
-from app.data_access.csv.cadets import *
-from app.data_access.csv.food_and_clothing import *
 from app.data_access.csv.global_read_only import (
     is_global_read_only,
     set_global_read_only,
 )
-from app.data_access.csv.wa_event_mapping import CsvDataWAEventMapping
-from app.data_access.csv.wa_field_mapping import *
-from app.data_access.csv.registration_data import *
-from app.data_access.csv.configuration import *
-from app.data_access.csv.volunteers import *
-from app.data_access.csv.resources import *
 
+from app.data_access.csv.qualifications import CsvDataListOfCadetsWithTickListItems
+from app.data_access.csv.arch.cadets import CsvDataAttendanceAtEventsForSpecificCadet
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
-from app.data_access.csv.qualifications import *
+from app.data_access.sql.cadet_attendance import SqlDataAttendanceAtEventsForSpecificCadet
+
+from app.data_access.sql.cadet_clothing import SqlDataListOfCadetsWithClothingAtEvent
 from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
+from app.data_access.sql.cadet_food import SqlDataListOfCadetsWithFoodRequirementsAtEvent
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.club_dinghies import SqlDataListOfClubDinghies
+from app.data_access.sql.club_dinghies_with_people_at_event import SqlDataListOfCadetAtEventWithClubDinghies, \
+    SqlDataListOfVolunteersAtEventWithClubDinghies
+from app.data_access.sql.club_dinghy_limits import SqlDataListOfClubDinghyLimits
 from app.data_access.sql.connections import SqlDataListOfCadetVolunteerAssociations
 from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
 from app.data_access.sql.boat_classes import SqlDataListOfDinghies
+from app.data_access.sql.event_warnings import SqlDataListOfEventWarnings
 from app.data_access.sql.events import SqlDataListOfEvents
+from app.data_access.sql.field_mapping import SqlDataWAFieldMapping, SqlDataWAFieldMappingTemplates
 from app.data_access.sql.generic_sql_data import DBConnection
+from app.data_access.sql.group_notes import SqlDataListOfGroupNotesAtEvent
 
-from app.data_access.sql.groups import *
+from app.data_access.sql.groups import SqlDataListOfGroups
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.groups_at_event import SqlDataListOfCadetsWithGroups
+from app.data_access.sql.identified_cadets_at_event import SqlDataListOfIdentifiedCadetsAtEvent
+from app.data_access.sql.identified_volunteers_at_event import SqlDataListOfIdentifiedVolunteersAtEvent
+from app.data_access.sql.last_roles_across_events_for_volunteers import SqlDataListOfLastRolesAcrossEventsForVolunteers
 from app.data_access.sql.list_of_roles_and_teams import SqlDataListOfTeamsAndRolesWithIds
+from app.data_access.sql.mapped_registration_data import SqlDataMappedRegistrationData
+from app.data_access.sql.notes import SqlDataListOfNotes
+from app.data_access.sql.patrol_boat_labels import SqlDataListOfPatrolBoatLabelsAtEvent
 from app.data_access.sql.patrol_boats import SqlDataListOfPatrolBoats
+from app.data_access.sql.patrol_boats_with_volunteers_at_event import SqlDataListOfVolunteersAtEventWithPatrolBoats
 from app.data_access.sql.persistent_groups_at_events import SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion
+from app.data_access.sql.print_options import sqlDataListOfPrintOptions, SqlDataListOfArrangementOptions
 from app.data_access.sql.qualifications import SqlDataListOfQualifications
 from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
 from app.data_access.sql.roles import SqlDataListOfRoles
 from app.data_access.sql.skills import SqlDataListOfSkills
+from app.data_access.sql.target_roles_at_event import SqlDataListOfTargetForRoleAtEvent
 from app.data_access.sql.teams import SqlDataListOfTeams
+from app.data_access.sql.tick_sheet_items import SqlDataListOfTickSheetItems
+from app.data_access.sql.tick_sheet_sub_stages import SqlDataListOfTickSubStages
+from app.data_access.sql.volunteer_food import SqlDataListOfVolunteersWithFoodRequirementsAtEvent
 from app.data_access.sql.volunteers import SqlDataListOfVolunteers
+from app.data_access.sql.volunteers_at_event import SqlDataListOfVolunteersAtEvent
 from app.data_access.sql.volunteers_in_roles_at_event import SqlDataListOfVolunteersInRolesAtEvent
 from app.data_access.sql.volunteers_with_skills import SqlDataListOfVolunteerSkills
+from app.data_access.sql.wa_event_mapping import SqlDataWAEventMapping
 
+#FIXME PROBABLY SOME CLEANUP HERE
 
 class MixedSqlAndCsvDataApi(object):
     def __init__(
@@ -121,54 +139,42 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_wa_event_mapping(self) -> CsvDataWAEventMapping:
-        return CsvDataWAEventMapping(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_wa_event_mapping(self) -> SqlDataWAEventMapping:
+        return SqlDataWAEventMapping(
+            self.db_connection
         )
 
     @property
-    def data_wa_field_mapping(self) -> CsvDataWAFieldMapping:
-        return CsvDataWAFieldMapping(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_wa_field_mapping(self) -> SqlDataWAFieldMapping:
+        return SqlDataWAFieldMapping(
+            self.db_connection
         )
 
     @property
-    def data_wa_field_mapping_templates(self) -> CsvDataWAFieldMappingTemplates:
-        return CsvDataWAFieldMappingTemplates(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_wa_field_mapping_templates(self) -> SqlDataWAFieldMappingTemplates:
+        return SqlDataWAFieldMappingTemplates(
+            self.db_connection
+        )
+
+
+    @property
+    def data_registration_data(self) -> SqlDataMappedRegistrationData:
+        return SqlDataMappedRegistrationData(
+            self.db_connection
         )
 
     @property
-    def data_wa_field_mapping_list_of_templates(self) -> CsvDataWAFieldMappingListOfTemplates:
-        return CsvDataWAFieldMappingListOfTemplates(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
-        )
-
-    @property
-    def data_registration_data(self) -> CsvDataMappedRegistrationData:
-        return CsvDataMappedRegistrationData(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
-        )
-
-    @property
-    def data_event_warnings(self) -> CsvDataListOfEventWarnings:
-        return CsvDataListOfEventWarnings(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_event_warnings(self) -> SqlDataListOfEventWarnings:
+        return SqlDataListOfEventWarnings(
+            self.db_connection
         )
 
     @property
     def data_identified_cadets_at_event(
         self,
-    ) -> CsvDataListOfIdentifiedCadetsAtEvent:
-        return CsvDataListOfIdentifiedCadetsAtEvent(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfIdentifiedCadetsAtEvent:
+        return SqlDataListOfIdentifiedCadetsAtEvent(
+            self.db_connection
         )
 
     @property
@@ -188,19 +194,17 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_print_options(self) -> csvDataListOfPrintOptions:
-        return csvDataListOfPrintOptions(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_print_options(self) -> sqlDataListOfPrintOptions:
+        return sqlDataListOfPrintOptions(
+            self.db_connection
         )
 
     @property
     def data_arrangement_and_group_order_options(
         self,
-    ) -> csvDataListOfArrangementOptions:
-        return csvDataListOfArrangementOptions(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfArrangementOptions:
+        return SqlDataListOfArrangementOptions(
+            self.db_connection
         )
 
     @property
@@ -224,19 +228,17 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_volunteers_at_event(self) -> CsvDataListOfVolunteersAtEvent:
-        return CsvDataListOfVolunteersAtEvent(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_list_of_volunteers_at_event(self) -> SqlDataListOfVolunteersAtEvent:
+        return SqlDataListOfVolunteersAtEvent(
+        self.db_connection
         )
 
     @property
     def data_list_of_identified_volunteers_at_event(
         self,
-    ) ->CsvDataListOfIdentifiedVolunteersAtEvent:
-        return CsvDataListOfIdentifiedVolunteersAtEvent(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) ->SqlDataListOfIdentifiedVolunteersAtEvent:
+        return SqlDataListOfIdentifiedVolunteersAtEvent(
+            self.db_connection
         )
 
     @property
@@ -260,10 +262,9 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_List_of_club_dinghy_limits(self) -> CsvDataListOfClubDinghyLimits:
-        return CsvDataListOfClubDinghyLimits(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    def data_List_of_club_dinghy_limits(self) -> SqlDataListOfClubDinghyLimits:
+        return SqlDataListOfClubDinghyLimits(
+            self.db_connection
         )
 
 
@@ -276,37 +277,33 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_attendance_at_events_for_specific_cadet(
         self,
-    ) -> CsvDataAttendanceAtEventsForSpecificCadet:
-        return CsvDataAttendanceAtEventsForSpecificCadet(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataAttendanceAtEventsForSpecificCadet:
+        return SqlDataAttendanceAtEventsForSpecificCadet(
+            self.db_connection
         )
 
     @property
     def data_list_of_volunteers_at_event_with_patrol_boats(
         self,
-    ) -> CsvDataListOfVolunteersAtEventWithPatrolBoats:
-        return CsvDataListOfVolunteersAtEventWithPatrolBoats(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfVolunteersAtEventWithPatrolBoats:
+        return SqlDataListOfVolunteersAtEventWithPatrolBoats(
+            self.db_connection
         )
 
     @property
     def data_list_of_cadets_at_event_with_club_dinghies(
         self,
-    ) -> CsvDataListOfCadetAtEventWithClubDinghies:
-        return CsvDataListOfCadetAtEventWithClubDinghies(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfCadetAtEventWithClubDinghies:
+        return SqlDataListOfCadetAtEventWithClubDinghies(
+            self.db_connection
         )
 
     @property
     def data_list_of_volunteers_at_event_with_club_dinghies(
         self,
-    ) -> CsvDataListOfVolunteersAtEventWithClubDinghies:
-        return CsvDataListOfVolunteersAtEventWithClubDinghies(
-            master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path,
+    ) -> SqlDataListOfVolunteersAtEventWithClubDinghies:
+        return SqlDataListOfVolunteersAtEventWithClubDinghies(
+            self.db_connection
         )
 
     @property
@@ -338,17 +335,18 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_tick_sub_stages(self) -> CsvDataListOfTickSubStages:
-        return CsvDataListOfTickSubStages(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_tick_sub_stages(self) -> SqlDataListOfTickSubStages:
+        return SqlDataListOfTickSubStages(
+            self.db_connection
         )
 
     @property
-    def data_list_of_tick_sheet_items(self) -> CsvDataListOfTickSheetItems:
-        return CsvDataListOfTickSheetItems(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_tick_sheet_items(self) -> SqlDataListOfTickSheetItems:
+        return SqlDataListOfTickSheetItems(
+            self.db_connection
         )
 
+    ## KEEP AS CSV
     @property
     def data_list_of_cadets_with_tick_list_items(
         self,
@@ -360,61 +358,61 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_targets_for_role_at_event(
         self,
-    ) -> CsvDataListOfTargetForRoleAtEvent:
-        return CsvDataListOfTargetForRoleAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    ) -> SqlDataListOfTargetForRoleAtEvent:
+        return SqlDataListOfTargetForRoleAtEvent(
+            self.db_connection
         )
 
     @property
     def data_list_of_cadets_with_food_requirement_at_event(
         self,
-    ) -> CsvDataListOfCadetsWithFoodRequirementsAtEvent:
-        return CsvDataListOfCadetsWithFoodRequirementsAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    ) -> SqlDataListOfCadetsWithFoodRequirementsAtEvent:
+        return SqlDataListOfCadetsWithFoodRequirementsAtEvent(
+            self.db_connection
         )
 
     @property
     def data_list_of_volunteers_with_food_requirement_at_event(
         self,
-    ) -> CsvDataListOfVolunteersWithFoodRequirementsAtEvent:
-        return CsvDataListOfVolunteersWithFoodRequirementsAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    ) -> SqlDataListOfVolunteersWithFoodRequirementsAtEvent:
+        return SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
+            self.db_connection
         )
 
     @property
     def data_list_of_cadets_with_clothing_at_event(
         self,
-    ) -> CsvDataListOfCadetsWithClothingAtEvent:
-        return CsvDataListOfCadetsWithClothingAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    ) -> SqlDataListOfCadetsWithClothingAtEvent:
+        return SqlDataListOfCadetsWithClothingAtEvent(
+        self.db_connection
         )
 
     @property
-    def data_list_of_group_notes_at_event(self) -> CsvDataListOfGroupNotesAtEvent:
-        return CsvDataListOfGroupNotesAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_group_notes_at_event(self) -> SqlDataListOfGroupNotesAtEvent:
+        return SqlDataListOfGroupNotesAtEvent(
+            self.db_connection
         )
 
     @property
-    def data_list_of_notes(self) -> CsvDataListOfNotes:
-        return CsvDataListOfNotes(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_notes(self) ->SqlDataListOfNotes:
+        return SqlDataListOfNotes(
+        self.db_connection
         )
 
     @property
-    def data_list_of_patrol_boat_labels(self) -> CsvDataListOfPatrolBoatLabelsAtEvent:
-        return CsvDataListOfPatrolBoatLabelsAtEvent(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_patrol_boat_labels(self) -> SqlDataListOfPatrolBoatLabelsAtEvent:
+        return SqlDataListOfPatrolBoatLabelsAtEvent(
+            self.db_connection
         )
 
     @property
-    def data_list_of_last_roles_across_events_for_volunteers(self) -> CsvDataListOfLastRolesAcrossEventsForVolunteers:
-        return CsvDataListOfLastRolesAcrossEventsForVolunteers(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    def data_list_of_last_roles_across_events_for_volunteers(self) ->SqlDataListOfLastRolesAcrossEventsForVolunteers:
+        return SqlDataListOfLastRolesAcrossEventsForVolunteers(
+self.db_connection
         )
 
     #### USERS
-
+    ## KEEP AS CSV
     @property
     def data_list_of_users(self) -> CsvDataListOfSkipperManUsers:
         return CsvDataListOfSkipperManUsers(

@@ -3,7 +3,7 @@ from app.backend.clothing.dict_of_clothing_for_event import (
     get_dict_of_cadets_with_clothing_at_event,
 )
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.clothing_at_event import DictOfCadetsWithClothingAtEvent
@@ -38,7 +38,7 @@ def get_unfiltered_dict_of_active_cadets_with_clothing_at_event(
     list_of_cadets_with_clothing = get_dict_of_cadets_with_clothing_at_event(
         object_store=object_store, event=event
     )
-    dict_of_registered_cadets = get_dict_of_cadets_with_registration_data(
+    dict_of_registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     active_cadets = dict_of_registered_cadets.list_of_active_cadets()

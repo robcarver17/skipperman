@@ -94,8 +94,8 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 
 no_club_dinghy_id = no_club_dinghy.id
 
-event_id_for_generic_limit = str("generic_limit")
-
+OLD_event_id_for_generic_limit = "generic_limit"
+event_id_for_generic_limit = str("-99994")
 
 @dataclass
 class ClubDinghyWithLimitAtEvent(GenericSkipperManObject):

@@ -43,7 +43,7 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
 
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data,
+    DEPRECATE_get_dict_of_cadets_with_registration_data,
     update_dict_of_cadets_with_registration_data,
 )
 

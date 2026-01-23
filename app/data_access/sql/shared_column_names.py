@@ -69,3 +69,66 @@ TEAM_LOCATION = "team_location"
 TEAM_ORDER = "team_order"
 
 TEAM_IDX = "team_idx"
+
+WA_ID = "WildApricot_id"
+WA_FIELD = "WildApricotField"
+SM_FIELD = "SkippermanField"
+MAPPING_TEMPLATE_NAME = "mapping_template_name"
+
+ROW_ID = "row_id"
+
+PRIORITY = "warning_priority"
+CATEGORY = "warning_category"
+WARNING_TEXT = "warning_text"
+WARNING_AUTO_REFRESH = "warning_auto_refresh"
+WARNING_IGNORE = "warning_ignore"
+WARNING_ID = "warning_id"
+
+REPORT_NAME = "report_name"
+REPORT_OPTION_KEY = "report_option_key"
+REPORT_OPTION_VALUE = "report_option_value"
+
+REPORT_ARRANGEMENT_COLUMNS = "report_arrangement_columns"
+REPORT_ARRANGEMENT_METHOD = "report_arrangement_method"
+REPORT_GROUP_ORDER = "report_group_order"
+
+VOLUNTEER_AVAILABLITY = "volunteer_availability"
+PREFERRED_DUTIES = "preferred_duties"
+SAME_OR_DIFFERENT_DUTIES = "same_or_different_duties"
+VOLUNTEER_ANY_OTHER_INFORMATION = "volunteer_any_other_info"
+VOLUNTEER_STATUS = "volunteer_status"
+VOLUNTEER_NOTES = "volunteer_notes"
+
+VOLUNTEER_INDEX = "volunteer_index"
+
+CLUB_DINGHY_LIMIT = "club_dinghy_limit"
+
+TICK_SUBSTAGE_NAME = "tick_substage_name"
+TICK_SUBSTAGE_ID = "tick_substage_id"
+
+TICK_SHEET_ITEM_NAME = "tick_sheet_item_name"
+TICK_SHEET_ITEM_ID = "tick_sheet_item_id"
+
+VOLUNTEER_TARGET_NUMBER = "volunteer_target_number"
+
+FOOD_REQUIRED_KEY = "food_required_key"
+FOOD_REQUIRED_VALUE = "food_required_text_value"
+FOOD_REQUIRED_BOOL_VALUE = "food_required_bool_value"
+
+CADET_CLOTHING_COLOUR = "cadet_clothing_color"
+CADET_CLOTHING_SIZE = "cadet_clothing_size"
+
+GROUP_NOTES = "group_notes"
+
+NOTE_TEXT = "note_text"
+NOTE_CREATED_DATETIME = "note_created_datetime"
+NOTE_PRIORITY_STR = "note_priority"
+NOTE_COMPLETED = "note_completed"
+AUTHOR_VOLUNTEER_ID = "author_volunteer_id"
+ASSIGNED_VOLUNTEER_ID = "assigned_volunteer_id"
+NOTE_ID = "note_d"
+
+PATROL_BOAT_LABEL = "patrol_boat_label"
+
+ATTENDANCE_DATETIME = "attendance_datetime"
+CADET_ATTENDANCE = "cadet_attendance"

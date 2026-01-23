@@ -81,7 +81,7 @@ def post_form_config_volunteer_skills(
     return interface.get_new_form_given_function(display_form_config_volunteer_skills)
 
 
-def save_from_ordinary_list_of_skills(object_store: ObjectStore, new_list: List[Skill]):
+def save_from_ordinary_list_of_skills( interface: abstractInterface, new_list: List[Skill]):
     update_list_of_skills(
-        object_store=object_store, list_of_skills=ListOfSkills(new_list)
+        object_store=interface.object_store, list_of_skills=ListOfSkills(new_list)
     )

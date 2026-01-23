@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable, Dict, Union, List
 
-from app.objects.composed.attendance import compose_dict_of_attendance_across_events
 from app.objects.composed.cadets_with_all_event_info import (
     compose_dict_of_all_event_info_for_cadet,
 )
@@ -33,18 +32,12 @@ from app.objects.composed.clothing_at_event import (
     compose_dict_of_cadets_with_clothing_at_event,
 )
 from app.objects.composed.club_dinghy_limits import compose_club_dinghy_limits
-from app.objects.composed.committee import (
-    create_list_of_cadet_committee_members_from_underlying_data,
-)
 from app.objects.composed.food_at_event import (
     compose_dict_of_cadets_with_food_requirements_at_event,
     compose_dict_of_volunteers_with_food_requirements_at_event,
 )
 from app.objects.composed.notes_for_groups import (
     compose_dict_of_notes_for_groups_at_event,
-)
-from app.objects.composed.notes_with_volunteers import (
-    compose_list_of_notes_with_volunteers_from_list_of_notes,
 )
 from app.objects.composed.roles_and_teams import compose_dict_of_teams_with_roles
 from app.objects.composed.ticks_in_dicts import (
@@ -411,17 +404,6 @@ list_of_events=object_definition_for_list_of_events,
 
 
 
-object_definition_for_list_of_cadet_committee_members = DerivedObjectDefinition(
-    composition_function=create_list_of_cadet_committee_members_from_underlying_data,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        list_of_cadets_with_id_on_commitee=object_definition_for_list_of_cadet_committee_members_with_id,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_cadets_with_id_on_commitee=object_definition_for_list_of_cadet_committee_members_with_id
-    ),
-)
-
 object_definition_for_dict_of_qualifications_for_cadets = DerivedObjectDefinition(
     composition_function=create_dict_of_qualifications_for_cadets,
     dict_of_arguments_and_underlying_object_definitions=dict(
@@ -562,17 +544,6 @@ object_definition_for_club_dinghy_limits = DerivedObjectDefinition(
     ),
     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
         list_of_club_dinghy_limits=object_definition_for_list_of_club_dinghy_limits_with_ids
-    ),
-)
-
-object_definition_for_list_of_notes_with_volunteers = DerivedObjectDefinition(
-    composition_function=compose_list_of_notes_with_volunteers_from_list_of_notes,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_notes=object_definition_for_list_of_notes,
-        list_of_volunteers=object_definition_for_volunteers,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_notes=object_definition_for_list_of_notes
     ),
 )
 
@@ -728,20 +699,6 @@ object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition
 
 # object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id
 
-object_definition_for_dict_of_cadets_with_attendance = DerivedObjectDefinition(
-    composition_function=compose_dict_of_attendance_across_events,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        list_of_events=object_definition_for_list_of_events,
-        dict_of_list_of_raw_attendance=object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_list_of_raw_attendance=object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id,
-    ),
-    required_keys=[
-        "list_of_cadet_ids",
-    ],
-)
 
 
 object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObjectDefinition(

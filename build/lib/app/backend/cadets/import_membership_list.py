@@ -45,7 +45,7 @@ def read_imported_list_of_cadets(filename: str) -> ListOfCadets:
         data[DOB_IN_MEMBERSHIP_FILE], format=DOB_FORMAT
     )
     list_of_cadets = [
-        cadet_from_row_in_imported_list(cadet_row=cadet_row, row_id=int(row_id))
+        cadet_from_row_in_imported_list(cadet_row=cadet_row, row_id=int(str(row_id)))
         for row_id, cadet_row in data.iterrows()
     ]
 

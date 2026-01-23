@@ -1,4 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.qualifications import ListOfQualifications, Qualification
@@ -8,21 +9,21 @@ from app.data_access.store.object_definitions import (
 
 
 def add_new_qualification(
-    object_store: ObjectStore, name_of_entry_to_add: str
+    interface: abstractInterface,  name_of_entry_to_add: str
 ) -> ListOfQualifications:
-    list_of_qualifications = get_list_of_qualifications(object_store)
+    list_of_qualifications = get_list_of_qualifications(interface.object_store)
     list_of_qualifications.add(name_of_entry_to_add)
     update_list_of_qualifications(
-        object_store=object_store, updated_list_of_qualifications=list_of_qualifications
+        object_store=interface.object_store, updated_list_of_qualifications=list_of_qualifications
     )
 
     return list_of_qualifications
 
 
 def modify_qualification(
-    object_store: ObjectStore, existing_object: Qualification, new_object: Qualification
+   interface: abstractInterface, existing_object: Qualification, new_object: Qualification
 ):
-    list_of_qualifications = get_list_of_qualifications(object_store)
+    list_of_qualifications = get_list_of_qualifications(interface.object_store)
     list_of_qualifications.replace(
         existing_qualification=existing_object, new_qualification=new_object
     )
@@ -32,7 +33,7 @@ def modify_qualification(
         raise Exception("Duplicate names")
 
     update_list_of_qualifications(
-        object_store=object_store, updated_list_of_qualifications=list_of_qualifications
+        object_store=interface.object_store, updated_list_of_qualifications=list_of_qualifications
     )
 
 

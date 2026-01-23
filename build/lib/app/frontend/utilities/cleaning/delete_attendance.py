@@ -104,8 +104,8 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
         object_store=interface.object_store,
     )
     
-    clean_attendance_data_for_event(object_store=interface.object_store, event=event)
-    interface.DEPRECATE_flush_and_clear()
+    clean_attendance_data_for_event(interface=interface, event=event)
+    interface.clear()
 
     interface.log_error( "Cleaned attendance data for event %s" % str(event))
 

@@ -220,10 +220,10 @@ def get_modified_role_from_form(
 
 
 def save_from_ordinary_list_of_roles(
-    object_store: ObjectStore, new_list: List[RoleWithSkills]
+        interface: abstractInterface, new_list: List[RoleWithSkills]
 ):
     update_list_of_roles_with_skills(
-        object_store=object_store,
+        object_store=interface.object_store,
         list_of_roles_with_skills=DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
             list_of_roles_with_skills=new_list
         ),

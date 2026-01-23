@@ -3,8 +3,9 @@ import datetime
 from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import     get_health_notes_for_cadet_at_event
 from app.backend.cadets_at_event.instructor_marked_attendance import (
-    get_current_attendance_on_day_for_cadets_in_group,
+    get_attendance_on_day_for_cadets_in_group,
     are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late,
+    mark_unknown_cadets_as_not_attending_or_unregistered,
 )
 from app.frontend.shared.buttons import (
     get_button_value_given_type_and_attributes,
@@ -38,7 +39,9 @@ from app.objects.groups import Group
 def get_table_to_mark_attendance(
     interface: abstractInterface, event: Event, group: Group, day: Day
 ) -> Table:
-    current_attendance = get_current_attendance_on_day_for_cadets_in_group(
+    mark_unknown_cadets_as_not_attending_or_unregistered(interface=interface,
+                                                         event=event,group=group,day=day)
+    current_attendance = get_attendance_on_day_for_cadets_in_group(
         interface.object_store, event=event, group=group, day=day
     )
 

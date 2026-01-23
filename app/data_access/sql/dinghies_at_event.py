@@ -3,9 +3,16 @@ import pandas as pd
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     ListOfCadetAtEventWithBoatClassAndPartnerWithIds, CadetAtEventWithBoatClassAndPartnerWithIds,
 )
+from app.data_access.sql.cadets import SqlDataListOfCadets
+from app.data_access.sql.boat_classes import SqlDataListOfDinghies
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
+from app.objects.cadets import ListOfCadets
+from app.objects.boat_classes import ListOfBoatClasses
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import DictOfCadetsAndBoatClassAndPartners, \
+    compose_raw_dict_of_cadets_and_boat_classes_and_partners
 from app.objects.day_selectors import Day
+from app.objects.events import Event
 from app.objects.partners import from_partner_id_to_int, from_int_to_partner_id
 from app.objects.utilities.transform_data import make_id_as_int_str
 
@@ -21,6 +28,34 @@ INDEX_NAME_CADETS_AND_DINGHIES_TABLE = "cadets_and_dinghies_table_index"
 class SqlDataListOfCadetAtEventWithDinghies(
     GenericSqlData
 ):
+    def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+            self, event: Event
+    ) -> DictOfCadetsAndBoatClassAndPartners:
+        raw_data = self.read(event.id)
+        new_dict = compose_raw_dict_of_cadets_and_boat_classes_and_partners(
+            list_of_cadets=self.list_of_cadets,
+            list_of_boat_classes=self.list_of_boat_classes,
+            list_of_cadets_at_event_with_boat_class_and_partners_with_ids=raw_data
+        )
+
+        return DictOfCadetsAndBoatClassAndPartners(new_dict)
+
+    @property
+    def list_of_cadets(self) -> ListOfCadets:
+        list_of_cadets = getattr(self, "_list_of_cadets", None)
+        if list_of_cadets is None:
+            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+
+        return list_of_cadets
+
+    @property
+    def list_of_boat_classes(self) -> ListOfBoatClasses:
+        list_of_boat_classes = getattr(self, "_list_of_boat_classes", None)
+        if list_of_boat_classes is None:
+            list_of_boat_classes = self._list_of_boat_classes = SqlDataListOfDinghies(self.db_connection).read()
+
+        return list_of_boat_classes
+
     def read(self, event_id: str) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
             self.create_table()

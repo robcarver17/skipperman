@@ -1,3 +1,4 @@
+
 from app.backend.reporting.arrangement.arrangement_order import (
     ArrangementOfRows,
     EMPTY,
@@ -23,6 +24,8 @@ def reorder_matrix(
         row = reorder_matrix_table_row(
             current_list_of_entries=current_list_of_entries,
             current_order_as_list_for_row=current_order_as_list_for_row,
+            row_index=row_index,
+            arrangement_of_rows=arrangement_of_rows
         )
         rows.append(row)
 
@@ -32,12 +35,18 @@ def reorder_matrix(
 def reorder_matrix_table_row(
     current_list_of_entries: list,
     current_order_as_list_for_row: list,
+        row_index: int,
+        arrangement_of_rows: ArrangementOfRows,
 ) -> RowInTable:
     row_elements = []
+
     for column_index, index_in_list in enumerate(current_order_as_list_for_row):
         element = reorder_matrix_table_element(
             current_list_of_entries=current_list_of_entries,
             index_in_list=index_in_list,
+            column_index=column_index,
+            row_index=row_index,
+            arrangement_of_rows=arrangement_of_rows
         )
         row_elements.append(element)
         # row_elements.append(" ")
@@ -45,19 +54,41 @@ def reorder_matrix_table_row(
     return RowInTable(row_elements)
 
 
+
 def reorder_matrix_table_element(
-    current_list_of_entries: list, index_in_list: int
+        arrangement_of_rows: ArrangementOfRows,
+        column_index: int,
+        row_index: int,
+        current_list_of_entries: list, index_in_list: int
 ) -> Line:
     if index_in_list == EMPTY:
         return Line("")
 
     element_in_list = current_list_of_entries[index_in_list]
-    up_button = Button(up_arrow, value=get_button_name(element_in_list, UP))
-    down_button = Button(down_arrow, value=get_button_name(element_in_list, DOWN))
-    left_button = Button(left_arrow, value=get_button_name(element_in_list, LEFT))
-    right_button = Button(right_arrow, value=get_button_name(element_in_list, RIGHT))
+    if arrangement_of_rows.top_row(row_index, column_index):
+        up_button = ""
+    else:
+        up_button = Button(up_arrow, value=get_button_name(element_in_list, UP))
 
-    return Line([left_button, up_button, element_in_list, down_button, right_button])
+    if arrangement_of_rows.bottom_row(row_index, column_index):
+        down_button = ""
+    else:
+        down_button = Button(down_arrow, value=get_button_name(element_in_list, DOWN))
+
+    if arrangement_of_rows.left_column(row_index, column_index):
+        left_button = ""
+    else:
+        left_button = Button(left_arrow, value=get_button_name(element_in_list, LEFT))
+
+    if arrangement_of_rows.right_column(row_index, column_index) and arrangement_of_rows.single_column():
+        right_button = ""
+    else:
+        right_button = Button(right_arrow, value=get_button_name(element_in_list, RIGHT))
+
+    line = Line([left_button, up_button, element_in_list, down_button, right_button])
+    return line
+
+
 
 
 UP = "UP"

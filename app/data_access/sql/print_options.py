@@ -92,7 +92,9 @@ class SqlDataListOfArrangementOptions(
 ):
     def read(self, report_name: str) -> ArrangementOptionsAndGroupOrder:
         try:
+            print(".............")
             if self.table_does_not_exist(LIST_OF_ARRANGEMENTS_TABLE):
+                print("EMPTY")
                 return ArrangementOptionsAndGroupOrder.create_empty()
 
             cursor = self.cursor
@@ -112,10 +114,13 @@ class SqlDataListOfArrangementOptions(
             return ArrangementOptionsAndGroupOrder.create_empty()
 
         raw_item = raw_list[0]## only one record
+
+        print(raw_item)
+
         as_dict = dict(columns = raw_item[0],
                        method = raw_item[1],
                        group_order = raw_item[2])
-
+        print(as_dict)
         return   ArrangementOptionsAndGroupOrder.from_dict_of_str(as_dict)
 
     def write(

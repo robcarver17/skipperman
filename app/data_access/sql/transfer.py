@@ -6,6 +6,7 @@ from app.data_access.sql.cadet_attendance import SqlDataAttendanceAtEventsForSpe
 from app.data_access.sql.cadet_clothing import SqlDataListOfCadetsWithClothingAtEvent
 from app.data_access.sql.cadet_food import SqlDataListOfCadetsWithFoodRequirementsAtEvent
 from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
+from app.data_access.sql.cadets_with_ticks import SqlDataListOfCadetsWithTickListItems
 from app.data_access.sql.club_dinghy_limits import SqlDataListOfClubDinghyLimits
 from app.data_access.sql.connections import SqlDataListOfCadetVolunteerAssociations
 from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
@@ -111,6 +112,7 @@ sql_notes = SqlDataListOfNotes(db_connection)
 sql_patrol_boat_labels = SqlDataListOfPatrolBoatLabelsAtEvent(db_connection)
 sql_last_volunteer_roles = SqlDataListOfLastRolesAcrossEventsForVolunteers(db_connection)
 sql_attendance=SqlDataAttendanceAtEventsForSpecificCadet(db_connection)
+sql_ticks = SqlDataListOfCadetsWithTickListItems(db_connection)
 
 def transfer_from_csv_to_sql():
     csv_api = CsvDataApi(
@@ -126,8 +128,11 @@ def transfer_from_csv_to_sql():
             csv_api.data_attendance_at_events_for_specific_cadet.read(cadet.id),
             cadet_id=cadet.id
         )
+        sql_ticks.write(
+            csv_api.data_list_of_cadets_with_tick_list_items.read(cadet.id),
+            cadet_id=cadet.id
+        )
 
-    """
     sql_events.write(events)
 
     for report_name in ["Allocation report", "Patrol boat report", "Rollcall report", "Sailors with boats report", "Volunteer rota report"]:
@@ -149,7 +154,6 @@ def transfer_from_csv_to_sql():
     
     sql_list_of_dinghies.write(csv_api.data_list_of_dinghies.read())
     
-    sql_club_boat_limits.write(csv_api.data_List_of_club_dinghy_limits.read())
 
     sql_substages.write(csv_api.data_list_of_tick_sub_stages.read())
 
@@ -159,59 +163,59 @@ def transfer_from_csv_to_sql():
     
     sql_tick_sheet_items.write(csv_api.data_list_of_tick_sheet_items.read())
 
-    """
-
+    sql_club_boat_limits._transfer(csv_api.data_List_of_club_dinghy_limits.read())
+    sql_club_dinghies.write(csv_api.data_List_of_club_dinghies.read())
 
     for event in events:
         event_id = str(event.id)
-        #sql_clothing.write(csv_api.data_list_of_cadets_with_clothing_at_event.read(event_id), event_id=event_id)
-        #sql_list_of_volunteers_with_food_requirements.write(csv_api.data_list_of_volunteers_with_food_requirement_at_event.read(event_id), event_id=event_id)
-        #sql_list_of_cadets_with_food_requirements.write(csv_api.data_list_of_cadets_with_food_requirement_at_event.read(event_id), event_id=event_id)
-        #sql_targets_at_event.write(csv_api.data_list_of_targets_for_role_at_event.read(event_id), event_id=event_id)
-        #sql_volunteers_with_patrol_boats.write(csv_api.data_list_of_volunteers_at_event_with_patrol_boats.read(event_id), event_id=event_id)
-        #sql_identified_volunteers_at_event.write(csv_api.data_list_of_identified_volunteers_at_event.read(event_id), event_id=event_id)
-        #sql_list_of_volunteers_at_event.write(csv_api.data_list_of_volunteers_at_event.read(event_id), event_id=event_id)
-        #sql_identified_cadets_at_event.write(csv_api.data_identified_cadets_at_event.read(event_id), event_id=event_id)
-        #sql_event_warnings.write(csv_api.data_event_warnings.read(event_id), event_id=event_id)
-        #sql_mapped_registration_data.write(csv_api.data_registration_data.read(event_id), event_id=event_id)
-        #sql_field_mappings.write(csv_api.data_wa_field_mapping.read(event_id), event_id=event_id)
+        sql_clothing.write(csv_api.data_list_of_cadets_with_clothing_at_event.read(event_id), event_id=event_id)
+        sql_list_of_volunteers_with_food_requirements.write(csv_api.data_list_of_volunteers_with_food_requirement_at_event.read(event_id), event_id=event_id)
+        sql_list_of_cadets_with_food_requirements.write(csv_api.data_list_of_cadets_with_food_requirement_at_event.read(event_id), event_id=event_id)
+        sql_targets_at_event.write(csv_api.data_list_of_targets_for_role_at_event.read(event_id), event_id=event_id)
+        sql_volunteers_with_patrol_boats.write(csv_api.data_list_of_volunteers_at_event_with_patrol_boats.read(event_id), event_id=event_id)
+        sql_identified_volunteers_at_event.write(csv_api.data_list_of_identified_volunteers_at_event.read(event_id), event_id=event_id)
+        sql_list_of_volunteers_at_event.write(csv_api.data_list_of_volunteers_at_event.read(event_id), event_id=event_id)
+        sql_identified_cadets_at_event.write(csv_api.data_identified_cadets_at_event.read(event_id), event_id=event_id)
+        sql_event_warnings.write(csv_api.data_event_warnings.read(event_id), event_id=event_id)
+        sql_mapped_registration_data.write(csv_api.data_registration_data.read(event_id), event_id=event_id)
+        sql_field_mappings.write(csv_api.data_wa_field_mapping.read(event_id), event_id=event_id)
 
-        #sql_volunteers_with_roles.write(csv_api.data_list_of_volunteers_in_roles_at_event.read(event_id), event_id=event_id)
+        sql_volunteers_with_roles.write(csv_api.data_list_of_volunteers_in_roles_at_event.read(event_id), event_id=event_id)
 
-        #list_of_cadets_with_groups = csv_api.data_list_of_cadets_with_groups.read(event_id)
-        #if len(list_of_cadets_with_groups)>0:
-        #    sql_groups_at_events.write(list_of_cadets_with_groups, event_id)
+        list_of_cadets_with_groups = csv_api.data_list_of_cadets_with_groups.read(event_id)
+        if len(list_of_cadets_with_groups)>0:
+            sql_groups_at_events.write(list_of_cadets_with_groups, event_id)
 
-        #list_of_cadets_with_dinghies = csv_api.data_list_of_cadets_with_dinghies_at_event.read(event_id)
-        #sql_cadets_and_dinghies_at_event.write(list_of_cadets_with_dinghies, event_id=event_id)
+        list_of_cadets_with_dinghies = csv_api.data_list_of_cadets_with_dinghies_at_event.read(event_id)
+        sql_cadets_and_dinghies_at_event.write(list_of_cadets_with_dinghies, event_id=event_id)
 
-        #list_of_cadets_at_event = csv_api.data_cadets_at_event.read(event_id)
-        #sql_cadets_at_event.write(list_of_cadets_at_event, event_id=event_id)
+        list_of_cadets_at_event = csv_api.data_cadets_at_event.read(event_id)
+        sql_cadets_at_event.write(list_of_cadets_at_event, event_id=event_id)
 
-        #sql_club_dinghies_with_cadets.write(csv_api.data_list_of_cadets_at_event_with_club_dinghies.read(event_id), event_id=event_id)
-        #sql_club_dinghies_with_volunteers.write(csv_api.data_list_of_volunteers_at_event_with_club_dinghies.read(event_id), event_id=event_id)
+        sql_club_dinghies_with_cadets.write(csv_api.data_list_of_cadets_at_event_with_club_dinghies.read(event_id), event_id=event_id)
+        sql_club_dinghies_with_volunteers.write(csv_api.data_list_of_volunteers_at_event_with_club_dinghies.read(event_id), event_id=event_id)
 
-    #list_of_qualifications = csv_api.data_list_of_qualifications.read()
-    #sql_qualifications.write(list_of_qualifications)
+    list_of_qualifications = csv_api.data_list_of_qualifications.read()
+    sql_qualifications.write(list_of_qualifications)
 
-    #list_of_cadets_with_qualifications = csv_api.data_list_of_cadets_with_qualifications.read()
-    #sql_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
+    list_of_cadets_with_qualifications = csv_api.data_list_of_cadets_with_qualifications.read()
+    sql_cadets_with_qualifications.write(list_of_cadets_with_qualifications)
 
-    #sql_cadets_on_committee.write(csv_api.data_list_of_cadets_on_committee.read())
-    #sql_list_of_volunteers.write(csv_api.data_list_of_volunteers.read())
-    #sql_associations.write(csv_api.data_list_of_cadet_volunteer_associations.read())
-    #sql_skills.write(csv_api.data_list_of_skills.read())
-    #sql_volunteers_with_skills.write(csv_api.data_list_of_volunteer_skills.read())
-    #sql_patrol_boats.write(csv_api.data_list_of_patrol_boats.read())
-    #sql_club_dinghies.write(csv_api.data_List_of_club_dinghies.read())
-    #sql_roles.write(csv_api.data_list_of_roles.read())
-    #sql_teams.write(csv_api.data_list_of_teams.read())
-    #sql_teams_and_roles.write(csv_api.data_list_of_teams_and_roles_with_ids.read())
-    #sql_event_mappings.write(csv_api.data_wa_event_mapping.read())
-    #sql_group_notes.write(csv_api.data_list_of_group_notes_at_event.read())
-    #sql_notes.write(csv_api.data_list_of_notes.read())
-    #sql_patrol_boat_labels.write(csv_api.data_list_of_patrol_boat_labels.read())
-    #sql_last_volunteer_roles.write(csv_api.data_list_of_last_roles_across_events_for_volunteers.read())
+    sql_cadets_on_committee.write(csv_api.data_list_of_cadets_on_committee.read())
+    sql_list_of_volunteers.write(csv_api.data_list_of_volunteers.read())
+    sql_associations.write(csv_api.data_list_of_cadet_volunteer_associations.read())
+    sql_skills.write(csv_api.data_list_of_skills.read())
+    sql_volunteers_with_skills.write(csv_api.data_list_of_volunteer_skills.read())
+    sql_patrol_boats.write(csv_api.data_list_of_patrol_boats.read())
+
+    sql_roles.write(csv_api.data_list_of_roles.read())
+    sql_teams.write(csv_api.data_list_of_teams.read())
+    sql_teams_and_roles.write(csv_api.data_list_of_teams_and_roles_with_ids.read())
+    sql_event_mappings.write(csv_api.data_wa_event_mapping.read())
+    sql_group_notes.write(csv_api.data_list_of_group_notes_at_event.read())
+    sql_notes.write(csv_api.data_list_of_notes.read())
+    sql_patrol_boat_labels.write(csv_api.data_list_of_patrol_boat_labels.read())
+    sql_last_volunteer_roles.write(csv_api.data_list_of_last_roles_across_events_for_volunteers.read())
 
 def transfer_from_sql_to_csv():
     csv_api = CsvDataApi(
@@ -246,6 +250,10 @@ def transfer_from_sql_to_csv():
     for cadet in list_of_cadets:
         csv_api.data_attendance_at_events_for_specific_cadet.write(
             sql_attendance.read(cadet.id),
+            cadet_id=cadet.id
+        )
+        csv_api.data_list_of_cadets_with_tick_list_items.write(
+            sql_ticks.read(cadet.id),
             cadet_id=cadet.id
         )
 

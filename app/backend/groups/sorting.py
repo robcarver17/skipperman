@@ -11,6 +11,8 @@ from app.objects.day_selectors import Day
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
+## FIXME REFACTOR
+
 CADET = "Cadet"
 SORT_FIRST_NAME = "First name"
 SORT_SECOND_NAME = "Second name"

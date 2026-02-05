@@ -13,6 +13,7 @@ from app.backend.registration_data.volunteer_registration_data import (
     update_dict_of_registration_data_for_volunteers_at_event,
 )
 
+## FIXME NEEDS REFACTORING
 
 def clean_sensitive_data_for_event(object_store: ObjectStore, event: Event):
     ## We clean:

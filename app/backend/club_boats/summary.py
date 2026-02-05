@@ -2,6 +2,7 @@ from typing import Dict, List
 
 import pandas as pd
 
+from app.backend.club_boats.list_of_club_dinghies import get_list_of_club_dinghies
 from app.backend.volunteers.volunteers_at_event import (
     get_attendance_matrix_for_list_of_volunteers_at_event,
 )
@@ -21,10 +22,11 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+ DictOfPeopleAndClubDinghiesAtEvent,
 )
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-    get_dict_of_people_and_club_dinghies_at_event,
+from app.backend.club_boats.people_with_club_dinghies_at_event import (
+     get_dict_of_cadets_and_club_dinghies_at_event,
+    get_dict_of_volunteers_and_club_dinghies_at_event,
 )
 from app.objects.volunteers import Volunteer
 
@@ -40,19 +42,20 @@ def summarise_club_boat_allocations_for_event(
         object_store=object_store, event=event
     )
 
-    return df_cadets + df_volunteers
+    return df_cadets.add(df_volunteers, fill_value=0)
 
 
 def summarise_club_boat_allocations_for_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
     dict_of_cadets_and_club_dinghies_at_event = (
-        get_dict_of_people_and_club_dinghies_at_event(
+        get_dict_of_cadets_and_club_dinghies_at_event(
             object_store=object_store, event=event
         )
     )
+    sorted_list_of_dinghies = get_list_of_club_dinghies(object_store)
     list_of_dinghys_at_event = (
-        dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event()
+        dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(sorted_list_of_dinghies=sorted_list_of_dinghies)
     )
 
     row_names = list_of_dinghys_at_event.list_of_names()
@@ -75,7 +78,7 @@ def summarise_club_boat_allocations_for_cadets_at_event(
 def get_relevant_cadets_for_club_dinghy(
     group: ClubDinghy,
     event: Event,
-    list_of_ids_with_groups: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    list_of_ids_with_groups: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Dict[Day, List[Cadet]]:
     ## map from generic to specific var names. Event is not used
     dinghy = group
@@ -97,13 +100,15 @@ def get_relevant_cadets_for_club_dinghy(
 def summarise_club_boat_allocations_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-    dict_of_cadets_and_club_dinghies_at_event = (
-        get_dict_of_people_and_club_dinghies_at_event(
+    dict_of_volunteers_and_club_dinghies_at_event = (
+        get_dict_of_volunteers_and_club_dinghies_at_event(
             object_store=object_store, event=event
         )
     )
+    sorted_list_of_dinghies = get_list_of_club_dinghies(object_store)
+
     list_of_dinghys_at_event = (
-        dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event()
+        dict_of_volunteers_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(sorted_list_of_dinghies)
     )
 
     row_names = list_of_dinghys_at_event.list_of_names()
@@ -117,7 +122,7 @@ def summarise_club_boat_allocations_for_volunteers_at_event(
         groups=list_of_dinghys_at_event,
         group_labels=row_names,
         availability_dict=availability_dict,
-        list_of_ids_with_groups=dict_of_cadets_and_club_dinghies_at_event,  ## ignore typing error
+        list_of_ids_with_groups=dict_of_volunteers_and_club_dinghies_at_event,  ## ignore typing error
     )
 
     return df
@@ -126,7 +131,7 @@ def summarise_club_boat_allocations_for_volunteers_at_event(
 def get_relevant_volunteers_for_club_dinghy(
     group: ClubDinghy,
     event: Event,
-    list_of_ids_with_groups: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    list_of_ids_with_groups: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Dict[Day, List[Volunteer]]:
     ## map from generic to specific var names. Event is not used
     dinghy = group

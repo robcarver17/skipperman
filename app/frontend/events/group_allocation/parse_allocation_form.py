@@ -112,7 +112,8 @@ def update_data_given_allocation_form(interface: abstractInterface):
     for cadet in list_of_cadets:
         if is_admin_or_skipper(interface):
             update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
-            get_cadet_notes_for_row_in_form_and_alter_registration_data(
+
+        get_cadet_notes_for_row_in_form_and_alter_registration_data(
                 interface=interface,
                 event=event,
                 cadet=cadet,

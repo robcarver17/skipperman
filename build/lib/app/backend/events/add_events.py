@@ -5,9 +5,6 @@ from dataclasses import dataclass
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
-from app.data_access.configuration.configuration import (
-    SIMILARITY_LEVEL_TO_WARN_NAME,
-)
 
 from app.objects.events import Event, default_event
 
@@ -15,13 +12,17 @@ from app.objects.events import Event, default_event
 def verify_event_and_warn(object_store: ObjectStore, event: Event) -> str:
     warn_text = ""
     if contains_2_more_digits(event.event_name):
-        warn_text += "Looks like event name contains a year - don't do that! "
-    if len(event.event_name) < 5:
+        warn_text += "Looks like event name contains a year - don't do that! Fine if it is an event number."
+
+    if len(event.event_name)==0:
+        warn_text += "Events must have a name. "
+    elif len(event.event_name) < 5:
         warn_text += "Event name seems a bit short. "
+
     if event.start_date < datetime.date.today():
-        warn_text += "Event started in the past. "
+        warn_text += "Event started in the past - are you sure. "
     if event.end_date < event.start_date:
-        warn_text += "Event ends before it starts. "
+        warn_text += "Events cannot end before they start. "
     if event.duration == 1:
         warn_text += "Event is only one day long. "
 

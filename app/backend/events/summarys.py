@@ -22,7 +22,7 @@ from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group
-
+## FIXME REFACTOR
 
 def summarise_allocations_for_event(
     object_store: ObjectStore, event: Event

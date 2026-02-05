@@ -27,7 +27,7 @@ class CsvDataMappedRegistrationData(GenericCsvData):
 
 
 class CsvDataListOfEventWarnings(GenericCsvData):
-    def read(self, event_id: str) -> RegistrationDataForEvent:
+    def read(self, event_id: str) -> ListOfEventWarnings:
         warnings = self.read_and_return_object_of_type(
             ListOfEventWarnings,
             file_identifier=EVENT_WARNINGS_FILE_ID,

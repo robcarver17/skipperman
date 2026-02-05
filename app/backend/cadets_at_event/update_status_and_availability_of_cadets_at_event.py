@@ -12,8 +12,8 @@ from app.backend.food.modify_food_data import (
 )
 
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_with_id_at_event import (
-    CadetWithIdAtEvent,
     get_health_from_event_row,
 )
 from app.objects.cadets import Cadet
@@ -22,6 +22,7 @@ from app.objects.events import Event
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import RegistrationStatus
 
+## FIXME NEEDS REFACTORING
 
 def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
     object_store: ObjectStore,
@@ -42,10 +43,6 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
     return messages
 
 
-from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
-    update_dict_of_cadets_with_registration_data,
-)
 
 
 def make_cadet_available_on_day(
@@ -105,11 +102,12 @@ def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
 
 
 def update_registration_details_for_existing_cadet_at_event_who_was_manual(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     cadet: Cadet,
     row_in_registration_data: RowInRegistrationData,
 ):
+    object_store=interface.object_store
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     dict_of_all_event_info_for_cadets.update_registration_data_for_existing_cadet(
         cadet=cadet, row_in_registration_data=row_in_registration_data
@@ -123,9 +121,9 @@ def update_registration_details_for_existing_cadet_at_event_who_was_manual(
     )
 
     remove_clothing_for_cadet_at_event(
-        object_store=object_store, event=event, cadet=cadet
+        interface=interface, event=event, cadet=cadet
     )
 
     remove_food_requirements_for_cadet_at_event(
-        object_store=object_store, event=event, cadet=cadet
+        interface=interface, event=event, cadet=cadet
     )

@@ -16,6 +16,7 @@ from app.backend.food.dict_of_food_for_event import (
     get_dict_of_volunteers_with_food_requirements_at_event,
 )
 
+## FIXME REFACTOR
 
 def get_dict_of_active_cadets_with_food_requirements_at_event(
     object_store: ObjectStore, event: Event

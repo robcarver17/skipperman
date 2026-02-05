@@ -11,33 +11,42 @@ from app.objects.groups import ListOfGroups, Group
 def add_new_sailing_group_given_name(
         interface: abstractInterface, name_of_entry_to_add: str
 ):
-    list_of_groups = get_list_of_groups(interface.object_store)
-    list_of_groups.add(name_of_entry_to_add)
-    update_list_of_groups(
-        object_store=interface.object_store, updated_list_of_groups=list_of_groups
-    )
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_groups.add_new_group,
+            group_name = name_of_entry_to_add
+        )
+    except Exception as e:
+        interface.log_error("Error: %s, when adding group %s" % (str(e), name_of_entry_to_add))
 
 
 def modify_sailing_group(
         interface: abstractInterface, existing_object: Group, new_object: Group
 ):
-    list_of_groups = get_list_of_groups(interface.object_store)
-    list_of_groups.replace(existing_group=existing_object, new_group=new_object)
     try:
-        list_of_groups.check_for_duplicated_names()
-    except Exception:
-        raise Exception("Duplicate names - each group must have a unique name")
+        interface.update(interface.object_store.data_api.data_list_of_groups.modify_sailing_group,
+            existing_group_id =existing_object.id,
+        new_group = new_object
+        )
+    except Exception as e:
+        interface.log_error("Error: %s, when modifying %s to %s" % (str(e), existing_object, new_object))
 
-    update_list_of_groups(
-        object_store=interface.object_store, updated_list_of_groups=list_of_groups
+def get_group_with_id(    object_store: ObjectStore, group_id:str, default=arg_not_passed) -> Group:
+    return object_store.get(
+        object_store.data_api.data_list_of_groups.get_group_with_id,
+        group_id=group_id,
+        default=default
+
     )
-
 
 def get_group_with_name(
     object_store: ObjectStore, group_name: str, default=arg_not_passed
 ) -> Group:
-    list_of_groups = get_list_of_groups(object_store)
-    return list_of_groups.matches_name(group_name, default=default)
+    return object_store.get(
+        object_store.data_api.data_list_of_groups.get_group_with_name,
+        group_name=group_name,
+        default=default
+    )
 
 
 def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
@@ -45,11 +54,11 @@ def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:
 
 
 def update_list_of_groups(
-    object_store: ObjectStore, updated_list_of_groups: ListOfGroups
+    interface: abstractInterface, updated_list_of_groups: ListOfGroups
 ):
-    object_store.DEPRECATE_update(
-        new_object=updated_list_of_groups,
-        object_definition=object_definition_for_list_of_groups,
+    interface.update(
+        interface.object_store.data_api.data_list_of_groups.write,
+        list_of_groups = updated_list_of_groups
     )
 
 

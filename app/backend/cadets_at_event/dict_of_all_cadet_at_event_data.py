@@ -24,6 +24,7 @@ from app.data_access.store.object_definitions import (
 )
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
+## FIXME NEEDS REFACTORING
 
 def cadet_is_active(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet

@@ -36,7 +36,6 @@ def body_of_mapping_table(
     mapping = get_field_mapping_for_event(
         object_store=interface.object_store, event=event
     )
-    mapping.sort_by_skipperman_field()
 
     rows_in_mapping = [
         row_in_mapping_table(event=event, wa_field_map=wa_field_map)

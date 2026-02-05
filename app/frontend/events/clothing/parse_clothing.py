@@ -31,6 +31,7 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 def save_clothing_data(interface: abstractInterface):
     event = get_event_from_state(interface)
     only_committee = are_we_showing_only_committee(interface)
+
     dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
         object_store=interface.object_store, event=event, only_committee=only_committee
     )
@@ -55,12 +56,12 @@ def save_clothing_data_for_cadet(
 
     if not new_size == clothing.size:
         change_clothing_size_for_cadet(
-            object_store=interface.object_store, event=event, cadet=cadet, size=new_size
+            interface=interface, event=event, cadet=cadet, size=new_size
         )
 
     if not new_colour == clothing.colour:
         change_colour_group_for_cadet(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             cadet=cadet,
             colour=new_colour,
@@ -86,7 +87,7 @@ def distribute_colour_groups(interface: abstractInterface):
     event = get_event_from_state(interface)
     try:
         distribute_colour_groups_at_event(
-            object_store=interface.object_store, event=event
+            interface=interface, event=event
         )
     except NotEnoughColours as error:
         interface.log_error(str(error))
@@ -101,5 +102,5 @@ def clear_all_colours(interface: abstractInterface):
 
     for cadet in dict_of_cadets_with_clothing.list_of_cadets:
         clear_colour_group_for_cadet(
-            object_store=interface.object_store, event=event, cadet=cadet
+            interface=interface, event=event, cadet=cadet
         )

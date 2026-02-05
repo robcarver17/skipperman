@@ -64,6 +64,6 @@ def save_from_ordinary_list_of_patrol_boats(
         interface: abstractInterface, new_list: List[PatrolBoat]
 ):
     update_list_of_patrol_boats(
-        object_store=interface.object_store,
+        interface=interface,
         updated_list_of_patrol_boats=ListOfPatrolBoats(new_list),
     )

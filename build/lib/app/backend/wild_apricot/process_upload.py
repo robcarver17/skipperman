@@ -10,15 +10,17 @@ from app.backend.mapping.map_wa_fields import (
     map_wa_fields_in_df_for_event_and_add_special_fields,
 )
 from app.backend.mapping.event_mapping import verify_and_if_required_add_wa_mapping
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 
 
 def process_uploaded_wa_event_file(
-    object_store: ObjectStore, filename: str, event: Event
+        interface: abstractInterface, filename: str, event: Event
 ):
+    object_store = interface.object_store
     ## add WA mapping
     verify_and_if_required_add_wa_mapping(
-        filename=filename, event=event, object_store=object_store
+        filename=filename, event=event, interface=interface
     )
 
     ## do field mapping

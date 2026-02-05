@@ -9,9 +9,9 @@ from app.backend.groups.group_allocation_info import (
 )
 from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
-    DictOfEventAllocations,
     get_dict_of_event_allocations_given_list_of_events_from_stored_data,
 )
+from app.objects.composed.cadets_at_event_with_groups import DictOfEventAllocations
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )

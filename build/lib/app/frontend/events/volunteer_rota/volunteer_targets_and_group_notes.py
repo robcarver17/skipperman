@@ -196,5 +196,5 @@ def save_group_notes_for_group(
     if notes is MISSING_FROM_FORM:
         return
     update_group_notes_at_event_for_group(
-        object_store=interface.object_store, event=event, group=group, notes=notes
+        interface=interface, event=event, group=group, notes=notes
     )

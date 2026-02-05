@@ -207,3 +207,21 @@ def is_boat_empty(
             return False
 
     return True
+
+
+def copy_patrol_boat_labels_across_event(
+    object_store: ObjectStore, event: Event, overwrite: bool = False
+):
+    dict_of_voluteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
+    )
+
+    dict_of_voluteers_at_event_with_patrol_boats.copy_patrol_boat_labels_across_event(
+        overwrite
+    )
+    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+        object_store=object_store,
+        dict_of_volunteers_at_event_with_patrol_boats=dict_of_voluteers_at_event_with_patrol_boats,
+    )

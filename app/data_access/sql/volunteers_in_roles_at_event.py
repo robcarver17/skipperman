@@ -1,13 +1,17 @@
 from typing import Dict
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.list_of_roles_and_teams import SqlDataListOfTeamsAndRolesWithIds
 from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.roles import SqlDataListOfRoles
 from app.data_access.sql.groups import SqlDataListOfGroups
-from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup, DictOfDaysRolesAndGroups
+from app.data_access.sql.volunteers import SqlDataListOfVolunteers
+from app.objects.composed.roles_and_teams import DictOfTeamsWithRoles
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
+from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup, DictOfDaysRolesAndGroups, \
+    DictOfDaysRolesAndGroupsAndTeams, \
+    RoleAndGroupAndTeam, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
 from app.objects.day_selectors import Day
-from app.objects.groups import unallocated_group_id
-from app.objects.roles_and_teams import no_role_allocated_id, RolesWithSkillIds
 
 
 from app.objects.volunteer_roles_and_groups_with_id import ListOfVolunteersWithIdInRoleAtEvent, VolunteerWithIdInRoleAtEvent
@@ -21,6 +25,59 @@ INDEX_VOLUNTEERS_IN_ROLES_TABLE = "index_volunteers_in_roles"
 class SqlDataListOfVolunteersInRolesAtEvent(
     GenericSqlData
 ):
+    def get_dict_of_volunteers_with_roles_and_groups_at_event(self, event_id: str) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
+        raw_list = self.read(event_id)
+        new_dict = {}
+        for raw_item in raw_list:
+
+            volunteer_id = raw_item.volunteer_id
+            day = raw_item.day
+            group_id = raw_item.group_id
+            role_id = raw_item.role_id
+
+            group = self.sql_groups.group_with_id(group_id)
+            raw_role = self.sql_roles.object_with_id(role_id)
+            role_with_skill = self.list_of_roles_with_skills.role_with_id(raw_role.id)
+            list_of_team_and_index = self.dict_of_teams_and_roles.list_of_teams_and_index_given_role(role_with_skill)
+
+            role_and_group_and_team = RoleAndGroupAndTeam(
+                role=role_with_skill,
+                group=group,
+                list_of_team_and_index=list_of_team_and_index
+            )
+
+            volunteer = self.list_of_volunteers.volunteer_with_id(volunteer_id)
+
+            entry_for_volunteer = new_dict.get(volunteer, DictOfDaysRolesAndGroupsAndTeams())
+            entry_for_volunteer[day] = role_and_group_and_team
+            new_dict[volunteer] = entry_for_volunteer
+
+        return DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(new_dict)
+
+    @property
+    def list_of_roles_with_skills(self) ->  ListOfRolesWithSkills:
+        list_of_roles_with_skills = getattr(self, "_list_of_roles_with_skills", None)
+        if list_of_roles_with_skills is None:
+            list_of_roles_with_skills = self._list_of_roles_with_skills = SqlDataListOfRoles(self.db_connection).read_list_of_roles_with_skills()
+
+        return list_of_roles_with_skills
+
+    @property
+    def dict_of_teams_and_roles(self) -> DictOfTeamsWithRoles:
+        dict_of_teams_and_roles = getattr(self, "_dict_of_teams_and_roles", None)
+        if dict_of_teams_and_roles is None:
+            dict_of_teams_and_roles = self._dict_of_teams_and_roles = SqlDataListOfTeamsAndRolesWithIds(self.db_connection).get_dict_of_teams_and_roles()
+
+        return dict_of_teams_and_roles
+
+    @property
+    def list_of_volunteers(self):
+        list_of_volunteers = getattr(self, "_list_of_volunteers", None)
+        if list_of_volunteers is None:
+            self._list_of_volunteers = list_of_volunteers = SqlDataListOfVolunteers(self.db_connection).read()
+
+        return list_of_volunteers
+
     def get_role_and_groups_for_event_and_volunteer(self, event_id:str,
     volunteer_id:str) -> DictOfDaysRolesAndGroups:
         if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
@@ -98,10 +155,6 @@ class SqlDataListOfVolunteersInRolesAtEvent(
 
         return ListOfVolunteersWithIdInRoleAtEvent(list_of_volunteers_in_roles)
 
-    volunteer_id: str
-    day: Day
-    group_id: str = unallocated_group_id
-    role_id: str = no_role_allocated_id
 
     def write(
         self,

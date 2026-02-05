@@ -18,11 +18,11 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 
 from app.backend.groups.list_of_groups import get_list_of_groups
 
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-    get_dict_of_people_and_club_dinghies_at_event,
+from app.backend.club_boats.people_with_club_dinghies_at_event import (
+     get_dict_of_cadets_and_club_dinghies_at_event,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent, DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 
@@ -57,7 +57,7 @@ def add_club_boat_asterix(
     event: Event,
 ):
     dict_of_cadets_at_event_with_club_dinghies = (
-        get_dict_of_people_and_club_dinghies_at_event(
+        get_dict_of_cadets_and_club_dinghies_at_event(
             object_store=object_store, event=event
         )
     )
@@ -73,7 +73,7 @@ def add_club_boat_asterix(
 
 def add_club_boat_asterix_to_cadet_with_group_on_day(
     cadet_with_group: CadetWithGroupOnDay,
-    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
 ):
     cadet = cadet_with_group.cadet
     day = cadet_with_group.day

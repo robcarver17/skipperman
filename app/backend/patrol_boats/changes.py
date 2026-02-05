@@ -21,7 +21,7 @@ from app.backend.volunteers.volunteers_at_event import (
     update_dict_of_all_event_data_for_volunteers,
 )
 
-
+##FIXME REFACTOR
 @dataclass
 class BoatDayVolunteer:
     boat: PatrolBoat

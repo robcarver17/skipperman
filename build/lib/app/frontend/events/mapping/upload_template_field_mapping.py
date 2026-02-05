@@ -79,7 +79,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
     
     save_field_mapping_template(
         template_name=template_name,
-        object_store=interface.object_store,
+        interface=interface,
         template=template,
     )
     interface.DEPRECATE_flush_and_clear()

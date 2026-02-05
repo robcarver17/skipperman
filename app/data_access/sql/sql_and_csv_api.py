@@ -6,8 +6,6 @@ from app.data_access.csv.global_read_only import (
     set_global_read_only,
 )
 
-from app.data_access.csv.qualifications import CsvDataListOfCadetsWithTickListItems
-from app.data_access.csv.arch.cadets import CsvDataAttendanceAtEventsForSpecificCadet
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
 from app.data_access.sql.cadet_attendance import SqlDataAttendanceAtEventsForSpecificCadet
 
@@ -15,6 +13,7 @@ from app.data_access.sql.cadet_clothing import SqlDataListOfCadetsWithClothingAt
 from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
 from app.data_access.sql.cadet_food import SqlDataListOfCadetsWithFoodRequirementsAtEvent
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
+from app.data_access.sql.cadets_with_ticks import SqlDataListOfCadetsWithTickListItems
 from app.data_access.sql.club_dinghies import SqlDataListOfClubDinghies
 from app.data_access.sql.club_dinghies_with_people_at_event import SqlDataListOfCadetAtEventWithClubDinghies, \
     SqlDataListOfVolunteersAtEventWithClubDinghies
@@ -346,13 +345,12 @@ class MixedSqlAndCsvDataApi(object):
             self.db_connection
         )
 
-    ## KEEP AS CSV
     @property
     def data_list_of_cadets_with_tick_list_items(
         self,
-    ) -> CsvDataListOfCadetsWithTickListItems:
-        return CsvDataListOfCadetsWithTickListItems(
-            self.master_data_path, backup_data_path=self.backup_data_path
+    ) -> SqlDataListOfCadetsWithTickListItems:
+        return SqlDataListOfCadetsWithTickListItems(
+            self.db_connection
         )
 
     @property

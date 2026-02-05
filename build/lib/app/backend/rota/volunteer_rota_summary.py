@@ -13,7 +13,7 @@ from app.backend.volunteers.volunteers_at_event import (
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     RoleAndGroupAndTeam,
     RoleAndGroup,
 )
@@ -96,7 +96,7 @@ def get_volunteers_and_roles_at_event(object_store: ObjectStore, event: Event):
 
 def get_summary_of_roles_and_groups_for_events_on_day(
     day: Day,
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     sorted_roles_at_event: DEPRECATE_ListOfRolesWithSkills,
     sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:
@@ -189,7 +189,7 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
 
 def get_summary_of_teams_and_groups_for_events_on_day(
     day: Day,
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     sorted_teams_at_event: ListOfTeams,
     sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:

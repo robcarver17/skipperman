@@ -60,11 +60,6 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
             other_list_of_boats.list_of_ids
         )
 
-    def replace(self, existing_patrol_boat: PatrolBoat, new_patrol_boat: PatrolBoat):
-        object_idx = self.idx_given_name(existing_patrol_boat.name)
-        new_patrol_boat.id = existing_patrol_boat.id
-        self[object_idx] = new_patrol_boat
-
     def boat_given_id(self, patrol_boat_id: str, default=arg_not_passed):
         if patrol_boat_id == no_patrol_boat.id:
             return no_patrol_boat
@@ -81,29 +76,6 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
             default=default,
         )
 
-    def idx_given_name(self, patrol_boat_name: str, default=arg_not_passed) -> int:
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name="name",
-            attr_value=patrol_boat_name,
-            default=default,
-        )
-
-    def add(self, patrol_boat_name: str):
-        try:
-            assert patrol_boat_name not in self.list_of_names()
-        except:
-            raise Exception(
-                "Can't add duplicate patrol boat %s already exists" % patrol_boat_name
-            )
-        patrol_boat = PatrolBoat(name=patrol_boat_name, hidden=False)
-        patrol_boat.id = self.next_id()
-
-        self.append(patrol_boat)
-
-    def check_for_duplicated_names(self):
-        list_of_names = self.list_of_names()
-        assert len(list_of_names) == len(set(list_of_names))
 
 
 @dataclass

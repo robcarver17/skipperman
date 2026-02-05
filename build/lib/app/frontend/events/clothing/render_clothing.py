@@ -3,6 +3,7 @@ from typing import List
 from app.objects.cadets import Cadet
 
 from app.objects.abstract_objects.abstract_form import listInput
+from app.objects.utilities.transform_data import  TRUE, FALSE
 
 from app.objects.composed.clothing_at_event import (
     SORT_BY_FIRSTNAME,
@@ -81,6 +82,7 @@ help_button = HelpButton("clothing_help")
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order = get_sort_order(interface)
     only_committee = are_we_showing_only_committee(interface)
+    print("Showing only committee??? %s type %s" % (str(only_committee), str(type(only_committee))))
 
     dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
         object_store=interface.object_store, event=event, only_committee=only_committee
@@ -151,16 +153,18 @@ SORT_ORDER = "cloth_sort"
 
 
 def set_to_showing_only_committee(interface: abstractInterface):
-    interface.set_persistent_value(COMMITTEE_ONLY, True)
+    interface.set_persistent_value(COMMITTEE_ONLY, TRUE)
 
 
 def set_to_showing_all(interface: abstractInterface):
-    interface.set_persistent_value(COMMITTEE_ONLY, False)
-
+    interface.set_persistent_value(COMMITTEE_ONLY, FALSE)
 
 def are_we_showing_only_committee(interface: abstractInterface) -> bool:
-    return interface.get_persistent_value(COMMITTEE_ONLY, default=False)
+    only_committee = interface.get_persistent_value(COMMITTEE_ONLY, default=FALSE)
+    return only_committee== TRUE
 
+def clear_showing_committee_flag(interface: abstractInterface):
+    interface.clear_persistent_value(COMMITTEE_ONLY)
 
 def get_sort_order(interface: abstractInterface) -> str:
     return interface.get_persistent_value(SORT_ORDER, default=SORT_BY_FIRSTNAME)
@@ -168,3 +172,6 @@ def get_sort_order(interface: abstractInterface) -> str:
 
 def save_sort_order(interface: abstractInterface, sort_order: str):
     interface.set_persistent_value(SORT_ORDER, sort_order)
+
+def clear_sort_order(interface: abstractInterface):
+    interface.clear_persistent_value(SORT_ORDER)

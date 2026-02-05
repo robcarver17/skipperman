@@ -52,7 +52,7 @@ def get_list_of_very_similar_cadets_from_data(
     cadet: Cadet,
     first_name_threshold=SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_FIRST_NAMES,
 ):
-    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
+    list_of_cadets = get_sorted_list_of_cadets(object_store)
     return get_list_of_very_similar_cadets(
         list_of_cadets, other_cadet=cadet, first_name_threshold=first_name_threshold
     )
@@ -63,7 +63,7 @@ def get_list_of_similar_cadets_from_data(
     cadet: Cadet,
     name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME,
 ) -> list:
-    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
+    list_of_cadets = get_sorted_list_of_cadets(object_store)
     return get_list_of_similar_cadets(
         list_of_cadets, other_cadet=cadet, name_threshold=name_threshold
     )
@@ -74,7 +74,7 @@ def get_list_of_similar_cadets_from_data(
 def get_cadet_from_list_of_cadets_given_name_of_cadet(
     object_store: ObjectStore, cadet_selected: str, default=arg_not_passed
 ) -> Cadet:
-    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
+    list_of_cadets = get_sorted_list_of_cadets(object_store)
     cadet = list_of_cadets.matching_cadet_with_name(cadet_selected, default=default)
     return cadet
 
@@ -89,13 +89,13 @@ def get_list_of_cadets(object_store: ObjectStore) -> ListOfCadets:
 
 
 def get_list_of_cadets_sorted_by_surname(object_store: ObjectStore) -> ListOfCadets:
-    return get_sorted_list_of_cadets_from_raw_data(object_store=object_store, sort_by=SORT_BY_SURNAME)
+    return get_sorted_list_of_cadets(object_store=object_store, sort_by=SORT_BY_SURNAME)
 
 
-def get_sorted_list_of_cadets_from_raw_data(object_store: ObjectStore, sort_by: str = arg_not_passed,
-                                            exclude_cadet: Cadet = arg_not_passed,
-                                            similar_cadet: Cadet = arg_not_passed
-                                            ) -> ListOfCadets:
+def get_sorted_list_of_cadets(object_store: ObjectStore, sort_by: str = arg_not_passed,
+                              exclude_cadet: Cadet = arg_not_passed,
+                              similar_cadet: Cadet = arg_not_passed
+                              ) -> ListOfCadets:
 
     list_of_cadets =  object_store.get(object_store.data_api.data_list_of_cadets.read, sort_by=sort_by,
                                        exclude_cadet=exclude_cadet)

@@ -3,11 +3,11 @@ from typing import List
 
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
-    update_dict_of_cadets_with_groups_at_event,
+    add_cadet_to_group_on_day, get_days_and_groups_for_cadet_at_event,
 )
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events,
-    DEPRECATE_update_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+
 )
 from app.backend.registration_data.cadet_registration_data import (
     add_new_cadet_to_event_from_row_in_registration_data,
@@ -26,7 +26,9 @@ from app.data_access.configuration.field_list import (
     CADET_DOUBLE_HANDED_PARTNER,
 )
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
+from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.utilities.exceptions import NoMoreData, MissingData, DuplicateCadets
@@ -36,6 +38,7 @@ from app.backend.registration_data.cadet_registration_data import (
     DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
 
+## FIXME NEEDS REFACTORING
 
 def from_partner_name_to_cadet(partner_name: str) -> Cadet:
     if len(partner_name) > 0:
@@ -64,11 +67,12 @@ def get_registered_two_handed_partner_name_for_cadet_at_event(
 
 
 def add_unregistered_partner_cadet(
-    object_store: ObjectStore,
+        interface: abstractInterface,
     original_cadet: Cadet,
     new_cadet: Cadet,
     event: Event,
 ):
+    object_store=interface.object_store
     print("Adding %s to registration data" % new_cadet)
     new_row = add_cloned_row_to_raw_registration_data_and_return_row(
         object_store=object_store,
@@ -100,7 +104,7 @@ def add_unregistered_partner_cadet(
 
     print("Adding %s to sailing groups " % new_cadet)
     add_new_cadet_to_groups(
-        object_store=object_store,
+        interface=interface,
         new_cadet=new_cadet,
         original_cadet=original_cadet,
         event=event,
@@ -194,7 +198,7 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
     original_cadet: Cadet,
     new_cadet: Cadet,
 ):
-    dinghys_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    dinghys_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
 
@@ -202,55 +206,48 @@ def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existin
         cadet=original_cadet, partner_cadet=new_cadet, day=day
     )
 
-    DEPRECATE_update_dict_of_cadets_and_boat_classes_and_partners_at_events(
-        object_store=object_store,
-        event=event,
-        dict_of_cadets_and_boat_classes_and_partners_at_events=dinghys_data,
-    )
+    ### FIXME NEEDS TO UPDATE UNDELRYING DATA
 
 
 def add_new_cadet_to_groups(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     original_cadet: Cadet,
     new_cadet: Cadet,
     event: Event,
 ):
     list_of_days = get_list_of_days_given_original_cadet(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         original_cadet=original_cadet,
     )
+    original_cadet_groups = get_days_and_groups_for_cadet_at_event(
+        object_store=interface.object_store, event=event,
+        cadet=original_cadet
+    )
 
     for day in list_of_days:
-        add_new_cadet_to_group_on_day(
-            object_store=object_store,
+        add_new_cadet_to_same_group_as_original_cadet_on_day(
+            interface=interface,
             event=event,
-            original_cadet=original_cadet,
+            original_cadet_groups=original_cadet_groups,
             new_cadet=new_cadet,
             day=day,
         )
 
 
-def add_new_cadet_to_group_on_day(
-    object_store: ObjectStore,
-    original_cadet: Cadet,
+def add_new_cadet_to_same_group_as_original_cadet_on_day(
+    interface: abstractInterface,
+    original_cadet_groups: DaysAndGroups,
     new_cadet: Cadet,
     day: Day,
     event: Event,
 ):
-    cadets_at_event_data = get_dict_of_cadets_with_groups_at_event(
-        object_store=object_store, event=event
-    )
-    group = cadets_at_event_data.get_days_and_groups_for_cadet(
-        cadet=original_cadet
-    ).group_on_day(day)
+    group = original_cadet_groups.group_on_day(day)
 
-    cadets_at_event_data.add_or_upate_group_for_cadet_on_day(
-        cadet=new_cadet, day=day, group=group
-    )
-
-    update_dict_of_cadets_with_groups_at_event(
-        object_store=object_store,
+    add_cadet_to_group_on_day(
+interface=interface,
         event=event,
-        dict_of_cadets_with_groups_at_event=cadets_at_event_data,
+        cadet=new_cadet,
+        group=group,
+        day=day
     )

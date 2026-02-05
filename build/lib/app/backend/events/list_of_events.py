@@ -1,8 +1,6 @@
 from copy import copy
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_events,
-)
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import (
     ListOfEvents,
     SORT_BY_START_DSC,
@@ -21,19 +19,17 @@ def list_of_previously_used_event_names(object_store: ObjectStore) -> list:
     return list(set(event_names))
 
 
-def add_new_verified_event(object_store: ObjectStore, event: Event):
-    list_of_events = get_list_of_events(object_store)
-    list_of_events.add(event)
-    update_list_of_events(
-        object_store=object_store, updated_list_of_events=list_of_events
+def add_new_verified_event(interface: abstractInterface, event: Event):
+    interface.update(
+        interface.object_store.data_api.data_list_of_events.add_event,
+        event=event
     )
-
 
 def get_event_from_id(
     object_store: ObjectStore, event_id: str, default=arg_not_passed
 ) -> Event:
-    list_of_events = get_list_of_events(object_store)
-    return list_of_events.event_with_id(event_id, default=default)
+    return object_store.get(object_store.data_api.data_list_of_events.get_event_from_id,
+                            event_id=event_id, default=default)
 
 
 def get_event_from_list_of_events_given_event_description(
@@ -47,23 +43,11 @@ def get_event_from_list_of_events_given_event_description(
 def get_sorted_list_of_events(
     object_store: ObjectStore, sort_by=SORT_BY_START_DSC
 ) -> ListOfEvents:
-    list_of_events = get_list_of_events(object_store)
-    list_of_events = list_of_events.sort_by(sort_by)
-
-    return list_of_events
-
+    return object_store.get(object_store.data_api.data_list_of_events.read,
+                            sort_by=sort_by)
 
 def get_list_of_events(object_store: ObjectStore) -> ListOfEvents:
     return object_store.get(object_store.data_api.data_list_of_events.read)
-
-
-def update_list_of_events(
-    object_store: ObjectStore, updated_list_of_events: ListOfEvents
-):
-    object_store.DEPRECATE_update(
-        new_object=updated_list_of_events,
-        object_definition=object_definition_for_list_of_events,
-    )
 
 
 all_sort_types_for_event_list = [SORT_BY_START_ASC, SORT_BY_START_DSC, SORT_BY_NAME]
@@ -77,9 +61,9 @@ def get_list_of_last_N_events(
     only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
-    list_of_events = copy(get_list_of_events(object_store))
+    list_of_events_sorted_by_date_asc = copy(get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_ASC))
     list_of_events = remove_event_and_possibly_past_events_and_sort(
-        list_of_events,
+        list_of_events_sorted_by_date_asc=list_of_events_sorted_by_date_asc,
         excluding_event=excluding_event,
         only_events_before_excluded_event=only_events_before_excluded_event,
     )
@@ -92,29 +76,26 @@ def get_list_of_last_N_events(
 
 
 def remove_event_and_possibly_past_events_and_sort(
-    list_of_events: ListOfEvents,
+    list_of_events_sorted_by_date_asc: ListOfEvents,
     excluding_event: Event = arg_not_passed,
     only_events_before_excluded_event: bool = True,
 ):
-    list_of_events_sorted_by_date_desc = (
-        list_of_events.sort_by_start_date_asc()
-    )  ## newest last
 
     try:  # weird not a singleton error
         if excluding_event == arg_not_passed:
-            return list_of_events_sorted_by_date_desc
+            return list_of_events_sorted_by_date_asc
     except:
         pass
 
-    idx_of_event = list_of_events_sorted_by_date_desc.index_of_id(excluding_event.id)
+    idx_of_event = list_of_events_sorted_by_date_asc.index_of_id(excluding_event.id)
     if only_events_before_excluded_event:
-        list_of_events_sorted_by_date_desc = list_of_events_sorted_by_date_desc[
+        list_of_events_sorted_by_date_asc = list_of_events_sorted_by_date_asc[
             :idx_of_event
         ]  ## only those that occured before this event
     else:
-        list_of_events_sorted_by_date_desc.pop(idx_of_event)
+        list_of_events_sorted_by_date_asc.pop(idx_of_event)
 
-    return ListOfEvents(list_of_events_sorted_by_date_desc)
+    return ListOfEvents(list_of_events_sorted_by_date_asc)
 
 
 def get_N_most_recent_events_newest_last(

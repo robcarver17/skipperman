@@ -17,6 +17,8 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 
 
+## FIXME REFACTOR
+
 def identify_birthdays(object_store: ObjectStore, event: Event) -> list:
     cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
     active_cadets = cadets_at_event_data.list_of_cadets

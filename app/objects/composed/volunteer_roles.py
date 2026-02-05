@@ -91,6 +91,62 @@ class ListOfRolesWithSkills(List[RoleWithSkills]):
         return self[idx]
 
 
+    def contains_no_role_set(self):
+        exists = self.role_with_name(NO_ROLE_ALLOCATED, default=missing_data)
+        return exists is not missing_data
+
+
+    def index_of_matching_existing_named_role(
+        self, existing_role: RoleWithSkills, default=arg_not_passed
+    ) -> int:
+        return self.index_of_matching_existing_role_name(existing_role.name)
+
+    def index_of_matching_existing_role_name(
+        self, existing_role_name: str, default=arg_not_passed
+    ) -> int:
+        return get_idx_of_unique_object_with_attr_in_list(
+            some_list=self,
+            attr_name="name",
+            attr_value=existing_role_name,
+            default=default,
+        )
+
+    def check_for_duplicated_names(self):
+        list_of_names = self.list_of_names()
+        assert len(list_of_names) == len(set(list_of_names))
+
+    def list_of_names(self):
+        return [role.name for role in self]
+
+    def sort_to_match_other_role_list_order(
+        self, other_list: Union["ListOfRolesWithSkills", ListOfRolesWithSkillIds]
+    ) -> "ListOfRolesWithSkills":
+        new_list = []
+        for role_with_skill in other_list:
+            if role_with_skill.name in self.list_of_names():
+                new_list.append(self.role_with_name(role_with_skill.name))
+
+        return ListOfRolesWithSkills.from_list_of_roles_with_skills(new_list)
+
+    def subset_for_ids(self, subset_list_of_ids: List[str]) -> List[RoleWithSkills]:
+        list_of_ids = self.list_of_ids()
+        list_of_idx = [list_of_ids.index(id) for id in subset_list_of_ids]
+
+        return [self[idx] for idx in list_of_idx]
+
+    def list_of_ids(self) -> List[str]:
+        return [role.id for role in self]
+
+
+    def role_with_name(self, role_name, default=arg_not_passed):
+        if role_name == no_role_set.name:
+            return no_role_set
+
+        return get_unique_object_with_attr_in_list(
+            some_list=self, attr_name="name", attr_value=role_name, default=default
+        )
+
+
 class DEPRECATE_ListOfRolesWithSkills(List[RoleWithSkills]):
     def __init__(
         self,

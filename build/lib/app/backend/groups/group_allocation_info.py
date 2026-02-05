@@ -11,6 +11,7 @@ from app.objects.composed.cadets_with_all_event_info import (
     AllEventInfoForCadet,
 )
 
+## FIXME REFACTOR
 
 @dataclass
 class GroupAllocationInfo:

@@ -114,17 +114,17 @@ def process_form_when_cadet_chosen_as_partner(
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet
 ) -> NewForm:
-    
+
     primary_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
 
     add_unregistered_partner_cadet(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         original_cadet=primary_cadet,
         new_cadet=new_cadet,
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return return_to_allocation_pages(interface)
 

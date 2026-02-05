@@ -23,7 +23,6 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     save_menu_button,
-    HelpButton,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
@@ -69,15 +68,15 @@ def post_form_view_for_clothing_requirements(
     
     if save_menu_button.pressed(last_button_pressed):
         save_clothing_data(interface)
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
 
     elif distribute_action_button.pressed(last_button_pressed):
         distribute_colour_groups(interface)
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
 
     elif clear_all_colours_button.pressed(last_button_pressed):
         clear_all_colours(interface)
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
 
     elif last_button_pressed in all_sort_types:
         sort_order = interface.last_button_pressed()
@@ -85,24 +84,29 @@ def post_form_view_for_clothing_requirements(
 
     elif filter_all_button.pressed(last_button_pressed):
         set_to_showing_all(interface)
+        return interface.get_new_form_given_function(display_form_view_for_clothing_requirements)
 
     elif filter_committee_button.pressed(last_button_pressed):
         set_to_showing_only_committee(interface)
 
     elif export_committee_button.pressed(last_button_pressed):
         return export_committee_clothing(interface)
+
     elif export_all_clothing_button.pressed(last_button_pressed):
         return export_all_clothing(interface)
+
     elif export_colours_button.pressed(last_button_pressed):
         return export_clothing_colours(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    return display_form_view_for_clothing_requirements(interface)
+    return interface.get_new_form_given_function(display_form_view_for_clothing_requirements)
 
 
 def previous_form(interface: abstractInterface):
+    clear_showing_committee_flag(interface)
+    clear_sort_order(interface)
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_for_clothing_requirements
     )

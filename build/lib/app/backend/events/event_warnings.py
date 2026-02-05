@@ -1,108 +1,80 @@
 from typing import List
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_event_warnings,
-)
 from app.data_access.store.object_store import ObjectStore
-from app.objects.event_warnings import ListOfEventWarnings
+from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.event_warnings import ListOfEventWarnings, EventWarningLog
 from app.objects.events import Event
 
 
 def get_list_of_event_warnings(
     object_store: ObjectStore, event: Event
 ) -> ListOfEventWarnings:
-    return object_store.DEPRECATE_get(
-        object_definition_for_list_of_event_warnings, event_id=event.id
+    return object_store.get(
+        object_store.data_api.data_event_warnings.read, event_id=event.id
     )
 
-
-def update_list_of_event_warnings(
-    object_store: ObjectStore, event: Event, list_of_event_warnings: ListOfEventWarnings
-):
-    object_store.DEPRECATE_update(
-        list_of_event_warnings,
-        object_definition=object_definition_for_list_of_event_warnings,
-        event_id=event.id,
-    )
 
 
 def add_list_of_event_warnings(
-    object_store: ObjectStore, event: Event, new_list_of_warnings: ListOfEventWarnings
+    interface: abstractInterface, event: Event, new_list_of_warnings: ListOfEventWarnings
 ):
-    existing_list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
-    )
-    for warning in new_list_of_warnings:
-        existing_list_of_warnings.add_new_event_warning_checking_for_duplicate(warning)
-
-    update_list_of_event_warnings(
-        list_of_event_warnings=existing_list_of_warnings,
-        event=event,
-        object_store=object_store,
-    )
+    for warning_log in new_list_of_warnings:
+        add_new_event_warning_checking_for_duplicate(interface=interface,
+                                                                      event=event,
+                                                    warning_log=warning_log)
 
 
-def add_new_event_warning_checking_for_duplicate(
-    object_store: ObjectStore,
+def add_new_event_warning_given_components_checking_for_duplicate(
+    interface: abstractInterface,
     event: Event,
     warning: str,
     category: str,
     priority: str,
     auto_refreshed: bool,
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
-    )
-    list_of_warnings.add_new_event_warning_checking_for_duplicate_from_components(
+    warning_log = EventWarningLog(
         warning=warning,
         category=category,
         priority=priority,
-        auto_refreshed=auto_refreshed,
+        auto_refreshed=auto_refreshed
     )
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
-    )
+    add_new_event_warning_checking_for_duplicate(interface=interface,
+                                                 warning_log=warning_log,
+                                                 event=event)
 
 
-def add_or_update_list_of_new_event_warnings_clearing_any_missing(
-    object_store: ObjectStore,
+def add_new_event_warning_checking_for_duplicate(
+    interface: abstractInterface,
     event: Event,
-    new_list_of_warnings: List[str],
-    category: str,
-    priority: str,
+    warning_log: EventWarningLog
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.add_new_event_warning_checking_for_duplicate,
+        event_id=event.id,
+        warning_log=warning_log
     )
-    list_of_warnings.add_or_update_list_of_new_event_warnings_clearing_any_missing(
-        list_of_warnings=new_list_of_warnings, category=category, priority=priority
-    )
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
-    )
+
+
 
 
 def mark_event_warning_with_id_as_ignore(
-    object_store: ObjectStore, event: Event, warning_id: str
+    interface: abstractInterface, event: Event, warning_id: str
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
+        event_id=event.id,
+        warning_id=warning_id,
+        ignore_flag=True
     )
-    list_of_warnings.mark_event_warning_with_id_as_ignored(warning_id)
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
-    )
-
 
 def mark_event_warning_with_id_as_unignore(
-    object_store: ObjectStore, event: Event, warning_id: str
+    interface: abstractInterface, event: Event, warning_id: str
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
-    )
-    list_of_warnings.mark_event_warning_with_id_as_unignored(warning_id)
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
+        event_id=event.id,
+        warning_id=warning_id,
+        ignore_flag=False
     )
 
 
@@ -127,44 +99,40 @@ def get_list_of_all_warning_ids_at_event(
 
 
 def mark_all_active_event_warnings_with_priority_and_category_as_ignored(
-    object_store: ObjectStore, event: Event, category: str, priority: str
+    interface: abstractInterface, event: Event, category: str, priority: str
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
-    )
-    list_of_warnings.mark_all_active_event_warnings_with_priority_and_category_as_ignored(
-        category=category, priority=priority
-    )
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.reverse_ignore_on_active_event_warnings_with_priority_and_category,
+        event_id=event.id,
+        category=category,
+        priority=priority,
+        set_active_to_ignored=True
     )
 
 
 def mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(
-    object_store: ObjectStore, event: Event, category: str, priority: str
+    interface: abstractInterface, event: Event, category: str, priority: str
 ):
-    list_of_warnings = get_list_of_event_warnings(
-        object_store=object_store, event=event
-    )
-    list_of_warnings.mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(
-        category=category, priority=priority
-    )
-    update_list_of_event_warnings(
-        list_of_event_warnings=list_of_warnings, event=event, object_store=object_store
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.reverse_ignore_on_active_event_warnings_with_priority_and_category,
+        event_id=event.id,
+        category=category,
+        priority=priority,
+        set_active_to_ignored=False
     )
 
-
-def process_warnings_into_warning_list(
-    object_store: ObjectStore,
+def process_list_of_warnings_which_auto_clear(
+    interface: abstractInterface,
     event: Event,
     list_of_warnings: List[str],
     priority: str,
     category: str,
 ):
-    add_or_update_list_of_new_event_warnings_clearing_any_missing(
-        object_store=object_store,
-        event=event,
-        category=category,
-        priority=priority,
-        new_list_of_warnings=list_of_warnings,
-    )
+    interface.update(
+        interface.object_store.data_api.data_event_warnings.add_or_update_list_of_autorefreshed_event_warnings_clearing_any_missing,
+            new_list_of_warnings=list_of_warnings,
+            category=category,
+            priority=priority,
+            event_id= event.id
+        )
+

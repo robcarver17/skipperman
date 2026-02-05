@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from typing import Dict
 
+from app.objects.groups import Group
 from app.objects.utilities.exceptions import missing_data
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.utilities.generic_list_of_objects import (
@@ -47,3 +49,8 @@ class ListOfGroupNotesAtEventWithIds(GenericListOfObjects):
             self[existing_note_idx] = GroupNotesAtEventWithIds(
                 group_id=group_id, event_id=event_id, notes=notes
             )
+
+
+class DictOfNotesForGroupsAtEvent(Dict[Group, str]):
+    def notes_for_group(self, group: Group):
+        return self.get(group, "")

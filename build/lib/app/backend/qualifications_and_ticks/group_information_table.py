@@ -147,7 +147,6 @@ def get_days_attending_and_in_group_for_cadet(
     return in_group
 
 
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import get_dict_of_cadets_and_club_dinghies_at_event
 def get_boat_ownership_column_for_list_of_cadets(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets,
     group: Group,

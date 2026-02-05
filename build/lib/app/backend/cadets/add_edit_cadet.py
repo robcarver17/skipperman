@@ -5,13 +5,10 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.backend.cadets.list_of_cadets import (
     get_list_of_similar_cadets_from_data,
-    get_list_of_cadets,
-    update_list_of_cadets,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import (
     Cadet,
-    is_cadet_age_surprising,
     cadet_seems_too_old,
     cadet_seems_too_young,
 )

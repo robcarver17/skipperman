@@ -188,12 +188,12 @@ def get_event_from_form(interface) -> Event:
     return event
 
 
-def process_form_when_event_verified(interface: abstractInterface) -> Form:
+def process_form_when_event_verified(interface: abstractInterface) -> Union[ Form, NewForm]:
     try:
         event = get_event_from_form(interface)
         
-        add_new_verified_event(interface.object_store, event=event)
-        interface.DEPRECATE_flush_and_clear()
+        add_new_verified_event(interface=interface, event=event)
+        interface.clear()
     except Exception as e:
         ## should never happen as we have to be verified to get here, but still
         interface.log_error(

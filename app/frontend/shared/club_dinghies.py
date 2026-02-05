@@ -3,8 +3,7 @@ from typing import Dict, List
 import pandas as pd
 
 from app.backend.club_boats.club_boat_limits import (
-    get_dict_of_club_dinghy_limits,
-    update_limit_for_club_dinghy_at_event,
+    update_limit_for_club_dinghy_at_event, get_dict_of_names_and_limits_for_all_visible_club_boats_at_event,
 )
 from app.backend.club_boats.list_of_club_dinghies import (
     get_list_of_club_dinghies,
@@ -43,8 +42,7 @@ def get_club_dinghies_form(interface: abstractInterface, event: Event) -> Table:
     club_dinghies_as_df = summarise_club_boat_allocations_for_event(
         event=event, object_store=object_store
     )
-    limits = get_dict_of_club_dinghy_limits(object_store)
-    limits_for_event = limits.dict_of_limits_for_all_visible_club_boats(event)
+    limits_for_event = get_dict_of_names_and_limits_for_all_visible_club_boats_at_event(object_store=object_store, event=event)
 
     visible_dinghies = get_list_of_visible_club_dinghies(object_store)
     list_of_dinghy_names = visible_dinghies.list_of_names()
@@ -168,7 +166,7 @@ def update_club_boat_limit_for_specific_boat_and_event(
         interface=interface, club_dinghy=club_dinghy
     )
     update_limit_for_club_dinghy_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         club_dinghy=club_dinghy,
         event=event,
         new_limit=new_limit,

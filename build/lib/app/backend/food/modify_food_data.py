@@ -1,16 +1,10 @@
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 
 from app.objects.cadets import Cadet
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.food.dict_of_food_for_event import (
-    get_dict_of_volunteers_with_food_requirements_at_event,
-    get_dict_of_cadets_with_food_requirements_at_event,
-    update_dict_of_cadets_with_food_requirements_at_event,
-    update_dict_of_volunteers_with_food_requirements_at_event,
-)
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event
 from app.objects.food import FoodRequirements
 
@@ -18,109 +12,76 @@ from app.objects.food import FoodRequirements
 def is_cadet_with_already_at_event_with_food(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
-    food_data = get_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-    return cadet in food_data.list_of_cadets()
+    return object_store.data_api.data_list_of_cadets_with_food_requirement_at_event.is_cadet_with_already_at_event_with_food(
+                            event_id=event.id,
+                            cadet_id=cadet.id)
 
 
 def add_new_cadet_with_food_to_event(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     cadet: Cadet,
     food_requirements: FoodRequirements,
 ):
-    food_data = get_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-    food_data.add_new_cadet_with_food_to_event(
-        cadet=cadet, food_requirements=food_requirements
-    )
-    update_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_cadet_with_food_requirements=food_data,
-    )
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_food_requirement_at_event.add_new_cadet_with_food_to_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        food_requirements=food_requirements)
+
 
 
 def remove_food_requirements_for_cadet_at_event(
-    object_store: ObjectStore, event: Event, cadet: Cadet
+        interface: abstractInterface, event: Event, cadet: Cadet
 ):
-    food_data = get_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-    food_data.remove_food_requirements_for_cadet_at_event(cadet=cadet)
-    update_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_cadet_with_food_requirements=food_data,
-    )
-
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_food_requirement_at_event.remove_food_requirements_for_cadet_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        )
 
 def is_volunteer_with_already_at_event_with_food(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> bool:
-    volunteers_with_food = get_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-
-    return volunteer in volunteers_with_food.list_of_volunteers()
+    return object_store.data_api.data_list_of_volunteers_with_food_requirement_at_event.is_volunteer_with_already_at_event_with_food(
+                            event_id=event.id,
+                            volunteer_id=volunteer.id)
 
 
 def add_new_volunteer_with_food_to_event(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     food_requirements: FoodRequirements,
     volunteer: Volunteer,
 ):
-    volunteers_with_food = get_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-    volunteers_with_food.add_new_volunteer_with_food_to_event(
-        volunteer=volunteer, food_requirements=food_requirements
-    )
-    update_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store,
-        dict_of_volunteers_with_food_requirements=volunteers_with_food,
-        event=event,
-    )
-
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_with_food_requirement_at_event.add_new_volunteer_with_food_to_event,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        food_requirements=food_requirements)
 
 def update_cadet_food_data(
-    object_store: ObjectStore,
+        interface: abstractInterface,
     event: Event,
     cadet: Cadet,
     new_food_requirements: FoodRequirements,
 ):
-    food_data = get_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store, event=event
-    )
-    food_data.update_cadet_food_data(
-        cadet=cadet, new_food_requirements=new_food_requirements
-    )
-    update_dict_of_cadets_with_food_requirements_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_cadet_with_food_requirements=food_data,
-    )
+    print("updating %s with %s" % (cadet, new_food_requirements))
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_food_requirement_at_event.update_cadet_food_data,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        new_food_requirements=new_food_requirements)
 
 
 def update_volunteer_food_data(
-    object_store: ObjectStore,
+        interface: abstractInterface,
     volunteer: Volunteer,
     event: Event,
     new_food_requirements: FoodRequirements,
 ):
-    dict_of_volunteers_with_food_requirements = (
-        get_dict_of_volunteers_with_food_requirements_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    dict_of_volunteers_with_food_requirements.update_volunteer_food_data(
-        volunteer=volunteer, new_food_requirements=new_food_requirements
-    )
-    update_dict_of_volunteers_with_food_requirements_at_event(
-        object_store=object_store,
-        event=event,
-        dict_of_volunteers_with_food_requirements=dict_of_volunteers_with_food_requirements,
-    )
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_with_food_requirement_at_event.update_volunteer_food_data,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        new_food_requirements=new_food_requirements)

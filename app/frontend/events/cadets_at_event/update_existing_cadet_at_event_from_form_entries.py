@@ -208,7 +208,7 @@ def update_comparing_new_and_existing_cadet_at_event(
         )
         if registration_replaces_manual_reg:
             update_registration_details_for_existing_cadet_at_event_who_was_manual(
-                object_store=interface.object_store,
+                interface=interface,
                 event=event,
                 cadet=cadet,
                 row_in_registration_data=new_cadet_at_event.data_in_row,

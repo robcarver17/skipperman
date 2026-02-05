@@ -11,10 +11,10 @@ from app.backend.registration_data.cadet_registration_data import (
 )
 
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-    get_dict_of_people_and_club_dinghies_at_event,
+from app.backend.club_boats.people_with_club_dinghies_at_event import (
+     get_dict_of_cadets_and_club_dinghies_at_event,
 )
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
@@ -162,7 +162,7 @@ def data_from_cadets_at_event_data_or_empty(
 
 
 def club_dinghy_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
-    dinghy_data = get_dict_of_people_and_club_dinghies_at_event(
+    dinghy_data = get_dict_of_cadets_and_club_dinghies_at_event(
         object_store=object_store, event=event
     )
     day_item_dict = dict(
@@ -179,7 +179,7 @@ def club_dinghy_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet)
 
 
 def boat_class_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
-    dinghy_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    dinghy_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
     day_item_dict = dict(
@@ -198,7 +198,7 @@ def boat_class_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
 
 
 def sail_number_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
-    dinghy_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    dinghy_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
     day_item_dict = dict(
@@ -217,7 +217,7 @@ def sail_number_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet)
 
 
 def partner_name_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
-    dinghy_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    dinghy_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
     day_item_dict = dict(

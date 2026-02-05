@@ -16,7 +16,7 @@ from app.data_access.configuration.configuration import MAX_GROUP_SIZE_PER_INSTR
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -81,7 +81,7 @@ def get_top_row_of_table_of_instructor_counts(
 
 def get_summary_row_of_instructors_for_group_at_event(
     object_store: ObjectStore,
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
     list_of_instructor_type_roles_at_event_sorted_by_seniority: list,
 ) -> RowInTable:
@@ -167,7 +167,7 @@ def get_group_notes_field_value(group: Group) -> str:
 
 
 def get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     role: RoleWithSkills,
     group: Group,
 ):
@@ -187,7 +187,7 @@ def get_names_of_instructor_with_day_annotation_or_blank_with_role_in_group(
 
 
 def get_dict_of_instructors_by_day_for_specific_role_in_group(
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     role: RoleWithSkills,
     group: Group,
 ):
@@ -206,7 +206,7 @@ def get_dict_of_instructors_by_day_for_specific_role_in_group(
     return dict_of_instructors_by_day
 
 def get_list_of_instructors_on_day_for_specific_role_in_group(
-        volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+        volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
         role: RoleWithSkills,
         group: Group,
         day: Day
@@ -291,7 +291,7 @@ def days_present_for(dict_of_instructors_by_day: Dict[Day, List[str]], instructo
 
 
 def get_instructor_count_allocated_to_group_with_day_annotation(
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
 ):
     if group.is_unallocated:
@@ -314,7 +314,7 @@ def get_instructor_count_allocated_to_group_with_day_annotation(
 
 
 def get_instructor_count_allocated_to_group_as_dict(
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
 ) -> Dict[str, int]:
     dict_of_instructors_by_day_for_group = get_dict_of_instructors_by_day_for_group(
@@ -328,7 +328,7 @@ def get_instructor_count_allocated_to_group_as_dict(
 
 
 def get_dict_of_instructors_by_day_for_group(
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
 ):
     days_in_event = volunteers_in_roles_at_event.event.days_in_event()

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 from app.backend.events.event_warnings import (
-    add_new_event_warning_checking_for_duplicate,
+    add_new_event_warning_given_components_checking_for_duplicate,
 )
 from app.data_access.configuration.configuration import local_timezone
 from app.objects.cadets import Cadet
@@ -340,8 +340,8 @@ def log_import_error(
     event = get_event_from_state(interface)
     interface.log_error(message)
     if log_as_warning:
-        add_new_event_warning_checking_for_duplicate(
-            object_store=interface.object_store,
+        add_new_event_warning_given_components_checking_for_duplicate(
+            interface=interface,
             event=event,
             warning="On import at %s, %s" % (datetime.now(local_timezone), message),
             category=category,

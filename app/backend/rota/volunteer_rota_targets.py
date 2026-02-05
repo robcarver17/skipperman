@@ -11,7 +11,7 @@ from app.backend.volunteers.volunteers_at_event import (
 )
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -73,7 +73,7 @@ def get_volunteer_targets_at_event(
 def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     event: Event,
     role: RoleWithSkills,
-    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     targets_at_event: DictOfTargetsForRolesAtEvent,
 ) -> RowInTableWithActualAndTargetsForRole:
     daily_counts = {}

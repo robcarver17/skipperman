@@ -50,7 +50,7 @@ def display_call_to_update_cadet_clothing_at_event_during_import(
             cadet=cadet,
             registration_data=registration_data,
         )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
     return return_to_controller(interface)
 
 
@@ -107,7 +107,7 @@ def process_update_to_existing_cadet_with_clothing(
         return
 
     remove_clothing_for_cadet_at_event(
-        object_store=interface.object_store, event=event, cadet=cadet
+        interface=interface, event=event, cadet=cadet
     )
 
     interface.log_error(
@@ -129,7 +129,7 @@ def process_update_to_cadet_new_to_event_with_clothing(
         return
 
     add_new_cadet_with_clothing_to_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         cadet=cadet,
         size=clothing_size_from_registration,

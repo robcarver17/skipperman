@@ -4,6 +4,7 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 )
 from app.backend.volunteers.warnings import warn_on_cadets_which_should_have_volunteers
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import cadet_seems_too_young
 from app.objects.events import Event
 from app.objects.event_warnings import (
@@ -21,27 +22,23 @@ from app.data_access.configuration.fixed import (
     HIGH_PRIORITY,
 )
 from app.backend.events.event_warnings import (
-    add_or_update_list_of_new_event_warnings_clearing_any_missing,
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
-    process_warnings_into_warning_list,
+    process_list_of_warnings_which_auto_clear,
 )
+
 from app.backend.registration_data.cadet_registration_data import (
     DEPRECATE_get_dict_of_cadets_with_registration_data,
 )
-from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
-)
-from app.objects.registration_status import manual_status
 
 
 def refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
-    object_store: ObjectStore, event: Event
+    interface: abstractInterface, event: Event
 ) -> ListOfEventWarnings:
-    refresh_registration_data_warnings(object_store=object_store, event=event)
+    refresh_registration_data_warnings(interface=interface, event=event)
 
     all_warnings = (
         get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(
-            object_store=object_store,
+            object_store=interface.object_store,
             event=event,
             list_of_categories=[
                 CADET_DOB,
@@ -56,15 +53,16 @@ def refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings
     return all_warnings
 
 
-def refresh_registration_data_warnings(object_store: ObjectStore, event: Event):
-    refresh_unknown_date_of_birth_warnings(object_store, event)
-    refresh_too_young_warnings(object_store, event)
-    warn_on_cadets_which_should_have_volunteers(object_store, event)
-    refresh_manually_added_cadet_warnings(object_store, event)
-    refresh_temporarily_skipped_cadet_warnings(object_store, event)
+def refresh_registration_data_warnings(interface: abstractInterface, event: Event):
+    refresh_unknown_date_of_birth_warnings(interface, event)
+    refresh_too_young_warnings(interface, event)
+    warn_on_cadets_which_should_have_volunteers(interface, event)
+    refresh_manually_added_cadet_warnings(interface, event)
+    refresh_temporarily_skipped_cadet_warnings(interface, event)
 
 
-def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Event):
+def refresh_unknown_date_of_birth_warnings(interface: abstractInterface, event: Event):
+    object_store=interface.object_store
     registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -77,8 +75,8 @@ def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Eve
             )
         # elif cadet_seems_too_young(cadet):
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=warnings,
         category=CADET_DOB,
@@ -86,7 +84,8 @@ def refresh_unknown_date_of_birth_warnings(object_store: ObjectStore, event: Eve
     )
 
 
-def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
+def refresh_too_young_warnings(interface: abstractInterface, event: Event):
+    object_store=interface.object_store
     registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -96,8 +95,8 @@ def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
         if cadet_seems_too_young(cadet):
             warnings.append("Sailor %s is too young to be a member " % cadet)
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=warnings,
         category=CADET_DOB,
@@ -105,7 +104,8 @@ def refresh_too_young_warnings(object_store: ObjectStore, event: Event):
     )
 
 
-def refresh_manually_added_cadet_warnings(object_store: ObjectStore, event: Event):
+def refresh_manually_added_cadet_warnings(interface: abstractInterface, event: Event):
+    object_store=interface.object_store
     dict_of_registrations = DEPRECATE_get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -117,8 +117,8 @@ def refresh_manually_added_cadet_warnings(object_store: ObjectStore, event: Even
                 % cadet.name
             )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=warnings,
         category=CADET_MANUALLY_ADDED,
@@ -131,7 +131,8 @@ from app.backend.registration_data.identified_cadets_at_event import (
 )
 
 
-def refresh_temporarily_skipped_cadet_warnings(object_store: ObjectStore, event: Event):
+def refresh_temporarily_skipped_cadet_warnings(interface: abstractInterface, event: Event):
+    object_store=interface.object_store
     identified_cadets = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )
@@ -149,8 +150,8 @@ def refresh_temporarily_skipped_cadet_warnings(object_store: ObjectStore, event:
                 % (str(cadet), row_id)
             )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=warnings,
         category=CADET_SKIPPED_TEMPORARY,

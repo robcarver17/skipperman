@@ -183,8 +183,40 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
 class DictOfPeopleAndClubDinghiesAtEvent(
     Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
 ):
-    pass
+    def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
+        self,
+            sorted_list_of_dinghies: ListOfClubDinghies
+    ) -> ListOfClubDinghies:
+        dinghies_for_peoeple = [
+            dict_of_dinghies.unique_list_of_dinghies()
+            for dict_of_dinghies in self.values()
+        ]
+        all_dinghies_as_single_list = flatten(dinghies_for_peoeple)
+        sorted_list = [
+            dinghy
+            for dinghy in sorted_list_of_dinghies
+            if dinghy in all_dinghies_as_single_list
+        ]
 
+        return ListOfClubDinghies(sorted_list)
+
+    def club_dinghys_for_person(
+        self,
+        person: Union[Cadet, Volunteer],
+    ) -> DictOfDaysAndClubDinghiesAtEventForPerson:
+        return self.get(person, DictOfDaysAndClubDinghiesAtEventForPerson())
+
+    @property
+    def list_of_cadets(self):
+        return ListOfCadets(self.list_of_people)
+
+    @property
+    def list_of_volunteers(self):
+        return ListOfVolunteers(self.list_of_people)
+
+    @property
+    def list_of_people(self):
+        return list(self.keys())
 
 class DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent(
     Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]

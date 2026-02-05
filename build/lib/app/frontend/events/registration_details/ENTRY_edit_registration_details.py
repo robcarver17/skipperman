@@ -92,7 +92,7 @@ def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLine
 
     warnings = (
         refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
-            object_store=interface.object_store, event=event
+            interface=interface, event=event
         )
     )
     interface.DEPRECATE_flush_and_clear()
@@ -228,4 +228,5 @@ def create_quick_spotters_report(interface: abstractInterface) -> File:
         interface=interface,
         override_print_options={"publish_to_public": False},
         ignore_stored_print_option_values_and_use_default=True,
+        override_additional_options=dict(include_unallocated_cadets=True)
     )

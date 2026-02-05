@@ -28,7 +28,7 @@ from app.objects.composed.volunteers_with_skills import (
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroupsAndTeams,
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     RoleAndGroupAndTeam,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
@@ -58,7 +58,6 @@ class AllEventDataForVolunteer:
     associated_cadets: ListOfCadets
     event: Event
     volunteer: Volunteer
-    food_requirements: FoodRequirements
     club_boats: DictOfDaysAndClubDinghiesAtEventForPerson
     most_common_role_group_and_team_at_previous_events: RoleAndGroupAndTeam
 
@@ -74,10 +73,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         event: Event,
         dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
         dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-        dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+        dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
         dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
         dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-        dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
         dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
             dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
     ):
@@ -94,9 +92,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         )
         self._dict_of_cadets_associated_with_volunteers = (
             dict_of_cadets_associated_with_volunteers
-        )
-        self._dict_of_volunteers_with_food_at_event = (
-            dict_of_volunteers_with_food_at_event
         )
         self._dict_of_people_and_club_dinghies_at_event = (
             dict_of_people_and_club_dinghies_at_event
@@ -361,8 +356,8 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         patrol_boat_data = self.dict_of_volunteers_at_event_with_patrol_boats
         messages += patrol_boat_data.drop_volunteer(volunteer)
 
-        food_data = self.dict_of_volunteers_with_food_at_event
-        messages += food_data.drop_volunteer(volunteer)
+        #food_data = self.dict_of_volunteers_with_food_at_event
+        #messages += food_data.drop_volunteer(volunteer)
 
         club_boats = self.dict_of_people_and_club_dinghies_at_event
         messages += club_boats.remove_person_from_event(volunteer)
@@ -424,7 +419,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             dict_of_volunteers_at_event_with_days_and_roles=self.dict_of_volunteers_at_event_with_days_and_roles,
             dict_of_volunteers_at_event_with_patrol_boats=self.dict_of_volunteers_at_event_with_patrol_boats,
             dict_of_cadets_associated_with_volunteers=self.dict_of_cadets_associated_with_volunteers,
-            dict_of_volunteers_with_food_at_event=self.dict_of_volunteers_with_food_at_event,
             dict_of_people_and_club_dinghies_at_event=self.dict_of_people_and_club_dinghies_at_event,
             dict_of_volunteers_with_most_common_role_and_group_across_events=self.dict_of_volunteers_with_most_common_role_and_group_across_events,
             event=self.event,
@@ -447,9 +441,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             ),
             associated_cadets=self.dict_of_cadets_associated_with_volunteers.get(
                 volunteer, ListOfCadets([])
-            ),
-            food_requirements=self.dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                volunteer, default=no_food_requirements
             ),
             club_boats=self.dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
                 volunteer
@@ -477,7 +468,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     @property
     def dict_of_volunteers_at_event_with_days_and_roles(
         self,
-    ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
+    ) -> DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
         return self._dict_of_volunteers_at_event_with_days_and_roles
 
     @property
@@ -496,11 +487,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     ) -> DictOfCadetsAssociatedWithVolunteer:
         return self._dict_of_cadets_associated_with_volunteers
 
-    @property
-    def dict_of_volunteers_with_food_at_event(
-        self,
-    ) -> DictOfVolunteersWithFoodRequirementsAtEvent:
-        return self._dict_of_volunteers_with_food_at_event
 
     @property
     def event(self) -> Event:
@@ -515,10 +501,9 @@ def compose_dict_of_all_event_data_for_volunteers(
     list_of_events: ListOfEvents,
     dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
     dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-    dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-    dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
     dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
 ) -> DictOfAllEventDataForVolunteers:
@@ -530,7 +515,6 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
-        dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
         dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
         dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events,
 
@@ -545,7 +529,6 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
         dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
-        dict_of_volunteers_with_food_at_event=dict_of_volunteers_with_food_at_event,
         dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
         dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events
     )
@@ -554,10 +537,9 @@ def compose_dict_of_all_event_data_for_volunteers(
 def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
     dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-    dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-    dict_of_volunteers_with_food_at_event: DictOfVolunteersWithFoodRequirementsAtEvent,
     dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
     event: Event,
@@ -587,9 +569,6 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                     ),
                     associated_cadets=dict_of_cadets_associated_with_volunteers.get(
                         volunteer, ListOfCadets([])
-                    ),
-                    food_requirements=dict_of_volunteers_with_food_at_event.food_for_volunteer(
-                        volunteer, default=no_food_requirements
                     ),
                     club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
                         volunteer

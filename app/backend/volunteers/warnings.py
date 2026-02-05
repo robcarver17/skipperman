@@ -4,6 +4,7 @@ from typing import List, Callable, Dict
 from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteer_roles import (
     empty_if_qualified_for_role_else_warnings,
 )
@@ -66,35 +67,31 @@ from app.data_access.configuration.fixed import (
 )
 from app.backend.events.event_warnings import (
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
-    process_warnings_into_warning_list,
+    process_list_of_warnings_which_auto_clear,
 )
 
 
-def process_all_warnings_for_rota(object_store: ObjectStore, event: Event):
-    warn_on_volunteers_with_skipped_registration(object_store=object_store, event=event)
-    warn_on_all_volunteers_availability_volunteers_missing(
-        object_store=object_store, event=event
-    )
-    warn_on_all_volunteers_availability_sailors_missing(
-        object_store=object_store, event=event
-    )
-    warn_on_all_volunteers_group(object_store=object_store, event=event)
-    warn_on_all_volunteers_unconnected(object_store=object_store, event=event)
-    warn_on_volunteer_qualifications(object_store=object_store, event=event)
-    warn_on_cadets_which_should_have_volunteers(object_store=object_store, event=event)
+def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
+    warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
+    warn_on_all_volunteers_availability_volunteers_missing(interface=interface, event=event)
+    warn_on_all_volunteers_availability_sailors_missing(interface=interface, event=event)
+    warn_on_all_volunteers_group(interface=interface, event=event)
+    warn_on_all_volunteers_unconnected(interface=interface, event=event)
+    warn_on_volunteer_qualifications(interface=interface, event=event)
+    warn_on_cadets_which_should_have_volunteers(interface=interface, event=event)
 
 
 def warn_on_all_volunteers_availability_volunteers_missing(
-    object_store: ObjectStore, event: Event
+    interface: abstractInterface, event: Event
 ):
     warnings = warn_on_all_volunteers_generic(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         warning_function=warn_about_single_volunteer_availablity_at_event_missing_volunteer,
     )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_AVAILABILITY,
@@ -103,65 +100,61 @@ def warn_on_all_volunteers_availability_volunteers_missing(
 
 
 def warn_on_all_volunteers_availability_sailors_missing(
-    object_store: ObjectStore, event: Event
+    interface: abstractInterface, event: Event
 ):
     warnings = warn_on_all_volunteers_generic(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         warning_function=warn_about_single_volunteer_availablity_at_event_missing_sailor,
     )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_AVAILABILITY,
         priority=MEDIUM_PRIORITY,
     )
 
 
-def warn_on_all_volunteers_group(object_store: ObjectStore, event: Event):
+def warn_on_all_volunteers_group(interface: abstractInterface, event: Event):
     warnings = warn_on_all_volunteers_generic(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         warning_function=warn_about_single_volunteer_groups_at_event,
     )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_GROUP,
         priority=LOW_PRIORITY,
     )
 
 
-def warn_on_all_volunteers_unconnected(object_store: ObjectStore, event: Event):
+def warn_on_all_volunteers_unconnected(interface: abstractInterface, event: Event):
     warnings = warn_on_all_volunteers_generic(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         warning_function=warn_about_single_volunteer_with_no_cadet_at_event,
     )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_UNCONNECTED,
         priority=LOWEST_PRIORITY,
     )
 
 
-def warn_on_volunteer_qualifications(object_store: ObjectStore, event: Event):
+def warn_on_volunteer_qualifications(interface: abstractInterface, event: Event):
     warnings = warn_on_all_volunteers_generic(
-        object_store=object_store,
+        object_store=interface.object_store,
         event=event,
         warning_function=warn_about_single_volunteer_with_qualifications,
     )
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_QUALIFICATION,
         priority=HIGH_PRIORITY,
@@ -481,23 +474,22 @@ def warn_about_single_volunteer_with_no_cadet_at_event(
 
 
 def warn_on_cadets_which_should_have_volunteers(
-    object_store: ObjectStore, event: Event
+        interface: abstractInterface, event: Event
 ):
     ## NOT GENERIC!
     active_cadets = get_list_of_active_cadets_at_event(
-        object_store=object_store, event=event
+        object_store=interface.object_store, event=event
     )
     list_of_warnings = [
         warning_for_specific_cadet_at_event(
-            object_store=object_store, event=event, cadet=cadet
+            object_store=interface.object_store, event=event, cadet=cadet
         )
         for cadet in active_cadets
     ]
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=list_of_warnings,
         priority=HIGH_PRIORITY,
         category=CADET_WITHOUT_ADULT,
@@ -588,24 +580,23 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 
 
 def warn_on_volunteers_with_skipped_registration(
-    object_store: ObjectStore, event: Event
+        interface: abstractInterface, event: Event
 ):
     identified_volunteers_at_event = get_list_of_identified_volunteers_at_event(
-        object_store=object_store, event=event
+        object_store=interface.object_store, event=event
     )
     list_of_temporary_row_ids_and_volunteer_index = (
         identified_volunteers_at_event.list_of_row_and_index_temporary_skip()
     )
     warnings = [
         warning_for_specific_temporary_skip_volunteer_id_at_event(
-            object_store=object_store, event=event, row_id_and_index=row_id_and_index
+            object_store=interface.object_store, event=event, row_id_and_index=row_id_and_index
         )
         for row_id_and_index in list_of_temporary_row_ids_and_volunteer_index
     ]
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
-        event=event,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_IDENTITY,
         priority=MEDIUM_PRIORITY,

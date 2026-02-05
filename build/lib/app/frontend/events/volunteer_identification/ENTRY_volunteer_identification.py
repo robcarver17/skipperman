@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.backend.events.event_warnings import (
-    add_new_event_warning_checking_for_duplicate,
+    add_new_event_warning_given_components_checking_for_duplicate,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -251,8 +251,8 @@ def log_very_similar_volunteer(
         % (matching_volunteer, volunteer)
     )
     print(warning)
-    add_new_event_warning_checking_for_duplicate(
-        object_store=interface.object_store,
+    add_new_event_warning_given_components_checking_for_duplicate(
+        interface=interface,
         event=get_event_from_state(interface),
         warning=warning,
         category=VOLUNTEER_IDENTITY,

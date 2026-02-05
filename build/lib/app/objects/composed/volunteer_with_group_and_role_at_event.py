@@ -396,8 +396,20 @@ class ListOfVolunteersWithRoleAtEvent(List[VolunteerWithRoleGroupAndTeamAtEvent]
             ]
         )
 
-
 class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
+    Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams]
+):
+
+    def days_and_roles_for_volunteer(
+        self, volunteer: Volunteer
+    ) -> DictOfDaysRolesAndGroupsAndTeams:
+        default = DictOfDaysRolesAndGroupsAndTeams()
+        return self.get(volunteer, default)
+
+    def list_of_volunteers(self) -> ListOfVolunteers:
+        return ListOfVolunteers(list(self.keys()))
+
+class DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     Dict[Volunteer, DictOfDaysRolesAndGroupsAndTeams]
 ):
     def __init__(
@@ -658,17 +670,18 @@ class DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
     def all_dicts_of_roles_and_groups(self) -> List[DictOfDaysRolesAndGroupsAndTeams]:
         return list(self.values())
 
-    def days_and_roles_for_volunteer(
-        self, volunteer: Volunteer
-    ) -> DictOfDaysRolesAndGroupsAndTeams:
-        default = DictOfDaysRolesAndGroupsAndTeams()
-        return self.get(volunteer, default)
-
     @property
     def list_of_volunteers_with_id_in_role_at_event(
         self,
     ) -> ListOfVolunteersWithIdInRoleAtEvent:
         return self._list_of_volunteers_with_id_in_role_at_event
+
+
+    def days_and_roles_for_volunteer(
+        self, volunteer: Volunteer
+    ) -> DictOfDaysRolesAndGroupsAndTeams:
+        default = DictOfDaysRolesAndGroupsAndTeams()
+        return self.get(volunteer, default)
 
     def list_of_volunteers(self) -> ListOfVolunteers:
         return ListOfVolunteers(list(self.keys()))
@@ -698,7 +711,7 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
     list_of_roles_with_skills: DEPRECATE_ListOfRolesWithSkills,
     dict_of_teams_and_roles: DEPRECATE_DictOfTeamsWithRoles,
     list_of_volunteers_with_id_in_role_at_event: ListOfVolunteersWithIdInRoleAtEvent,
-) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
+) -> DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
     event = list_of_events.event_with_id(event_id)
     raw_dict = compose_raw_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
         list_of_volunteers=list_of_volunteers,
@@ -708,7 +721,7 @@ def compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups(
         dict_of_teams_and_roles=dict_of_teams_and_roles,
     )
 
-    return DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
+    return DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups(
         raw_dict=raw_dict,
         event=event,
         dict_of_teams_and_roles=dict_of_teams_and_roles,

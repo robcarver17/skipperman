@@ -78,7 +78,7 @@ def display_list_of_events_with_field_mapping_buttons(
     interface: abstractInterface, exclude_event: Event
 ) -> ListOfLines:
     list_of_events = get_list_of_events_with_field_mapping(
-        interface=interface, exclude_event=exclude_event
+        object_store=interface.object_store, exclude_event=exclude_event
     )
     list_of_event_descriptions = list_of_events.list_of_event_descriptions
     list_with_buttons = [
@@ -125,7 +125,7 @@ def clone_field_mapping_for_selected_event_and_return_message(
 
     
     save_field_mapping_for_event(
-        object_store=interface.object_store, event=current_event, mapping=mapping
+        interface=interface, event=current_event, mapping=mapping
     )
     interface.DEPRECATE_flush_and_clear()
 

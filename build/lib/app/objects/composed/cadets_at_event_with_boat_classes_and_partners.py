@@ -224,7 +224,30 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
         )
 
 class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
-    pass
+    def unique_sorted_list_of_boat_classes_at_event(self, sorted_list_of_boat_classes: ListOfBoatClasses):
+        boat_classes_for_cadets = [
+            dict_of_days_and_boat_classes.unique_list_of_boat_classes()
+            for dict_of_days_and_boat_classes in self.values()
+        ]
+        boat_classes_across_cadets = flatten(boat_classes_for_cadets)
+
+        sorted_list = [
+            boat_class
+            for boat_class in sorted_list_of_boat_classes
+            if boat_class in boat_classes_across_cadets
+        ]
+
+        return ListOfBoatClasses(sorted_list)
+
+    def boat_classes_and_partner_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> DictOfDaysBoatClassAndPartners:
+        if default is arg_not_passed:
+            default = DictOfDaysBoatClassAndPartners()
+        return self.get(cadet, default)
+
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets(list(self.keys()))
 
 
 class DEPRECATE_DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):

@@ -1,8 +1,7 @@
 from typing import Union, List
 
 from app.backend.club_boats.club_boat_limits import (
-    get_dict_of_club_dinghy_limits,
-    clear_and_set_generic_limit,
+    clear_and_set_generic_limit, get_list_of_boats_and_generic_limits,
 )
 from app.data_access.store.object_store import ObjectStore
 
@@ -33,8 +32,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import RowInTable
-from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies
-from app.objects.composed.club_dinghy_limits import ClubDinghyAndGenericLimit
+from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies, ClubDinghyAndGenericLimit
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 header_text = "List of club dinghies: add, edit or re-order. Re-ordering will cancel any other changes made since saving."
@@ -54,11 +52,7 @@ def display_form_config_club_dinghies_page(interface: abstractInterface) -> Form
 def get_list_of_boats_and_limits(
     object_store: ObjectStore,
 ) -> List[ClubDinghyAndGenericLimit]:
-    dict_of_limits = get_dict_of_club_dinghy_limits(object_store)
-    list_of_boats_and_limits = dict_of_limits.list_of_generic_limits_for_all_boats()
-
-    return list_of_boats_and_limits
-
+    return get_list_of_boats_and_generic_limits(object_store)
 
 def get_row_for_existing_entry(
     entry: ClubDinghyAndGenericLimit, **ignored_kwargs
@@ -139,7 +133,7 @@ def post_form_config_club_dinghies_page(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_config_club_dinghies_page)
 
@@ -155,10 +149,10 @@ def get_modified_dinghy_and_limit_from_form(
         name_of_text_box_for_boat(existing_dinghy_and_limit), default=MISSING_FROM_FORM
     )
 
-    new_limit = interface.value_from_form(
+    new_limit = int(interface.value_from_form(
         get_cell_name_for_boat_limits(existing_dinghy_and_limit),
         default=MISSING_FROM_FORM,
-    )
+    ))
 
     new_hidden = is_radio_yes_or_no(
         interface=interface,
@@ -172,7 +166,6 @@ def get_modified_dinghy_and_limit_from_form(
     modified_boat_and_limits = ClubDinghyAndGenericLimit(
         club_dinghy=ClubDinghy(name=new_dinghy_name, hidden=new_hidden),
         limit=new_limit,
-        hidden=new_hidden,
     )
 
     return modified_boat_and_limits
@@ -183,17 +176,24 @@ def modify_club_dinghy_and_limit(
         existing_object: ClubDinghyAndGenericLimit,
     new_object: ClubDinghyAndGenericLimit,
 ):
-    modify_club_dinghy(
-        object_store=interface.object_store,
-        existing_object=existing_object.club_dinghy,
-        new_object=new_object.club_dinghy,
-    )
-    clear_and_set_generic_limit(
-        object_store=interface.object_store,
-        original_boat=existing_object.club_dinghy,
-        new_boat=new_object.club_dinghy,
-        new_limit=new_object.limit,
-    )
+
+    if existing_object.club_dinghy==new_object.club_dinghy:
+        pass
+    else:
+        modify_club_dinghy(
+            interface=interface,
+            existing_object=existing_object.club_dinghy,
+            new_object=new_object.club_dinghy,
+        )
+
+    if existing_object.limit == new_object.limit:
+        pass
+    else:
+        clear_and_set_generic_limit(
+            interface=interface,
+            original_boat=existing_object.club_dinghy,
+            new_limit=new_object.limit,
+        )
 
 
 def save_from_ordinary_list_of_club_dinghies_and_limits(
@@ -202,6 +202,6 @@ def save_from_ordinary_list_of_club_dinghies_and_limits(
     ## We don't need to do the limits as order doesn't matter - changes to limits will be done in modify
     list_of_club_dinghies = [item.club_dinghy for item in new_list]
     update_list_of_club_dinghies(
-        object_store=interface.object_store,
+        interface=interface,
         updated_list_of_club_dinghies=ListOfClubDinghies(list_of_club_dinghies),
     )

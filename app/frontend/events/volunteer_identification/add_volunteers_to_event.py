@@ -128,7 +128,7 @@ def process_new_volunteer_at_event_with_active_cadets(
     any_issues = len(issues_with_volunteer) > 0
     if any_issues:
         add_list_of_event_warnings(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             new_list_of_warnings=issues_with_volunteer,
         )

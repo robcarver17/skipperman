@@ -31,6 +31,161 @@ class ListOfCadetsWithClothingAtEvent(GenericListOfObjects):
 
 
 class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
+    @property
+    def list_of_cadets(self):
+        return ListOfCadets(list(self.keys()))
+
+    def does_cadet_have_clothing(
+        self,
+        cadet: Cadet,
+    ) -> bool:
+        clothing = self.clothing_for_cadet(cadet, default=missing_data)
+        return not clothing is missing_data
+
+    def as_list(self) -> ListOfCadetsWithClothingAtEvent:
+        return ListOfCadetsWithClothingAtEvent(
+            [
+                CadetWithClothingAtEvent.from_dict_tuple(cadet_with_clothing)
+                for cadet_with_clothing in self.items()
+            ]
+        )
+
+    def sort_by_colour_and_firstname(self) -> "DictOfCadetsWithClothingAtEvent":
+        new_list_of_cadets = []
+        for colour in self.get_colour_options():
+            dict_this_colour = self.filter_for_colour(colour)
+            dict_this_colour_sorted_by_name = dict_this_colour.sort_by_firstname()
+            cadets_this_colour = dict_this_colour_sorted_by_name.list_of_cadets
+            new_list_of_cadets = new_list_of_cadets + cadets_this_colour
+
+        return self.filter_for_list_of_cadets(new_list_of_cadets)
+
+
+    def count_of_size_and_colour(self, size: str, colour: str) -> int:
+        return len(
+            [
+                clothing
+                for clothing in self.values()
+                if clothing.size == size and clothing.colour == colour
+            ]
+        )
+
+    def colours(self):
+        colours = [clothing.colour for clothing in self.values()]
+
+        return colours
+
+    def filter_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
+        raw_dict = dict(
+            [
+                (cadet, self.clothing_for_cadet(cadet))
+                for cadet in list_of_cadets
+                if cadet in self.list_of_cadets
+            ]
+        )
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def filter_for_colour(self, colour: str):
+        raw_dict = dict(
+            [
+                (cadet, clothing)
+                for cadet, clothing in self.items()
+                if clothing.colour == colour
+            ]
+        )
+
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+
+    def remove_if_in_list_of_cadets(self, list_of_cadets: ListOfCadets):
+        raw_dict = dict(
+            [
+                (cadet, clothing)
+                for cadet, clothing in self.items()
+                if cadet not in list_of_cadets
+            ]
+        )
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def filter_for_surname(self, surname: str):
+        raw_dict = dict(
+            [
+                (cadet, clothing)
+                for cadet, clothing in self.items()
+                if cadet.surname == surname
+            ]
+        )
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by(self, sort_by: str):
+        if sort_by == SORT_BY_FIRSTNAME:
+            return self.sort_by_firstname()
+        elif sort_by == SORT_BY_SURNAME:
+            return self.sort_by_surname()
+        elif sort_by == SORT_BY_DOB_ASC:
+            return self.sort_by_dob_asc()
+        elif sort_by == SORT_BY_DOB_DSC:
+            return self.sort_by_dob_desc()
+        elif sort_by == SORT_BY_SIZE:
+            return self.sort_by_size()
+        elif sort_by == SORT_BY_COLOUR:
+            return self.sort_by_colour()
+        else:
+            raise "Sort %s not known" % sort_by
+
+    def sort_by_surname(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[0].surname))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_firstname(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[0].first_name))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_name(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[0].name))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_dob_asc(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[0].date_of_birth))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_dob_desc(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[0], reverse=True))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_size(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[1].size))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def sort_by_colour(self):
+        raw_dict = dict(sorted(self.items(), key=lambda x: x[1].colour))
+        return DictOfCadetsWithClothingAtEvent(raw_dict)
+
+    def get_colour_options(self) -> List[str]:
+        colours = [clothing.colour for clothing in self.values()]
+
+        return list(set(colours))
+
+    def get_clothing_size_options(self) -> List[str]:
+        sizes = [clothing.size for clothing in self.values()]
+
+        return list(set(sizes))
+
+    def change_colour_group_for_cadet(self, cadet: Cadet, colour: str):
+        clothing_for_cadet = self.clothing_for_cadet(cadet)
+        clothing_for_cadet.colour = colour
+        self[cadet] = clothing_for_cadet
+
+    def clothing_for_cadet(
+        self, cadet: Cadet, default=arg_not_passed
+    ) -> ClothingAtEvent:
+        if default is arg_not_passed:
+            default = no_clothing_requirements
+        clothing = self.get(cadet, default)
+
+        return clothing
+
+class DEPRECATE_DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, ClothingAtEvent],
@@ -71,7 +226,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
             ]
         )
 
-    def sort_by_colour_and_firstname(self) -> "DictOfCadetsWithClothingAtEvent":
+    def sort_by_colour_and_firstname(self) -> "DEPRECATE_DictOfCadetsWithClothingAtEvent":
         new_list_of_cadets = []
         for colour in self.get_colour_options():
             dict_this_colour = self.filter_for_colour(colour)
@@ -160,7 +315,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
                 list_of_ids
             )
         )
-        return DictOfCadetsWithClothingAtEvent(
+        return DEPRECATE_DictOfCadetsWithClothingAtEvent(
             raw_dict=raw_dict,
             list_of_cadets_with_clothing_and_ids=subset_list_of_cadets_with_clothing_and_ids,
         )
@@ -275,7 +430,7 @@ def compose_dict_of_cadets_with_clothing_at_event(
             for cadet_with_clothing in list_of_cadets_with_clothing_and_ids
         ]
     )
-    return DictOfCadetsWithClothingAtEvent(
+    return DEPRECATE_DictOfCadetsWithClothingAtEvent(
         raw_dict=raw_dict,
         list_of_cadets_with_clothing_and_ids=list_of_cadets_with_clothing_and_ids,
     )

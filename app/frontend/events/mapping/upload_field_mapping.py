@@ -79,7 +79,7 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
 
 
         save_field_mapping_for_event(
-            object_store=interface.object_store, event=event, mapping=mapping
+           interface=interface, event=event, mapping=mapping
         )
         interface.DEPRECATE_flush_and_clear()
 

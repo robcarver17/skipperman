@@ -32,6 +32,7 @@ from app.objects.events import Event
 from app.objects.utilities.exceptions import missing_data, MISSING_FROM_FORM
 from app.objects.boat_classes import no_boat_class
 
+### FIXME NEEDS REFACTOR
 
 @dataclass
 class CadetWithDinghySailNumberBoatClassAndPartner:
@@ -135,7 +136,7 @@ def convert_single_input_to_cadet_with_class_and_partner_at_event(
         day=day,
     )
 
-    return CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
+    new_update= CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
         cadet=cadet,
         boat_class=boat_class,
         partner_cadet=two_handed_partner,
@@ -144,6 +145,8 @@ def convert_single_input_to_cadet_with_class_and_partner_at_event(
         club_dinghy=club_dinghy,
         group=group,
     )
+
+    return new_update
 
 
 def get_boat_class_from_str(

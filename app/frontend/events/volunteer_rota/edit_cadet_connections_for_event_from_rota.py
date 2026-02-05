@@ -150,7 +150,7 @@ def delete_event_connection_given_form(interface: abstractInterface):
     volunteer = get_volunteer_from_state(interface)
 
     delete_cadet_connection(
-        object_store=interface.object_store, cadet=cadet, volunteer=volunteer
+        interface=interface, cadet=cadet, volunteer=volunteer
     )
 
 

@@ -1,4 +1,4 @@
-from app.backend.events.event_warnings import add_new_event_warning_checking_for_duplicate
+from app.backend.events.event_warnings import add_new_event_warning_given_components_checking_for_duplicate
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import RegistrationDataForVolunteerAtEvent
 from app.objects.event_warnings import VOLUNTEER_AVAILABILITY
@@ -79,11 +79,11 @@ def get_volunteer_at_event_registration_data_from_form_contents(
         message = "Volunteer %s did not select any days in form" % volunteer.name
         interface.log_error(message)
 
-        add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                     event=get_event_from_state(interface),
-                                                     warning=message, category=VOLUNTEER_AVAILABILITY,
-                                                     priority=MEDIUM_PRIORITY,
-                                                     auto_refreshed=False)  ## warning will sit on system until cleared
+        add_new_event_warning_given_components_checking_for_duplicate(object_store=interface.object_store,
+                                                                      event=get_event_from_state(interface),
+                                                                      warning=message, category=VOLUNTEER_AVAILABILITY,
+                                                                      priority=MEDIUM_PRIORITY,
+                                                                      auto_refreshed=False)  ## warning will sit on system until cleared
 
 
     any_other_information = get_any_other_information(
@@ -148,10 +148,10 @@ def log_any_alert_warnings(interface: abstractInterface, volunteer: Volunteer):
     if len(alert)==0:
         return
 
-    add_new_event_warning_checking_for_duplicate(object_store=interface.object_store,
-                                                 event=get_event_from_state(interface),
-                                                 warning=alert, category=VOLUNTEER_AVAILABILITY, priority=MEDIUM_PRIORITY,
-                                                 auto_refreshed=False)  ## warning will sit on system until cleared
+    add_new_event_warning_given_components_checking_for_duplicate(object_store=interface.object_store,
+                                                                  event=get_event_from_state(interface),
+                                                                  warning=alert, category=VOLUNTEER_AVAILABILITY, priority=MEDIUM_PRIORITY,
+                                                                  auto_refreshed=False)  ## warning will sit on system until cleared
 
 
 def get_alert_warning_from_form(interface: abstractInterface, volunteer: Volunteer):

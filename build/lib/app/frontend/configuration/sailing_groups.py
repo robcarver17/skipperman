@@ -76,7 +76,7 @@ def post_form_config_sailing_groups(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_config_sailing_groups)
 
@@ -160,5 +160,5 @@ def get_group_from_form(
 
 def save_from_ordinary_list_of_groups( interface: abstractInterface, new_list: List[Group]):
     update_list_of_groups(
-        object_store=interface.object_store, updated_list_of_groups=ListOfGroups(new_list)
+        interface=interface, updated_list_of_groups=ListOfGroups(new_list)
     )

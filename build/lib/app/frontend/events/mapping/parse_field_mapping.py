@@ -64,7 +64,7 @@ def add_WA_and_skipperman_field_to_mapping(interface: abstractInterface):
     
     try:
         save_new_mapping_pairing(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             skipperman_field=skipperman_field,
             wa_field=wa_field,
@@ -76,7 +76,7 @@ def add_WA_and_skipperman_field_to_mapping(interface: abstractInterface):
         )
 
     clear_current_skipperman_field_to_add_from_state(interface)
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def get_wa_field_mapping_from_form(interface: abstractInterface):
@@ -110,7 +110,7 @@ def delete_mapping(interface: abstractInterface):
     )
     try:
         delete_mapping_given_skipperman_field(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             skipperman_field=skipperman_field,
         )
@@ -118,4 +118,4 @@ def delete_mapping(interface: abstractInterface):
         interface.log_error(
             "Error deleting mapping for %s, %s" % (skipperman_field, str(e))
         )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()

@@ -36,9 +36,9 @@ app/backend/clothing/dict_of_clothing_for_event.py
 app/backend/clothing/summarise_clothing.py
 app/backend/clothing/../../data_access/configuration/configuration.yaml
 app/backend/club_boats/__init__.py
-app/backend/club_boats/cadets_with_club_dinghies_at_event.py
 app/backend/club_boats/club_boat_limits.py
 app/backend/club_boats/list_of_club_dinghies.py
+app/backend/club_boats/people_with_club_dinghies_at_event.py
 app/backend/club_boats/summary.py
 app/backend/club_boats/../../data_access/configuration/configuration.yaml
 app/backend/events/__init__.py
@@ -249,6 +249,7 @@ app/data_access/sql/cadet_food.py
 app/data_access/sql/cadets.py
 app/data_access/sql/cadets_at_event.py
 app/data_access/sql/cadets_with_qualifications.py
+app/data_access/sql/cadets_with_ticks.py
 app/data_access/sql/club_dinghies.py
 app/data_access/sql/club_dinghies_with_people_at_event.py
 app/data_access/sql/club_dinghy_limits.py
@@ -652,7 +653,6 @@ app/objects/composed/cadets_with_all_event_info.py
 app/objects/composed/cadets_with_all_event_info_functions.py
 app/objects/composed/cadets_with_qualifications.py
 app/objects/composed/clothing_at_event.py
-app/objects/composed/club_dinghy_limits.py
 app/objects/composed/committee.py
 app/objects/composed/dict_of_previous_cadet_groups.py
 app/objects/composed/dict_of_volunteer_role_targets.py

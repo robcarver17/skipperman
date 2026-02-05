@@ -13,14 +13,15 @@ from app.data_access.store.object_definitions import \
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, )
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfEventAllocations, )
 from app.objects.composed.dict_of_previous_cadet_groups import \
     DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds
 from app.objects.events import Event, ListOfEvents
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group, missing_group_display_only
+## FIXME REFACTOR
 
-
+## EXTERNAL
 def get_list_of_previous_groups_as_str(
     object_store: ObjectStore,
     event_to_exclude: Event,
@@ -46,6 +47,7 @@ def get_list_of_previous_groups_as_str(
 
     return list_of_groups_as_str
 
+## external
 def get_dict_of_all_event_allocations_for_single_cadet(
     object_store: ObjectStore,
     cadet: Cadet,
@@ -53,6 +55,7 @@ def get_dict_of_all_event_allocations_for_single_cadet(
     return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_all_event_allocations_for_single_cadet,
                             cadet_id=cadet.id)
 
+## EXTERNAL
 def DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
     object_store: ObjectStore,
     cadet: Cadet,
@@ -71,26 +74,7 @@ def DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
     )
 
 
-class DictOfEventAllocations(Dict[Cadet, Dict[Event, str]]):
-    def __init__(
-        self, raw_dict: Dict[Cadet, Dict[Event, str]], list_of_events: ListOfEvents
-    ):
-        super().__init__(raw_dict)
-        self._list_of_events = list_of_events
-
-    def previous_group_names_for_cadet_as_list(self, cadet: Cadet):
-        previous_groups_for_cadet_by_event = self.get(cadet)
-        ## ordered by event already
-        return list(previous_groups_for_cadet_by_event.values())
-
-    @property
-    def list_of_events(self) -> ListOfEvents:
-        return self._list_of_events
-
-
-
-
-
+## external
 def get_dict_of_event_allocations_given_list_of_events_from_stored_data(
     object_store: ObjectStore,
     list_of_cadets: ListOfCadets,
@@ -165,7 +149,7 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
 
     return dict_of_previous_groups
 
-
+## external
 def update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(object_store: ObjectStore):
     dict_of_group_names_for_events_and_cadets_persistent_version =get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store)
     list_of_cadets = get_list_of_cadets(object_store)

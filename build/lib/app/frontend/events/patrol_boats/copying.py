@@ -2,7 +2,7 @@ from app.backend.patrol_boats.changes import (
     copy_across_earliest_allocation_of_boats_at_event,
     copy_across_boats_at_event,
 )
-from app.backend.patrol_boats.copying import copy_patrol_boat_labels_across_event
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import copy_patrol_boat_labels_across_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )

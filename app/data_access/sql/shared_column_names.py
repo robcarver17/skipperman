@@ -108,6 +108,7 @@ TICK_SUBSTAGE_ID = "tick_substage_id"
 
 TICK_SHEET_ITEM_NAME = "tick_sheet_item_name"
 TICK_SHEET_ITEM_ID = "tick_sheet_item_id"
+TICK_VALUE = "tick_value"
 
 VOLUNTEER_TARGET_NUMBER = "volunteer_target_number"
 

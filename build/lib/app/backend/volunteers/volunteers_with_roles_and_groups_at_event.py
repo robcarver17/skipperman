@@ -12,7 +12,7 @@ from app.data_access.store.object_definitions import (
     object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
 )
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     RoleAndGroupAndTeam,
     RoleAndGroup, DictOfDaysRolesAndGroups,
 )
@@ -132,13 +132,13 @@ def get_role_and_groups_for_event_and_volunteer(
 
 def get_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore, event: Event
-) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
-    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.read, event_id=event.id)
+) -> DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
+    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_dict_of_volunteers_with_roles_and_groups_at_event, event_id=event.id)
 
 
 def update_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore,
-    dict_of_volunteers_with_roles_and_groups_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    dict_of_volunteers_with_roles_and_groups_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 ):
     return object_store.DEPRECATE_update(
         object_definition=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,

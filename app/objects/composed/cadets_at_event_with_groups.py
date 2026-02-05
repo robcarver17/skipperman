@@ -211,6 +211,88 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
         return self.get(cadet, default)
 
+    def list_of_cadets_in_group_on_day(self, day: Day, group: Group):
+        return ListOfCadets(
+            [
+                cadet
+                for cadet, days_and_groups in self.items()
+                if days_and_groups.group_on_day(day) == group
+            ]
+        )
+
+    def get_list_of_cadets_with_group_for_specific_day(
+        self, day: Day, include_unallocated_cadets: bool
+    ) -> ListOfCadetsWithGroupOnDay:
+        list_of_cadets_by_group = []
+        list_of_cadets = self.list_of_cadets.sort_by_name()
+        for cadet in list_of_cadets:
+            days_and_groups_for_cadet = self.get_days_and_groups_for_cadet(cadet)
+            group_on_day = days_and_groups_for_cadet.group_on_day(day)
+            list_of_cadets_by_group.append(
+                CadetWithGroupOnDay(cadet=cadet, group=group_on_day, day=day)
+            )
+
+        list_of_cadets_by_group = ListOfCadetsWithGroupOnDay(list_of_cadets_by_group)
+        if not include_unallocated_cadets:
+            list_of_cadets_by_group = list_of_cadets_by_group.remove_unallocated()
+
+        return list_of_cadets_by_group
+
+    def subset_for_day(self, day: Day) -> Dict[Cadet, Group]:
+        raw_dict = dict(
+            [
+                (cadet, days_and_groups.group_on_day(day))
+                for cadet, days_and_groups in self.items()
+            ]
+        )
+        dict_without_unallocated = dict(
+            [
+                (cadet, group)
+                for cadet, group in raw_dict.items()
+                if not group.is_unallocated
+            ]
+        )
+
+        return dict_without_unallocated
+
+
+    def all_groups_at_event(self) -> ListOfGroups:
+        all_days_and_groups = self.days_and_groups()
+        list_of_groups = [
+            day_and_group.list_of_groups for day_and_group in all_days_and_groups
+        ]
+        list_of_groups = flatten(list_of_groups)
+
+        unique_list = list(set(list_of_groups))
+        all_groups = self.list_of_groups
+        list_of_groups = [group for group in all_groups if group in unique_list]
+
+        return ListOfGroups(list_of_groups)
+
+    def days_and_groups(self) -> List[DaysAndGroups]:
+        return list(self.values())
+
+
+    def subset_for_list_of_cadets(
+        self, list_of_cadets: ListOfCadets
+    ) -> "DictOfCadetsWithDaysAndGroupsAtEvent":
+        raw_dict = dict(
+            [
+                (cadet, self.get_days_and_groups_for_cadet(cadet))
+                for cadet in list_of_cadets
+            ]
+        )
+
+        return DictOfCadetsWithDaysAndGroupsAtEvent(
+            raw_dict
+        )
+
+
+    @property
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets(list(self.keys()))
+
+
 
 class DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
     def __init__(
@@ -440,3 +522,20 @@ def compose_raw_dict_of_cadets_with_days_and_groups_at_event(
 
 
 GROUP_STR_NAME = "group"
+
+
+class DictOfEventAllocations(Dict[Cadet, Dict[Event, str]]):
+    def __init__(
+        self, raw_dict: Dict[Cadet, Dict[Event, str]], list_of_events: ListOfEvents
+    ):
+        super().__init__(raw_dict)
+        self._list_of_events = list_of_events
+
+    def previous_group_names_for_cadet_as_list(self, cadet: Cadet):
+        previous_groups_for_cadet_by_event = self.get(cadet)
+        ## ordered by event already
+        return list(previous_groups_for_cadet_by_event.values())
+
+    @property
+    def list_of_events(self) -> ListOfEvents:
+        return self._list_of_events

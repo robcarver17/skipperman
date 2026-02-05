@@ -5,7 +5,7 @@ from app.backend.cadets.list_of_cadets import (
     get_list_of_very_similar_cadets_from_data,
 )
 from app.backend.events.event_warnings import (
-    add_new_event_warning_checking_for_duplicate,
+    add_new_event_warning_given_components_checking_for_duplicate,
 )
 from app.objects.abstract_objects.abstract_buttons import Button
 
@@ -233,8 +233,8 @@ def log_when_cadet_matched_with_similar(
         very_similar_cadet,
         cadet,
     )
-    add_new_event_warning_checking_for_duplicate(
-        object_store=interface.object_store,
+    add_new_event_warning_given_components_checking_for_duplicate(
+        interface=interface,
         event=get_event_from_state(interface),
         warning=warning,
         category=CADET_IDENTITY,
@@ -364,8 +364,8 @@ def log_warning_when_skipping_permanently(
 
     warning = "Permanently skipping cadet %s row id %s" % (cadet.name, row_id)
 
-    add_new_event_warning_checking_for_duplicate(
-        object_store=interface.object_store,
+    add_new_event_warning_given_components_checking_for_duplicate(
+        interface=interface,
         event=get_event_from_state(interface),
         warning=warning,
         category=CADET_REGISTRATION,

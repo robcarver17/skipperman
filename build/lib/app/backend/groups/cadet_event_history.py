@@ -19,6 +19,7 @@ from app.objects.composed.cadets_at_event_with_groups import (
 from app.objects.events import Event, ListOfEvents
 from app.objects.utilities.exceptions import missing_data
 
+## FIXME REFACTOR
 
 def write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename(
     object_store: ObjectStore,

@@ -52,6 +52,19 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         return roles_for_team
 
 
+    def list_of_teams_and_index_given_role(
+        self, role: RoleWithSkills
+    ) -> ListOfTeamsAndIndices:
+        list_of_teams = [
+            team
+            for team, list_of_roles_with_skills in self.items()
+            if role in list_of_roles_with_skills
+        ]
+        list_of_teams_and_index = [
+            TeamAndIndex(team, self[team].index(role)) for team in list_of_teams
+        ]
+        return ListOfTeamsAndIndices(list_of_teams_and_index)
+
 class DEPRECATE_DictOfTeamsWithRoles(Dict[Team, DEPRECATE_ListOfRolesWithSkills]):
     def __init__(
         self,

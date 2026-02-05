@@ -12,7 +12,7 @@ from app.data_access.configuration.fixed import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.membership_status import current_member
 
-from app.backend.cadets.list_of_cadets import  get_sorted_list_of_cadets_from_raw_data
+from app.backend.cadets.list_of_cadets import  get_sorted_list_of_cadets
 from app.objects.composed.committee import ListOfCadetsOnCommittee
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -24,7 +24,7 @@ from app.objects.utilities.exceptions import MissingData
 def get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    all_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
+    all_cadets = get_sorted_list_of_cadets(object_store)
     list_of_committee_members = get_list_of_cadets_on_committee(object_store)
 
     list_of_cadets = ListOfCadets(
@@ -72,7 +72,7 @@ def get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_brac
 def get_list_of_cadets_members_but_not_on_committee_in_right_age_bracket(
     object_store: ObjectStore,
 ) -> ListOfCadets:
-    list_of_cadets = get_sorted_list_of_cadets_from_raw_data(object_store)
+    list_of_cadets = get_sorted_list_of_cadets(object_store)
 
     list_of_cadets = ListOfCadets(
         [

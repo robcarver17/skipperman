@@ -1,12 +1,13 @@
 from typing import List
 
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-    get_dict_of_people_and_club_dinghies_at_event,
+from app.backend.club_boats.people_with_club_dinghies_at_event import (
+    get_dict_of_volunteers_and_club_dinghies_at_event,
 )
 from app.backend.events.event_warnings import (
     get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority,
-    process_warnings_into_warning_list,
+    process_list_of_warnings_which_auto_clear,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.event_warnings import (
     ListOfEventWarnings,
     VOLUNTEER_QUALIFICATION,
@@ -34,21 +35,21 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 
 
-def process_all_warnings_for_patrol_boats(object_store: ObjectStore, event: Event):
-    warn_on_volunteer_qualifications(object_store=object_store, event=event)
-    warn_on_pb2_drivers(object_store=object_store, event=event)
-    warn_on_double_booking(object_store=object_store, event=event)
+def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: Event):
+    warn_on_volunteer_qualifications(interface=interface, event=event)
+    warn_on_pb2_drivers(interface=interface, event=event)
+    warn_on_double_booking(interface=interface, event=event)
 
 
-def warn_on_double_booking(object_store: ObjectStore, event: Event):
+def warn_on_double_booking(interface: abstractInterface,  event: Event):
     list_of_warnings = []
     for day in event.days_in_event():
-        list_of_warnings += warn_on_double_booking_on_day(object_store, event, day)
+        list_of_warnings += warn_on_double_booking_on_day(interface.object_store, event, day)
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=list_of_warnings,
         category=DOUBLE_BOOKED,
@@ -59,7 +60,7 @@ def warn_on_double_booking(object_store: ObjectStore, event: Event):
 def warn_on_double_booking_on_day(
     object_store: ObjectStore, event: Event, day: Day
 ) -> List[str]:
-    dict_of_people_with_club_dinghies = get_dict_of_people_and_club_dinghies_at_event(
+    dict_of_people_with_club_dinghies = get_dict_of_volunteers_and_club_dinghies_at_event(
         object_store=object_store, event=event
     )
     dict_of_voluteers_at_event_with_patrol_boats = (
@@ -86,7 +87,8 @@ def warn_on_double_booking_on_day(
     return warnings
 
 
-def warn_on_pb2_drivers(object_store: ObjectStore, event: Event):
+def warn_on_pb2_drivers(interface: abstractInterface,  event: Event):
+    object_store=interface.object_store
     list_of_boats_at_event = load_list_of_patrol_boats_at_event(
         object_store=object_store, event=event
     )
@@ -98,8 +100,8 @@ def warn_on_pb2_drivers(object_store: ObjectStore, event: Event):
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
-    process_warnings_into_warning_list(
-        object_store=object_store,
+    process_list_of_warnings_which_auto_clear(
+        interface=interface,
         event=event,
         list_of_warnings=list_of_warnings,
         category=MISSING_DRIVER,

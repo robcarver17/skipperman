@@ -91,7 +91,7 @@ def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface
         event = get_event_from_state(interface)
 
         verify_and_if_required_add_wa_mapping(
-            object_store=interface.object_store, filename=temp_filename, event=event
+            interface=interface, filename=temp_filename, event=event
         )
         save_staged_file_of_raw_event_upload_with_event_id(temp_filename, event=event)
     except Exception as e:

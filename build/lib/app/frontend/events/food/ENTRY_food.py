@@ -77,7 +77,7 @@ def post_form_view_for_food_requirements(
     
     if save_menu_button.pressed(last_button_pressed):
         save_food_data_in_form(interface)
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
 
     elif download_food_button.pressed(last_button_pressed):
         return download_food_data(interface)
@@ -85,7 +85,7 @@ def post_form_view_for_food_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    return display_form_view_for_food_requirements(interface)
+    return interface.get_new_form_given_function(display_form_view_for_food_requirements)
 
 
 def previous_form(interface: abstractInterface):

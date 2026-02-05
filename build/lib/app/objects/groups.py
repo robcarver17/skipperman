@@ -47,10 +47,10 @@ def sorted_locations(passed_list_of_locations: List[GroupLocation]):
 @dataclass
 class Group(GenericSkipperManObjectWithIds):
     name: str
-    location: GroupLocation
-    protected: bool
-    hidden: bool
-    streamer: str
+    location: GroupLocation = lake_training_group_location
+    protected: bool = False
+    hidden: bool = False
+    streamer: str = ""
     id: str = arg_not_passed
 
     def __eq__(self, other):
@@ -114,23 +114,6 @@ class ListOfGroups(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Group
 
-    def add(self, group_name: str):
-        try:
-            assert group_name not in self.list_of_names()
-        except:
-            raise Exception(
-                "Can't add duplicate sailing group %s already exists" % group_name
-            )
-        group = Group(
-            group_name,
-            protected=False,
-            location=lake_training_group_location,
-            hidden=False,
-            streamer=""
-        )
-        group.id = self.next_id()
-
-        self.append(group)
 
     def group_with_id(self, group_id: str, default=arg_not_passed):
         if group_id == unallocated_group_id:
@@ -138,27 +121,6 @@ class ListOfGroups(GenericListOfObjectsWithIds):
 
         return self.object_with_id(group_id, default=default)
 
-    def replace(self, existing_group: Group, new_group: Group):
-        existing_idx = self.idx_given_name(group_name=existing_group.name)
-        new_group.id = existing_group.id
-        self[existing_idx] = new_group
-
-    def idx_given_name(self, group_name: str, default=arg_not_passed):
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self, attr_name="name", attr_value=group_name, default=default
-        )
-
-    def matches_name(self, group_name: str, default=arg_not_passed):
-        if group_name == unallocated_group.name:
-            return unallocated_group
-
-        return get_unique_object_with_attr_in_list(
-            some_list=self, attr_name="name", attr_value=group_name, default=default
-        )
-
-    def check_for_duplicated_names(self):
-        list_of_names = self.list_of_names()
-        assert len(list_of_names) == len(set(list_of_names))
 
     def has_lake_group(self):
         return self.contains_specific_location(lake_training_group_location)

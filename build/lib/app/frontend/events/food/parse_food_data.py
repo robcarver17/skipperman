@@ -37,7 +37,6 @@ from app.frontend.forms.form_utils import get_food_requirements_from_form
 
 def save_food_data_in_form(interface: abstractInterface):
     save_cadet_food_data_in_form(interface)
-
     save_volunteer_food_data_in_form(interface)
 
 
@@ -77,10 +76,11 @@ def save_cadet_food_data_for_cadet(
         interface.log_error("Food for %s missing from form" % cadet.name)
         return
 
-    print("vol food for %s %s" % (cadet, new_food_requirements))
+    if existing_food_requirements == new_food_requirements:
+        return
 
     update_cadet_food_data(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         cadet=cadet,
         new_food_requirements=new_food_requirements,
@@ -126,9 +126,12 @@ def save_volunteer_food_data_for_volunteer(
     if new_food_requirements is MISSING_FROM_FORM:
         interface.log_error("food for %s missing from form" % volunteer.name)
         return
-    print("vol food for %s %s" % (volunteer, new_food_requirements))
+
+    if new_food_requirements == existing_food_requirements:
+        return
+
     update_volunteer_food_data(
-        object_store=interface.object_store,
+        interface=interface,
         volunteer=volunteer,
         new_food_requirements=new_food_requirements,
         event=event,

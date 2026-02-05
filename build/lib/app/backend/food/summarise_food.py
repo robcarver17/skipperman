@@ -102,7 +102,7 @@ def summarise_food_data_by_day_for_cadets(
         for day in event.days_in_event():
             list_to_count = [
                 1
-                for cadet in cadets_with_food_requirements.list_of_cadets()
+                for cadet in cadets_with_food_requirements.list_of_cadets
                 if cadet_has_right_age_and_is_available_on_day(
                     cadet=cadet,
                     day=day,
@@ -190,7 +190,7 @@ def count_cadets_with_right_age(
 ):
     list_to_count = [
         1
-        for cadet in cadets_with_food_requirements.list_of_cadets()
+        for cadet in cadets_with_food_requirements.list_of_cadets
         if cadet_has_right_age(
             cadet=cadet,
             age_window=age_window,

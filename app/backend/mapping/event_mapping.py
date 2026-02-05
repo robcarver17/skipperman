@@ -1,6 +1,7 @@
 from app.data_access.xls_and_csv import load_spreadsheet_file_and_clear_nans
 from app.backend.wild_apricot.load_wa_file import get_event_id_from_wa_df
 from app.backend.events.list_of_events import get_event_from_id
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.events import Event
 from app.objects.utilities.exceptions import FileError
@@ -13,22 +14,17 @@ from app.data_access.store.object_definitions import (
 from app.data_access.store.object_store import ObjectStore
 
 
-def clear_wa_event_id_mapping(object_store: ObjectStore, event: Event):
-    wa_mapping_data = get_event_id_mapping_for_wa_files(object_store)
-    wa_mapping_data.clear_mapping_for_event(event.id)
-    update_event_id_mapping_for_wa_files(
-        list_of_wa_event_id_maps=wa_mapping_data, object_store=object_store
-    )
+def clear_wa_event_id_mapping(interface: abstractInterface, event: Event):
+    interface.update(
+        interface.object_store.data_api.data_wa_event_mapping.clear_wa_event_id_mapping, event_id=event.id)
 
 
 def is_event_mapped_with_wa_id(object_store: ObjectStore, event: Event) -> bool:
-    wa_mapping_data = get_event_id_mapping_for_wa_files(object_store)
-    return wa_mapping_data.is_event_in_mapping_list(event_id=event.id)
+    return object_store.data_api.data_wa_event_mapping.is_event_mapped_with_wa_id(event_id=event.id)
 
 
 def is_wa_id_in_mapping_list(object_store: ObjectStore, wa_id: str) -> bool:
-    wa_mapping_data = get_event_id_mapping_for_wa_files(object_store)
-    return wa_mapping_data.is_wa_id_in_mapping_list(wa_id)
+    return object_store.data_api.data_wa_event_mapping.is_wa_id_in_mapping_list(wa_id=wa_id)
 
 
 def get_wa_id_for_event(object_store: ObjectStore, event: Event) -> str:
@@ -56,18 +52,18 @@ def verify_file_has_correct_wa_id(
 
 
 def verify_and_if_required_add_wa_mapping(
-    object_store: ObjectStore, filename: str, event: Event
+    interface: abstractInterface, filename: str, event: Event
 ):
     wa_as_df = load_spreadsheet_file_and_clear_nans(filename)
     wa_id = get_event_id_from_wa_df(wa_as_df=wa_as_df)
 
     is_new_event = confirm_correct_wa_mapping_and_return_true_if_new_event(
-        object_store=object_store, wa_id=wa_id, event=event
+        object_store=interface.object_store, wa_id=wa_id, event=event
     )
 
     # Add the WA/Event id mapping to the relevant table unless we are updating an existing event
     if is_new_event:
-        add_wa_to_event_mapping(object_store=object_store, event=event, wa_id=wa_id)
+        add_wa_to_event_mapping(interface=interface, event=event, wa_id=wa_id)
 
 
 def confirm_correct_wa_mapping_and_return_true_if_new_event(
@@ -118,22 +114,16 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     return True
 
 
-def add_wa_to_event_mapping(object_store: ObjectStore, event: Event, wa_id: str):
-    wa_mapping_data = get_event_id_mapping_for_wa_files(object_store)
-    wa_mapping_data.add_event(event_id=event.id, wa_id=wa_id)
-    update_event_id_mapping_for_wa_files(
-        object_store=object_store, list_of_wa_event_id_maps=wa_mapping_data
-    )
+def add_wa_to_event_mapping(interface: abstractInterface, event: Event, wa_id: str):
+    try:
+        interface.update(
+        interface.object_store.data_api.data_wa_event_mapping.add_event, event_id=event.id, wa_id=wa_id)
+    except Exception as e:
+        interface.log_error("Error: %s whilst updating event mapping for %s" % (str(e), event))
 
 
 def get_event_id_mapping_for_wa_files(object_store: ObjectStore) -> ListOfWAEventMaps:
-    return object_store.DEPRECATE_get(object_definition_for_wa_event_mapping)
-
-
-def update_event_id_mapping_for_wa_files(
-    object_store: ObjectStore, list_of_wa_event_id_maps: ListOfWAEventMaps
-):
-    object_store.DEPRECATE_update(
-        new_object=list_of_wa_event_id_maps,
-        object_definition=object_definition_for_wa_event_mapping,
+    return object_store.get(
+        object_store.data_api.data_wa_event_mapping.read
     )
+

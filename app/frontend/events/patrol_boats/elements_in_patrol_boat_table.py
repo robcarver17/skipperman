@@ -225,7 +225,7 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
 
     
     process_all_warnings_for_patrol_boats(
-        object_store=interface.object_store, event=event
+        interface=interface, event=event
     )
     interface.DEPRECATE_flush_and_clear()
     all_warnings = get_all_saved_warnings_for_patrol_boats(

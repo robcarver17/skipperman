@@ -1,26 +1,10 @@
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    DEPRECATE_DictOfCadetsAndBoatClassAndPartners, DictOfCadetsAndBoatClassAndPartners,
+ DictOfCadetsAndBoatClassAndPartners,
 )
 from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_cadets_with_ids_and_boat_classes_at_event,
-    object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
-)
-from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
-)
-
-
-def DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
-    object_store: ObjectStore, event: Event
-) -> DEPRECATE_DictOfCadetsAndBoatClassAndPartners:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
-        event_id=event.id,
-    )
 
 
 def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
@@ -30,15 +14,6 @@ def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
                             event=event)
 
 
-def DEPRECATE_update_dict_of_cadets_and_boat_classes_and_partners_at_events(
-    object_store: ObjectStore,
-    event: Event,
-    dict_of_cadets_and_boat_classes_and_partners_at_events: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
-):
-    object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
-        event_id=event.id,
-        new_object=dict_of_cadets_and_boat_classes_and_partners_at_events,
-    )
+
 
 

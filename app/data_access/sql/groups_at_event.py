@@ -3,7 +3,7 @@ from typing import Dict, List
 from app.data_access.sql.generic_sql_data import GenericSqlData, int2date, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.events import EVENTS_TABLE
-from app.data_access.sql.groups import GROUPS_TABLE
+from app.data_access.sql.groups import GROUPS_TABLE, SqlDataListOfGroups
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups, CadetIdWithGroup
@@ -20,6 +20,62 @@ INDEX_NAME_CADETS_WITH_GROUP_ID_TABLE = "event_cadet_day"
 
 
 class SqlDataListOfCadetsWithGroups(GenericSqlData):
+    def add_cadet_to_group_on_day(self,
+    event_id:str,
+    cadet_id:str,
+    day:Day,
+    group_id:str,
+
+):
+        if self.is_cadet_in_group_already_on_day(
+            event_id=event_id,
+            cadet_id=cadet_id,
+            day=day
+        ):
+            raise Exception("Cadet already in group on day")
+
+        try:
+            if self.table_does_not_exist(CADETS_WITH_GROUP_ID_TABLE):
+                self.create_table()
+
+            insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?,?,?)" % (
+                    CADETS_WITH_GROUP_ID_TABLE,
+                    EVENT_ID, CADET_ID, DAY, GROUP_ID)
+            self.cursor.execute(insertion,
+                                    (int(event_id), int(cadet_id), day.name, int(group_id)))
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to groups at event table" % str(e1))
+        finally:
+            self.close()
+
+    def is_cadet_in_group_already_on_day(self,  event_id:str,
+    cadet_id:str,
+    day:Day,
+
+):
+
+        if self.table_does_not_exist(CADETS_WITH_GROUP_ID_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' AND %s='%s' ''' % (
+
+                CADETS_WITH_GROUP_ID_TABLE,
+                EVENT_ID, int(event_id),
+                CADET_ID, int(cadet_id),
+                DAY, day.name
+            ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading groups at events" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
     def get_list_of_cadets_in_group(self, event: Event, group: Group) -> ListOfCadets:
         all_group_allocations_at_event = self.get_group_allocations_for_event_active_cadets_only(
             event=event
@@ -29,18 +85,41 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
 
         return cadets_in_group
 
+    def get_dict_of_cadets_with_groups_at_event(self, event_id: str) -> DictOfCadetsWithDaysAndGroupsAtEvent:
+        raw_list = self.read(event_id)
+        new_dict = {}
+        for cadet_ids_with_groups in raw_list:
+            cadet_id = cadet_ids_with_groups.cadet_id
+            day = cadet_ids_with_groups.day
+            group_id = cadet_ids_with_groups.group_id
+            group = self.list_of_groups.group_with_id(group_id)
+            cadet = self.list_of_cadets.cadet_with_id(cadet_id)
+            existing_for_cadet = new_dict.get(cadet, DaysAndGroups())
+            existing_for_cadet[day] = group
+            new_dict[cadet] = existing_for_cadet
+
+        return DictOfCadetsWithDaysAndGroupsAtEvent(new_dict)
+
+    @property
+    def list_of_groups(self) -> ListOfGroups:
+        list_of_groups = getattr(self, "_list_of_groups", None)
+        if list_of_groups is None:
+            self._list_of_groups = list_of_groups = SqlDataListOfGroups(self.db_connection).read()
+
+        return list_of_groups
+
     def get_group_allocations_for_event_active_cadets_only(
     self, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
         return DictOfCadetsWithDaysAndGroupsAtEvent(
             [
                 (self.list_of_cadets.cadet_with_id(cadet_id),
-                 self.days_and_group_at_event_for_cadet(event=event, cadet_id=cadet_id))
+                 self.days_and_group_at_event_for_cadet(event_id=event.id, cadet_id=cadet_id))
                 for cadet_id in self.list_of_active_cadet_ids_at_event(event)
             ]
         )
 
-    def days_and_group_at_event_for_cadet(self, event: Event, cadet_id: str) -> DaysAndGroups:
+    def days_and_group_at_event_for_cadet(self, event_id: str, cadet_id: str) -> DaysAndGroups:
         try:
             cursor = self.cursor
 
@@ -60,7 +139,7 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
                 GROUPS_TABLE, GROUP_ID,
 
                 CADETS_WITH_GROUP_ID_TABLE, EVENT_ID,
-                int(event.id),
+                int(event_id),
 
                 CADETS_WITH_GROUP_ID_TABLE, CADET_ID,
                 int(cadet_id)
@@ -209,7 +288,7 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
             new_dict[event] = current_entry
 
         most_common = dict([
-            (event, days_and_groups.most_common())
+            (event, days_and_groups.most_common().name)
             for event, days_and_groups in new_dict.items()
         ])
 

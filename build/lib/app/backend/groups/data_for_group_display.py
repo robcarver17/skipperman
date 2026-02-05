@@ -20,6 +20,7 @@ from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.groups import unallocated_group
 from app.objects.utilities.utils import all_equal, similar
 
+## FIXME REFACTOR
 
 def get_current_group_name_across_days_or_none_if_different(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet

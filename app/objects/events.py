@@ -80,6 +80,16 @@ class Event(GenericSkipperManObjectWithIds):
         except:
             return "Length of event greater than 7 days"
 
+        try:
+            assert self.end_date>=self.start_date
+        except:
+            return "Event end date before start date"
+
+        try:
+            assert len(self.name)>0
+        except:
+            return "Empty event name"
+
         return ""
 
     @property
@@ -190,7 +200,7 @@ class ListOfEvents(GenericListOfObjectsWithIds):
         exists = event.event_description in self.list_of_event_descriptions
 
         if exists:
-            raise Exception("Event %s already in data" % str(event))
+            raise Exception("Event with same year and name %s already in data" % str(event))
 
     def event_with_description(
         self, event_description: str, default=arg_not_passed

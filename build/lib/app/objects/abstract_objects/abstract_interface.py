@@ -98,6 +98,7 @@ class abstractInterface:
             session_data = copy(self.args_passed)
             self._session_data = session_data
 
+        print("Session data %s" % str(session_data))
         return session_data
 
     @property

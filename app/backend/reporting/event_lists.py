@@ -105,12 +105,12 @@ def event_has_groups(object_store: ObjectStore, event: Event):
 
 
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events,
+    get_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
 
 
 def event_has_cadets_with_boats(object_store: ObjectStore, event: Event):
-    boat_data = DEPRECATE_get_dict_of_cadets_and_boat_classes_and_partners_at_events(
+    boat_data = get_dict_of_cadets_and_boat_classes_and_partners_at_events(
         object_store=object_store, event=event
     )
     return len(boat_data) > 0

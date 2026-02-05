@@ -230,11 +230,11 @@ def process_warning_with_id_from_table(
         return
     if IGNORE in checkboxvalue_list:
         mark_event_warning_with_id_as_ignore(
-            object_store=interface.object_store, event=event, warning_id=warning_id
+            interface=interface, event=event, warning_id=warning_id
         )
     else:
         mark_event_warning_with_id_as_unignore(
-            object_store=interface.object_store, event=event, warning_id=warning_id
+            interface=interface, event=event, warning_id=warning_id
         )
 
 
@@ -245,14 +245,14 @@ def save_multiple_warnings_given_specific_button_pressed(
     event = get_event_from_state(interface)
     if ignore_on:
         mark_all_active_event_warnings_with_priority_and_category_as_ignored(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             priority=priority,
             category=category,
         )
     else:
         mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             priority=priority,
             category=category,

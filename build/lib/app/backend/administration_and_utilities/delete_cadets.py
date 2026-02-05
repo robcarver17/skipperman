@@ -14,10 +14,8 @@ from app.backend.registration_data.identified_cadets_at_event import (
     delete_cadet_from_identified_data_and_return_rows_deleted,
 )
 from app.backend.volunteers.connected_cadets import delete_all_connections_for_cadet
-from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
-from app.objects.utilities.exceptions import missing_data
 
 from app.backend.events.list_of_events import get_list_of_events
 
@@ -26,7 +24,6 @@ def delete_cadet_in_data_and_return_warnings(
     interface: abstractInterface, cadet_to_delete: Cadet
 ) -> list:
     messages = []
-    object_store = interface.object_store
 
     ## list of cadets on committee - just delete
     cadet_was_on_commmittee = delete_cadet_from_committee_data(
@@ -62,6 +59,7 @@ def delete_cadet_in_data_and_return_warnings(
         qual_message = "No qualifications to delete"
 
     messages.append(qual_message)
+
     ## cadets at event attendance
     attendance_at_events_deleted = (
         delete_raw_attendance_for_cadet_and_return_list_of_events(
@@ -90,16 +88,16 @@ def delete_cadet_in_data_and_return_warnings(
         tick_message = "No ticksheet data to delete"
     messages.append(tick_message)
 
-    list_of_events = get_list_of_events(object_store)
+    list_of_events = get_list_of_events(interface.object_store)
     for event in list_of_events:
         event_messages = delete_cadet_from_event_and_return_messages(
-            object_store=object_store,
+            interface=interface,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,
         )
         rows_identified = delete_cadet_from_identified_data_and_return_rows_deleted(
-            object_store=object_store,
+            interface=interface,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,

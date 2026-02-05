@@ -38,6 +38,27 @@ class SqlDataDictOfPeopleAndClubDinghiesAtEvent(
 class SqlDataListOfCadetAtEventWithClubDinghies(
     GenericSqlData
 ):
+    def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
+            self, event_id: str, cadet_id: str
+    ) -> bool:
+        if self.table_does_not_exist(CADETS_AND_CLUB_DINGHIES_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+                CADETS_AND_CLUB_DINGHIES_TABLE,
+                EVENT_ID, int(event_id),
+                CADET_ID, int(cadet_id)))
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadets and dinghies at event" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
     def read_dict_of_cadets_and_club_dinghies_at_event(self, event_id: str) -> DictOfPeopleAndClubDinghiesAtEvent:
         list_of_cadets_at_event_with_dinghies = self.read(event_id)
         new_dict = {}
@@ -45,7 +66,7 @@ class SqlDataListOfCadetAtEventWithClubDinghies(
             cadet = self.list_of_cadets.cadet_with_id(cadet_with_id_and_dinghy.cadet_id)
             day = cadet_with_id_and_dinghy.day
             dinghy = self.list_of_club_dinghies.club_dinghy_with_id(cadet_with_id_and_dinghy.club_dinghy_id)
-            existing_dict_of_days = new_dict.get(cadet, {})
+            existing_dict_of_days = new_dict.get(cadet, DictOfDaysAndClubDinghiesAtEventForPerson())
             existing_dict_of_days[day] = dinghy
             new_dict[cadet] = existing_dict_of_days
 
@@ -167,18 +188,18 @@ INDEX_NAME_VOLUNTEERS_AND_CLUB_DINGHIES_TABLE = "volunteers_and_club_dinghies_ta
 class SqlDataListOfVolunteersAtEventWithClubDinghies(
     GenericSqlData
 ):
-    def read_dict_of_volunteers_and_club_dinghies_at_event(self, event_id: str) -> dict[Volunteer, DictOfDaysAndClubDinghiesAtEventForPerson]:
+    def read_dict_of_volunteers_and_club_dinghies_at_event(self, event_id: str) ->  DictOfPeopleAndClubDinghiesAtEvent:
         list_of_volunteers_at_event_with_dinghies = self.read(event_id)
         new_dict = {}
         for volunteer_with_id_and_dinghy in list_of_volunteers_at_event_with_dinghies:
             volunteer = self.list_of_volunteers.volunteer_with_id(volunteer_with_id_and_dinghy.volunteer_id)
             day = volunteer_with_id_and_dinghy.day
             dinghy = self.list_of_club_dinghies.club_dinghy_with_id(volunteer_with_id_and_dinghy.club_dinghy_id)
-            existing_dict_of_days = new_dict.get(volunteer, {})
+            existing_dict_of_days = new_dict.get(volunteer, DictOfDaysAndClubDinghiesAtEventForPerson())
             existing_dict_of_days[day] = dinghy
             new_dict[volunteer] = existing_dict_of_days
 
-        return new_dict
+        return  DictOfPeopleAndClubDinghiesAtEvent(new_dict)
 
     @property
     def list_of_volunteers(self):

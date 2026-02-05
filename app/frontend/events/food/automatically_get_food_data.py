@@ -122,7 +122,7 @@ def process_update_to_cadet_food_data_if_already_at_event(
         return
 
     remove_food_requirements_for_cadet_at_event(
-        object_store=interface.object_store, event=event, cadet=cadet
+        interface=interface, event=event, cadet=cadet
     )
 
 
@@ -146,7 +146,7 @@ def process_update_to_cadet_food_data_if_new_to_event(
 
     food_requirements = guess_food_requirements_from_food_field(both_food_and_allergies)
     add_new_cadet_with_food_to_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         cadet=cadet,
         food_requirements=food_requirements,
@@ -203,7 +203,7 @@ def process_update_to_volunteer_food_data_if_new_to_event(
         list_of_food_preferences_as_single_str
     )
     add_new_volunteer_with_food_to_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         food_requirements=food_requirements,
         volunteer=volunteer,

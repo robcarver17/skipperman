@@ -5,6 +5,7 @@ from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.backend.registration_data.cadet_registration_data import (
     get_list_of_cadets_with_id_and_registration_data_at_event,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.utilities.exceptions import NoMoreData, DuplicateCadets, missing_data
 
@@ -169,18 +170,13 @@ def mark_row_as_temporarily_skip_cadet(
 
 
 def add_identified_cadet_and_row(
-    object_store: ObjectStore, event: Event, row_id: str, cadet: Cadet
+    interface: abstractInterface, event: Event, row_id: str, cadet: Cadet
 ):
-    identified_cadets_at_event = get_list_of_identified_cadets_at_event(
-        object_store=object_store, event=event
-    )
-    identified_cadets_at_event.add_cadet_and_row_association(
-        cadet_id=cadet.id, row_id=row_id
-    )
-    update_list_of_identified_cadets_at_event(
-        identified_cadets_at_event=identified_cadets_at_event,
-        event=event,
-        object_store=object_store,
+    interface.update(
+        interface.object_store.data_api.data_identified_cadets_at_event.add_identified_cadet_and_row,
+        event_id=event.id,
+        row_id=row_id,
+        cadet_id=cadet.id
     )
 
 
@@ -215,9 +211,8 @@ def cadet_at_event_given_row_id(
 def get_list_of_identified_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfIdentifiedCadetsAtEvent:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_identified_cadets_at_event,
-        event_id=event.id,
+    return object_store.get(
+        object_store.data_api.data_identified_cadets_at_event.read, event_id=event.id
     )
 
 

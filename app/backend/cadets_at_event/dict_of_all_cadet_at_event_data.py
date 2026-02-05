@@ -7,6 +7,7 @@ from app.backend.registration_data.cadet_registration_data import (
 from app.backend.registration_data.identified_cadets_at_event import (
     add_identified_cadet_and_row,
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.utilities.exceptions import arg_not_passed
 
@@ -189,20 +190,21 @@ def cadet_availability_at_event(
 
 
 def add_new_cadet_manually_to_event(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     new_cadet: Cadet,
     event: Event,
 ):
+    object_store = interface.object_store
     new_row = add_empty_row_to_raw_registration_data_and_return_row(
         object_store=object_store, event=event, cadet=new_cadet
     )
 
     add_identified_cadet_and_row(
-        object_store=object_store, event=event, row_id=new_row.row_id, cadet=new_cadet
+        interface=interface, event=event, row_id=new_row.row_id, cadet=new_cadet
     )
 
     add_new_cadet_to_event_from_row_in_registration_data(
-        object_store=object_store,
+        interface=interface,
         event=event,
         row_in_registration_data=new_row,
         cadet=new_cadet,

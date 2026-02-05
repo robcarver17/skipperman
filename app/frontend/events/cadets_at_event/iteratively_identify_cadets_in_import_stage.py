@@ -179,7 +179,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
     )
     
     add_identified_cadet_and_row(
-        object_store=interface.object_store, event=event, row_id=row_id, cadet=cadet
+        interface=interface, event=event, row_id=row_id, cadet=cadet
     )
     interface.DEPRECATE_flush_and_clear()
     ## run recursively until no more data

@@ -6,6 +6,7 @@ from app.backend.registration_data.raw_mapped_registration_data import (
     update_raw_mapped_registration_data,
 )
 from app.data_access.configuration.configuration import local_timezone
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector, Day
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -124,7 +125,7 @@ def get_cadet_at_event(
 
 
 def add_new_cadet_to_event_from_row_in_registration_data(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     row_in_registration_data: RowInRegistrationData,
     cadet: Cadet,
@@ -134,27 +135,20 @@ def add_new_cadet_to_event_from_row_in_registration_data(
     )
 
     add_new_cadet_to_event(
-        object_store=object_store, event=event, cadet_at_event=cadet_at_event
+        interface=interface, event=event, cadet_at_event=cadet_at_event
     )
 
 
 def add_new_cadet_to_event(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     cadet_at_event: CadetWithIdAtEvent,
 ):
-    list_of_cadets_with_id_at_event = (
-        get_list_of_cadets_with_id_and_registration_data_at_event(
-            object_store=object_store, event=event
-        )
+    interface.update(
+        interface.object_store.data_api.data_cadets_at_event.add_new_cadet_to_event,
+        event_id=event.id,
+        cadet_at_event=cadet_at_event
     )
-    list_of_cadets_with_id_at_event.add(cadet_at_event)
-    update_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
-    )
-
 
 def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event

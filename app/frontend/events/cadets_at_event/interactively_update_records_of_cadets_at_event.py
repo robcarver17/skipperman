@@ -313,7 +313,7 @@ def process_update_to_cadet_new_to_event_with_registration_row(
 
     
     add_new_cadet_to_event_from_row_in_registration_data(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         row_in_registration_data=relevant_row,
         cadet=cadet,

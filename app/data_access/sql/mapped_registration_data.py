@@ -16,6 +16,22 @@ INDEX_MAPPED_REGISTRATION_DATA_TABLE = "index_mapped_registration_data_table"
 
 
 class SqlDataMappedRegistrationData(GenericSqlData):
+    def add_row(self, event_id: str,
+                                                row_in_registration_data: RowInRegistrationData):
+
+        try:
+            if self.table_does_not_exist(MAPPED_REGISTRATION_DATA_TABLE):
+                self.create_table()
+
+            self.add_row_without_committing(event_id=event_id,row_in_registration_data=row_in_registration_data)
+
+            self.conn.commit()
+
+        except Exception as e1:
+            raise Exception("Error %s when writing registration data at event# %s" % (str(e1), event_id))
+        finally:
+            self.close()
+
     def read(self, event_id: str) -> RegistrationDataForEvent:
         try:
             if self.table_does_not_exist(MAPPED_REGISTRATION_DATA_TABLE):
@@ -67,29 +83,7 @@ class SqlDataMappedRegistrationData(GenericSqlData):
                                                                               EVENT_ID,
                                                                               int(event_id)))
             for row_in_registration_data in mapped_wa_event:
-                # First special field used to index
-                row_id = str(row_in_registration_data.row_id)
-
-                # Status - 2nd special field
-                registration_status = row_in_registration_data.registration_status
-                insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
-                    MAPPED_REGISTRATION_DATA_TABLE,
-                    ROW_ID, EVENT_ID, REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE)
-                self.cursor.execute(insertion, (
-                    row_id, int(event_id), _REGISTRATION_STATUS, registration_status.name))
-
-                as_str_dict = row_in_registration_data.as_str_dict()
-
-                for key in row_in_registration_data.list_of_keys_excluding_special_keys():
-                    value = copy(as_str_dict[key])
-                    if key in [REGISTRATION_DATE, CADET_DATE_OF_BIRTH]:
-                        value = str(date2int(value))
-
-                    insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
-                        MAPPED_REGISTRATION_DATA_TABLE,
-                        ROW_ID, EVENT_ID, REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE)
-                    self.cursor.execute(insertion, (
-                        str(row_id), int(event_id), key, value))
+                self.add_row_without_committing(event_id=event_id,row_in_registration_data=row_in_registration_data)
 
             self.conn.commit()
 
@@ -98,6 +92,30 @@ class SqlDataMappedRegistrationData(GenericSqlData):
         finally:
             self.close()
 
+    def add_row_without_committing(self, event_id: str, row_in_registration_data: RowInRegistrationData):
+        ## special field
+        row_id = str(row_in_registration_data.row_id)
+
+        # Status - 2nd special field
+        registration_status = row_in_registration_data.registration_status
+        insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
+            MAPPED_REGISTRATION_DATA_TABLE,
+            ROW_ID, EVENT_ID, REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE)
+        self.cursor.execute(insertion, (
+            row_id, int(event_id), _REGISTRATION_STATUS, registration_status.name))
+
+        as_str_dict = row_in_registration_data.as_str_dict()
+
+        for key in row_in_registration_data.list_of_keys_excluding_special_keys():
+            value = copy(as_str_dict[key])
+            if key in [REGISTRATION_DATE, CADET_DATE_OF_BIRTH]:
+                value = str(date2int(value))
+
+            insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
+                MAPPED_REGISTRATION_DATA_TABLE,
+                ROW_ID, EVENT_ID, REGISTRATION_ROW_NAME, REGISTRATION_ROW_VALUE)
+            self.cursor.execute(insertion, (
+                str(row_id), int(event_id), key, value))
 
     def create_table(self):
         table_creation_query = """

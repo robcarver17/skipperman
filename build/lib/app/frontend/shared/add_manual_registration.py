@@ -79,10 +79,10 @@ def add_cadet_to_event_and_return_form(
 
     
     add_new_cadet_manually_to_event(
-        object_store=interface.object_store, event=event, new_cadet=cadet
+        interface=interface, event=event, new_cadet=cadet
     )
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return return_to_allocation_pages(
         interface=interface, calling_function=calling_function

@@ -3,6 +3,7 @@ from typing import List
 
 import pandas as pd
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.membership_status import user_unconfirmed_member
 
@@ -96,6 +97,14 @@ def get_raw_mapped_registration_data(
 ) -> RegistrationDataForEvent:
     return (object_store.get(object_store.data_api.data_registration_data.read, event_id=event.id))
 
+
+def add_row_to_raw_mapped_registration_data( interface: abstractInterface, event: Event, row_in_registration_data: RowInRegistrationData):
+    interface.update(
+        interface.object_store.data_api.data_registration_data.add_row,
+        event_id=event.id,
+        row_in_registration_data=row_in_registration_data
+
+    )
 
 def update_raw_mapped_registration_data(
     object_store: ObjectStore, event: Event, registration_data: RegistrationDataForEvent

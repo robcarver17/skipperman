@@ -21,6 +21,22 @@ ACTIVE_STATUS_NAMES_AS_STR="('%s')" % ("','".join(ACTIVE_STATUS_NAMES))
 
 
 class SqlDataListOfCadetsAtEvent(GenericSqlData):
+    def add_new_cadet_to_event(
+            self,
+            event_id: str,
+            cadet_at_event: CadetWithIdAtEvent,
+    ):
+        try:
+            if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
+                self.create_table()
+
+            self.write_cadet_at_event_without_commit(event_id=event_id, cadet_at_event=cadet_at_event)
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to groups at event table event# %s" % (str(e1), event_id))
+        finally:
+            self.close()
+
     def get_list_of_active_cadets_at_event(
         self, event: Event
     ) -> ListOfCadets:
@@ -127,29 +143,30 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADETS_AT_EVENT_TABLE, EVENT_ID, event_id))
 
             for cadet_at_event in list_of_cadets_at_event:
-                cadet_id = str(cadet_at_event.cadet_id)
-                availability = cadet_at_event.availability.as_str()
-                status = cadet_at_event.status.name
-                data_in_row = cadet_at_event.data_in_row
-                notes = str(cadet_at_event.notes)
-                health = str(cadet_at_event.health)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?, ?,?,?, ?, ?)" % (
-                    CADETS_AT_EVENT_TABLE,
-                    EVENT_ID, CADET_ID, CADET_AVAILABLITY, CADET_REGISTRATION_STATUS, CADET_REGISTRATION_NOTES, CADET_HEALTH)
-                self.cursor.execute(insertion,
-                                    (int(event_id), int(cadet_id), availability, status, notes, health))
-
-                self._write_row_of_registration_data_for_cadet_at_event(cadet_id=cadet_id,
-                                                                        event_id=event_id,
-                                                                        row_in_registration_data=data_in_row)
-
+                self.write_cadet_at_event_without_commit(event_id=event_id, cadet_at_event=cadet_at_event)
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing to groups at event table event# %s" % (str(e1), event_id))
         finally:
             self.close()
 
+    def write_cadet_at_event_without_commit(self, event_id: str, cadet_at_event: CadetWithIdAtEvent):
+        cadet_id = str(cadet_at_event.cadet_id)
+        availability = cadet_at_event.availability.as_str()
+        status = cadet_at_event.status.name
+        data_in_row = cadet_at_event.data_in_row
+        notes = str(cadet_at_event.notes)
+        health = str(cadet_at_event.health)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?, ?,?,?, ?, ?)" % (
+            CADETS_AT_EVENT_TABLE,
+            EVENT_ID, CADET_ID, CADET_AVAILABLITY, CADET_REGISTRATION_STATUS, CADET_REGISTRATION_NOTES, CADET_HEALTH)
+        self.cursor.execute(insertion,
+                            (int(event_id), int(cadet_id), availability, status, notes, health))
+
+        self._write_row_of_registration_data_for_cadet_at_event(cadet_id=cadet_id,
+                                                                event_id=event_id,
+                                                                row_in_registration_data=data_in_row)
 
     def create_table(self):
         table_creation_query = """

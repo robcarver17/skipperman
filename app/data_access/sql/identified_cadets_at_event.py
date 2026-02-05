@@ -9,6 +9,25 @@ INDEX_CADET_IDENTIFIED_AT_EVENT_TABLE = "index_identified_cadets_at_event"
 class SqlDataListOfIdentifiedCadetsAtEvent(
     GenericSqlData
 ):
+    def add_identified_cadet_and_row(
+            self, event_id: str, row_id: str, cadet_id: str
+    ):
+        try:
+            if self.table_does_not_exist(CADET_IDENTIFIED_AT_EVENT_TABLE):
+                self.create_table()
+
+            identified_cadet_at_event = IdentifiedCadetAtEvent(
+                cadet_id=cadet_id,
+                row_id=row_id
+            )
+            self.insert_row_without_commit(event_id=event_id, identified_cadet_at_event=identified_cadet_at_event)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to identified cadets at event table event# %s" % (str(e1), event_id))
+        finally:
+            self.close()
+
     def read(self, event_id: str) -> ListOfIdentifiedCadetsAtEvent:
         try:
             if self.table_does_not_exist(CADET_IDENTIFIED_AT_EVENT_TABLE):
@@ -42,27 +61,29 @@ class SqlDataListOfIdentifiedCadetsAtEvent(
             self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADET_IDENTIFIED_AT_EVENT_TABLE, EVENT_ID, event_id))
 
             for identified_cadet_at_event in list_of_cadets_at_event:
-                cadet_id = int(identified_cadet_at_event.cadet_id)
-                row_id = str(identified_cadet_at_event.row_id)
-
-                ## FIXME: EVENTUALLY REMOVE
-                if cadet_id==OLD_TEMPORARY_SKIP_TEST_CADET_ID:
-                    cadet_id = TEMPORARY_SKIP_TEST_CADET_ID
-
-                insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
-                    CADET_IDENTIFIED_AT_EVENT_TABLE,
-                    EVENT_ID,
-                    CADET_ID,
-                    ROW_ID)
-                self.cursor.execute(insertion,
-                                    (int(event_id), cadet_id, row_id))
-
+                self.insert_row_without_commit(event_id=event_id, identified_cadet_at_event=identified_cadet_at_event)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing to identified cadets at event table event# %s" % (str(e1), event_id))
         finally:
             self.close()
+
+    def insert_row_without_commit(self, event_id: str, identified_cadet_at_event: IdentifiedCadetAtEvent):
+        cadet_id = int(identified_cadet_at_event.cadet_id)
+        row_id = str(identified_cadet_at_event.row_id)
+
+        ## FIXME: EVENTUALLY REMOVE
+        if cadet_id == OLD_TEMPORARY_SKIP_TEST_CADET_ID:
+            cadet_id = TEMPORARY_SKIP_TEST_CADET_ID
+
+        insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
+            CADET_IDENTIFIED_AT_EVENT_TABLE,
+            EVENT_ID,
+            CADET_ID,
+            ROW_ID)
+        self.cursor.execute(insertion,
+                            (int(event_id), cadet_id, row_id))
 
 
     def create_table(self):

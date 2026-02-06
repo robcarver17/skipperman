@@ -33,23 +33,6 @@ class TickSubStagesAsDict(Dict[TickSubStage, ListOfTickSheetItems]):
 
 
 class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict]):
-    def __init__(
-        self,
-        list_of_qualifications: ListOfQualifications,
-        list_of_tick_sheet_items: ListOfTickSheetItems,
-        list_of_tick_sub_stages: ListOfTickSubStages,
-    ):
-        dict_of_items = (
-            create_raw_qualifications_and_tick_items_as_dict_from_underyling(
-                list_of_qualifications=list_of_qualifications,
-                list_of_tick_sub_stages=list_of_tick_sub_stages,
-                list_of_tick_sheet_items=list_of_tick_sheet_items,
-            )
-        )
-        super().__init__(dict_of_items)
-        self.list_of_qualifications = list_of_qualifications
-        self.list_of_tick_sub_stages = list_of_tick_sub_stages
-        self.list_of_tick_sheet_items = list_of_tick_sheet_items
 
     def list_of_substage_names(self):
         list_of_substage_names = []
@@ -201,30 +184,6 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
 
         return substage_id
 
-    @property
-    def list_of_tick_sheet_items(self) -> ListOfTickSheetItems:
-        return self._list_of_tick_sheet_items
-
-    @property
-    def list_of_qualifications(self) -> ListOfQualifications:
-        return self._list_of_qualifications
-
-    @property
-    def list_of_tick_sub_stages(self) -> ListOfTickSubStages:
-        return self._list_of_tick_sub_stages
-
-    @list_of_qualifications.setter
-    def list_of_qualifications(self, list_of_qualifications: ListOfQualifications):
-        self._list_of_qualifications = list_of_qualifications
-
-    @list_of_tick_sheet_items.setter
-    def list_of_tick_sheet_items(self, list_of_tick_sheet_items: ListOfTickSheetItems):
-        self._list_of_tick_sheet_items = list_of_tick_sheet_items
-
-    @list_of_tick_sub_stages.setter
-    def list_of_tick_sub_stages(self, list_of_tick_sub_stages: ListOfTickSubStages):
-        self._list_of_tick_sub_stages = list_of_tick_sub_stages
-
 
 def create_qualifications_and_tick_items_as_dict_from_underyling(
     list_of_qualifications: ListOfQualifications,
@@ -314,6 +273,6 @@ def list_of_ticksheet_items_for_substage_given_list_of_ticksheet_items_for_quali
     substage: TickSubStage,
     list_of_tick_sheet_items_for_qualification: ListOfTickSheetItems,
 ) -> ListOfTickSheetItems:
-    return list_of_tick_sheet_items_for_qualification.subset_for_substage_id_ignoring_placeholders(
+    return list_of_tick_sheet_items_for_qualification.subset_for_substage_id(
         substage_id=substage.id
     )

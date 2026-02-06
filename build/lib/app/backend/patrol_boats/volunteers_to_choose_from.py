@@ -16,7 +16,7 @@ from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
 )
 
-
+## FIXME REFACTOR
 def get_sorted_volunteer_data_for_volunteers_at_event_but_not_yet_on_patrol_boats_on_given_day(
     object_store: ObjectStore,
     event: Event,

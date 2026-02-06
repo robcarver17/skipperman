@@ -5,7 +5,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_list_of_qualifications,
     update_list_of_qualifications,
-    add_new_qualification,
+    add_qualification,
     modify_qualification,
 )
 
@@ -53,7 +53,7 @@ def post_form_config_qualifications_page(
         existing_list=list_of_qualifications,
         interface=interface,
         header_text=header_text,
-        adding_function=add_new_qualification,
+        adding_function=add_qualification,
         modifying_function=modify_qualification,
         save_function=save_from_ordinary_list_of_qualifications,
     )
@@ -73,7 +73,7 @@ def post_form_config_qualifications_page(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(
         display_form_config_qualifications_page
@@ -84,6 +84,6 @@ def save_from_ordinary_list_of_qualifications(
         interface: abstractInterface, new_list: List[Qualification]
 ):
     update_list_of_qualifications(
-        object_store=interface.object_store,
+        interface=interface,
         updated_list_of_qualifications=ListOfQualifications(new_list),
     )

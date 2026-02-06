@@ -16,7 +16,7 @@ from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
 )
 
-##REFACTOR
+## FIXME REFACTOR
 
 def get_summary_list_of_patrol_boat_allocations_for_events(
     object_store: ObjectStore, event: Event

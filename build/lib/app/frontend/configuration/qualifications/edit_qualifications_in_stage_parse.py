@@ -2,7 +2,7 @@ from app.backend.qualifications_and_ticks.list_of_substages import get_substage_
 from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_ticks import (
     get_tick_items_as_dict_for_qualification,
     add_new_substage_to_qualification,
-    add_new_ticklistitem_to_qualification,
+    add_new_ticklistitem_to_substage,
     modify_substage_name,
     modify_ticksheet_item_name,
 )
@@ -36,7 +36,7 @@ def add_new_substage_to_qualification_from_form(interface: abstractInterface):
         if new_substage_name is MISSING_FROM_FORM:
             raise "Form missing new name entry for %s" % qualification.name
         add_new_substage_to_qualification(
-            object_store=interface.object_store,
+            interface=interface,
             qualification=qualification,
             new_substage_name=new_substage_name,
         )
@@ -63,9 +63,8 @@ def add_new_tick_list_item_from_form(interface: abstractInterface, button_presse
                 qualification.name,
                 substage,
             )
-        add_new_ticklistitem_to_qualification(
-            object_store=interface.object_store,
-            qualification=qualification,
+        add_new_ticklistitem_to_substage(
+            interface=interface,
             substage=substage,
             new_tick_list_name=new_tick_list_name,
         )
@@ -123,8 +122,7 @@ def save_edited_substage_name_in_qualifications_form_for_substage(
                 field_name,
             )
         modify_substage_name(
-            object_store=interface.object_store,
-            qualification=qualification,
+            interface=interface,
             existing_substage=substage,
             new_name=edited_name,
         )
@@ -159,11 +157,11 @@ def save_edited_ticklist_itemnames_in_qualifications_form_for_tick_item(
             raise "Field entry name missing"
 
         modify_ticksheet_item_name(
-            object_store=interface.object_store,
+            interface=interface,
             existing_tick_item=tick_item,
             new_item_name=new_item_name,
         )
     except Exception as e:
         interface.log_error(
-            "Can't modify ticksheet name for %s because %s" % (fieldname, str(e))
+            "Can't modify ticksheet name for %s because %s" % (tick_item, str(e))
         )

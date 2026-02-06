@@ -2,6 +2,7 @@ from typing import List, Dict
 
 import pandas as pd
 
+from app.backend.groups.list_of_groups import get_list_of_groups
 from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_list_of_qualifications,
 )
@@ -50,12 +51,13 @@ def get_expected_qualifications_for_cadets_at_event(
     groups_data = get_dict_of_cadets_with_groups_at_event(
         object_store=object_store, event=event
     )
-    list_of_groups = groups_data.all_groups_at_event()
+    all_groups = get_list_of_groups(object_store)
+    sorted_list_of_groups_at_event = groups_data.sorted_all_groups_at_event(all_groups)
 
     list_of_qualifications = get_list_of_qualifications(object_store)
 
     list_of_expected_qualifications = []
-    for group in list_of_groups:
+    for group in sorted_list_of_groups_at_event:
         cadets_in_this_group = groups_data.cadets_in_group_during_event(group)
 
         list_of_expected_qualifications_for_group = [

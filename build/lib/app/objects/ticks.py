@@ -3,10 +3,8 @@ from typing import List, Dict
 from enum import Enum
 
 import pandas as pd
-from app.objects.utilities.exceptions import MultipleMatches
 
 from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
-from app.objects.substages import TickSheetItem
 
 Tick = Enum("Tick", ["Full", "Half", "NotApplicable", "NoTick"])
 
@@ -41,8 +39,6 @@ def tick_from_str(some_str: str) -> Tick:
 
 
 class DictOfTicksWithItem(Dict[str, Tick]):
-    def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
-        self[tick_item.id] = new_tick
 
     def as_dict_of_str_aligned_to_list_of_tick_list_items(
         self, list_of_tick_list_items: List[str]
@@ -54,8 +50,6 @@ class DictOfTicksWithItem(Dict[str, Tick]):
             ]
         )
 
-    def get_tick_with_id(self, tick_item_id) -> Tick:
-        return self.get(tick_item_id, no_tick)
 
     @classmethod
     def from_dict_of_str(cls, dict_of_str):
@@ -127,30 +121,7 @@ class ListOfTickListItemsAndTicksForSpecificCadet(GenericListOfObjects):
 
         return cls(list_of_cadets_with_tick_list_items)
 
-    def update_tick(self, new_tick: Tick, tick_item: TickSheetItem):
-        dict_of_ticks = self.dict_of_ticks_with_items()
-        dict_of_ticks.update_tick(new_tick=new_tick, tick_item=tick_item)
 
-    def dict_of_ticks_with_items(self) -> DictOfTicksWithItem:
-        tick_list_items_for_cadet = self._tick_list_items_for_cadet_adding_if_required()
-
-        return tick_list_items_for_cadet.dict_of_ticks_with_items
-
-    def _tick_list_items_for_cadet_adding_if_required(
-        self,
-    ) -> CadetIdWithTickListItemIds:
-        if len(self) == 0:
-            tick_list_items_for_cadet = CadetIdWithTickListItemIds.create_empty(
-                NOTIONAL_CADET_ID_NOT_USED
-            )
-            self.append(tick_list_items_for_cadet)
-        elif len(self) == 1:
-            tick_list_items_for_cadet = self[0]
-            tick_list_items_for_cadet.cadet_id = NOTIONAL_CADET_ID_NOT_USED  ## will eventually modify old files for tidiness
-        else:
-            raise MultipleMatches("Cant have more than one cadet in a file now")
-
-        return tick_list_items_for_cadet
 
     def list_of_tick_list_item_ids(self) -> List[str]:
         if len(self) == 0:
@@ -188,4 +159,4 @@ def from_df_to_list_of_cadets_with_tick_list_items(
         )
         list_of_cadets_with_tick_lists.append(cadet_with_tick_list_items)
 
-    return ListOfTickListItemsAndTicksForSpecificCadet(list_of_cadets_with_tick_lists)
+    return ListOfTickListItemsAndTicksForSpecificCadet(list_of_cadets_with_tick_lists) ## ignore warning

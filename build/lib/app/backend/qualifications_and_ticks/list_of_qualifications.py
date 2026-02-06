@@ -3,38 +3,24 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.qualifications import ListOfQualifications, Qualification
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_qualifications,
-)
 
 
-def add_new_qualification(
+def add_qualification(
     interface: abstractInterface,  name_of_entry_to_add: str
-) -> ListOfQualifications:
-    list_of_qualifications = get_list_of_qualifications(interface.object_store)
-    list_of_qualifications.add(name_of_entry_to_add)
-    update_list_of_qualifications(
-        object_store=interface.object_store, updated_list_of_qualifications=list_of_qualifications
-    )
-
-    return list_of_qualifications
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_qualifications.add_qualification,
+        qualification_name = name_of_entry_to_add)
 
 
 def modify_qualification(
    interface: abstractInterface, existing_object: Qualification, new_object: Qualification
 ):
-    list_of_qualifications = get_list_of_qualifications(interface.object_store)
-    list_of_qualifications.replace(
-        existing_qualification=existing_object, new_qualification=new_object
-    )
-    try:
-        list_of_qualifications.check_for_duplicated_names()
-    except:
-        raise Exception("Duplicate names")
+    interface.update(
+        interface.object_store.data_api.data_list_of_qualifications.modify_qualification,
+        existing_qualification_id = existing_object.id,
+        updated_qualification = new_object)
 
-    update_list_of_qualifications(
-        object_store=interface.object_store, updated_list_of_qualifications=list_of_qualifications
-    )
 
 
 def get_qualification_given_id(
@@ -54,9 +40,9 @@ def get_list_of_qualifications(object_store: ObjectStore) -> ListOfQualification
 
 
 def update_list_of_qualifications(
-    object_store: ObjectStore, updated_list_of_qualifications: ListOfQualifications
+    interface: abstractInterface, updated_list_of_qualifications: ListOfQualifications
 ):
-    object_store.DEPRECATE_update(
-        new_object=updated_list_of_qualifications,
-        object_definition=object_definition_for_list_of_qualifications,
+    interface.update(
+        interface.object_store.data_api.data_list_of_qualifications.write,
+        list_of_qualifications=updated_list_of_qualifications
     )

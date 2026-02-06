@@ -25,11 +25,12 @@ from app.objects.composed.ticks_in_dicts import TickSubStagesAsDict
 def table_for_edit_qualification_details(
     interface: abstractInterface, qualification: Qualification
 ) -> Table:
+    object_store =interface.object_store
     tick_items_as_dict = get_tick_items_as_dict_for_qualification(
-        object_store=interface.object_store, qualification=qualification
+        object_store = object_store, qualification=qualification
     )
     suggestions = get_suggestions_for_autocorrect(
-        object_store=interface.object_store, qualification=qualification
+        object_store=object_store, qualification=qualification
     )
 
     table = []

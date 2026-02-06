@@ -49,7 +49,7 @@ def delete_cadet_in_data_and_return_warnings(
 
     ## list of cadets with qualifications
     existing_qualifications = delete_all_qualifications_for_cadet(
-        object_store=interface.object_store, cadet=cadet_to_delete, areyousure=True
+        interface=interface, cadet=cadet_to_delete, areyousure=True
     )
     if len(existing_qualifications) > 0:
         qual_message = "Will delete qualifications: %s" % ", ".join(
@@ -80,7 +80,7 @@ def delete_cadet_in_data_and_return_warnings(
 
     ## ticksheets
     current_ticks = delete_ticks_for_cadet(
-        object_store=interface.object_store, cadet=cadet_to_delete, areyousure=True
+        interface=interface, cadet=cadet_to_delete, areyousure=True
     )
     if current_ticks > 0:
         tick_message = "Will delete a total of %d ticks" % current_ticks
@@ -91,13 +91,13 @@ def delete_cadet_in_data_and_return_warnings(
     list_of_events = get_list_of_events(interface.object_store)
     for event in list_of_events:
         event_messages = delete_cadet_from_event_and_return_messages(
-            interface=interface,
+            object_store=interface.object_store,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,
         )
         rows_identified = delete_cadet_from_identified_data_and_return_rows_deleted(
-            interface=interface,
+            object_store=interface.object_store,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,

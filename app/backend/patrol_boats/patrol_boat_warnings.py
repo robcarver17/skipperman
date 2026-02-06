@@ -34,6 +34,7 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
 )
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
 
+## FIXME REFACTOR
 
 def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: Event):
     warn_on_volunteer_qualifications(interface=interface, event=event)

@@ -16,6 +16,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 
+## FIXME REFACTOR
 
 def get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role(
     object_store: ObjectStore, patrol_boat: PatrolBoat, day: Day, event: Event

@@ -1,48 +1,46 @@
 from typing import List, Union
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_qualifications_for_cadets,
-)
 from app.objects.composed.cadets_with_qualifications import (
-    DEPRECATED_DictOfQualificationsForCadets,
     QualificationsForCadet, DictOfQualificationsForCadets,
 )
 from app.objects.qualifications import Qualification, NoQualifications
 
 
 def apply_qualification_to_cadet(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     cadet: Cadet,
     qualification: Qualification,
     awarded_by: str,
 ):
-    dict_of_qualifications_for_all_cadets = get_dict_of_qualifications_for_all_cadets(
-        object_store
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_qualifications.apply_qualification_to_cadet,
+        cadet_id=cadet.id,
+    qualification_id= qualification.id,
+    awarded_by=awarded_by
     )
-    dict_of_qualifications_for_all_cadets.apply_qualification_to_cadet(
-        cadet=cadet, qualification=qualification, awarded_by=awarded_by
-    )
-    update_dict_of_qualifications_for_all_cadets(
-        object_store=object_store,
-        dict_of_qualifications=dict_of_qualifications_for_all_cadets,
-    )
-
 
 def remove_qualification_from_cadet(
-    object_store: ObjectStore, cadet: Cadet, qualification: Qualification
+    interface: abstractInterface, cadet: Cadet, qualification: Qualification
 ):
-    dict_of_qualifications_for_all_cadets = get_dict_of_qualifications_for_all_cadets(
-        object_store
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_qualifications.remove_qualification_from_cadet,
+        cadet_id=cadet.id,
+    qualification_id= qualification.id,
     )
-    dict_of_qualifications_for_all_cadets.remove_qualification_from_cadet(
-        cadet=cadet, qualification=qualification
-    )
-    update_dict_of_qualifications_for_all_cadets(
-        object_store=object_store,
-        dict_of_qualifications=dict_of_qualifications_for_all_cadets,
+
+def delete_all_qualifications_for_cadet(
+    interface: abstractInterface, cadet: Cadet, areyousure=False
+):
+    if not areyousure:
+        return
+
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_qualifications.delete_all_qualifications_for_cadet,
+        cadet_id=cadet.id,
     )
 
 
@@ -85,27 +83,3 @@ def highest_qualification_for_cadet(
     return object_store.get(
         object_store.data_api.data_list_of_cadets_with_qualifications.highest_qualification_for_cadet, cadet=cadet)
 
-
-def update_dict_of_qualifications_for_all_cadets(
-    object_store: ObjectStore, dict_of_qualifications: DEPRECATED_DictOfQualificationsForCadets
-):
-    object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_qualifications_for_cadets,
-        new_object=dict_of_qualifications,
-    )
-
-
-def delete_all_qualifications_for_cadet(
-    object_store: ObjectStore, cadet: Cadet, areyousure=False
-):
-    if not areyousure:
-        return
-
-    dict_of_qualifications = get_dict_of_qualifications_for_all_cadets(object_store)
-    current_qualifications = dict_of_qualifications.qualifications_for_cadet(cadet)
-    dict_of_qualifications.delete_all_qualifications_for_cadet(cadet)
-    update_dict_of_qualifications_for_all_cadets(
-        dict_of_qualifications=dict_of_qualifications, object_store=object_store
-    )
-
-    return current_qualifications

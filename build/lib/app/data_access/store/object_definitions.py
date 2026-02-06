@@ -25,19 +25,10 @@ from app.objects.composed.cadet_volunteer_associations import (
     compose_dict_of_cadets_associated_with_volunteers,
     compose_dict_of_volunteers_associated_with_cadets,
 )
-from app.objects.composed.cadets_with_qualifications import (
-    create_dict_of_qualifications_for_cadets,
-)
 from app.objects.composed.clothing_at_event import (
     compose_dict_of_cadets_with_clothing_at_event,
 )
 from app.objects.composed.roles_and_teams import compose_dict_of_teams_with_roles
-from app.objects.composed.ticks_in_dicts import (
-    create_qualifications_and_tick_items_as_dict_from_underyling,
-)
-from app.objects.composed.ticksheet import (
-    compose_dict_of_cadets_with_qualifications_and_ticks,
-)
 from app.objects.composed.volunteer_roles import compose_list_of_roles_with_skills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     compose_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
@@ -395,19 +386,6 @@ list_of_events=object_definition_for_list_of_events,
  )
 
 
-
-object_definition_for_dict_of_qualifications_for_cadets = DerivedObjectDefinition(
-    composition_function=create_dict_of_qualifications_for_cadets,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_qualifications=object_definition_for_list_of_qualifications,
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        list_of_cadets_with_ids_and_qualifications=object_definition_for_list_of_cadets_and_qualifications_with_ids,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_cadets_with_ids_and_qualifications=object_definition_for_list_of_cadets_and_qualifications_with_ids
-    ),
-)
-
 object_definition_for_volunteer_and_cadet_associations = DerivedObjectDefinition(
     composition_function=create_list_of_cadet_volunteer_associations_from_underlying_data,
     dict_of_arguments_and_underlying_object_definitions=dict(
@@ -420,18 +398,6 @@ object_definition_for_volunteer_and_cadet_associations = DerivedObjectDefinition
     ),
 )
 
-object_definition_for_qualifications_and_tick_items_as_dict = DerivedObjectDefinition(
-    composition_function=create_qualifications_and_tick_items_as_dict_from_underyling,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_qualifications=object_definition_for_list_of_qualifications,
-        list_of_tick_sheet_items=object_definition_for_list_of_tick_sheet_items,
-        list_of_tick_sub_stages=object_definition_for_list_of_tick_sub_stages,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_tick_sheet_items=object_definition_for_list_of_tick_sheet_items,
-        list_of_tick_sub_stages=object_definition_for_list_of_tick_sub_stages,
-    ),
-)
 
 object_definition_for_dict_of_volunteers_with_skills = DerivedObjectDefinition(
     composition_function=compose_dict_of_volunteer_skills,
@@ -645,20 +611,6 @@ object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition
 # object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id
 
 
-
-object_definition_for_dict_of_cadets_with_qualifications_and_ticks = DerivedObjectDefinition(
-    composition_function=compose_dict_of_cadets_with_qualifications_and_ticks,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        qualifications_and_tick_items_as_dict=object_definition_for_qualifications_and_tick_items_as_dict,
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,  ##new
-        dict_of_qualifications_for_all_cadets=object_definition_for_dict_of_qualifications_for_cadets,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_cadet_ids_with_tick_list_items_for_cadet_id=object_definition_for_dict_of_cadet_ids_with_tick_list_items_for_cadet_id,  ##new
-    ),
-    required_keys=["list_of_cadet_ids"],
-)  # DictOfCadetsWithQualificationsAndTicks
 
 object_definition_for_dict_of_cadets_associated_with_volunteers = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_associated_with_volunteers,

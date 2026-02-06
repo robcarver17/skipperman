@@ -92,7 +92,7 @@ def action_if_cadet_apply_qualification_button_pressed(
     qualification = get_qualification_from_state(interface)
     awarded_by = get_volunteer_name_for_logged_in_user(interface)
     apply_qualification_to_cadet(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         qualification=qualification,
         awarded_by=awarded_by,
@@ -108,7 +108,7 @@ def action_if_cadet_remove_qualification_button_pressed(
 
     qualification = get_qualification_from_state(interface)
     remove_qualification_from_cadet(
-        object_store=interface.object_store, cadet=cadet, qualification=qualification
+        interface=interface, cadet=cadet, qualification=qualification
     )
 
 

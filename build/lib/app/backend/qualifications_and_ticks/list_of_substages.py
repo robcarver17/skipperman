@@ -30,6 +30,7 @@ def get_suggestions_for_autocorrect(
 
     substage_names = (
         get_suggested_list_of_all_substage_names_excluding_existing_in_qualification(
+            object_store=object_store,
             qualifications_and_tick_items_as_dict=qualifications_and_tick_items_as_dict,
             qualification=qualification,
         )
@@ -39,10 +40,11 @@ def get_suggestions_for_autocorrect(
 
 
 def get_suggested_list_of_all_substage_names_excluding_existing_in_qualification(
+        object_store: ObjectStore,
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
     qualification: Qualification,
 ):
-    all_substage_names = qualifications_and_tick_items_as_dict.list_of_substage_names()
+    all_substage_names = get_list_of_tick_substages(object_store).list_of_names()
     tick_items_as_dict_for_qualification = qualifications_and_tick_items_as_dict[
         qualification
     ]
@@ -61,4 +63,6 @@ def get_substage_given_id(
 
 
 def get_list_of_tick_substages(object_store: ObjectStore) -> ListOfTickSubStages:
-    return object_store.DEPRECATE_get(object_definition_for_list_of_tick_sub_stages)
+    return object_store.get(
+        object_store.data_api.data_list_of_tick_sub_stages.read
+    )

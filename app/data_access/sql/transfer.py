@@ -121,7 +121,7 @@ def transfer_from_csv_to_sql():
         backup_data_path=backup_data_path,
     )
     events = csv_api.data_list_of_events.read()
-
+    """
     list_of_cadets =csv_api.data_list_of_cadets.read()
     for cadet in list_of_cadets:
         sql_attendance.write(
@@ -155,14 +155,16 @@ def transfer_from_csv_to_sql():
     sql_list_of_dinghies.write(csv_api.data_list_of_dinghies.read())
     
 
-    sql_substages.write(csv_api.data_list_of_tick_sub_stages.read())
 
     list_of_templates = csv_api.data_wa_field_mapping_list_of_templates.read()
     for template_name in list_of_templates:
         sql_template_field_mappings.write(csv_api.data_wa_field_mapping_templates.read(template_name), template_name=template_name)
-    
+    """
+    sql_tick_sheet_items.create_table()
+    sql_substages.create_table()
     sql_tick_sheet_items.write(csv_api.data_list_of_tick_sheet_items.read())
-
+    sql_substages.write(csv_api.data_list_of_tick_sub_stages.read())
+    """
     sql_club_boat_limits._transfer(csv_api.data_List_of_club_dinghy_limits.read())
     sql_club_dinghies.write(csv_api.data_List_of_club_dinghies.read())
 
@@ -216,6 +218,7 @@ def transfer_from_csv_to_sql():
     sql_notes.write(csv_api.data_list_of_notes.read())
     sql_patrol_boat_labels.write(csv_api.data_list_of_patrol_boat_labels.read())
     sql_last_volunteer_roles.write(csv_api.data_list_of_last_roles_across_events_for_volunteers.read())
+    """
 
 def transfer_from_sql_to_csv():
     csv_api = CsvDataApi(

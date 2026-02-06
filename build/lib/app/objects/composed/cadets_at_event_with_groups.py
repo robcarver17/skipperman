@@ -256,7 +256,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         return dict_without_unallocated
 
 
-    def all_groups_at_event(self) -> ListOfGroups:
+    def sorted_all_groups_at_event(self, all_groups: ListOfGroups) -> ListOfGroups:
         all_days_and_groups = self.days_and_groups()
         list_of_groups = [
             day_and_group.list_of_groups for day_and_group in all_days_and_groups
@@ -264,7 +264,6 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
         list_of_groups = flatten(list_of_groups)
 
         unique_list = list(set(list_of_groups))
-        all_groups = self.list_of_groups
         list_of_groups = [group for group in all_groups if group in unique_list]
 
         return ListOfGroups(list_of_groups)

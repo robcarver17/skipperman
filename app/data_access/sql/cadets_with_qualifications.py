@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Union
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, int2date, date2int
@@ -17,6 +18,99 @@ INDEX_NAME_CADETS_WITH_QUALIFICATION_TABLE = "cadets_with_qualifications_id"
 class SqlListOfCadetsWithQualifications(
     GenericSqlData
 ):
+    def apply_qualification_to_cadet(
+            self,
+            cadet_id:str,
+            qualification_id:str,
+            awarded_by: str,
+    ):
+        if self.does_cadet_have_qualification(cadet_id=cadet_id, qualification_id=qualification_id):
+            raise Exception("Cadet already has qualification")
+
+        cadet_with_qualifications = CadetWithIdAndQualification(
+            cadet_id=cadet_id,
+            qualification_id=qualification_id,
+            awarded_by=awarded_by,
+            date=datetime.date.today()
+        )
+
+        try:
+            if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
+                self.create_table()
+
+            self.write_qualification_for_cadet_with_checks_or_commit(
+                    cadet_with_qualifications
+                )
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to cadet with qualifications table" % str(e1))
+        finally:
+            self.close()
+
+    def remove_qualification_from_cadet(
+            self,
+            cadet_id: str,
+            qualification_id: str,
+
+    ):
+        try:
+            if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
+                self.create_table()
+
+            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s' " %
+                                (CADETS_WITH_QUALIFICATION_TABLE,
+                                 CADET_ID,
+                                 int(cadet_id),
+                                 QUALIFICATION_ID,
+                                 int(qualification_id)))
+
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to cadet with qualifications table" % str(e1))
+        finally:
+            self.close()
+
+    def delete_all_qualifications_for_cadet(
+            self,
+            cadet_id: str,
+    ):
+        try:
+            if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
+                self.create_table()
+
+            self.cursor.execute("DELETE FROM %s WHERE %s='%s' " %
+                                (CADETS_WITH_QUALIFICATION_TABLE,
+                                 CADET_ID,
+                                 int(cadet_id),
+                                 ))
+
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing to cadet with qualifications table" % str(e1))
+        finally:
+            self.close()
+
+    def does_cadet_have_qualification(self, cadet_id:str, qualification_id: str):
+        if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+                CADETS_WITH_QUALIFICATION_TABLE, CADET_ID, int(cadet_id),
+                QUALIFICATION_ID, int(qualification_id)
+            ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadets with qualifications" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
     def highest_qualification_for_cadet(
             self, cadet: Cadet
     ) -> Union[object, Qualification]:
@@ -61,7 +155,7 @@ class SqlListOfCadetsWithQualifications(
     def get_dict_of_qualifications_for_all_cadets(
             self,
     ) -> DictOfQualificationsForCadets:
-        list_of_cadets = []
+        list_of_cadets = self.list_of_cadets
         return DictOfQualificationsForCadets(
             dict(
                 [
@@ -118,7 +212,7 @@ class SqlListOfCadetsWithQualifications(
     def list_of_cadets(self)-> ListOfCadets:
         list_of_cadets = getattr(self, "_list_of_cadets", None)
         if list_of_cadets is None:
-            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection)
+            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
 
         return list_of_cadets
 
@@ -194,23 +288,28 @@ class SqlListOfCadetsWithQualifications(
             self.cursor.execute("DELETE FROM %s" % (CADETS_WITH_QUALIFICATION_TABLE))
 
             for cadet_with_qualifications in list_of_cadets_with_qualifications:
-                cadet_id = int(cadet_with_qualifications.cadet_id)
-                qualification_id =int(cadet_with_qualifications.qualification_id)
-                qualification_date = date2int(cadet_with_qualifications.date)
-                awarded_by = str(cadet_with_qualifications.awarded_by)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?,?,?)" % (
-                    CADETS_WITH_QUALIFICATION_TABLE,
-                    CADET_ID, QUALIFICATION_ID, QUALIFICATION_DATE, AWARDED_BY
+                self.write_qualification_for_cadet_with_checks_or_commit(
+                    cadet_with_qualifications
                 )
-                self.cursor.execute(insertion,
-                                    (cadet_id, qualification_id, qualification_date, awarded_by))
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing to cadet with qualifications table" % str(e1))
         finally:
             self.close()
+
+    def write_qualification_for_cadet_with_checks_or_commit(self, cadet_with_qualifications: CadetWithIdAndQualification):
+        cadet_id = int(cadet_with_qualifications.cadet_id)
+        qualification_id = int(cadet_with_qualifications.qualification_id)
+        qualification_date = date2int(cadet_with_qualifications.date)
+        awarded_by = str(cadet_with_qualifications.awarded_by)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?,?,?)" % (
+            CADETS_WITH_QUALIFICATION_TABLE,
+            CADET_ID, QUALIFICATION_ID, QUALIFICATION_DATE, AWARDED_BY
+        )
+        self.cursor.execute(insertion,
+                            (cadet_id, qualification_id, qualification_date, awarded_by))
 
     def create_table(self):
         table_creation_query = """

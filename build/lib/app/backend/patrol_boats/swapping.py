@@ -15,6 +15,7 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
+## FIXME REFACTOR
 
 @dataclass
 class SwapData:

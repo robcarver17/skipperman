@@ -302,8 +302,9 @@ def get_ticksheet_data_from_state(
     group = get_group_from_state(interface)
     qualification = get_qualification_from_state(interface)
 
+    object_store = interface.object_store
     ticksheet_data = get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
-        object_store=interface.object_store,
+        object_store=object_store,
         event=event,
         group=group,
         qualification=qualification,

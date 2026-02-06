@@ -22,6 +22,7 @@ from app.backend.registration_data.cadet_registration_data import get_dict_of_ca
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.partners import no_partnership_given_partner_cadet
 
+## REFACTOR
 
 def get_group_info_table(
     object_store: ObjectStore, event: Event, group: Group

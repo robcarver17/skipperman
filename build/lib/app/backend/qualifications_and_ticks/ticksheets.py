@@ -1,15 +1,12 @@
 from typing import List
 
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 
 from app.backend.groups.cadets_with_groups_at_event import get_group_allocations_for_event_active_cadets_only
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
-    object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
-)
 from app.objects.composed.ticksheet import (
     DictOfCadetsWithQualificationsAndTicks,
     DictOfCadetsAndTicksWithinQualification,
@@ -23,26 +20,10 @@ from app.objects.ticks import (
 from app.objects.substages import TickSheetItem
 
 
-def save_ticksheet_edits_for_specific_tick(
-    object_store: ObjectStore, new_tick: Tick, cadet: Cadet, tick_item: TickSheetItem
-):
-    dict_of_cadets_with_qualifications_and_ticks = (
-        get_dict_of_cadets_with_qualifications_and_ticks(
-            object_store=object_store, list_of_cadet_ids=[cadet.id]
-        )
-    )
-    dict_of_cadets_with_qualifications_and_ticks.update_tick(
-        cadet=cadet, tick_item=tick_item, new_tick=new_tick
-    )
-    update_dict_of_cadets_with_qualifications_and_ticks(
-        new_dict_of_cadets_with_qualifications_and_ticks=dict_of_cadets_with_qualifications_and_ticks,
-        object_store=object_store,
-    )
-
-
 def get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
     object_store: ObjectStore, event: Event, group: Group, qualification: Qualification
 ) -> DictOfCadetsAndTicksWithinQualification:
+
     all_group_allocations_at_event = get_group_allocations_for_event_active_cadets_only(
         object_store=object_store, event=event
     )
@@ -59,47 +40,37 @@ def get_ticksheet_data_for_cadets_at_event_in_group_with_qualification(
     )
 
 
-def get_dict_of_cadets_with_qualifications_and_ticks(
-    object_store: ObjectStore, list_of_cadet_ids: List[str]
-) -> DictOfCadetsWithQualificationsAndTicks:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
-        list_of_cadet_ids=list_of_cadet_ids,
-    )
-
-
-def update_dict_of_cadets_with_qualifications_and_ticks(
-    object_store: ObjectStore,
-    new_dict_of_cadets_with_qualifications_and_ticks: DictOfCadetsWithQualificationsAndTicks,
-):
-    list_of_cadet_ids = (
-        new_dict_of_cadets_with_qualifications_and_ticks.list_of_cadets.list_of_ids
-    )
-    return object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_cadets_with_qualifications_and_ticks,
-        list_of_cadet_ids=list_of_cadet_ids,
-        new_object=new_dict_of_cadets_with_qualifications_and_ticks,
-    )
-
-
-from app.objects.ticks import ListOfTickListItemsAndTicksForSpecificCadet
 
 
 def delete_ticks_for_cadet(
-    object_store: ObjectStore, cadet: Cadet, areyousure: bool = False
+    interface: abstractInterface, cadet: Cadet, areyousure: bool = False
 ):
     if not areyousure:
         return
 
-    ticks = object_store.DEPRECATE_get(
-        object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
-        cadet_id=cadet.id,
-    ).list_of_tick_list_item_ids()
-
-    object_store.DEPRECATE_update(
-        new_object=ListOfTickListItemsAndTicksForSpecificCadet([]),
-        object_definition=object_definition_for_list_of_cadets_with_tick_list_items_for_cadet_id,
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_tick_list_items.delete_ticks_for_cadet,
         cadet_id=cadet.id,
     )
 
-    return len(ticks)
+def save_ticksheet_edits_for_specific_tick(
+    interface: abstractInterface, new_tick: Tick, cadet: Cadet, tick_item: TickSheetItem
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_tick_list_items.save_ticksheet_edits_for_specific_tick,
+        cadet_id=cadet.id,
+        tick_item_id=tick_item.id,
+        new_tick=new_tick
+    )
+
+
+
+def get_dict_of_cadets_with_qualifications_and_ticks(
+    object_store: ObjectStore, list_of_cadet_ids: List[str]
+) -> DictOfCadetsWithQualificationsAndTicks:
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_tick_list_items.get_dict_of_cadets_with_qualifications_and_ticks,
+        list_of_cadet_ids=list_of_cadet_ids
+    )
+
+

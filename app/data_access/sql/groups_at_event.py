@@ -288,7 +288,7 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
             new_dict[event] = current_entry
 
         most_common = dict([
-            (event, days_and_groups.most_common().name)
+            (event, days_and_groups.most_common())
             for event, days_and_groups in new_dict.items()
         ])
 

@@ -120,7 +120,7 @@ def apply_ticksheet_edits_for_specific_tick(
     )
 
     save_ticksheet_edits_for_specific_tick(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         tick_item=tick_item,
         new_tick=new_tick_or_none,

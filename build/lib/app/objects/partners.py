@@ -85,3 +85,18 @@ def no_partnership_given_partner_cadet(partner: Union[Cadet, NoCadetPartner]):
 
 def valid_partnership_given_partner_cadet(partner: Union[Cadet, object]):
     return not no_partnership_given_partner_cadet(partner)
+
+
+def from_partner_name_to_cadet(partner_name: str) -> Cadet:
+    if len(partner_name) > 0:
+        partner_name_split = partner_name.split(" ")
+        if len(partner_name_split) > 1:
+            first_name = " ".join(partner_name_split[:-1])
+            second_name = partner_name_split[-1]
+        else:
+            first_name = partner_name
+            second_name = ""
+    else:
+        first_name = second_name = ""
+
+    return Cadet.from_name_only(first_name=first_name, surname=second_name)

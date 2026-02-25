@@ -1,9 +1,9 @@
+from copy import copy
 from dataclasses import dataclass
 
 
-from app.data_access.store.object_store import ObjectStore
-
 from app.backend.rota.changes import swap_roles_and_groups_for_volunteers_in_allocation
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.patrol_boats import PatrolBoat
 
@@ -15,7 +15,6 @@ from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles impor
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
-## FIXME REFACTOR
 
 @dataclass
 class SwapData:
@@ -31,20 +30,20 @@ class SwapData:
 
 
 def do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
-    object_store: ObjectStore, swap_data: SwapData
+    interface: abstractInterface, swap_data: SwapData
 ):
     if swap_data.swapping_into_empty_boat:
         move_volunteer_into_empty_boat_using_swapdata(
-            object_store=object_store, swap_data=swap_data
+            interface=interface, swap_data=swap_data
         )
 
     if swap_data.swap_roles:
         swap_roles_for_volunteers_in_allocation_using_swapdata(
-            object_store=object_store, swap_data=swap_data
+            interface=interface, swap_data=swap_data
         )
     if swap_data.swap_boats:
         swap_boats_for_volunteers_in_allocation_using_swapdata(
-            object_store=object_store, swap_data=swap_data
+            interface=interface, swap_data=swap_data
         )
 
 
@@ -60,10 +59,10 @@ def is_possible_to_swap_roles_on_one_day(
 
 
 def swap_boats_for_volunteers_in_allocation_using_swapdata(
-    object_store: ObjectStore, swap_data: SwapData
+    interface: abstractInterface, swap_data: SwapData
 ):
     swap_patrol_boats_for_volunteers_in_allocation(
-        object_store=object_store,
+        interface=interface,
         event=swap_data.event,
         volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
         original_volunteer=swap_data.original_volunteer,
@@ -72,38 +71,61 @@ def swap_boats_for_volunteers_in_allocation_using_swapdata(
     )
 
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-    update_dict_of_all_event_data_for_volunteers,
-)
 
 
 def swap_patrol_boats_for_volunteers_in_allocation(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     original_day: Day,
     original_volunteer: Volunteer,
     day_to_swap_with: Day,
     volunteer_to_swap_with: Volunteer,
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(object_store, event)
-    all_event_data.swap_patrol_boats_for_volunteers_in_allocation(
-        original_volunteer=original_volunteer,
-        volunteer_to_swap_with=volunteer_to_swap_with,
-        day_to_swap_with=day_to_swap_with,
-        original_day=original_day,
+    original_volunteer_boat = copy(interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
+        event_id=event.id,
+        volunteer_id=original_volunteer.id,
+        day=original_day
+    ))
+    volunteer_to_swap_with_boat = copy(interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
+        event_id=event.id,
+        volunteer_id=volunteer_to_swap_with.id,
+        day=day_to_swap_with
+    ))
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
+        event_id=event.id,
+        volunteer_id=original_volunteer.id,
+        day=original_day
     )
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
+        event_id=event.id,
+        volunteer_id=volunteer_to_swap_with.id,
+        day=day_to_swap_with
+    )
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
+        event_id=event.id,
+        volunteer_id=original_volunteer.id,
+        day=day_to_swap_with,
+        patrol_boat_id = volunteer_to_swap_with_boat
 
-    update_dict_of_all_event_data_for_volunteers(
-        object_store, dict_of_all_event_data=all_event_data
+    )
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
+        event_id=event.id,
+        volunteer_id=volunteer_to_swap_with.id,
+        day=original_day,
+        patrol_boat_id=original_volunteer_boat
+
     )
 
 
 def swap_roles_for_volunteers_in_allocation_using_swapdata(
-    object_store: ObjectStore, swap_data: SwapData
+        interface: abstractInterface, swap_data: SwapData
 ):
     swap_roles_and_groups_for_volunteers_in_allocation(
-        object_store=object_store,
+        interface=interface,
         event=swap_data.event,
         volunteer_to_swap_with=swap_data.volunteer_to_swap_with,
         original_volunteer=swap_data.original_volunteer,
@@ -113,17 +135,19 @@ def swap_roles_for_volunteers_in_allocation_using_swapdata(
 
 
 def move_volunteer_into_empty_boat_using_swapdata(
-    object_store: ObjectStore, swap_data: SwapData
+        interface: abstractInterface, swap_data: SwapData
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store, swap_data.event
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
+        event_id = swap_data.event.id,
+        volunteer_id = swap_data.original_volunteer.id,
+        day = swap_data.original_day
     )
-    all_event_data.move_volunteer_into_empty_boat(
-        original_volunteer=swap_data.original_volunteer,
-        day_to_swap_with=swap_data.day_to_swap_with,
-        new_patrol_boat=swap_data.empty_boat_to_swap_into,
-    )
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
+        event_id = swap_data.event.id,
+        volunteer_id =swap_data.original_volunteer.id,
+        day = swap_data.day_to_swap_with,
+        patrol_boat_id = swap_data.empty_boat_to_swap_into.id
 
-    update_dict_of_all_event_data_for_volunteers(
-        object_store, dict_of_all_event_data=all_event_data
     )

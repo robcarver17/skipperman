@@ -1,11 +1,11 @@
 from typing import List, Dict
 
-from app.data_access.sql.club_dinghies import SqlDataListOfClubDinghies
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
 from app.objects.club_dinghies import ListOfClubDinghyLimits, ClubDinghyWithLimitAtEvent, \
     OLD_event_id_for_generic_limit, event_id_for_generic_limit, ClubDinghyAndGenericLimit, ListOfClubDinghies, \
     ClubDinghy
+from app.objects.utilities.exceptions import missing_data, MultipleMatches
 
 CLUB_DINGHY_LIMIT_TABLE = "club_dinghy_limits"
 INDEX_CLUB_DINGHY_LIMIT_TABLE = "index_club_dinghy_limits"
@@ -67,9 +67,8 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
                 return ListOfClubDinghyLimits.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
 
-                EVENT_ID,
                 DINGHY_ID,
                 CLUB_DINGHY_LIMIT,
             CLUB_DINGHY_LIMIT_TABLE,
@@ -84,9 +83,9 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
             self.close()
 
         new_list = [
-           ClubDinghyWithLimitAtEvent(event_id=str(raw_item[0]),
-                                       club_dinghy_id = str(raw_item[1]),
-                                       limit=int(raw_item[2]))
+           ClubDinghyWithLimitAtEvent(event_id=event_id,
+                                       club_dinghy_id = str(raw_item[0]),
+                                       limit=int(raw_item[1]))
             for raw_item in raw_list]
 
         return ListOfClubDinghyLimits(new_list)
@@ -94,19 +93,15 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
 
     @property
     def club_boats(self) -> ListOfClubDinghies:
-        club_boats = getattr(self, "_club_boats", None)
-        if club_boats is None:
-            club_boats = self._club_boats = SqlDataListOfClubDinghies(self.db_connection).read()
+        list_of_club_dinghies = self.object_store.get(self.object_store.data_api.data_List_of_club_dinghies.read)
 
-        return club_boats
+        return list_of_club_dinghies
 
     @property
     def visible_club_boats(self) -> ListOfClubDinghies:
-        visible_club_boats = getattr(self, "_visible_club_boats", None)
-        if visible_club_boats is None:
-            visible_club_boats = self._visible_club_boats = SqlDataListOfClubDinghies(self.db_connection).get_list_of_visible_club_dinghies()
+        list_of_club_dinghies = self.object_store.get(self.object_store.data_api.data_List_of_club_dinghies.get_list_of_visible_club_dinghies)
 
-        return visible_club_boats
+        return list_of_club_dinghies
 
 
     def clear_and_set_generic_limit(self,
@@ -118,27 +113,26 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
                                                    new_limit=new_limit)
 
     def add_generic_limit_for_club_dinghy(self, club_dinghy_id: str):
+        self.update_limit_for_club_dinghy_at_event(
+            club_dinghy_id=club_dinghy_id,
+            event_id=event_id_for_generic_limit,
+            new_limit=0
+        )
+
+    def _add_limit_for_club_dinghy_without_checks(self, event_id: str, club_dinghy_id: str, limit: int):
         event_id = event_id_for_generic_limit
         try:
             if self.table_does_not_exist(CLUB_DINGHY_LIMIT_TABLE):
                 self.create_table()
-            deletion = "DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (CLUB_DINGHY_LIMIT_TABLE,
-                                                                    EVENT_ID,
-                                                                    int(event_id),
-                                                                    DINGHY_ID,
-                                                                    int(club_dinghy_id))
-            self.cursor.execute(
-                deletion)
 
-            insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
-                CLUB_DINGHY_LIMIT_TABLE,
-                EVENT_ID,
-                DINGHY_ID,
-                CLUB_DINGHY_LIMIT)
-            self.cursor.execute(insertion,
-                                (int(event_id),
-                                 int(club_dinghy_id),
-                                 0))
+            self._add_row_without_checks_or_commits(
+                ClubDinghyWithLimitAtEvent(
+                    event_id=event_id,
+                    club_dinghy_id=club_dinghy_id,
+                    limit=limit
+                )
+            )
+
             self.conn.commit()
         except Exception as e1:
             raise Exception(
@@ -150,27 +144,38 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         event_id: str,
         club_dinghy_id: str,
         new_limit: int):
+            if self.does_limit_already_exist(event_id=event_id, club_dinghy_id=club_dinghy_id):
+                self._update_limit_for_club_dinghy_at_event_without_checks(
+                    event_id=event_id,
+                    club_dinghy_id=club_dinghy_id,
+                    new_limit=new_limit
+                )
+            else:
+                self._add_limit_for_club_dinghy_without_checks(
+                    event_id=event_id,
+                    club_dinghy_id=club_dinghy_id,
+                    limit=new_limit
+                )
+
+    def _update_limit_for_club_dinghy_at_event_without_checks(self,
+        event_id: str,
+        club_dinghy_id: str,
+        new_limit: int):
 
         try:
             if self.table_does_not_exist(CLUB_DINGHY_LIMIT_TABLE):
-                self.create_table()
-            deletion = "DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (CLUB_DINGHY_LIMIT_TABLE,
+                raise Exception("table undefined")
+
+            update= "UPDATE %s SET %s=%d WHERE %s=%d AND %s=%d" % (CLUB_DINGHY_LIMIT_TABLE,
+                                                                          CLUB_DINGHY_LIMIT,
+                                                                          int(new_limit),
                                                                     EVENT_ID,
                                                                     int(event_id),
                                                                     DINGHY_ID,
                                                                     int(club_dinghy_id))
             self.cursor.execute(
-                deletion)
+                update)
 
-            insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
-                CLUB_DINGHY_LIMIT_TABLE,
-                EVENT_ID,
-                DINGHY_ID,
-                CLUB_DINGHY_LIMIT)
-            self.cursor.execute(insertion,
-                                (int(event_id),
-                                 int(club_dinghy_id),
-                                 int(new_limit)))
             self.conn.commit()
         except Exception as e1:
             raise Exception(
@@ -178,7 +183,41 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         finally:
             self.close()
 
+    def does_limit_already_exist(self, event_id: str, club_dinghy_id: str):
+        existing_limit = self.get_limit_for_event_and_dinghy(event_id=event_id, club_dinghy_id=club_dinghy_id, default=missing_data)
+        if existing_limit is missing_data:
+            return  False
 
+        return True
+
+    def get_limit_for_event_and_dinghy(self, event_id: str, club_dinghy_id: str, default=missing_data):
+        try:
+            if self.table_does_not_exist(CLUB_DINGHY_LIMIT_TABLE):
+                return default
+
+            cursor = self.cursor
+            cursor.execute('''SELECT  %s FROM %s  WHERE %s=%d AND %s=%d ''' % (
+                CLUB_DINGHY_LIMIT,
+            CLUB_DINGHY_LIMIT_TABLE,
+                EVENT_ID,
+                int(event_id),
+                DINGHY_ID,
+                int(club_dinghy_id)
+)
+
+                           )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading dinghy limits table at event" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list)==0:
+            return default
+        elif len(raw_list)>1:
+            raise MultipleMatches
+
+        return int(raw_list[0][0])
 
     def read(self) -> ListOfClubDinghyLimits:
         try:
@@ -219,19 +258,7 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
                 "DELETE FROM %s" % (CLUB_DINGHY_LIMIT_TABLE))
 
             for limit_for_boat_at_event in list_of_boats:
-                club_dinghy_id = int(limit_for_boat_at_event.club_dinghy_id)
-                limit = int(limit_for_boat_at_event.limit)
-                event_id= int(limit_for_boat_at_event.event_id)
-
-                insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
-                    CLUB_DINGHY_LIMIT_TABLE,
-                EVENT_ID,
-                DINGHY_ID,
-                CLUB_DINGHY_LIMIT)
-                self.cursor.execute(insertion,
-                                    (event_id,
-                                     club_dinghy_id,
-                                     limit))
+                self._add_row_without_checks_or_commits(limit_for_boat_at_event)
 
             self.conn.commit()
         except Exception as e1:
@@ -239,6 +266,21 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
                 "Error %s when writing to dinghy limits table event" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_checks_or_commits(self, limit_for_boat_at_event: ClubDinghyWithLimitAtEvent):
+        club_dinghy_id = int(limit_for_boat_at_event.club_dinghy_id)
+        limit = int(limit_for_boat_at_event.limit)
+        event_id = int(limit_for_boat_at_event.event_id)
+
+        insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
+            CLUB_DINGHY_LIMIT_TABLE,
+            EVENT_ID,
+            DINGHY_ID,
+            CLUB_DINGHY_LIMIT)
+        self.cursor.execute(insertion,
+                            (event_id,
+                             club_dinghy_id,
+                             limit))
 
     def _transfer(self, list_of_boats: ListOfClubDinghyLimits):
         try:

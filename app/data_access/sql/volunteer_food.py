@@ -1,10 +1,8 @@
-from app.data_access.sql.volunteers import SqlDataListOfVolunteers
 from app.objects.composed.food_at_event import DictOfVolunteersWithFoodRequirementsAtEvent
 from app.objects.food import ListOfVolunteersWithFoodRequirementsAtEvent, VolunteerWithFoodRequirementsAtEvent, \
     FoodRequirements
 from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
 from app.data_access.sql.shared_column_names import *
-from app.objects.volunteers import ListOfVolunteers
 
 VOLUNTEER_FOOD_REQUIRED_TABLE = "volunteer_food_required"
 INDEX_VOLUNTEER_FOOD_REQUIRED_TABLE = "index_volunteer_food_required"
@@ -20,7 +18,7 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT *  FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT *  FROM %s WHERE %s=%d AND %s=%d ''' % (
             VOLUNTEER_FOOD_REQUIRED_TABLE,
             VOLUNTEER_ID,
             int(volunteer_id),
@@ -46,7 +44,7 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
             if self.table_does_not_exist(VOLUNTEER_FOOD_REQUIRED_TABLE):
                 self.create_table()
 
-            self.write_volunteer_with_food_without_committing(
+            self._write_volunteer_with_food_without_commit_or_checks(
                     event_id=event_id,
                     volunteer_with_food=VolunteerWithFoodRequirementsAtEvent(
                         volunteer_id=volunteer_id,
@@ -72,11 +70,9 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
     def remove_food_requirements_for_volunteer_at_event(  self, volunteer_id: str, event_id: str):
         try:
             if self.table_does_not_exist(VOLUNTEER_FOOD_REQUIRED_TABLE):
-                self.create_table()
+                return
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (VOLUNTEER_FOOD_REQUIRED_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d" % (VOLUNTEER_FOOD_REQUIRED_TABLE,
                                                                   EVENT_ID,
                                                                   int(event_id),
                                                                               VOLUNTEER_ID,
@@ -102,10 +98,8 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
         )
 
     @property
-    def list_of_volunteers(self) -> ListOfVolunteers:
-        list_of_volunteers = getattr(self, "_list_of_volunteers", None)
-        if list_of_volunteers is None:
-            list_of_volunteers = self._list_of_volunteers = SqlDataListOfVolunteers(self.db_connection).read()
+    def list_of_volunteers(self):
+        list_of_volunteers =self.object_store.get(self.object_store.data_api.data_list_of_volunteers.read)
 
         return list_of_volunteers
 
@@ -115,7 +109,7 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s,%s,%s  FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s,%s,%s  FROM %s WHERE %s=%d ''' % (
                 VOLUNTEER_ID,
                 FOOD_REQUIRED_KEY,
                 FOOD_REQUIRED_BOOL_VALUE,
@@ -162,14 +156,12 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
             if self.table_does_not_exist(VOLUNTEER_FOOD_REQUIRED_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (VOLUNTEER_FOOD_REQUIRED_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (VOLUNTEER_FOOD_REQUIRED_TABLE,
                                                                   EVENT_ID,
                                                                   int(event_id)))
 
             for volunteer_with_food in list_of_volunteers_with_food:
-                self.write_volunteer_with_food_without_committing(
+                self._write_volunteer_with_food_without_commit_or_checks(
                     event_id=event_id,
                     volunteer_with_food=volunteer_with_food
                 )
@@ -179,7 +171,7 @@ class SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
         finally:
             self.close()
 
-    def write_volunteer_with_food_without_committing(self, event_id: str, volunteer_with_food: VolunteerWithFoodRequirementsAtEvent):
+    def _write_volunteer_with_food_without_commit_or_checks(self, event_id: str, volunteer_with_food: VolunteerWithFoodRequirementsAtEvent):
         volunteer_id = int(volunteer_with_food.volunteer_id)
         food_required = volunteer_with_food.food_requirements
         other_value = food_required.other

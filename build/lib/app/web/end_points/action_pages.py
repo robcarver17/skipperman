@@ -5,9 +5,9 @@ from werkzeug.datastructures import MultiDict
 from app.data_access.init_data import  object_store
 from app.frontend.form_handler import FormHandler
 from app.frontend.menu_define import get_functions_mapping_for_action_name
-from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewForm, NewFormWithRedirectInfo
+from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewFormWithRedirectInfo
 from app.objects.utilities.exceptions import MissingMethod
-from app.web.flask.flask_interface import flaskInterface
+from app.web.flask.flask_interface import flaskInterface, from_multidict_to_dict
 from app.web.flask.security import get_access_group_for_current_user
 from app.web.html.html_components import (
     Html,
@@ -16,7 +16,7 @@ from app.web.html.master_layout import get_master_layout
 from app.web.html.process_abstract_form_to_html import (
     process_abstract_form_to_html,
 )
-from app.web.html.url_define import get_urls_of_interest, ACTION_PREFIX
+from app.web.html.url_define import ACTION_PREFIX, get_urls_of_interest
 from flask import send_file, Response, redirect, url_for
 
 
@@ -26,7 +26,7 @@ def generate_action_page_html(action_name: str,
 
     print("getting html for %s %s %s" % (action_name, form_name, str(args_passed)))
 
-    args_passed=from_multidict_to_dict(args_passed)
+    args_passed= from_multidict_to_dict(args_passed)
 
     abstract_form_for_action = get_abstract_form_for_specific_action(action_name=action_name,
                                                                      form_name=form_name,
@@ -46,15 +46,6 @@ def generate_action_page_html(action_name: str,
 
 
 # return
-
-def from_multidict_to_dict(some_multi_dict: MultiDict):
-    new_dict = dict(
-        [
-            (key, some_multi_dict.get(key)) for key in some_multi_dict.keys()
-        ]
-    )
-
-    return new_dict
 
 def from_abstract_to_laid_out_html(
     abstract_form_for_action: Form, action_name: str

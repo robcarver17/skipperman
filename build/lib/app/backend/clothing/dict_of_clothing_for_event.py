@@ -68,12 +68,12 @@ def clear_colour_group_for_cadet(
                      event_id=event.id)
 
 
-def remove_clothing_for_cadet_at_event(
+def remove_requirements_for_clothing_for_cadet_at_event(
     interface: abstractInterface,
     event: Event,
     cadet: Cadet,
 ):
-    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event,
+    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event,
                      cadet_id=cadet.id,
                      event_id=event.id)
 

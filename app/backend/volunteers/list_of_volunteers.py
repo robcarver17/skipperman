@@ -5,7 +5,6 @@ from app.data_access.configuration.configuration import (
     SIMILARITY_LEVEL_TO_MATCH_VERY_SIMILAR_VOLUNTEER_NAME,
 )
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import object_definition_for_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteers import Volunteer, ListOfVolunteers, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
@@ -19,32 +18,16 @@ def get_volunteer_with_matching_name(
 
 
 def get_volunteer_from_name(
-    object_store: ObjectStore, volunteer_name: str
+    object_store: ObjectStore, volunteer_name: str, default=missing_data
 ) -> Volunteer:
     list_of_volunteers = get_list_of_volunteers(object_store)
 
-    return list_of_volunteers.volunteer_with_matching_name(volunteer_name)
+    return list_of_volunteers.volunteer_with_matching_name(volunteer_name, default=default)
 
 
-def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str) -> Volunteer:
-    return object_store.get(object_store.data_api.data_list_of_volunteers.get_volunteer_from_id, volunteer_id=volunteer_id)
+def get_volunteer_from_id(object_store: ObjectStore, volunteer_id: str, default=missing_data) -> Volunteer:
+    return object_store.get(object_store.data_api.data_list_of_volunteers.get_volunteer_from_id, volunteer_id=volunteer_id, default=default)
 
-
-def DEPRECATE_get_volunteer_from_list_of_given_str_of_volunteer(
-    object_store: ObjectStore, volunteer_as_str: str, default=missing_data
-) -> Volunteer:
-    list_of_volunteers = get_list_of_volunteers(object_store)
-    list_of_volunteers_as_str = DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers)
-    try:
-        volunteer_idx = list_of_volunteers_as_str.index(volunteer_as_str)
-    except IndexError:
-        return default
-
-    return list_of_volunteers[volunteer_idx]
-
-
-def DEPRECATE_get_list_of_volunteers_as_str(list_of_volunteers: ListOfVolunteers) -> List[str]:
-    return [str(volunteer) for volunteer in list_of_volunteers]
 
 
 def get_sorted_list_of_volunteers(

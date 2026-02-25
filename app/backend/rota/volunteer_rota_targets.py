@@ -1,17 +1,14 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_targets_for_role_at_event,
-)
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_dict_of_volunteers_with_roles_and_groups_at_event
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-)
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+  DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -35,12 +32,7 @@ class RowInTableWithActualAndTargetsForRole:
 def get_list_of_actual_and_targets_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[RowInTableWithActualAndTargetsForRole]:
-    all_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    volunteers_in_roles_at_event = (
-        all_event_data.dict_of_volunteers_at_event_with_days_and_roles
-    )
+    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store=object_store, event=event)
 
     targets_at_event = get_volunteer_targets_at_event(
         object_store=object_store, event=event
@@ -65,15 +57,16 @@ def get_list_of_actual_and_targets_for_roles_at_event(
 def get_volunteer_targets_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfTargetsForRolesAtEvent:
-    return object_store.DEPRECATE_get(
-        object_definition_for_list_of_targets_for_role_at_event, event_id=event.id
+    return object_store.get(
+        object_store.data_api.data_list_of_targets_for_role_at_event.read,
+        event_id=event.id
     )
 
 
 def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     event: Event,
     role: RoleWithSkills,
-    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     targets_at_event: DictOfTargetsForRolesAtEvent,
 ) -> RowInTableWithActualAndTargetsForRole:
     daily_counts = {}
@@ -96,23 +89,13 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
     )
 
 
-def save_new_volunteer_target(
-    object_store: ObjectStore, event: Event, role: RoleWithSkills, target: int
+def update_volunteer_target(
+    interface: abstractInterface, event: Event, role: RoleWithSkills, target: int
 ):
-    targets_at_event = get_volunteer_targets_at_event(
-        object_store=object_store, event=event
-    )
-    targets_at_event.update_new_volunteer_target(role=role, target=target)
-    update_volunteer_targets_at_event(
-        object_store=object_store, dict_of_targets=targets_at_event
-    )
 
-
-def update_volunteer_targets_at_event(
-    object_store: ObjectStore, dict_of_targets: DictOfTargetsForRolesAtEvent
-):
-    object_store.DEPRECATE_update(
-        new_object=dict_of_targets,
-        event_id=dict_of_targets.event.id,
-        object_definition=object_definition_for_list_of_targets_for_role_at_event,
+    interface.update(
+        interface.object_store.data_api.data_list_of_targets_for_role_at_event.update_volunteer_target,
+        event_id=event.id,
+        role_id = role.id,
+        target = target
     )

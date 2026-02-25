@@ -2,7 +2,7 @@ from typing import Union, List, Tuple
 
 from app.objects.composed.roles_and_teams import (
     list_of_all_roles_not_already_in_team,
-    DEPRECATE_DictOfTeamsWithRoles, DictOfTeamsWithRoles,
+     DictOfTeamsWithRoles,
 )
 
 from app.objects.abstract_objects.abstract_tables import RowInTable
@@ -148,7 +148,7 @@ def post_form_edit_individual_team_page(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_edit_individual_team_page)
 
@@ -160,7 +160,7 @@ def reorder_ordered_list_of_roles(
     new_order_of_role_names = reorder_form_interface.new_order_of_list()
     try:
         reorder_roles_for_team_given_list_of_names(
-            object_store=interface.object_store,
+            interface=interface,
             new_order_of_role_names=new_order_of_role_names,
             team=team,
         )
@@ -176,7 +176,7 @@ def add_new_role_to_team(interface: abstractInterface, team: Team):
             raise "Role name missing from form"
 
         add_new_named_role_to_team(
-            object_store=interface.object_store, team=team, new_role_name=new_role_name
+            interface=interface, team=team, new_role_name=new_role_name
         )
     except Exception as e:
         interface.log_error("Error adding role %s: %s" % (new_role_name, str(e)))

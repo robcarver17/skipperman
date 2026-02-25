@@ -1,3 +1,5 @@
+from typing import List
+
 from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.objects.day_selectors import Day
@@ -11,6 +13,108 @@ from app.objects.patrol_boats import ListOfPatrolBoatLabelsAtEvents, PatrolBoatL
 class SqlDataListOfPatrolBoatLabelsAtEvent(
     GenericSqlData
 ):
+
+    def update_patrol_boat_label_at_event(
+            self,
+            event_id: str, patrol_boat_id: str, label: str, day:Day
+        ):
+        if self.is_an_existing_patrol_boat_label_at_event(event_id=event_id,
+                                                          patrol_boat_id=patrol_boat_id,
+                                                          day=day):
+            self._modify_existing_patrol_boat_label_at_event_without_checks(
+                event_id=event_id,
+                patrol_boat_id=patrol_boat_id,
+                day=day,
+                label=label
+            )
+        else:
+            self._add_patrol_boat_label_at_event_without_checks(
+                event_id=event_id,
+                patrol_boat_id=patrol_boat_id,
+                day=day,
+                label=label
+            )
+
+    def is_an_existing_patrol_boat_label_at_event(
+            self,
+            event_id: str, patrol_boat_id: str,  day:Day
+        ):
+        if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s=%d AND %s='%s' ''' % (
+                PATROL_BOATS_LABELS_TABLE,
+                EVENT_ID,
+                int(event_id),
+                PATROL_BOAT_ID,
+                int(patrol_boat_id),
+                DAY,
+                day.name
+                ))
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading patrol boat labels at event" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
+    def _modify_existing_patrol_boat_label_at_event_without_checks(
+            self,
+            event_id: str, patrol_boat_id: str, label: str, day:Day
+        ):
+        try:
+            if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
+                raise Exception("Can't modify if existing doesn't exist")
+
+            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d AND %s='%s' " % (
+                PATROL_BOATS_LABELS_TABLE,
+                PATROL_BOAT_LABEL,
+                label,
+                EVENT_ID,
+                int(event_id),
+                PATROL_BOAT_ID,
+                int(patrol_boat_id),
+                DAY,
+                day.name)
+
+            self.cursor.execute(insertion)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing volunteers on patrol boats at event" % str(e1))
+        finally:
+            self.close()
+
+
+    def _add_patrol_boat_label_at_event_without_checks(
+            self,
+            event_id: str, patrol_boat_id: str, label: str, day:Day
+        ):
+        try:
+            if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
+                self.create_table()
+            boat_label = PatrolBoatLabelAtEvent(
+                event_id=event_id,
+                boat_id=patrol_boat_id,
+                day=day,
+                label=label
+            )
+            self._add_patrol_boat_label_without_checks_or_commits(
+                    boat_label
+                )
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing volunteers on patrol boats at event" % str(e1))
+        finally:
+            self.close()
+
+    def get_list_of_unique_labels(self) -> List[str]:
+        return self.read().unique_set_of_labels()
+
     def read(self) -> ListOfPatrolBoatLabelsAtEvents:
         if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
             return PatrolBoatLabelAtEvent.create_empty()
@@ -49,23 +153,29 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(
             self.cursor.execute("DELETE FROM %s" % PATROL_BOATS_LABELS_TABLE)
 
             for boat_label in list_of_patrol_boat_labels:
-                event_id = int(boat_label.event_id)
-                day= boat_label.day.name
-                boat_id = int(boat_label.boat_id)
-                label = str(boat_label.label)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
-                    PATROL_BOATS_LABELS_TABLE,
-                    EVENT_ID, PATROL_BOAT_ID, DAY, PATROL_BOAT_LABEL)
-
-                self.cursor.execute(insertion, (
-                    event_id, boat_id, day, label))
-
+                self._add_patrol_boat_label_without_checks_or_commits(
+                    boat_label
+                )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing volunteers on patrol boats at event" % str(e1))
         finally:
             self.close()
+
+    def _add_patrol_boat_label_without_checks_or_commits(self,
+                                                         boat_label: PatrolBoatLabelAtEvent):
+
+        event_id = int(boat_label.event_id)
+        day = boat_label.day.name
+        boat_id = int(boat_label.boat_id)
+        label = str(boat_label.label)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
+            PATROL_BOATS_LABELS_TABLE,
+            EVENT_ID, PATROL_BOAT_ID, DAY, PATROL_BOAT_LABEL)
+
+        self.cursor.execute(insertion, (
+            event_id, boat_id, day, label))
 
     def create_table(self):
 

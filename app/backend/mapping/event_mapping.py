@@ -8,9 +8,6 @@ from app.objects.utilities.exceptions import FileError
 
 from app.objects.wa_event_mapping import ListOfWAEventMaps
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_wa_event_mapping,
-)
 from app.data_access.store.object_store import ObjectStore
 
 

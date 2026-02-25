@@ -73,7 +73,7 @@ def post_form_edit_individual_cadet(
         return previous_form(interface)
     elif save_menu_button.pressed(button_pressed):
         modify_cadet_given_form_contents(interface)
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
         return previous_form(interface)
     else:
         button_error_and_back_to_initial_state_form(interface)

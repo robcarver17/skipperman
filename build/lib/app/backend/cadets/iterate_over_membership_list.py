@@ -2,7 +2,7 @@ from copy import copy
 
 
 
-from app.backend.cadets.list_of_cadets import update_list_of_cadets, \
+from app.backend.cadets.list_of_cadets import bulk_update_of_list_of_cadets, \
     get_sorted_list_of_cadets
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -14,7 +14,7 @@ def set_all_current_members_to_temporary_unconfirmed(interface: abstractInterfac
 
     list_of_cadets = get_sorted_list_of_cadets(object_store=interface.object_store)
     list_of_cadets.set_all_current_members_to_temporary_unconfirmed_status()
-    update_list_of_cadets(
+    bulk_update_of_list_of_cadets(
         interface=interface, updated_list_of_cadets=list_of_cadets
     )
 
@@ -34,7 +34,7 @@ def set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(
     lapsed_members = (
         list_of_cadets.set_all_temporary_unconfirmed_members_to_lapsed_and_return_list()
     )
-    update_list_of_cadets(
+    bulk_update_of_list_of_cadets(
         interface=interface, updated_list_of_cadets=list_of_cadets
     )
 
@@ -48,7 +48,7 @@ def set_all_user_unconfirmed_members_to_non_members_and_return_list(
     lapsed_members = (
         list_of_cadets.set_all_user_unconfirmed_members_to_non_members_and_return_list()
     )
-    update_list_of_cadets(
+    bulk_update_of_list_of_cadets(
         interface=interface, updated_list_of_cadets=list_of_cadets
     )
 

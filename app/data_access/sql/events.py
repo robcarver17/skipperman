@@ -1,7 +1,7 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData, date2int, int2date
 
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches
+from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
 
 EVENTS_TABLE = "list_of_events"
 INDEX_EVENTS_TABLE = "index_list_of_events"
@@ -33,21 +33,11 @@ class SqlDataListOfEvents(GenericSqlData):
         existing_events = self.read()
         existing_events.confirm_event_does_not_already_exist(event)
 
-        event_id = self.next_available_id()
-
+        event.id = self.next_available_id()
         try:
             if self.table_does_not_exist(EVENTS_TABLE):
                 self.create_table()
-
-            event_name = event.event_name
-            start_date = date2int(event.start_date)
-            end_date = date2int(event.end_date)
-
-            insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
-                    EVENTS_TABLE, EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENT_ID)
-
-            self.cursor.execute(insertion, (event_name, start_date, end_date, event_id))
-
+            self._add_row_without_commit_or_checks(event)
             self.conn.commit()
         except Exception as e1:
             raise Exception("error %s when writing events table" % str(e1))
@@ -80,16 +70,13 @@ class SqlDataListOfEvents(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-    def get_event_from_id(self, event_id: str, default=arg_not_passed) -> Event:
+    def get_event_from_id(self, event_id: str, default=missing_data) -> Event:
         if self.table_does_not_exist(EVENTS_TABLE):
-            if default is arg_not_passed:
-                raise MissingData("event id %s not found" % event_id)
-            else:
-                return default
+            return default
 
         try:
             cursor = self.cursor
-            statement = "SELECT %s, %s, %s FROM %s WHERE %s='%s' " % (
+            statement = "SELECT %s, %s, %s FROM %s WHERE %s=%d " % (
                 EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENTS_TABLE,
                 EVENT_ID, int(event_id)
             )
@@ -101,10 +88,7 @@ class SqlDataListOfEvents(GenericSqlData):
             self.close()
 
         if len(raw_list)==0:
-            if default is arg_not_passed:
-                raise MissingData("event id %s not found" % event_id)
-            else:
-                return default
+            return default
         elif len(raw_list)>1:
             raise MultipleMatches("more than one event with id %s" % event_id)
 
@@ -157,21 +141,24 @@ class SqlDataListOfEvents(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (EVENTS_TABLE))
 
             for event in list_of_events:
-                event_name = event.event_name
-                start_date = date2int(event.start_date)
-                end_date = date2int(event.end_date)
-                event_id = int(event.id)
-
-                insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
-                    EVENTS_TABLE, EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENT_ID)
-
-                self.cursor.execute(insertion, (event_name, start_date, end_date, event_id))
+                self._add_row_without_commit_or_checks(event)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("error %s when writing events table" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_commit_or_checks(self, event: Event):
+        event_name = event.event_name
+        start_date = date2int(event.start_date)
+        end_date = date2int(event.end_date)
+        event_id = int(event.id)
+
+        insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
+            EVENTS_TABLE, EVENT_NAME, EVENT_START_DATE, EVENT_END_DATE, EVENT_ID)
+
+        self.cursor.execute(insertion, (event_name, start_date, end_date, event_id))
 
     def create_table(self):
 

@@ -10,7 +10,7 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 from app.objects.cadets import Cadet
 
 from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
+    get_dict_of_cadets_with_registration_data,
 )
 
 
@@ -50,7 +50,7 @@ def display_call_to_update_food_for_cadets_and_volunteers_from_registration_data
     )
     update_food_for_volunteers_from_registration_data(interface=interface, event=event)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return return_to_controller(interface)
 
@@ -74,7 +74,7 @@ def update_food_for_cadets_from_registration_data_on_import(
     interface: abstractInterface, event: Event
 ):
     dict_of_cadets_at_event_with_registration_data = (
-        DEPRECATE_get_dict_of_cadets_with_registration_data(
+        get_dict_of_cadets_with_registration_data(
             object_store=interface.object_store, event=event
         )
     )

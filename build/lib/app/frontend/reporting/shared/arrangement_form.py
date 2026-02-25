@@ -199,7 +199,7 @@ def get_reorder_matrix_form_element(
     interface: abstractInterface, reporting_options: ReportingOptions
 ) -> Table:
     arrangement_of_rows = get_arrangement_of_rows_from_storage_or_derive_from_method(
-        reporting_options=reporting_options, object_store=interface.object_store
+        reporting_options=reporting_options, interface=interface
     )
     order_of_groups_with_numbers = augment_order_of_groups_with_sizes(reporting_options)
     reorder_matrix_table = reorder_matrix(
@@ -253,7 +253,7 @@ def post_form_for_group_arrangement_options(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(current_form_function)
 
@@ -273,7 +273,7 @@ def change_arrangement_given_method_and_current_order(
 
     update_arrangement_and_group_order(
         arrangement_and_group_options=arrange_options_and_group_order,
-        object_store=interface.object_store,
+        interface=interface,
         report_type=reporting_options.specific_parameters.report_type,
     )
 
@@ -289,7 +289,7 @@ def change_group_order_and_arrangement(
     indices_to_swap = reorder_form_interface.indices_to_swap()
     new_group_order = reorder_form_interface.new_order_of_list()
     modify_arrangement_given_change_in_group_order(
-        object_store=interface.object_store,
+        interface=interface,
         indices_to_swap=indices_to_swap,
         new_group_order=new_group_order,
         report_type=reporting_options.specific_parameters.report_type,
@@ -301,7 +301,7 @@ def remove_empty_from_group_order_and_arrangement(
 ):
     empty_groups = get_empty_groups(reporting_options)
     remove_empty_groups_from_group_order_and_arrangement(
-        object_store=interface.object_store,
+        interface=interface,
         empty_groups=empty_groups,
         reporting_options=reporting_options,
     )
@@ -339,7 +339,7 @@ def get_order_matrix_interface(
 ) -> reorderMatrixInterface:
     arrangement_of_columns = (
         get_arrangement_of_columns_from_storage_or_derive_from_method(
-            object_store=interface.object_store, reporting_options=reporting_options
+            interface=interface, reporting_options=reporting_options
         )
     )
 

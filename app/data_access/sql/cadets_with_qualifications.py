@@ -1,15 +1,12 @@
 import datetime
-from typing import List, Union
+
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, int2date, date2int
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.cadets import SqlDataListOfCadets
-from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.cadets import  ListOfCadets
 from app.objects.composed.cadets_with_qualifications import   QualificationsForCadet, \
     QualificationAndDate, DictOfQualificationsForCadets
-from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications, CadetWithIdAndQualification, Qualification, \
-    NoQualifications
-from app.data_access.sql.qualifications import QUALIFICATION_TABLE
+from app.objects.qualifications import ListOfCadetsWithIdsAndQualifications, CadetWithIdAndQualification, ListOfQualifications
 
 CADETS_WITH_QUALIFICATION_TABLE = "cadets_with_qualifications_table"
 INDEX_NAME_CADETS_WITH_QUALIFICATION_TABLE = "cadets_with_qualifications_id"
@@ -38,7 +35,7 @@ class SqlListOfCadetsWithQualifications(
             if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
                 self.create_table()
 
-            self.write_qualification_for_cadet_with_checks_or_commit(
+            self._write_qualification_for_cadet_without_checks_or_commit(
                     cadet_with_qualifications
                 )
 
@@ -56,9 +53,9 @@ class SqlListOfCadetsWithQualifications(
     ):
         try:
             if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-                self.create_table()
+                return
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s' " %
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d " %
                                 (CADETS_WITH_QUALIFICATION_TABLE,
                                  CADET_ID,
                                  int(cadet_id),
@@ -78,9 +75,9 @@ class SqlListOfCadetsWithQualifications(
     ):
         try:
             if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-                self.create_table()
+                return
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' " %
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " %
                                 (CADETS_WITH_QUALIFICATION_TABLE,
                                  CADET_ID,
                                  int(cadet_id),
@@ -99,7 +96,7 @@ class SqlListOfCadetsWithQualifications(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s=%d ''' % (
                 CADETS_WITH_QUALIFICATION_TABLE, CADET_ID, int(cadet_id),
                 QUALIFICATION_ID, int(qualification_id)
             ))
@@ -111,46 +108,6 @@ class SqlListOfCadetsWithQualifications(
 
         return len(raw_list)>0
 
-    def highest_qualification_for_cadet(
-            self, cadet: Cadet
-    ) -> Union[object, Qualification]:
-        if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-            return QualificationsForCadet()
-
-        try:
-            cursor = self.cursor
-
-            query = "SELECT %s.%s, %s.%s  FROM %s INNER JOIN %s ON %s.%s=%s.%s WHERE %s.%s=%d ORDER BY %s.%s DESC LIMIT 1" % (
-
-                QUALIFICATION_TABLE, QUALIFICATION_NAME,
-                QUALIFICATION_TABLE, QUALIFICATION_ID,
-
-                QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE, QUALIFICATION_ID,
-                QUALIFICATION_TABLE, QUALIFICATION_ID,
-                CADETS_WITH_QUALIFICATION_TABLE, CADET_ID,int(cadet.id),
-                QUALIFICATION_TABLE, QUALIFICATION_ORDER
-
-            )
-
-            cursor.execute(query)
-
-            raw_list = cursor.fetchall()
-        except Exception as e1:
-            raise Exception("Error %s when reading cadets with qualifications" % str(e1))
-        finally:
-            self.close()
-
-        if len(raw_list)==0:
-            return NoQualifications
-
-        item = raw_list[0]
-        return Qualification(
-            name=item[0],
-            id=str(item[1])
-        )
-
 
     def get_dict_of_qualifications_for_all_cadets(
             self,
@@ -159,95 +116,74 @@ class SqlListOfCadetsWithQualifications(
         return DictOfQualificationsForCadets(
             dict(
                 [
-                    (cadet, self.get_list_of_qualifications_for_cadet(cadet)) for cadet in list_of_cadets
+                    (cadet, self.get_ordered_list_of_qualifications_for_cadet(cadet)) for cadet in list_of_cadets
                 ]
             )
         )
 
-    def get_list_of_qualifications_for_cadet(
-            self, cadet: Cadet
+
+    def get_ordered_list_of_qualifications_for_cadet(
+            self, cadet_id: str
     ) -> QualificationsForCadet:
-        if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-            return QualificationsForCadet()
+        list_of_qualifications_for_cadet = self.get_unordered_qualifications_for_cadet(cadet_id)
+        list_of_qualifications = self.list_of_qualifications
 
-        try:
-            cursor = self.cursor
-
-            query = "SELECT %s.%s, %s.%s, %s.%s, %s.%s  FROM %s INNER JOIN %s ON %s.%s=%s.%s WHERE %s.%s=%d ORDER BY %s.%s " % (
-
-                QUALIFICATION_TABLE, QUALIFICATION_NAME,
-                QUALIFICATION_TABLE, QUALIFICATION_ID,
-                CADETS_WITH_QUALIFICATION_TABLE, QUALIFICATION_DATE,
-                CADETS_WITH_QUALIFICATION_TABLE, AWARDED_BY,
-
-                QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE, QUALIFICATION_ID,
-                QUALIFICATION_TABLE, QUALIFICATION_ID,
-                CADETS_WITH_QUALIFICATION_TABLE, CADET_ID,int(cadet.id),
-                QUALIFICATION_TABLE, QUALIFICATION_ORDER
-
-            )
-
-            cursor.execute(query)
-
-            raw_list = cursor.fetchall()
-        except Exception as e1:
-            raise Exception("Error %s when reading cadets with qualifications" % str(e1))
-        finally:
-            self.close()
-
-        new_list= [QualificationAndDate(qualification=Qualification(
-            name=item[0],
-            id=str(item[1])
-        ),
-            date_achieved=int2date(item[2]),
-            awarded_by=str(item[3])
-                        )
-                for item in raw_list]
-
-        return QualificationsForCadet(new_list)
+        return list_of_qualifications_for_cadet.order_by(list_of_qualifications)
 
     @property
-    def list_of_cadets(self)-> ListOfCadets:
-        list_of_cadets = getattr(self, "_list_of_cadets", None)
-        if list_of_cadets is None:
-            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+    def list_of_qualifications(self) -> ListOfQualifications:
+        return self.object_store.get(self.object_store.data_api.data_list_of_qualifications.read)
+
+    @property
+    def list_of_cadets(self) -> ListOfCadets:
+        list_of_cadets = self.object_store.get(self.object_store.data_api.data_list_of_cadets.read)
 
         return list_of_cadets
 
-    def sorted_list_of_named_qualifications_for_cadet(self, cadet_id: str) -> List[str]:
+    def get_unordered_qualifications_for_cadet(self, cadet_id: str) ->  QualificationsForCadet:
+        raw_list = self.get_qualifications_for_cadet_with_ids(cadet_id)
+
+        return QualificationsForCadet([
+            QualificationAndDate(
+                qualification=self.list_of_qualifications.qualification_given_id(raw_item.qualification_id),
+                date_achieved=raw_item.date,
+                awarded_by=raw_item.awarded_by
+            ) for raw_item in raw_list
+        ])
+
+
+    def get_qualifications_for_cadet_with_ids(self, cadet_id: str) -> ListOfCadetsWithIdsAndQualifications:
         if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-            return []
+            return ListOfCadetsWithIdsAndQualifications([])
 
         try:
             cursor = self.cursor
-
-            query = "SELECT %s.%s FROM %s INNER JOIN %s ON %s.%s=%s.%s WHERE %s.%s=%d ORDER BY %s.%s " % (
-
-                QUALIFICATION_TABLE, QUALIFICATION_NAME,
-                QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE,
-                CADETS_WITH_QUALIFICATION_TABLE, QUALIFICATION_ID,
-                QUALIFICATION_TABLE, QUALIFICATION_ID,
-                CADETS_WITH_QUALIFICATION_TABLE, CADET_ID,int(cadet_id),
-                QUALIFICATION_TABLE, QUALIFICATION_ORDER
-
-            )
-
-            cursor.execute(query)
-
+            cursor.execute('''SELECT %s,  %s, %s FROM %s  WHERE %s=%d ''' % (
+                QUALIFICATION_ID,
+                QUALIFICATION_DATE, AWARDED_BY, CADETS_WITH_QUALIFICATION_TABLE,
+                CADET_ID,
+                int(cadet_id)
+            ))
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading cadets with qualifications" % str(e1))
         finally:
             self.close()
 
-        return [item[0] for item in raw_list]
+        new_list = [
+            CadetWithIdAndQualification(
+                cadet_id=cadet_id,
+                qualification_id=str(raw_cadet_with_qual[0]),
+                date=int2date(raw_cadet_with_qual[1]),
+                awarded_by=str(raw_cadet_with_qual[2])
+            ) for raw_cadet_with_qual in raw_list
+        ]
+
+        return ListOfCadetsWithIdsAndQualifications(new_list) ## ignore warning
 
     def read(self) -> ListOfCadetsWithIdsAndQualifications:
         if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
-            self.create_table()
+            return ListOfCadetsWithIdsAndQualifications([])
 
         try:
             cursor = self.cursor
@@ -283,12 +219,10 @@ class SqlListOfCadetsWithQualifications(
             if self.table_does_not_exist(CADETS_WITH_QUALIFICATION_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (CADETS_WITH_QUALIFICATION_TABLE))
 
             for cadet_with_qualifications in list_of_cadets_with_qualifications:
-                self.write_qualification_for_cadet_with_checks_or_commit(
+                self._write_qualification_for_cadet_without_checks_or_commit(
                     cadet_with_qualifications
                 )
 
@@ -298,7 +232,7 @@ class SqlListOfCadetsWithQualifications(
         finally:
             self.close()
 
-    def write_qualification_for_cadet_with_checks_or_commit(self, cadet_with_qualifications: CadetWithIdAndQualification):
+    def _write_qualification_for_cadet_without_checks_or_commit(self, cadet_with_qualifications: CadetWithIdAndQualification):
         cadet_id = int(cadet_with_qualifications.cadet_id)
         qualification_id = int(cadet_with_qualifications.qualification_id)
         qualification_date = date2int(cadet_with_qualifications.date)

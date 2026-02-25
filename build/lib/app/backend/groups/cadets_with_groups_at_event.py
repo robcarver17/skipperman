@@ -1,5 +1,6 @@
 from typing import List
 
+from app.backend.groups.list_of_groups import get_list_of_groups
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 from app.objects.utilities.exceptions import arg_not_passed
@@ -7,24 +8,19 @@ from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.cadet_attendance import DictOfDaySelectors
 
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_attendance_matrix_for_list_of_cadets_at_event,
     get_dict_of_all_event_info_for_cadets,
 )
+from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent, DaysAndGroups,
+   DictOfCadetsWithDaysAndGroupsAtEvent, DaysAndGroups,
 )
 
 from app.objects.events import Event
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_cadets_with_ids_and_groups_at_event,
-    object_definition_for_dict_of_cadets_with_groups_at_event,
-)
-from app.objects.cadet_with_id_with_group_at_event import ListOfCadetIdsWithGroups
 
 from app.data_access.store.object_store import ObjectStore
-from app.objects.groups import Group, ListOfGroups
+from app.objects.groups import Group, ListOfGroups, unallocated_group
 
 
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
@@ -123,7 +119,7 @@ def get_list_of_all_groups_at_event(
 
 def get_list_of_cadets_in_group(object_store: ObjectStore, event: Event, group: Group):
     return object_store.get(
-        object_store.data_api.data_list_of_cadets_with_groups.get_list_of_cadets_in_group,
+        object_store.data_api.data_list_of_cadets_with_groups.get_list_of_active_cadets_in_group,
         group=group,
         event=event)
 
@@ -131,3 +127,22 @@ def get_group_allocations_for_event_active_cadets_only(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
     return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_group_allocations_for_event_active_cadets_only, event=event)
+
+
+def get_sorted_list_of_groups_at_event(
+    object_store: ObjectStore, event: Event, include_unallocated: bool = True
+):
+    all_groups_at_event = get_list_of_all_groups_at_event(object_store=object_store, event=event)
+
+    all_groups = get_list_of_groups(object_store)
+    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
+        all_groups
+    )
+    if include_unallocated:
+        if unallocated_group not in sorted_groups_at_event:
+            sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
+    else:
+        if unallocated_group in sorted_groups_at_event:
+            sorted_groups_at_event.remove(unallocated_group)
+
+    return sorted_groups_at_event

@@ -23,7 +23,7 @@ class SqlDataMappedRegistrationData(GenericSqlData):
             if self.table_does_not_exist(MAPPED_REGISTRATION_DATA_TABLE):
                 self.create_table()
 
-            self.add_row_without_committing(event_id=event_id,row_in_registration_data=row_in_registration_data)
+            self._add_row_without_commit_or_checks(event_id=event_id, row_in_registration_data=row_in_registration_data)
 
             self.conn.commit()
 
@@ -35,7 +35,7 @@ class SqlDataMappedRegistrationData(GenericSqlData):
     def read(self, event_id: str) -> RegistrationDataForEvent:
         try:
             if self.table_does_not_exist(MAPPED_REGISTRATION_DATA_TABLE):
-                self.create_table()
+                return RegistrationDataForEvent.create_empty()
 
             cursor = self.cursor
             cursor.execute("SELECT %s, %s, %s FROM %s WHERE %s='%d'" % (
@@ -77,13 +77,11 @@ class SqlDataMappedRegistrationData(GenericSqlData):
             if self.table_does_not_exist(MAPPED_REGISTRATION_DATA_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (MAPPED_REGISTRATION_DATA_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s='%d" % (MAPPED_REGISTRATION_DATA_TABLE,
                                                                               EVENT_ID,
                                                                               int(event_id)))
             for row_in_registration_data in mapped_wa_event:
-                self.add_row_without_committing(event_id=event_id,row_in_registration_data=row_in_registration_data)
+                self._add_row_without_commit_or_checks(event_id=event_id, row_in_registration_data=row_in_registration_data)
 
             self.conn.commit()
 
@@ -92,7 +90,7 @@ class SqlDataMappedRegistrationData(GenericSqlData):
         finally:
             self.close()
 
-    def add_row_without_committing(self, event_id: str, row_in_registration_data: RowInRegistrationData):
+    def _add_row_without_commit_or_checks(self, event_id: str, row_in_registration_data: RowInRegistrationData):
         ## special field
         row_id = str(row_in_registration_data.row_id)
 

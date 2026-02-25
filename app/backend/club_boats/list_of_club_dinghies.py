@@ -18,11 +18,8 @@ def get_club_dinghy_from_id(
 def get_club_dinghy_with_name(
     object_store: ObjectStore, boat_name: str, default=arg_not_passed
 ) -> ClubDinghy:
-    return \
-        object_store.data_api.data_List_of_club_dinghies.get_club_dinghy_with_name(
-        dinghy_name=boat_name,
-        default = default
-    )
+    list_of_club_dinghies = get_list_of_club_dinghies(object_store)
+    return list_of_club_dinghies.club_dinghy_with_name(boat_name, default=default)
 
 
 def add_new_club_dinghy_given_string(

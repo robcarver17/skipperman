@@ -25,10 +25,10 @@ from app.data_access.configuration.field_list import (
     _REGISTRATION_STATUS,
     _SPECIAL_FIELDS,
     REGISTRATION_DATE,
-    CADET_DATE_OF_BIRTH,
+    CADET_DATE_OF_BIRTH, CADET_FIRST_NAME, CADET_SURNAME, CADET_DOUBLE_HANDED_PARTNER,
 )
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
-from app.objects.cadets import default_cadet
+from app.objects.cadets import default_cadet, Cadet
 
 
 # can't use generic methods here as based on dataclasses
@@ -291,3 +291,17 @@ def status_is_unable(status: str):
             return True
 
     return False
+
+
+def modify_row_to_clone_for_new_cadet_partner(
+    original_cadet: Cadet, new_cadet: Cadet, existing_row: RowInRegistrationData
+) -> RowInRegistrationData:
+    new_row = copy(existing_row)
+
+    new_row.replace_row_id_by_adding_random_number()  ## avoid duplicate warning
+    new_row.registration_status = manual_status  ## avoids it being deleted
+    new_row[CADET_FIRST_NAME] = new_cadet.first_name
+    new_row[CADET_SURNAME] = new_cadet.surname
+    new_row[CADET_DOUBLE_HANDED_PARTNER] = original_cadet.name
+
+    return new_row

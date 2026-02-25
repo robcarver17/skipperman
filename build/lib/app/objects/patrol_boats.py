@@ -26,7 +26,7 @@ NO_BOAT_ID = str(-9999)
 @dataclass
 class PatrolBoat(GenericSkipperManObjectWithIds):
     name: str
-    hidden: bool
+    hidden: bool = False
     id: str = arg_not_passed
 
     def __repr__(self):

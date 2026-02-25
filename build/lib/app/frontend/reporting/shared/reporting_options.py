@@ -120,7 +120,7 @@ def reset_all_report_options(
         interface=interface, report_generator=report_generator
     )
     reset_arrangement_report_options(
-        object_store=interface.object_store, report_generator=report_generator
+        interface=interface, report_generator=report_generator
     )
 
 

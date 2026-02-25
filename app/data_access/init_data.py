@@ -23,6 +23,7 @@ try:
 except:
     pass
 
+object_cache = SimpleObjectCache()
 
 ## IF YOU WANT TO USE A DIFFERENT KIND OF DATA, EG DATABASE, CREATE AN API AND MODIFY THIS
 def make_data():
@@ -34,8 +35,8 @@ def make_data():
 
 
 underling_data_api = make_data()
-object_cache = SimpleObjectCache()
 
 object_store = ObjectStore( data_api=underling_data_api,
-                           object_cache=object_cache)
+                           new_object_cache=object_cache)
 
+underling_data_api.add_object_store(object_store) ## so only one cache

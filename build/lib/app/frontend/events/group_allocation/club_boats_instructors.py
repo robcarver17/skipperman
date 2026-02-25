@@ -2,9 +2,10 @@ from typing import Tuple, List
 
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.backend.volunteers.volunteers_at_event import \
-    get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies, \
-    allocate_club_dinghy_to_volunteer_on_day, remove_club_dinghy_from_volunteer_on_day, \
-    get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy
+    get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies
+from app.backend.club_boats.volunteer_with_club_dinghies import \
+    get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy, allocate_club_dinghy_to_volunteer_on_day, \
+    remove_club_dinghy_from_volunteer_on_day
 from app.backend.club_boats.list_of_club_dinghies import get_club_dinghy_from_id
 from app.data_access.store.object_store import ObjectStore
 from app.frontend.shared.buttons import get_button_value_given_type_and_attributes, is_button_of_type, get_attributes_from_button_pressed_of_known_type

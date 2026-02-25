@@ -1,3 +1,4 @@
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
@@ -41,7 +42,7 @@ def get_list_of_volunteers_except_those_already_at_event(
 
 
 def add_volunteer_to_event_with_availability(
-    object_store: ObjectStore, volunteer: Volunteer, event: Event, no_availability: bool
+    interface: abstractInterface, volunteer: Volunteer, event: Event, no_availability: bool
 ):
     if no_availability:
         availability = DaySelector.create_empty()
@@ -53,7 +54,7 @@ def add_volunteer_to_event_with_availability(
     )
 
     add_volunteer_at_event(
-        object_store=object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         registration_data=registration_data,

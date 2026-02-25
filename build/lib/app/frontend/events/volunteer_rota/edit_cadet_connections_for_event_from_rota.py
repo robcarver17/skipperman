@@ -9,9 +9,7 @@ from app.backend.volunteers.connected_cadets import (
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.events import Event
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_list_of_active_cadets_at_event,
-)
+from app.backend.registration_data.cadet_registration_data import get_list_of_active_cadets_at_event
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -112,7 +110,7 @@ def post_form_edit_cadet_connections_from_rota(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return display_form_edit_cadet_connections_from_rota(interface)
 

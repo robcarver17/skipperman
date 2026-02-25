@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
 
 from app.backend.volunteers.list_of_volunteers import sort_list_of_volunteers
 from app.backend.volunteers.roles_and_teams import (
@@ -225,14 +222,13 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadet
     object_store: ObjectStore,
     dict_of_all_event_data_for_volunteers: DictOfAllEventDataForVolunteers,
 ) -> ListOfVolunteers:
-    dict_of_all_cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store,
-                                                                         event=dict_of_all_event_data_for_volunteers.event)
     list_of_locations = [
         get_cadet_location_string_for_volunteer(
+            object_store=object_store,
             volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get_data_for_volunteer(
                 volunteer
             ),
-            dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
+
         )
         for volunteer in dict_of_all_event_data_for_volunteers.list_of_volunteers()
     ]
@@ -306,7 +302,7 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
         object_store=object_store, list_of_tuples=tuple_of_volunteers_at_event_and_roles
     )
 
-    sorted_list_of_volunteers = ListOfVolunteers([tuple[0] for tuple in sorted_tuples])
+    sorted_list_of_volunteers = ListOfVolunteers([tuple[0] for tuple in sorted_tuples]) ## ignore type error
 
     return sorted_list_of_volunteers
 

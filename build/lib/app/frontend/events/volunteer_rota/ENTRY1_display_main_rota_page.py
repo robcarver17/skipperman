@@ -219,7 +219,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
             interface=interface, swap_button=last_button_pressed
         )
     elif update_most_common_role_button.pressed(last_button_pressed):
-        update_most_common_role_data(interface)
+        update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(interface)
 
 
     ## SAVES
@@ -239,7 +239,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_view_for_volunteer_rota)
 
@@ -252,7 +252,7 @@ def save_all_information_across_forms(interface: abstractInterface):
     save_group_notes_from_form(interface)
     save_warnings_from_table(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def add_new_volunteer_form(interface: abstractInterface):
@@ -287,6 +287,3 @@ def create_quick_report(interface: abstractInterface) -> File:
         override_print_options=dict(publish_to_public=False),
         ignore_stored_print_option_values_and_use_default=True,
     )
-
-def update_most_common_role_data(interface: abstractInterface):
-    update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(interface.object_store)

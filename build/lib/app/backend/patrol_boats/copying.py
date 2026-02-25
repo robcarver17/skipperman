@@ -1,6 +1,12 @@
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_boat_allocated_to_volunteer_on_day_at_event
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
-    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
+    VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday, VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
 )
+from app.objects.day_selectors import Day
+from app.objects.events import Event
+from app.objects.utilities.exceptions import missing_data
+from app.objects.volunteers import Volunteer
 
 
 def volunteer_has_at_least_one_allocated_role_which_matches_others(
@@ -150,3 +156,77 @@ def is_possible_to_copy_roles(
         return True
 
 
+def copy_across_earliest_allocation_of_boats_at_event(
+    interface: abstractInterface,
+    volunteer_with_boat_data: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
+    allow_overwrite: bool,
+):
+    earliest_day = earliest_day_with_boat_for_volunteer_or_none(
+        volunteer_with_boat_data
+    )
+    if earliest_day is None:
+        return
+
+    copy_across_boats_at_event(
+        interface=interface,
+        event=volunteer_with_boat_data.event,
+        volunteer=volunteer_with_boat_data.volunteer,
+        day=earliest_day,
+        allow_overwrite=allow_overwrite,
+    )
+
+
+def copy_across_boats_at_event(
+    interface: abstractInterface,
+    event: Event,
+    volunteer: Volunteer,
+    day: Day,
+    allow_overwrite: bool,
+):
+    patrol_boat_to_copy = get_boat_allocated_to_volunteer_on_day_at_event(object_store=interface.object_store,
+                                                                  event=event,
+                                                                  volunteer=volunteer,
+                                                                  day=day,
+                                                                  default=missing_data)
+    if patrol_boat_to_copy is missing_data:
+        raise Exception("Can't copy as no boat for %s on %s" % (volunteer, day))
+
+    for day_to_copy_over in event.days_in_event():
+        if day_to_copy_over==day:
+            continue
+
+        existing_boat = interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_allocated_to_an_id_for_volunteer_on_day(
+            event_id=event.id,
+            volunteer_id=volunteer.id,
+            day=day
+        )
+        if existing_boat:
+            if allow_overwrite:
+                interface.update(
+                    interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_boat_id_for_volunteer_on_day,
+                    event_id=event.id,
+                    volunteer_id=volunteer.id,
+                    day=day
+                )
+            else:
+                continue
+
+        interface.update(
+            interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
+            event_id=event.id,
+            volunteer_id=volunteer.id,
+            day=day,
+            patrol_boat_id=patrol_boat_to_copy.id
+        )
+
+
+def earliest_day_with_boat_for_volunteer_or_none(
+    volunteer_with_boat_data: VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
+) -> Day:
+    for day in volunteer_with_boat_data.event.days_in_event():
+        if volunteer_with_boat_data.patrol_boat_by_day.on_any_patrol_boat_on_given_day(
+            day
+        ):
+            return day
+
+    return None

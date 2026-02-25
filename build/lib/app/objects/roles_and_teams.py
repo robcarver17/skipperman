@@ -235,6 +235,18 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
     def _object_class_contained(self):
         return TeamsAndRolesWithIds
 
+    @classmethod
+    def create_new_list_for_team_from_ordered_role_ids(cls, team_id: str, list_of_role_ids: List[str]):
+        return ListOfTeamsAndRolesWithIds(
+            [
+                TeamsAndRolesWithIds(
+                    team_id=team_id,
+                    role_id=role_id,
+                    order_idx=idx
+                ) for idx, role_id in enumerate(list_of_role_ids)
+            ]
+        )
+
     def remove_roles_for_team_id(self, team_id: str):
         new_list = [
             role_and_team for role_and_team in self if role_and_team.team_id != team_id

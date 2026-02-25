@@ -13,8 +13,9 @@ def get_boat_class_from_name(
 def add_new_boat_class_given_string(
     interface: abstractInterface, name_of_entry_to_add: str
 ):
+    new_boat = BoatClass(name_of_entry_to_add)
     interface.update(interface.object_store.data_api.data_list_of_dinghies.add_new_boat_class_given_string,
-                       name_of_entry_to_add=name_of_entry_to_add)
+                       new_boat=new_boat)
 
 
 def modify_boat_class(

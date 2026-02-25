@@ -35,19 +35,13 @@ class SqlDataListOfCadets(GenericSqlData):
 
     def add_cadet(self, new_cadet: Cadet):
         if self.does_matching_cadet_exist(new_cadet):
-            raise Exception("Cadet exactly matching %s name/dob already exists!" % str(new_cadet))
+            raise Exception("Cadet exactly matching %s name and/or dob already exists!" % str(new_cadet))
+
+        new_cadet.id = self.next_available_cadet_id()
         try:
-            name = new_cadet.first_name
-            surname = new_cadet.surname
-            dob = date2int(new_cadet.date_of_birth)
-            status = new_cadet.membership_status.name
-            id = self.next_available_cadet_id()
-
-            insertion = "INSERT INTO %s ( %s, %s, %s, %s, %s) VALUES ( ?,?,?,?,?)" % (
-                CADETS_TABLE,
-            CADET_FIRST_NAME, CADET_SURNAME, CADET_DOB, CADET_MEMBERSHIP_STATUS, CADET_ID)
-
-            self.cursor.execute(insertion, (name, surname, dob, status, id))
+            self._write_row_without_checks_or_commits(
+                new_cadet
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -109,7 +103,7 @@ class SqlDataListOfCadets(GenericSqlData):
         ## matches everything except id
         try:
             if self.table_does_not_exist(CADETS_TABLE):
-                self.create_table()
+                return default
 
             cursor = self.cursor
             statement = "SELECT %s FROM %s WHERE %s=? AND %s=? AND %s=?" % (
@@ -140,7 +134,7 @@ class SqlDataListOfCadets(GenericSqlData):
         elif cadet_id == temporary_skip_cadet_id:
             return temporary_skip_cadet
         if self.table_does_not_exist(CADETS_TABLE):
-            return missing_data
+            return default
         try:
             cursor = self.cursor
             statement = "SELECT %s, %s, %s, %s FROM %s WHERE %s=%d" % (
@@ -236,23 +230,27 @@ class SqlDataListOfCadets(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (CADETS_TABLE))
 
             for cadet in list_of_cadets:
-                name = cadet.first_name
-                surname = cadet.surname
-                dob = date2int(cadet.date_of_birth)
-                status = cadet.membership_status.name
-                id = int(cadet.id)
+                self._write_row_without_checks_or_commits(cadet)
 
-                insertion = "INSERT INTO %s ( %s, %s, %s, %s, %s) VALUES ( ?,?,?,?,?)" % (
-                    CADETS_TABLE,
-                CADET_FIRST_NAME, CADET_SURNAME, CADET_DOB, CADET_MEMBERSHIP_STATUS, CADET_ID)
-
-                self.cursor.execute(insertion, (name, surname, dob, status, id))
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("error %s when writing cadets table" % str(e1))
         finally:
             self.close()
+
+    def _write_row_without_checks_or_commits(self, cadet: Cadet):
+        name = cadet.first_name
+        surname = cadet.surname
+        dob = date2int(cadet.date_of_birth)
+        status = cadet.membership_status.name
+        id = int(cadet.id)
+
+        insertion = "INSERT INTO %s ( %s, %s, %s, %s, %s) VALUES ( ?,?,?,?,?)" % (
+            CADETS_TABLE,
+            CADET_FIRST_NAME, CADET_SURNAME, CADET_DOB, CADET_MEMBERSHIP_STATUS, CADET_ID)
+
+        self.cursor.execute(insertion, (name, surname, dob, status, id))
 
     def create_table(self):
 

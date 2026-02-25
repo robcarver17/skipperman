@@ -7,32 +7,29 @@ from app.backend.events.list_of_events import (
     get_list_of_events,
 )
 from app.backend.groups.cadets_with_groups_at_event import get_group_allocations_for_event_active_cadets_only
-from app.data_access.store.object_definitions import \
-    object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version
 
 from app.data_access.store.object_store import ObjectStore
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfEventAllocations, )
+    DictOfEventAllocations, DictOfCadetsWithDaysAndGroupsAtEvent, )
 from app.objects.composed.dict_of_previous_cadet_groups import \
     DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds
 from app.objects.events import Event, ListOfEvents
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group, missing_group_display_only
-## FIXME REFACTOR
 
 ## EXTERNAL
 def get_list_of_previous_groups_as_str(
     object_store: ObjectStore,
     event_to_exclude: Event,
     cadet: Cadet,
-    only_events_before_excluded_event: bool = True,
 ) -> List[str]:
     dict_of_groups = get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
         object_store=object_store,
         excluding_event=event_to_exclude,
         cadet=cadet,
-        only_events_before_excluded_event=only_events_before_excluded_event,
+        only_events_before_excluded_event=False,
     )
     dict_of_groups = dict(
         [
@@ -48,38 +45,25 @@ def get_list_of_previous_groups_as_str(
     return list_of_groups_as_str
 
 ## external
-def get_dict_of_all_event_allocations_for_single_cadet(
+def get_dict_of_most_common_group_names_at_event_for_single_cadet(
     object_store: ObjectStore,
     cadet: Cadet,
 ) -> Dict[Event, str]:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_all_event_allocations_for_single_cadet,
-                            cadet_id=cadet.id)
+    dict_of_events_and_groups = object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_most_common_group_allocations_for_single_cadet,
+                                                 cadet_id=cadet.id)
 
-## EXTERNAL
-def DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
-    object_store: ObjectStore,
-    cadet: Cadet,
-    remove_unallocated: bool = False,
-    excluding_event: Event = arg_not_passed,
-    only_events_before_excluded_event: bool = True,
-    N_events: int = ALL_EVENTS,
-) -> Dict[Event, Group]:
-    return get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
-        object_store=object_store,
-        cadet=cadet,
-        N_events=N_events,
-        excluding_event=excluding_event,
-        remove_unallocated=remove_unallocated,
-        only_events_before_excluded_event=only_events_before_excluded_event,
-    )
+    return dict([
+        (event, group.name)
+        for event, group in dict_of_events_and_groups.items()
+    ])
+
 
 
 ## external
-def get_dict_of_event_allocations_given_list_of_events_from_stored_data(
+def get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
     object_store: ObjectStore,
     list_of_cadets: ListOfCadets,
-    list_of_events: ListOfEvents,
-):
+    list_of_events: ListOfEvents)-> Dict[Cadet, Dict[Event, str]]:
     dict_of_all_group_names_for_events = get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store)
     raw_dict = dict(
         [
@@ -97,16 +81,6 @@ def get_dict_of_event_allocations_given_list_of_events_from_stored_data(
 
     return DictOfEventAllocations(raw_dict, list_of_events=list_of_events)
 
-def get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store: ObjectStore) -> DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
-    return object_store.DEPRECATE_get(object_definition=object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version)
-
-
-def update_dict_of_group_names_for_events_and_cadets_persistent_version(object_store: ObjectStore, dict_of_group_names_for_events_and_cadets: DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds):
-    object_store.DEPRECATE_update(
-        dict_of_group_names_for_events_and_cadets,
-        object_definition=object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version
-    )
-
 
 def get_dict_of_event_allocations_for_single_cadet_given_list_of_events_from_persistent_data(
     cadet: Cadet,
@@ -123,6 +97,26 @@ def get_dict_of_event_allocations_for_single_cadet_given_list_of_events_from_per
     )
 
     return dict_of_previous_groups
+
+def get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store: ObjectStore) -> DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
+    return object_store.get(
+        object_store.data_api.data_list_of_group_names_for_events_and_cadets_persistent_version.get_dict_of_group_names_for_events_and_cadets_persistent_version
+    )
+
+
+## external
+def delete_persistent_version_of_previous_groups_for_cadet(interface: abstractInterface, cadet: Cadet):
+    interface.update(
+        interface.object_store.data_api.data_list_of_group_names_for_events_and_cadets_persistent_version.delete_persistent_version_of_previous_groups_for_cadet,
+        cadet_id=cadet.id
+    )
+
+
+def update_dict_of_group_names_for_events_and_cadets_persistent_version(interface: abstractInterface, dict_of_group_names_for_events_and_cadets: DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds):
+    interface.update(
+        interface.object_store.data_api.data_list_of_group_names_for_events_and_cadets_persistent_version.update_dict_of_group_names_for_events_and_cadets,
+        dict_of_group_names_for_events_and_cadets=dict_of_group_names_for_events_and_cadets
+    )
 
 
 
@@ -150,7 +144,9 @@ def get_dict_of_event_allocations_for_last_N_events_for_single_cadet(
     return dict_of_previous_groups
 
 ## external
-def update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(object_store: ObjectStore):
+def update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(interface: abstractInterface):
+    object_store=interface.object_store
+
     dict_of_group_names_for_events_and_cadets_persistent_version =get_dict_of_group_names_for_events_and_cadets_persistent_version(object_store)
     list_of_cadets = get_list_of_cadets(object_store)
     list_of_events = get_list_of_events(object_store)
@@ -176,7 +172,7 @@ def update_dict_of_group_names_for_events_and_cadets_persistent_version_from_cor
         )
 
     update_dict_of_group_names_for_events_and_cadets_persistent_version(dict_of_group_names_for_events_and_cadets=dict_of_group_names_for_events_and_cadets_persistent_version,
-                                                                        object_store=object_store)
+                                                                        interface=interface)
 
 
 
@@ -189,11 +185,11 @@ def get_dict_of_event_allocations_for_single_cadet_given_list_of_events(
     pad: bool = False,
 ) -> Dict[Event, Group]:
     previous_allocations_as_dict = (
-        DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+        get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
             object_store=object_store, list_of_events=list_of_events
         )
     )
-    dict_of_previous_groups = DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
+    dict_of_previous_groups = get_most_common_allocation_for_cadet_in_previous_events(
         cadet=cadet, previous_allocations_as_dict=previous_allocations_as_dict, pad=pad
     )
 
@@ -209,38 +205,9 @@ def get_dict_of_event_allocations_for_single_cadet_given_list_of_events(
     return dict_of_previous_groups
 
 
-def get_dict_of_group_allocations_for_all_events_active_cadets_only(
-    object_store: ObjectStore,
-) -> Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent]:
-    list_of_events = get_list_of_events(object_store)
-    list_of_events = list_of_events.sort_by_start_date_asc()
-
-    return DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
-        object_store=object_store, list_of_events=list_of_events
-    )
-
-
-def DEPRECATE_get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
-    object_store: ObjectStore, list_of_events: list
-) -> Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent]:
-    allocations_as_dict = dict(
-        [
-            (
-                event,
-                get_group_allocations_for_event_active_cadets_only(
-                    object_store=object_store, event=event
-                ),
-            )
-            for event in list_of_events
-        ]
-    )
-
-    return allocations_as_dict
-
-
-def DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
+def get_most_common_allocation_for_cadet_in_previous_events(
     cadet: Cadet,
-    previous_allocations_as_dict: Dict[Event, DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent],
+    previous_allocations_as_dict: Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent],
     pad: bool = False,
 ) -> Dict[Event, Group]:
     dict_of_allocations = dict(
@@ -265,3 +232,34 @@ def DEPRECATE_most_common_allocation_for_cadet_in_previous_events(
         )
 
     return dict_of_allocations
+
+
+## external
+def get_dict_of_group_allocations_for_all_events_active_cadets_only(
+    object_store: ObjectStore,
+) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
+    list_of_events = get_list_of_events(object_store)
+    list_of_events = list_of_events.sort_by_start_date_asc()
+
+    return get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+        object_store=object_store, list_of_events=list_of_events
+    )
+
+
+def get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
+    object_store: ObjectStore, list_of_events: list
+) -> Dict[Event, DictOfCadetsWithDaysAndGroupsAtEvent]:
+    allocations_as_dict = dict(
+        [
+            (
+                event,
+                get_group_allocations_for_event_active_cadets_only(
+                    object_store=object_store, event=event
+                ),
+            )
+            for event in list_of_events
+        ]
+    )
+
+    return allocations_as_dict
+

@@ -1,36 +1,83 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.objects.composed.volunteers_with_skills import SkillsDict
-from app.objects.volunteers import Volunteer
+from app.objects.composed.volunteers_with_skills import SkillsDict, DictOfVolunteersWithSkills
+from app.objects.volunteer_skills import ListOfSkills
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteers_with_skills_and_ids import ListOfVolunteerSkillsWithIds, VolunteerSkillWithIds
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.skills import  SqlDataListOfSkills
 
 VOLUNTEERS_WITH_SKILLS_TABLE = "volunteers_with_skills"
 INDEX_VOLUNTEERS_WITH_SKILLS_TABLE = "index_volunteers_with_skills"
 
 class SqlDataListOfVolunteerSkills(GenericSqlData):
-    def save_skills_for_volunteer(
-            self, volunteer: Volunteer, dict_of_skills: SkillsDict
+
+    def remove_skill_for_volunteer(
+            self, volunteer_id: str, skill_id: str
     ):
-        volunteer_id = int(volunteer.id)
         try:
-            list_of_skills = self.list_of_skills
+            if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
+               return
+
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d" % (VOLUNTEERS_WITH_SKILLS_TABLE,
+                                                                VOLUNTEER_ID,
+                                                                int(volunteer_id),
+                                                                          SKILL_ID,
+                                                                          int(skill_id)))
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing volunteer skills" % str(e1))
+        finally:
+            self.close()
+
+    def add_skill_for_volunteer(
+            self, volunteer_id: str, skill_id: str
+    ):
+        if self.does_volunteer_have_skill(volunteer_id=volunteer_id, skill_id=skill_id):
+            return
+
+        self._add_skill_for_volunteer_without_checks(volunteer_id=volunteer_id, skill_id=skill_id)
+
+    def _add_skill_for_volunteer_without_checks(
+                self, volunteer_id: str, skill_id: str
+        ):
+        try:
             if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (VOLUNTEERS_WITH_SKILLS_TABLE, VOLUNTEER_ID, volunteer_id))
+            volunteer_with_skill = VolunteerSkillWithIds(volunteer_id=volunteer_id, skill_id=skill_id)
+            self._add_row_without_checks_or_commits(volunteer_with_skill)
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing volunteer skills" % str(e1))
+        finally:
+            self.close()
 
-            for skill in list_of_skills:
-                if dict_of_skills.has_skill(skill):
-                    skill_id = int(skill.id)
-                    insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
-                        VOLUNTEERS_WITH_SKILLS_TABLE,
-                        VOLUNTEER_ID, SKILL_ID)
+    def does_volunteer_have_skill(self, volunteer_id: str, skill_id: str):
+        if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
+            return False
 
-                    self.cursor.execute(insertion, (
-                        volunteer_id, skill_id))
+        try:
+            cursor = self.cursor
+            statement = "SELECT * FROM %s WHERE %s=%d AND %s=%d" % (
+                 VOLUNTEERS_WITH_SKILLS_TABLE, VOLUNTEER_ID, int(volunteer_id), SKILL_ID, int(skill_id)
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading volunteer skills data" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
+    def delete_volunteer_skills(self, volunteer_id: str):
+        try:
+            if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
+               return
+
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (VOLUNTEERS_WITH_SKILLS_TABLE,
+                                                                VOLUNTEER_ID,
+                                                                int(volunteer_id)))
 
             self.conn.commit()
         except Exception as e1:
@@ -39,9 +86,54 @@ class SqlDataListOfVolunteerSkills(GenericSqlData):
             self.close()
 
 
+    def update_skills_for_volunteer(
+            self, volunteer: Volunteer, dict_of_skills: SkillsDict
+    ):
+        try:
+            if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
+                self.create_table()
+
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (VOLUNTEERS_WITH_SKILLS_TABLE, VOLUNTEER_ID, int(volunteer.id)))
+
+            for skill in dict_of_skills.list_of_held_skills():
+                self._add_skill_for_volunteer_without_checks(
+                    volunteer_id=volunteer.id,
+                    skill_id=skill.id
+                )
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing volunteer skills" % str(e1))
+        finally:
+            self.close()
+
+    def get_dict_of_volunteers_with_skills(
+            self ) -> DictOfVolunteersWithSkills:
+        raw_data = self.read()
+        new_dict ={}
+        for raw_item in raw_data:
+            volunteer_id =raw_item.volunteer_id
+            skill_id = raw_item.skill_id
+
+            volunteer = self.list_of_volunteers.volunteer_with_id(volunteer_id)
+            skill = self.list_of_skills.skill_with_id(skill_id)
+
+            skills_dict_this_volunteer = new_dict.get(volunteer, SkillsDict())
+            skills_dict_this_volunteer[skill] = True
+            new_dict[volunteer] = skills_dict_this_volunteer
+
+        return DictOfVolunteersWithSkills(new_dict)
+
+
+    @property
+    def list_of_volunteers(self) -> ListOfVolunteers:
+        return self.object_store.get(
+            self.object_store.data_api.list_of_volunteers.read
+        )
+
     def get_dict_of_existing_skills_for_volunteer(
             self, volunteer_id: str
-    ) -> SkillsDict:# padded
+    ) -> SkillsDict:
 
         if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
             self.create_table()
@@ -64,17 +156,15 @@ class SqlDataListOfVolunteerSkills(GenericSqlData):
         list_of_skills =self.list_of_skills
 
         skills_dict = dict(
-            [skill, skill.id in list_of_skill_ids]
-            for skill in list_of_skills
+            [(skill,skill.id in list_of_skill_ids)
+            for skill in list_of_skills]
         )
 
-        return SkillsDict(skills_dict)
+        return SkillsDict(skills_dict) ## ignore warning
 
     @property
-    def list_of_skills(self):
-        list_of_skills  =getattr(self, "_list_of_skills", None)
-        if list_of_skills is None:
-            self._list_of_skills = list_of_skills =   SqlDataListOfSkills(self.db_connection).read()
+    def list_of_skills(self) -> ListOfSkills:
+        list_of_skills  =self.object_store.get(self.object_store.data_api.data_list_of_skills.read)
 
         return list_of_skills
 
@@ -109,25 +199,25 @@ class SqlDataListOfVolunteerSkills(GenericSqlData):
             if self.table_does_not_exist(VOLUNTEERS_WITH_SKILLS_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (VOLUNTEERS_WITH_SKILLS_TABLE))
 
             for volunteer_with_skill in list_of_volunteer_skills:
-                volunteer_id=int(volunteer_with_skill.volunteer_id)
-                skill_id= int(volunteer_with_skill.skill_id)
-                insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
-                    VOLUNTEERS_WITH_SKILLS_TABLE,
-                    VOLUNTEER_ID, SKILL_ID)
-
-                self.cursor.execute(insertion, (
-                    volunteer_id, skill_id))
-
+                self._add_row_without_checks_or_commits(volunteer_with_skill)
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing volunteer skills" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_checks_or_commits(self,volunteer_with_skill: VolunteerSkillWithIds ):
+        volunteer_id = int(volunteer_with_skill.volunteer_id)
+        skill_id = int(volunteer_with_skill.skill_id)
+        insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
+            VOLUNTEERS_WITH_SKILLS_TABLE,
+            VOLUNTEER_ID, SKILL_ID)
+
+        self.cursor.execute(insertion, (
+            volunteer_id, skill_id))
 
     def delete_table(self):
         self.conn.execute("DROP TABLE %s" % VOLUNTEERS_WITH_SKILLS_TABLE)

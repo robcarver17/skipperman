@@ -2,7 +2,7 @@ from flask import request, render_template
 
 from flask_login import login_user, logout_user
 
-from app.backend.security.modify_user import change_password_for_user
+from app.backend.security.list_of_users import change_password_for_user
 from app.objects.users_and_security import (
     default_admin_user_if_none_defined,
     ADMIN_GROUP,

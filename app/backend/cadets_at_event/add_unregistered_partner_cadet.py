@@ -1,4 +1,3 @@
-from copy import copy
 from typing import List
 
 from app.backend.groups.cadets_with_groups_at_event import (
@@ -18,50 +17,26 @@ from app.backend.registration_data.identified_cadets_at_event import (
 from app.backend.registration_data.raw_mapped_registration_data import (
    add_row_to_raw_mapped_registration_data,
 )
-from app.data_access.configuration.field_list import (
-    CADET_FIRST_NAME,
-    CADET_SURNAME,
-    CADET_DOUBLE_HANDED_PARTNER,
-)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
-from app.objects.utilities.exceptions import NoMoreData, MissingData, DuplicateCadets
-from app.objects.registration_data import RowInRegistrationData
-from app.objects.registration_status import manual_status
-from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
-)
+from app.objects.utilities.exceptions import NoMoreData
+from app.objects.registration_data import RowInRegistrationData, modify_row_to_clone_for_new_cadet_partner
+from app.backend.registration_data.cadet_registration_data import get_registration_data_for_single_cadet_at_event
 
-## FIXME NEEDS REFACTORING
 
-def from_partner_name_to_cadet(partner_name: str) -> Cadet:
-    if len(partner_name) > 0:
-        partner_name_split = partner_name.split(" ")
-        if len(partner_name_split) > 1:
-            first_name = " ".join(partner_name_split[:-1])
-            second_name = partner_name_split[-1]
-        else:
-            first_name = partner_name
-            second_name = ""
-    else:
-        first_name = second_name = ""
-
-    return Cadet.from_name_only(first_name=first_name, surname=second_name)
 
 
 def get_registered_two_handed_partner_name_for_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
-    cadets_at_event_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
-        object_store=object_store, event=event
-    )
-
-    cadet_at_event = cadets_at_event_data.registration_data_for_cadet(cadet)
-    return cadet_at_event.data_in_row.get(CADET_DOUBLE_HANDED_PARTNER, "")
+    cadet_at_event = get_registration_data_for_single_cadet_at_event(object_store=object_store,
+                                                                     event=event,
+                                                                     cadet=cadet)
+    return cadet_at_event.two_handed_partner(default="")
 
 
 def add_unregistered_partner_cadet(
@@ -131,20 +106,6 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
     return new_row
 
 
-def modify_row_to_clone_for_new_cadet_partner(
-    original_cadet: Cadet, new_cadet: Cadet, existing_row: RowInRegistrationData
-) -> RowInRegistrationData:
-    new_row = copy(existing_row)
-
-    new_row.replace_row_id_by_adding_random_number()  ## avoid duplicate warning
-    new_row.registration_status = manual_status  ## avoids it being deleted
-    new_row[CADET_FIRST_NAME] = new_cadet.first_name
-    new_row[CADET_SURNAME] = new_cadet.surname
-    new_row[CADET_DOUBLE_HANDED_PARTNER] = original_cadet.name
-
-    return new_row
-
-
 def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
         interface: abstractInterface,
     event: Event,
@@ -172,12 +133,12 @@ def get_list_of_days_given_original_cadet(
     event: Event,
     original_cadet: Cadet,
 ) -> List[Day]:
-    registration_data = DEPRECATE_get_dict_of_cadets_with_registration_data(
-        object_store=object_store, event=event
-    )
-    list_of_days = registration_data.registration_data_for_cadet(
+    registration_data = get_registration_data_for_single_cadet_at_event(
+        object_store=object_store,
+        event=event,
         cadet=original_cadet
-    ).availability.days_available()
+    )
+    list_of_days = registration_data.availability.days_available()
 
     return list_of_days
 

@@ -1,10 +1,12 @@
 from copy import copy
-from typing import List, Callable, Dict
+from typing import List, Callable
 
+from app.backend.registration_data.cadet_registration_data import is_event_first_event_for_cadet
 from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
+from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.composed.volunteer_roles import (
     empty_if_qualified_for_role_else_warnings,
 )
@@ -23,19 +25,14 @@ from app.backend.registration_data.identified_cadets_at_event import (
     get_all_rows_in_registration_data_which_have_been_identified_for_a_specific_cadet,
 )
 
-from app.backend.groups.previous_groups import (
-    DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet,
-)
 from app.backend.volunteers.volunteers_at_event import (
     get_dict_of_all_event_data_for_volunteers,
 )
 from app.backend.rota.volunteers_and_cadets import (
     list_of_cadet_groups_associated_with_volunteer,
 )
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_availability_dict_for_active_cadets_at_event,
-    get_list_of_active_cadets_at_event,
-)
+from app.backend.registration_data.cadet_registration_data import get_list_of_active_cadets_at_event
+from app.backend.cadets_at_event.cadet_availability import  get_attendance_matrix_for_list_of_cadets_at_event
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
     get_list_of_volunteers_associated_with_cadet_at_event,
     get_list_of_cadets_associated_with_volunteer_at_event,
@@ -46,7 +43,7 @@ from app.objects.cadets import (
     Cadet,
     cadet_is_too_young_to_be_without_parent,
 )
-from app.objects.day_selectors import empty_day_selector, Day, DaySelector
+from app.objects.day_selectors import empty_day_selector, Day
 from app.objects.events import Event
 from app.objects.registration_data import get_volunteer_status_from_row
 from app.objects.event_warnings import (
@@ -305,7 +302,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     active_connected_cadets: ListOfCadets,
     missing_volunteers_if_true_otherwise_missing_cadets: bool,
 ) -> str:
-    cadet_at_event_availability = get_availability_dict_for_active_cadets_at_event(
+    cadet_at_event_availability = get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event
     )
     volunteer_registration_data = volunteer_event_data.registration_data
@@ -332,7 +329,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
 def warning_about_volunteer_availability_on_specific_day(
     volunteer_registration_data: RegistrationDataForVolunteerAtEvent,
     active_connected_cadets: ListOfCadets,
-    cadet_at_event_availability: Dict[Cadet, DaySelector],
+    cadet_at_event_availability: DictOfDaySelectors,
     day: Day,
     warnings: List[str],
     missing_volunteers_if_true_otherwise_missing_cadets: bool,
@@ -366,7 +363,7 @@ def warning_about_volunteer_availability_on_specific_day(
 
 
 def get_list_of_cadets_available_on_day(
-    cadet_at_event_availability: Dict[Cadet, DaySelector],
+    cadet_at_event_availability: DictOfDaySelectors,
     active_connected_cadets: ListOfCadets,
     day: Day,
 ) -> ListOfCadets:
@@ -384,7 +381,7 @@ def get_list_of_cadets_available_on_day(
 
 
 def is_cadet_available_on_day(
-    cadet_at_event_availability: Dict[Cadet, DaySelector],
+    cadet_at_event_availability: DictOfDaySelectors,
     cadet: Cadet,
     day: Day,
 ) -> bool:
@@ -504,7 +501,7 @@ def warning_for_specific_cadet_at_event(
     )
     warning = ""
     if no_volunteer:
-        first_event = is_first_event_for_cadet(
+        first_event = is_event_first_event_for_cadet(
             object_store=object_store, event=event, cadet=cadet
         )
         too_young = cadet_is_too_young_to_be_without_parent(cadet)
@@ -535,19 +532,6 @@ def cadet_has_no_active_volunteer(
     return len(volunteers) == 0
 
 
-def is_first_event_for_cadet(
-    object_store: ObjectStore, event: Event, cadet: Cadet
-) -> bool:
-    previous_allocation = copy(
-        DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet(
-            object_store=object_store,
-            cadet=cadet,
-            excluding_event=event,
-            only_events_before_excluded_event=True,
-        )
-    )
-
-    return len(previous_allocation) == 0
 
 
 def get_volunteer_status_and_possible_names(

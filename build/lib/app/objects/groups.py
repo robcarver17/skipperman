@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -114,6 +114,16 @@ class ListOfGroups(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Group
 
+    def group_with_name(self, group_name: str, default=arg_not_passed):
+        if group_name == unallocated_group.name:
+            return unallocated_group
+
+        return get_unique_object_with_attr_in_list(
+            self,
+            attr_name='name',
+            attr_value=group_name,
+            default=default
+        )
 
     def group_with_id(self, group_id: str, default=arg_not_passed):
         if group_id == unallocated_group_id:

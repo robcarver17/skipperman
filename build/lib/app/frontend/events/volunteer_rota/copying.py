@@ -48,7 +48,7 @@ def update_if_individual_copy_overwrite_button_pressed(
     )
     event = get_event_from_state(interface)
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        object_store=interface.object_store,
+        interface=interface,
         volunteer=volunteer,
         day=day,
         event=event,
@@ -64,7 +64,7 @@ def update_if_individual_copy_fill_button_pressed(
     )
     event = get_event_from_state(interface)
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         day=day,
@@ -90,7 +90,7 @@ def update_if_copy_previous_role_button_pressed(
         return
 
     update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         new_role_and_group=previous_role_and_group,
@@ -106,7 +106,7 @@ def update_if_copy_first_role_to_empty_roles_button_pressed(
     )
     for volunteer in list_of_volunteers_at_event:
         copy_earliest_valid_role_for_volunteer(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             volunteer=volunteer,
             allow_overwrite=False,
@@ -122,7 +122,7 @@ def update_if_copy_first_role_and_overwrite_button_pressed(
     )
     for volunteer in list_of_volunteers_at_event:
         copy_earliest_valid_role_for_volunteer(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             volunteer=volunteer,
             allow_overwrite=True,

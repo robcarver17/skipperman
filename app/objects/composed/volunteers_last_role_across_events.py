@@ -1,7 +1,8 @@
 from typing import Dict, List, Union
 
 from app.objects.composed.volunteer_with_group_and_role_at_event import RoleAndGroup, RoleAndGroupAndTeam
-from app.objects.last_role_for_volunteer import ListOfMostCommonRoleForVolunteersAcrossEventsWithId
+from app.objects.last_role_for_volunteer import ListOfMostCommonRoleForVolunteersAcrossEventsWithId, \
+    MostCommonRoleForVolunteerAcrossEventsWithId
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
@@ -16,14 +17,6 @@ no_role_and_group =RoleAndGroup()
 class DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents(
     Dict[Volunteer, RoleAndGroupAndTeam]
 ):
-    def __init__(
-        self,
-        raw_dict: Dict[Volunteer, RoleAndGroupAndTeam],
-        list_of_most_common_role_for_volunteers_across_events_id: ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
-
-    ):
-        super().__init__(raw_dict)
-        self._list_of_most_common_role_for_volunteers_across_events_with_id= list_of_most_common_role_for_volunteers_across_events_id
 
     def get_most_common_role_and_group_for_volunteer_or_none(self, volunteer: Volunteer) -> RoleAndGroupAndTeam:
         role_and_group = self.get(volunteer, no_role_and_group)
@@ -40,7 +33,12 @@ class DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents(
 
     @property
     def list_of_most_common_role_for_volunteers_across_events_with_id(self):
-        return self._list_of_most_common_role_for_volunteers_across_events_with_id
+        return ListOfMostCommonRoleForVolunteersAcrossEventsWithId([
+            MostCommonRoleForVolunteerAcrossEventsWithId(volunteer_id=volunteer.id,
+                                                         role_id=most_common.role.id,
+                                                         group_id=most_common.group.id)
+            for volunteer, most_common in self.items()]
+        )
 
 def compose_dict_of_volunteers_with_last_role_and_group_across_events(
     list_of_groups: ListOfGroups,

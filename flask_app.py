@@ -8,6 +8,7 @@ from app.data_access.init_data import home_directory
 from app.web.end_points.documentation_pages import generate_help_page_html
 from app.web.flask.flash import flash_error
 from app.web.end_points.get_file import get_file_given_location
+from app.web.flask.flask_interface import from_multidict_to_dict
 from app.web.html.config_html import PROFILE
 
 from flask import session, Flask, redirect, request
@@ -162,6 +163,7 @@ def action(action_option:str, form_name: str):
         return generate_menu_page_html()
 
     args_passed = request.args
+    args_passed= from_multidict_to_dict(args_passed)
 
     return generate_action_page_html(action_name=action_option, form_name=form_name, args_passed=args_passed)
 

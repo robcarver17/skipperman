@@ -180,9 +180,30 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
             ]
         )
 
+
 class DictOfPeopleAndClubDinghiesAtEvent(
     Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
 ):
+    def list_of_volunteers_on_day_currently_allocated_to_any_club_dinghy(self, day: Day):
+        list_of_volunteers = [
+            volunteer for volunteer, dict_of_days in self.items() if dict_of_days.has_any_dinghy_on_specific_day(day)
+        ]
+        return ListOfVolunteers(list_of_volunteers)
+
+    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(self, day: Day, club_boat: ClubDinghy):
+        list_of_volunteers = [
+            volunteer for volunteer, dict_of_days in self.items() if dict_of_days.has_specific_dinghy_on_day(day, club_boat)
+        ]
+        return ListOfVolunteers(list_of_volunteers)
+
+    def allocate_club_boat_for_cadet_on_day(
+        self, person: Union[Cadet, Volunteer], day: Day, club_boat: ClubDinghy
+    ):
+        boats_for_person = self.club_dinghys_for_person(person)
+        boats_for_person.allocate_club_boat_on_day(day=day, club_boat=club_boat)
+        self[person] = boats_for_person
+
+
     def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
         self,
             sorted_list_of_dinghies: ListOfClubDinghies

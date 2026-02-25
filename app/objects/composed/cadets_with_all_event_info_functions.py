@@ -1,22 +1,23 @@
+from copy import copy
 from dataclasses import dataclass
 from typing import Union, Dict
 
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+    DictOfCadetsAndBoatClassAndPartners,
 )
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
     are_partners_equal,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+     DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_registration_data import (
-    DEPRECATE_DictOfCadetsWithRegistrationData,
+    DictOfCadetsWithRegistrationData,
 )
 from app.objects.day_selectors import Day, DaySelector
 from app.objects.groups import unallocated_group
@@ -24,8 +25,8 @@ from app.objects.partners import valid_partnership_given_partner_cadet, NoCadetP
 
 
 def cadets_not_allocated_to_group_but_attending_on_day(
-    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
     day: Day,
 ) -> ListOfCadets:
     list_of_cadets = []
@@ -54,8 +55,8 @@ def cadets_not_allocated_to_group_but_attending_on_day(
 
 
 def cadets_not_allocated_to_group_on_at_least_one_day_attending(
-    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> ListOfCadets:
     list_of_cadets = []
     for cadet in dict_of_cadets_with_registration_data.list_of_cadets():
@@ -79,8 +80,8 @@ def cadets_not_allocated_to_group_on_at_least_one_day_attending(
 
 def cadet_is_not_allocated_to_group_on_at_least_one_day_attending(
     cadet: Cadet,
-    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> bool:
     availability = dict_of_cadets_with_registration_data.registration_data_for_cadet(
         cadet
@@ -147,10 +148,32 @@ class PartnershipChange:
 
 @dataclass
 class RequiredDictForAllocation:
-    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners
-    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent
+    dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners
+    dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent
     availability_dict: Dict[Cadet, DaySelector]
+
+    @property
+    def messages(self):
+        messages = getattr(self, "_messages", None)
+        if messages is None:
+            messages = self._messages = []
+
+        return messages
+
+    def get_messages_or_none_and_clear(self) -> Union[str, None]:
+        msgs=copy(self.messages)
+        if len(msgs)==0:
+            return None
+
+        self._messages = []
+
+        return ", ".join(msgs)
+
+    def add_message(self, message:str):
+        messages = self.messages
+        messages.append(message)
+        self._messages = messages
 
     def add_single_cadet_to_list(self, cadet: Cadet):
         self.add_affected_cadets_to_list(ListOfCadets([cadet]))
@@ -175,22 +198,25 @@ class RequiredDictForAllocation:
 def update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+
+
 ) -> RequiredDictForAllocation:
     if availability_is_bad_for_sailor_or_partner(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
     ):
-
         return required_dict_for_allocation
 
     required_dict_for_allocation = update_cadets_own_info_excluding_partner(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
+
     )
 
     required_dict_for_allocation = update_partnership_info_for_updated_cadet_at_event(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
+
     )
 
     return required_dict_for_allocation
@@ -222,6 +248,7 @@ def availability_is_bad_for_sailor_or_partner(
 def update_partnership_info_for_updated_cadet_at_event(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+
 ) -> RequiredDictForAllocation:
     how_changed = how_has_partnership_changed(
         dict_of_cadets_and_boat_class_and_partners=required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners,
@@ -263,7 +290,7 @@ def update_partnership_info_for_updated_cadet_at_event(
 
 
 def how_has_partnership_changed(
-    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+    dict_of_cadets_and_boat_class_and_partners:DictOfCadetsAndBoatClassAndPartners,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> PartnershipChange:
     cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.cadet
@@ -456,7 +483,7 @@ def update_cadets_own_info_excluding_partner(
         cadet=cadet, day=day, group=group
     )
 
-    required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event.allocate_club_boat_on_day(
+    required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event.allocate_club_boat_for_cadet_on_day(
         person=cadet, day=day, club_boat=club_boat
     )
 

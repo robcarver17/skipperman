@@ -1,4 +1,3 @@
-from datetime import datetime
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, date2int, int2date
 from app.data_access.sql.shared_column_names import *
@@ -24,9 +23,7 @@ class SqlDataAttendanceAtEventsForSpecificCadet(
             if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
                 return
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADET_ATTENDANCE_TABLE, CADET_ID, int(cadet.id)))
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (CADET_ATTENDANCE_TABLE, CADET_ID, int(cadet.id)))
 
             self.conn.commit()
         except Exception as e1:
@@ -40,9 +37,7 @@ class SqlDataAttendanceAtEventsForSpecificCadet(
             if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
                 return
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADET_ATTENDANCE_TABLE, EVENT_ID, int(event.id)))
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (CADET_ATTENDANCE_TABLE, EVENT_ID, int(event.id)))
 
             self.conn.commit()
         except Exception as e1:
@@ -50,28 +45,13 @@ class SqlDataAttendanceAtEventsForSpecificCadet(
         finally:
             self.close()
 
-    def update_attendance_for_cadet_on_day_at_event(self, event: Event,
-                                                    cadet: Cadet, day: Day,
-                                                    attendance: Attendance):
+    def update_attendance_for_cadet_on_day_at_event(self, cadet_id: str, raw_attendance: RawAttendanceItem):
         try:
             if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
                 self.create_table()
-
-            insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
-                CADET_ATTENDANCE_TABLE,
-                CADET_ID,
-                EVENT_ID,
-                DAY,
-                ATTENDANCE_DATETIME,
-                CADET_ATTENDANCE)
-
-            self.cursor.execute(insertion, (
-                int(cadet.id),
-                int(event.id),
-                day.name,
-                date2int(datetime.now()),
-                attendance.name
-            ))
+            self._add_row_without_checks_or_commits(
+                cadet_id=cadet_id, attendance=raw_attendance
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -187,28 +167,30 @@ class SqlDataAttendanceAtEventsForSpecificCadet(
             self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADET_ATTENDANCE_TABLE, CADET_ID, int(cadet_id)))
 
             for attendance in list_of_attendance:
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
-                    CADET_ATTENDANCE_TABLE,
-                    CADET_ID,
-                    EVENT_ID,
-                    DAY,
-                    ATTENDANCE_DATETIME,
-                    CADET_ATTENDANCE)
-
-                self.cursor.execute(insertion, (
-                    int(cadet_id),
-                    int(attendance.event_id),
-                    attendance.day.name,
-                    date2int(attendance.datetime_marked),
-                    attendance.attendance.name
-                    ))
-
+                self._add_row_without_checks_or_commits(cadet_id=cadet_id, attendance=attendance)
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing attendance" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_checks_or_commits(self, cadet_id: str, attendance: RawAttendanceItem):
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
+            CADET_ATTENDANCE_TABLE,
+            CADET_ID,
+            EVENT_ID,
+            DAY,
+            ATTENDANCE_DATETIME,
+            CADET_ATTENDANCE)
+
+        self.cursor.execute(insertion, (
+            int(cadet_id),
+            int(attendance.event_id),
+            attendance.day.name,
+            date2int(attendance.datetime_marked),
+            attendance.attendance.name
+        ))
 
     def create_table(self):
 

@@ -1,14 +1,8 @@
 from typing import List, Union
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-)
+from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+from app.backend.registration_data.volunteer_registration_data import is_volunteer_already_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
-
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
 
 from app.backend.registration_data.cadet_registration_data import (
     get_list_of_active_cadets_at_event,
@@ -23,7 +17,6 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 from app.backend.volunteers.connected_cadets import (
     get_list_of_cadets_associated_with_volunteer,
     add_list_of_cadets_to_volunteer_connection,
-    is_cadet_already_associated_with_volunteer,
     get_list_of_volunteers_associated_with_cadet,
 )
 from app.data_access.store.object_store import ObjectStore
@@ -33,19 +26,6 @@ from app.objects.events import Event
 from app.objects.groups import Group, sorted_locations
 from app.objects.utilities.utils import in_x_not_in_y, in_both_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-
-
-def are_all_cadets_in_list_already_connection_to_volunteer(
-    object_store: ObjectStore, volunteer: Volunteer, list_of_cadets: ListOfCadets
-) -> bool:
-    list_of_already_connected = [
-        is_cadet_already_associated_with_volunteer(
-            object_store=object_store, volunteer=volunteer, cadet=cadet
-        )
-        for cadet in list_of_cadets
-    ]
-
-    return all(list_of_already_connected)
 
 
 def update_cadet_connections_when_volunteer_already_at_event(
@@ -139,43 +119,37 @@ def are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_d
 
     return list_of_relevant_information.all_cancelled_or_deleted()
 
-
 def get_list_of_volunteers_associated_with_cadet_at_event(
     object_store: ObjectStore, cadet: Cadet, event: Event
 ):
     list_of_volunteers = get_list_of_volunteers_associated_with_cadet(
         object_store=object_store, cadet=cadet
     )
-    volunteer_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    volunteers_at_event = (
-        volunteer_data.dict_of_registration_data_for_volunteers_at_event.list_of_volunteers_at_event()
-    )
     volunteers = [
         volunteer
         for volunteer in list_of_volunteers
-        if volunteer in volunteers_at_event
+        if is_volunteer_already_at_event(object_store=object_store, event=event, volunteer=volunteer)
     ]
 
     return ListOfVolunteers(volunteers)
 
 
 def get_cadet_location_string_for_volunteer(
-    dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
+    object_store: ObjectStore,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ):
-    list_of_cadets_at_event_and_associated = (
-        get_list_of_cadets_associated_with_volunteer_at_event_given_event_data(
-            dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
-            volunteer_data_at_event=volunteer_data_at_event,
+    list_of_cadets_at_event_and_associated = \
+        get_list_of_cadets_associated_with_volunteer_at_event(
+            object_store=object_store,
+            event=volunteer_data_at_event.event,
+            volunteer=volunteer_data_at_event.volunteer
         )
-    )
     if len(list_of_cadets_at_event_and_associated) == 0:
         return "xx No associated sailor(s) at event"  ## trick to get at end of sort
 
     list_of_groups = list_of_cadet_groups_associated_with_volunteer(
-        dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
+        object_store=object_store,
+        event=volunteer_data_at_event.event,
         list_of_cadets_at_event_and_associated=list_of_cadets_at_event_and_associated,
     )
     if list_of_groups is no_cadets_allocated_to_groups_yet:
@@ -185,15 +159,6 @@ def get_cadet_location_string_for_volunteer(
     else:
         return str_type_of_group_given_list_of_groups(list_of_groups)
 
-
-def get_list_of_cadets_associated_with_volunteer_at_event_given_event_data(
-    dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
-    volunteer_data_at_event: AllEventDataForVolunteer,
-) -> ListOfCadets:
-    cadets_at_event = dict_of_all_cadet_event_data.list_of_cadets
-    asssociated_with_volunteer = volunteer_data_at_event.associated_cadets
-
-    return ListOfCadets(in_both_x_and_y(cadets_at_event, asssociated_with_volunteer))
 
 
 def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
@@ -206,14 +171,15 @@ def str_type_of_group_given_list_of_groups(list_of_groups: List[Group]):
 
     return ", ".join(sorted_list_of_group_locations)
 
-
 def list_of_cadet_groups_associated_with_volunteer(
-    dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
+        object_store: ObjectStore,
+        event: Event,
     list_of_cadets_at_event_and_associated: ListOfCadets,
 ) -> Union[List[Group], object]:
+    dict_of_cadets_with_days_and_groups  = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
     list_of_groups = []
     for cadet in list_of_cadets_at_event_and_associated:
-        list_of_groups += dict_of_all_cadet_event_data.dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(
+        list_of_groups += dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(
             cadet
         ).list_of_groups
 
@@ -226,15 +192,13 @@ def list_of_cadet_groups_associated_with_volunteer(
 
 no_cadets_allocated_to_groups_yet = object()
 
-
 def get_list_of_cadets_associated_with_volunteer_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ):
     list_of_cadets = get_list_of_cadets_associated_with_volunteer(
         volunteer=volunteer, object_store=object_store
     )
-    event_data_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    active_cadets_at_event = event_data_for_cadets.list_of_cadets
+    active_cadets_at_event = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
     list_of_cadets_at_event = [
         cadet for cadet in list_of_cadets if cadet in active_cadets_at_event
     ]

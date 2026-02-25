@@ -9,7 +9,7 @@ from app.backend.reporting.rollcall_report.configuration import (
     GROUP_NAME_COLUMN_HEADING_FOR_SPOTTER_SHEET,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.events import Event
 
@@ -17,8 +17,9 @@ from app.objects.groups import unallocated_group, Group
 from app.objects.cadets import ListOfCadets, Cadet
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
-    get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info,
 )
+from app.backend.cadets_at_event.cadet_availability import \
+    get_attendance_matrix_for_list_of_cadets_at_event_with_passed_event_info
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 
@@ -160,7 +161,7 @@ def get_names_as_series_group_at_event(
 
 def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
     list_of_cadets: ListOfCadets,
-    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> ListOfCadets:
     return ListOfCadets(
         [
@@ -175,7 +176,7 @@ def add_club_boat_asterix_to_list_of_cadets_with_club_boat_on_any_day(
 
 def add_club_boat_asterix_to_cadet_with_club_boat_on_any_day(
     cadet: Cadet,
-    dict_of_cadets_at_event_with_club_dinghies: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    dict_of_cadets_at_event_with_club_dinghies: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> Cadet:
     has_dinghy = dict_of_cadets_at_event_with_club_dinghies.club_dinghys_for_person(
         cadet

@@ -1,6 +1,6 @@
 from typing import List
 
-from app.backend.club_boats.people_with_club_dinghies_at_event import (
+from app.backend.club_boats.volunteer_with_club_dinghies import (
     get_dict_of_volunteers_and_club_dinghies_at_event,
 )
 from app.backend.events.event_warnings import (
@@ -29,12 +29,10 @@ from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event,
+    get_list_of_patrol_boats_at_event,
     get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
-
-## FIXME REFACTOR
 
 def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: Event):
     warn_on_volunteer_qualifications(interface=interface, event=event)
@@ -90,7 +88,7 @@ def warn_on_double_booking_on_day(
 
 def warn_on_pb2_drivers(interface: abstractInterface,  event: Event):
     object_store=interface.object_store
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
         object_store=object_store, event=event
     )
     list_of_warnings = []

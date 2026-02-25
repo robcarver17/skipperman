@@ -1,7 +1,6 @@
 from app.backend.registration_data.raw_mapped_registration_data import (
     update_raw_mapped_registration_data,
 )
-from app.data_access.store.object_store import ObjectStore
 
 from app.backend.mapping.convert_helm_crew_data import (
     convert_mapped_wa_event_potentially_with_joined_rows,
@@ -33,5 +32,5 @@ def process_uploaded_wa_event_file(
     )
 
     update_raw_mapped_registration_data(
-        object_store=object_store, registration_data=mapped_wa_event_data, event=event
+        interface=interface, registration_data=mapped_wa_event_data, event=event
     )

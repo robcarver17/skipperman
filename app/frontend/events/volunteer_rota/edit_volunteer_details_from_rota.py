@@ -77,12 +77,12 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
 
     
     update_volunteer_availability_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         availability=availability,
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 AVAILABILITY = "Availability"

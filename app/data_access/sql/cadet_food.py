@@ -1,4 +1,3 @@
-from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadets import ListOfCadets
@@ -13,6 +12,14 @@ INDEX_CADET_FOOD_REQUIRED_TABLE = "index_cadet_food_requirements"
 class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
     GenericSqlData
 ):
+    def delete_cadet_from_event_and_return_messages(self, event_id: str, cadet_id: str):
+        if not self.is_cadet_with_already_at_event_with_food(event_id=event_id, cadet_id=cadet_id):
+            return []
+
+        self.remove_food_requirements_for_cadet_at_event(event_id=event_id, cadet_id=cadet_id)
+
+        return ["Removed food at event %s for cadet %s" % (event_id, cadet_id)]
+
     def is_cadet_with_already_at_event_with_food(
             self, event_id: str, cadet_id: str
     ) -> bool:
@@ -47,7 +54,7 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
             if self.table_does_not_exist(CADET_FOOD_REQUIRED_TABLE):
                 self.create_table()
 
-            self.write_cadet_with_food_without_committing(
+            self._write_cadet_with_food_without_commit_or_check(
                 cadet_with_food=CadetWithFoodRequirementsAtEvent(
                 cadet_id=cadet_id,
                 food_requirements=food_requirements
@@ -67,9 +74,7 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
             if self.table_does_not_exist(CADET_FOOD_REQUIRED_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (CADET_FOOD_REQUIRED_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d " % (CADET_FOOD_REQUIRED_TABLE,
                                                                   EVENT_ID,
                                                                   int(event_id),
                                                                     CADET_ID,
@@ -105,9 +110,7 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
-        list_of_cadets = getattr(self, "_list_of_cadets", None)
-        if list_of_cadets is None:
-            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+        list_of_cadets = self.object_store.get(self.object_store.data_api.data_list_of_cadets.read)
 
         return list_of_cadets
 
@@ -117,7 +120,7 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s,%s,%s  FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s,%s,%s  FROM %s WHERE %s=%d ''' % (
                 CADET_ID,
                 FOOD_REQUIRED_KEY,
                 FOOD_REQUIRED_BOOL_VALUE,
@@ -166,12 +169,12 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
             ## NEEDS TO DELETE OLD
             ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (CADET_FOOD_REQUIRED_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (CADET_FOOD_REQUIRED_TABLE,
                                                                   EVENT_ID,
                                                                   int(event_id)))
 
             for cadet_with_food in list_of_cadets_with_food:
-                self.write_cadet_with_food_without_committing(cadet_with_food=cadet_with_food, event_id=event_id)
+                self._write_cadet_with_food_without_commit_or_check(cadet_with_food=cadet_with_food, event_id=event_id)
 
             self.conn.commit()
         except Exception as e1:
@@ -179,7 +182,7 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
         finally:
             self.close()
 
-    def write_cadet_with_food_without_committing(self, event_id: str, cadet_with_food: CadetWithFoodRequirementsAtEvent):
+    def _write_cadet_with_food_without_commit_or_check(self, event_id: str, cadet_with_food: CadetWithFoodRequirementsAtEvent):
         cadet_id = int(cadet_with_food.cadet_id)
         food_required = cadet_with_food.food_requirements
         other_value = food_required.other

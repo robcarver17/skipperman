@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import copy_patrol_boat_labels_across_event
+from app.backend.patrol_boats.labels import copy_patrol_boat_labels_across_event
 from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats,
     copy_across_all_boats_and_roles,
@@ -96,7 +96,7 @@ def post_form_patrol_boat_copy_menu(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_display_form_for_parent_of_function(
         display_form_patrol_boat_copy_menu

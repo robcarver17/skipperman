@@ -3,12 +3,14 @@ import string
 from dataclasses import dataclass
 from enum import Enum
 
+from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteers import Volunteer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
+get_idx_of_unique_object_with_attr_in_list
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
@@ -64,8 +66,8 @@ class SkipperManUser(GenericSkipperManObject):
 
 
 NO_VOLUNTEER_ID = "-1"
-DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists
-DEFAULT_ADMIN_PASSWORD = "default"
+DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists at first login or on test machine
+DEFAULT_ADMIN_PASSWORD = "default" ### OK to have in clear text here as only used if no user security file exists
 
 default_admin_user_if_none_defined = SkipperManUser(
     username=DEFAULT_ADMIN_USER,
@@ -94,41 +96,24 @@ class ListOfSkipperManUsers(GenericListOfObjects):
     def _object_class_contained(self):
         return SkipperManUser
 
+    def replace_user(self, username: str, user: SkipperManUser):
+        idx = self.idx_of_user(username, default=missing_data)
+        if idx is missing_data:
+            raise Exception("Can't replace non existent user %s" % username)
+
+        self[idx] = user
+
+    def idx_of_user(self, username: str, default = arg_not_passed):
+        return get_idx_of_unique_object_with_attr_in_list(
+            self,
+            attr_name='username',
+            attr_value=username,
+            default=default
+        )
+
     def already_in_list(self, username: str) -> bool:
         existing_usernames = self.list_of_usernames_excludes_default()
         return username in existing_usernames
-
-    def add(self, user: SkipperManUser):
-        try:
-            assert not self.already_in_list(user.username)
-        except:
-            raise Exception("Can't have duplicate usernames")
-
-        self.append(user)
-
-    def change_password_for_user(self, username: str, new_password: str):
-        user = self.get_user_given_username(username)
-        user.password_hash = generate_password_hash(new_password)
-
-    def modify_volunteer_for_user(self, username: str, volunteer: Volunteer):
-        self.modify_volunteer_id(username=username, new_id=volunteer.id)
-
-    def modify_volunteer_id(self, username: str, new_id: str):
-        user = self.get_user_given_username(username)
-        user.volunteer_id = new_id
-
-    def modify_user_group(self, username: str, new_group: str):
-        user = self.get_user_given_username(username)
-        user.group = new_group
-
-    def delete(self, username: str):
-        try:
-            assert self.already_in_list(username)
-        except:
-            raise Exception("can't delete non existent user")
-
-        user = self.get_user_given_username(username)
-        self.remove(user)
 
     def get_user_given_username(
         self, username: str, default=default_user_if_not_logged_in
@@ -159,19 +144,16 @@ class ListOfSkipperManUsers(GenericListOfObjects):
 
         return ListOfSkipperManUsers(admin)
 
-    def check_for_duplicated_names(self):
-        list_of_names = self.list_of_usernames_excludes_default()
-        assert len(list_of_names) == len(set(list_of_names))
-
 
 def list_of_users_or_default_if_empty(
     list_of_users: ListOfSkipperManUsers,
 ) -> ListOfSkipperManUsers:
+    ## Ensures at least one user exists
     if len(list_of_users) > 0:
         return list_of_users
     else:
         return ListOfSkipperManUsers(
-            [default_admin_user_if_none_defined, default_user_if_not_logged_in]
+            [default_admin_user_if_none_defined]
         )
 
 

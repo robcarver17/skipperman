@@ -1,21 +1,19 @@
 from typing import List
 
 import pandas as pd
-from app.backend.groups.list_of_groups import get_list_of_groups
 
+from app.backend.groups.cadets_with_groups_at_event import get_sorted_list_of_groups_at_event
 from app.backend.volunteers.roles_and_teams import get_list_of_teams, get_list_of_roles
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
+    get_dict_of_volunteers_with_roles_and_groups_at_event
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-)
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     RoleAndGroupAndTeam,
-    RoleAndGroup,
+    RoleAndGroup, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -24,7 +22,6 @@ from app.objects.roles_and_teams import ListOfTeams, no_team
 from app.objects.volunteer_roles_and_groups_with_id import (
     TeamAndGroup,
 )
-from app.objects.groups import unallocated_group
 
 
 def get_summary_list_of_roles_and_groups_for_event(
@@ -56,7 +53,7 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(
+    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
         object_store=object_store, event=event
     )
     if len(volunteers_in_roles_at_event) == 0:
@@ -83,21 +80,11 @@ def get_list_of_day_summaries_for_roles_at_event(
     return all_day_summaries
 
 
-def get_volunteers_and_roles_at_event(object_store: ObjectStore, event: Event):
-    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    volunteers_in_roles_at_event = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
-    )
-
-    return volunteers_in_roles_at_event
-
 
 def get_summary_of_roles_and_groups_for_events_on_day(
     day: Day,
-    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    sorted_roles_at_event: DEPRECATE_ListOfRolesWithSkills,
+    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    sorted_roles_at_event: ListOfRolesWithSkills,
     sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:
     list_of_roles_and_groups = (
@@ -159,11 +146,8 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
 def get_list_of_day_summaries_teams_and_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
+    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
         object_store=object_store, event=event
-    )
-    volunteers_in_roles_at_event = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
 
     sorted_teams_at_event = get_sorted_list_of_teams_at_event(
@@ -189,7 +173,7 @@ def get_list_of_day_summaries_teams_and_groups_at_event(
 
 def get_summary_of_teams_and_groups_for_events_on_day(
     day: Day,
-    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     sorted_teams_at_event: ListOfTeams,
     sorted_groups_at_event: ListOfGroups,
 ) -> pd.DataFrame:
@@ -235,15 +219,15 @@ def from_list_of_day_summaries_to_single_df(
     days_at_event = event.days_in_event()
     single_df = pd.concat(all_day_summaries, axis=1)
     single_df.columns = [day.name for day in days_at_event]
-    single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values
+    single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values IGNORE warning
 
     return single_df
 
 
 def get_sorted_roles_at_event(
     object_store: ObjectStore, event: Event
-) -> DEPRECATE_ListOfRolesWithSkills:
-    volunteers_in_roles_at_event = get_volunteers_and_roles_at_event(
+) -> ListOfRolesWithSkills:
+    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
         object_store=object_store, event=event
     )
 
@@ -260,11 +244,8 @@ def get_sorted_roles_at_event(
 
 
 def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
-    volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
+    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
         object_store=object_store, event=event
-    )
-    volunteers_in_roles_at_event = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles
     )
     list_of_teams = get_list_of_teams(object_store)
     all_teams_at_event = ListOfTeams(volunteers_in_roles_at_event.all_teams_at_event)
@@ -277,28 +258,3 @@ def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
     return sorted_teams_at_event
 
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
-
-
-def get_sorted_list_of_groups_at_event(
-    object_store: ObjectStore, event: Event, include_unallocated: bool = True
-):
-    cadet_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    all_groups_at_event = (
-        cadet_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
-    )
-
-    all_groups = get_list_of_groups(object_store)
-    sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(
-        all_groups
-    )
-    if include_unallocated:
-        if unallocated_group not in sorted_groups_at_event:
-            sorted_groups_at_event = sorted_groups_at_event + [unallocated_group]
-    else:
-        if unallocated_group in sorted_groups_at_event:
-            sorted_groups_at_event.remove(unallocated_group)
-
-    return sorted_groups_at_event

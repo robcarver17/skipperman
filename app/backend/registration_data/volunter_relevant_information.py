@@ -214,7 +214,7 @@ def get_volunteer_from_relevant_information(
 
 def infer_volunteer_from_provided_information(
     relevant_information_for_id: RelevantInformationForVolunteerIdentification,
-) -> Volunteer:
+) -> Union[Volunteer, str]:
     passed_name = relevant_information_for_id.passed_name
 
     if passed_name == "":

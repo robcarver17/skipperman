@@ -41,17 +41,9 @@ class abstractInterface:
             self.log_error("Read only mode - not saving changes")
 
         else:
-            self.object_store.update(data_api_property_and_method, **kwargs)
+            return self.object_store.update_without_checking_read_only(data_api_property_and_method, **kwargs)
 
     def clear(self):
-        self.object_store.clear_memory_cache_in_store()
-
-    def DEPRECATE_flush_and_clear(self):
-        if self.read_only:
-            self.log_error("Read only mode - not saving changes")
-        else:
-            self.object_store.save_changed_data()
-
         self.object_store.clear_memory_cache_in_store()
 
     def log_error(self, error_message: str):

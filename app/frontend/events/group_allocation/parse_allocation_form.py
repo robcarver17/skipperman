@@ -37,18 +37,18 @@ from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availablity_from_form,
 )
-from app.backend.boat_classes.update_boat_information import (
-    CadetWithDinghySailNumberBoatClassAndPartner,
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
-)
+from app.backend.boat_classes.update_boat_information import \
+    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event
+from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import \
+    CadetWithDinghySailNumberBoatClassAndPartner
 from app.objects.partners import NOT_ALLOCATED_STR
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
 )
 from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import (
     update_availability_of_existing_cadet_at_event_and_return_messages,
-    make_cadet_available_on_day,
 )
+from app.backend.cadets_at_event.cadet_availability import make_cadet_available_on_day
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -67,7 +67,7 @@ def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     else:
         list_of_days = [day_from_state]
 
-    list_of_updates = get_list_of_updates_to_boat_classes_in_allocation_form(
+    list_of_updates = get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
         interface=interface,
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_days=list_of_days,
@@ -79,7 +79,7 @@ def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     )
 
 
-def get_list_of_updates_to_boat_classes_in_allocation_form(
+def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
     interface: abstractInterface,
     list_of_days: List[Day],
     list_of_cadets: ListOfCadets,
@@ -88,17 +88,15 @@ def get_list_of_updates_to_boat_classes_in_allocation_form(
     list_of_updates = []
     for day in list_of_days:
         for cadet in list_of_cadets:
-            current_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
+            already_has_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
                 cadet
-            ).boat_class_on_day(
-                day
-            )
-            if not current_boat is no_boat_class:
+            ).has_boat_class_on_day(day)
+            if already_has_boat:
                 continue
             boat_class_name = guess_name_of_boat_class_on_day_from_other_information(
                 dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet
             )
-            update = get_update_for_cadet(interface, cadet)
+            update = get_update_for_cadet(interface, cadet) ## should be fine but ensures we don't lose any updates made
             update.boat_class_name = boat_class_name
             list_of_updates.append(update)
 
@@ -143,7 +141,7 @@ def update_attendance_data_for_cadet_in_form(
 
     list_of_messages = (
         update_availability_of_existing_cadet_at_event_and_return_messages(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             new_availabilty=new_availability,
             cadet=cadet,
@@ -166,7 +164,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     if new_notes == MISSING_FROM_FORM:
         return
     update_notes_for_existing_cadet_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         cadet=cadet,
         new_notes=new_notes,
@@ -281,14 +279,14 @@ def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_
     list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner],
     list_of_days: List[Day],
 ):
-    group_switch_allowed = is_admin_or_skipper(interface)
+
     for day in list_of_days:
         messages=update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             list_of_updates=list_of_updates,
             day=day,
-            group_switch_allowed=group_switch_allowed
+
         )
 
         for message in messages:
@@ -310,7 +308,7 @@ def make_cadet_available_on_current_day(
     event = get_event_from_state(interface)
 
     make_cadet_available_on_day(
-        object_store=interface.object_store, event=event, cadet=cadet, day=day
+        interface=interface, event=event, cadet=cadet, day=day
     )
 
 

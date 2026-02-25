@@ -9,17 +9,15 @@ INDEX_DATA_FIELD_MAPPING_TABLE = "index_data_field_mapping"
 
 
 class SqlDataWAFieldMapping(GenericSqlData):
-
     def delete_mapping_given_skipperman_field(
             self, event_id: str,  skipperman_field: str
     ):
         if self.table_does_not_exist(DATA_FIELD_MAPPING_TABLE):
             raise Exception("Can't delete non existent mapping")
         try:
-            event_id_as_int = int(event_id)
-            delete_text = "DELETE FROM %s WHERE %s=%s AND %s='%s'" % (DATA_FIELD_MAPPING_TABLE,
+            delete_text = "DELETE FROM %s WHERE %s=%d AND %s='%s'" % (DATA_FIELD_MAPPING_TABLE,
                                                                   EVENT_ID,
-                                                                  event_id_as_int,
+                                                                  int(event_id),
                                                                 SM_FIELD,
                                                                               str(skipperman_field))
             print(delete_text)
@@ -43,14 +41,13 @@ class SqlDataWAFieldMapping(GenericSqlData):
             if self.table_does_not_exist(DATA_FIELD_MAPPING_TABLE):
                 self.create_table()
 
-            event_id_as_int = int(event_id)
-
-            insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?, ?)" % (
-                DATA_FIELD_MAPPING_TABLE,
-                EVENT_ID,
-                SM_FIELD, WA_FIELD)
-            self.cursor.execute(insertion, (
-                event_id_as_int, skipperman_field, wa_field))
+            self._add_row_without_commit_or_check(
+                event_id=event_id,
+                event_map=WAFieldMap(
+                    skipperman_field=skipperman_field,
+                    wa_field=wa_field
+                )
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -64,7 +61,7 @@ class SqlDataWAFieldMapping(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s='%s' ''' % (
                  DATA_FIELD_MAPPING_TABLE, EVENT_ID, int(event_id), SM_FIELD, skipperman_field
             ))
             raw_list = cursor.fetchall()
@@ -82,7 +79,7 @@ class SqlDataWAFieldMapping(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s='%s' ''' % (
                  DATA_FIELD_MAPPING_TABLE, EVENT_ID, int(event_id), WA_FIELD, wa_field
             ))
             raw_list = cursor.fetchall()
@@ -99,7 +96,7 @@ class SqlDataWAFieldMapping(GenericSqlData):
                 return ListOfWAFieldMappings.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s='%s' ORDER BY %s''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ORDER BY %s''' % (
                 WA_FIELD, SM_FIELD, DATA_FIELD_MAPPING_TABLE, EVENT_ID, int(event_id), SM_FIELD
             ))
             raw_list = cursor.fetchall()
@@ -119,27 +116,30 @@ class SqlDataWAFieldMapping(GenericSqlData):
             if self.table_does_not_exist(DATA_FIELD_MAPPING_TABLE):
                 self.create_table()
 
-            event_id_as_int = int(event_id)
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (DATA_FIELD_MAPPING_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (DATA_FIELD_MAPPING_TABLE,
                                                                   EVENT_ID,
-                                                                  event_id_as_int))
+                                                                  int(event_id)))
 
             for event_map in wa_field_mapping:
-                skipperman_field = str(event_map.skipperman_field)
-                wa_field = str(event_map.wa_field)
-
-                insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?, ?)" % (
-                    DATA_FIELD_MAPPING_TABLE,
-                    EVENT_ID,
-                    SM_FIELD, WA_FIELD)
-                self.cursor.execute(insertion, (
-                    event_id_as_int, skipperman_field, wa_field))
+                self._add_row_without_commit_or_check(event_id=event_id,
+                                                      event_map=event_map)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing event mappings" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_commit_or_check(self, event_id: str, event_map: WAFieldMap):
+        skipperman_field = str(event_map.skipperman_field)
+        wa_field = str(event_map.wa_field)
+
+        insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?, ?)" % (
+            DATA_FIELD_MAPPING_TABLE,
+            EVENT_ID,
+            SM_FIELD, WA_FIELD)
+        self.cursor.execute(insertion, (
+            int(event_id), skipperman_field, wa_field))
 
     def create_table(self):
 
@@ -220,7 +220,7 @@ class SqlDataWAFieldMappingTemplates(GenericSqlData):
                                                                   template_name))
 
             for event_map in wa_field_mapping:
-                self.write_mapping_without_commit(event_map=event_map, template_name=template_name)
+                self._write_mapping_without_commit(event_map=event_map, template_name=template_name)
 
             self.conn.commit()
         except Exception as e1:
@@ -228,7 +228,7 @@ class SqlDataWAFieldMappingTemplates(GenericSqlData):
         finally:
             self.close()
 
-    def write_mapping_without_commit(self, event_map: WAFieldMap, template_name: str):
+    def _write_mapping_without_commit(self, event_map: WAFieldMap, template_name: str):
         skipperman_field = str(event_map.skipperman_field)
         wa_field = str(event_map.wa_field)
 

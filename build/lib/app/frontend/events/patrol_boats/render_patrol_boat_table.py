@@ -192,15 +192,15 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event,
-    is_boat_empty,
+    get_list_of_patrol_boats_at_event,
+    is_boat_empty_on_day,
 )
 
 
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
 
@@ -259,7 +259,7 @@ def get_allocation_inputs_for_boat_across_days(
 def get_allocation_inputs_for_day_and_boat(
     interface: abstractInterface, patrol_boat: PatrolBoat, day: Day, event: Event
 ) -> ListOfLines:
-    if is_boat_empty(
+    if is_boat_empty_on_day(
         object_store=interface.object_store,
         patrol_boat=patrol_boat,
         day=day,

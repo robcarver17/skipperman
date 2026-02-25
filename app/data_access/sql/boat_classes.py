@@ -1,7 +1,7 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData, int2bool, bool2int
 from app.data_access.sql.shared_column_names import DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER
 from app.objects.boat_classes import ListOfBoatClasses, BoatClass
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches
+from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
 
 DINGHIES_TABLE = "dinghies_table"
 INDEX_NAME_DINGHIES_TABLE = "dinghies_table_index"
@@ -16,24 +16,35 @@ class SqlDataListOfDinghies(GenericSqlData):
         if existing_boat.name == new_boat.name:
             pass
         else:
-            if self.names_are_duplicated_including_new_name(new_boat.name):
+            if self.boat_name_already_exists(new_boat.name):
                 raise Exception("Name %s already in data" % new_boat.name)
 
+        existing_id = self.get_id_for_boat_with_name(existing_boat.name, default=missing_data)
+        if existing_id is missing_data:
+            raise Exception("boat %s doesn't exist" % existing_boat)
+
+        self._modify_boat_class_without_checks(existing_id=existing_id, new_boat=new_boat)
+
+    def _modify_boat_class_without_checks(
+            self, existing_id: str, ## won't have ID use name to ID
+            new_boat: BoatClass ## name may have changed
+    ):
         try:
 
             name = new_boat.name
             hidden = bool2int(new_boat.hidden)
-            existing_id = int(self.get_id_for_boat_with_name(existing_boat.name))
 
-            insertion = "UPDATE %s SET %s =?, %s=? WHERE %s=?" % (
+            insertion = "UPDATE %s SET %s ='%s', %s=%d WHERE %s=%d" % (
                 DINGHIES_TABLE,
                 DINGHY_NAME,
+                name,
                 HIDDEN,
-                DINGHY_ID
+                hidden,
+                DINGHY_ID,
+                int(existing_id)
             )
 
-            self.cursor.execute(insertion, (
-                name, hidden, existing_id))
+            self.cursor.execute(insertion)
 
             self.conn.commit()
         except Exception as e1:
@@ -42,28 +53,23 @@ class SqlDataListOfDinghies(GenericSqlData):
             self.close()
 
     def add_new_boat_class_given_string(
-            self, name_of_entry_to_add: str
+            self, new_boat: BoatClass
     ):
-        if self.names_are_duplicated_including_new_name(name_of_entry_to_add):
+        name_of_entry_to_add = new_boat.name
+        if self.boat_name_already_exists(name_of_entry_to_add):
             raise Exception("Name %s already in data" % name_of_entry_to_add)
 
+        self._add_new_boat_class_without_checks(new_boat)
+
+    def _add_new_boat_class_without_checks(
+                self,new_boat: BoatClass
+        ):
+        idx = self.next_available_id()
         try:
             if self.table_does_not_exist(DINGHIES_TABLE):
                 self.create_table()
 
-            boat = BoatClass(name_of_entry_to_add, hidden=False)
-            name = boat.name
-            hidden = bool2int(boat.hidden)
-            id = self.next_available_id()
-            idx = self.next_available_order()
-
-            insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
-                DINGHIES_TABLE,
-                DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
-
-            self.cursor.execute(insertion, (
-                name, hidden, id, idx))
-
+            self._add_row_without_check_or_commit(idx=idx, boat=new_boat)
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing dinghies" % str(e1))
@@ -125,36 +131,29 @@ class SqlDataListOfDinghies(GenericSqlData):
 
 
 
-    def names_are_duplicated_including_new_name(self, new_name: str):
-        existing_names = self.get_all_boat_names()
-        existing_names.append(new_name)
-
-        return len(set(existing_names)) < len(existing_names)
-
-    def get_all_boat_names(self):
+    def boat_name_already_exists(self, new_name: str):
         try:
             if self.table_does_not_exist(DINGHIES_TABLE):
-                return []
+                return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s FROM %s''' % (
-                DINGHY_NAME,  DINGHIES_TABLE
-             ))
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
+                 DINGHIES_TABLE,
+                 DINGHY_NAME,
+                str(new_name)
+            ))
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading boat classes" % str(e1))
         finally:
             self.close()
 
-        return [str(item[0]) for item in raw_list]
+        return len(raw_list)>0
 
-    def get_id_for_boat_with_name(self, name: str, default=arg_not_passed):
+    def get_id_for_boat_with_name(self, name: str, default=missing_data):
         try:
             if self.table_does_not_exist(DINGHIES_TABLE):
-                if default is arg_not_passed:
-                    raise MissingData("%s not found" % name)
-                else:
-                    return default
+                return default
 
             cursor = self.cursor
             cursor.execute('''SELECT %s FROM %s WHERE %s = "%s" ''' % (
@@ -169,10 +168,7 @@ class SqlDataListOfDinghies(GenericSqlData):
         if len(raw_list)>1:
             raise MultipleMatches("Multiple boats called %s" % name)
         elif len(raw_list)==0:
-            if default is arg_not_passed:
-                raise MissingData("%s not found" % name)
-            else:
-                return default
+            return default
 
         return str(raw_list[0][0])
 
@@ -208,22 +204,25 @@ class SqlDataListOfDinghies(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (DINGHIES_TABLE))
 
             for idx, boat in enumerate(list_of_boats):
-                name = boat.name
-                hidden = bool2int(boat.hidden)
-                id = int(boat.id)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
-                    DINGHIES_TABLE,
-                    DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
-
-                self.cursor.execute(insertion, (
-                    name, hidden, id, idx))
+                self._add_row_without_check_or_commit(idx=idx, boat=boat)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing dinghies" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_check_or_commit(self, idx: int, boat: BoatClass):
+        name = boat.name
+        hidden = bool2int(boat.hidden)
+        id = int(boat.id)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
+            DINGHIES_TABLE,
+            DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
+
+        self.cursor.execute(insertion, (
+            name, hidden, id, idx))
 
     def create_table(self):
 

@@ -95,7 +95,7 @@ def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLine
             interface=interface, event=event
         )
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     warnings_detail = display_warnings_tables(warnings)
 
@@ -169,7 +169,7 @@ def save_details_from_form(interface: abstractInterface):
     parse_registration_details_from_form(interface=interface, event=event)
     save_warnings_from_table(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def previous_form(interface: abstractInterface):

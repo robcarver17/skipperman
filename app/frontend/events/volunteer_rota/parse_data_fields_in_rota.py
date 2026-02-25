@@ -70,12 +70,14 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
     )  ### if arg_not_passed, no change
 
     update_role_and_group_at_event_for_volunteer_on_day(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         day=day,
         new_role=new_role,
         new_group=new_group,
+        allow_replacement=True
+
     )
 
 
@@ -135,7 +137,7 @@ def update_notes_for_volunteer_at_event_from_form(
     if new_notes == existing_notes:
         return
     update_volunteer_notes_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         new_notes=new_notes,

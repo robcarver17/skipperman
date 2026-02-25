@@ -21,13 +21,13 @@ from app.frontend.configuration.generic_list_modifier import (
     BUTTON_NOT_KNOWN,
 )
 
-from app.objects.composed.volunteer_roles import DEPRECATE_ListOfRolesWithSkills, RoleWithSkills
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 from app.backend.volunteers.roles_and_teams import (
     get_list_of_roles_with_skills,
     update_list_of_roles_with_skills,
-    modify_list_of_roles_with_skills,
+    modify_role_with_skills,
     add_to_list_of_roles_with_skills,
 )
 
@@ -63,7 +63,7 @@ def post_form_config_volunteer_roles(
         interface=interface,
         header_text=header_text,
         adding_function=add_to_list_of_roles_with_skills,
-        modifying_function=modify_list_of_roles_with_skills,
+        modifying_function=modify_role_with_skills,
         save_function=save_from_ordinary_list_of_roles,
         get_object_from_form_function=get_modified_role_from_form,
     )
@@ -76,7 +76,7 @@ def post_form_config_volunteer_roles(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_config_volunteer_roles)
 
@@ -223,8 +223,8 @@ def save_from_ordinary_list_of_roles(
         interface: abstractInterface, new_list: List[RoleWithSkills]
 ):
     update_list_of_roles_with_skills(
-        object_store=interface.object_store,
-        list_of_roles_with_skills=DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
-            list_of_roles_with_skills=new_list
+        interface=interface,
+        list_of_roles_with_skills=ListOfRolesWithSkills(
+            new_list
         ),
     )

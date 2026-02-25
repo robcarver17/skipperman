@@ -31,7 +31,7 @@ class reorderFormInterface:
         )
 
 
-def DEPRECATE_list_of_button_names_given_group_order(current_order: list) -> list:
+def list_of_button_names_given_group_order(current_order: list) -> list:
     up_buttons = [get_button_name_to_move_in_list(label, UP) for label in current_order]
     down_buttons = [
         get_button_name_to_move_in_list(label, DOWN) for label in current_order

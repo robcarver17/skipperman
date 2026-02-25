@@ -1,10 +1,8 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.data_access.sql.qualifications import SqlDataListOfQualifications
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.tick_sheet_sub_stages import SqlDataListOfTickSubStages
 from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict, TickSubStagesAsDict
-from app.objects.qualifications import Qualification
-from app.objects.substages import ListOfTickSheetItems, TickSheetItem
+from app.objects.qualifications import Qualification, ListOfQualifications
+from app.objects.substages import ListOfTickSheetItems, TickSheetItem, ListOfTickSubStages
 from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
 
 TICK_SHEET_ITEM_TABLE = "tick_sheet_items"
@@ -28,7 +26,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 self.create_table()
 
-            self.add_ticksheet_item_without_committing_or_checking(new_tick)
+            self._add_ticksheet_item_without_committing_or_checking(new_tick)
 
             self.conn.commit()
         except Exception as e1:
@@ -42,7 +40,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 return False
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s=%d ''' % (
                 TICK_SHEET_ITEM_TABLE,
                 TICK_SHEET_ITEM_NAME,
                 tick_list_name,
@@ -106,7 +104,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s='%s'" % (
+            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d" % (
                 TICK_SHEET_ITEM_TABLE,
                 TICK_SHEET_ITEM_NAME,
                 new_item_name,
@@ -131,7 +129,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
                     return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
 
                 TICK_SHEET_ITEM_NAME,
                 TICK_SUBSTAGE_ID,
@@ -192,18 +190,17 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         return TickSubStagesAsDict(new_dict)
 
     @property
-    def list_of_substages(self):
-        list_of_substages = getattr(self, "_list_of_substages", None)
-        if list_of_substages is None:
-            list_of_substages = self._list_of_substages = SqlDataListOfTickSubStages(self.db_connection).read()
+    def list_of_substages(self) -> ListOfTickSubStages:
+        list_of_substages = self.object_store.get(
+        self.object_store.data_api.data_list_of_tick_sub_stages.read
+    )
 
         return list_of_substages
 
+
     @property
-    def list_of_qualifications(self):
-        list_of_qualifications = getattr(self, "_list_of_qualifications", None)
-        if list_of_qualifications is None:
-            list_of_qualifications = self._list_of_qualifications = SqlDataListOfQualifications(self.db_connection).read()
+    def list_of_qualifications(self) ->ListOfQualifications:
+        list_of_qualifications = self.object_store.get(self.object_store.data_api.data_list_of_qualifications.read)
 
         return list_of_qualifications
 
@@ -241,12 +238,10 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (TICK_SHEET_ITEM_TABLE))
 
             for item in list_of_tick_sheet_items:
-                self.add_ticksheet_item_without_committing_or_checking(item)
+                self._add_ticksheet_item_without_committing_or_checking(item)
 
             self.conn.commit()
         except Exception as e1:
@@ -254,7 +249,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         finally:
             self.close()
 
-    def add_ticksheet_item_without_committing_or_checking(self, item: TickSheetItem):
+    def _add_ticksheet_item_without_committing_or_checking(self, item: TickSheetItem):
         name = item.name
         substage_id = int(item.substage_id)
         item_id = int(item.id)

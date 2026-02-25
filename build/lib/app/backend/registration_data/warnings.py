@@ -27,7 +27,7 @@ from app.backend.events.event_warnings import (
 )
 
 from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
+    get_dict_of_cadets_with_registration_data,
 )
 
 
@@ -63,7 +63,7 @@ def refresh_registration_data_warnings(interface: abstractInterface, event: Even
 
 def refresh_unknown_date_of_birth_warnings(interface: abstractInterface, event: Event):
     object_store=interface.object_store
-    registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
+    registered_cadets = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     active_cadets = registered_cadets.list_of_active_cadets()
@@ -86,7 +86,7 @@ def refresh_unknown_date_of_birth_warnings(interface: abstractInterface, event: 
 
 def refresh_too_young_warnings(interface: abstractInterface, event: Event):
     object_store=interface.object_store
-    registered_cadets = DEPRECATE_get_dict_of_cadets_with_registration_data(
+    registered_cadets = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     active_cadets = registered_cadets.list_of_active_cadets()
@@ -106,7 +106,7 @@ def refresh_too_young_warnings(interface: abstractInterface, event: Event):
 
 def refresh_manually_added_cadet_warnings(interface: abstractInterface, event: Event):
     object_store=interface.object_store
-    dict_of_registrations = DEPRECATE_get_dict_of_cadets_with_registration_data(
+    dict_of_registrations = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     warnings = []

@@ -192,7 +192,7 @@ def update_if_swap_button_pressed_and_ready_to_swap_but_not_cancel_button(
         return
     else:
         swap_roles_and_groups_for_volunteers_in_allocation(
-            object_store=interface.object_store,
+            interface=interface,
             original_day=original_day,
             event=event,
             day_to_swap_with=day_to_swap_with,

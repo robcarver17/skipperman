@@ -12,7 +12,7 @@ from app.objects.utilities.cadet_matching_and_sorting import (
 from app.objects.utilities.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
-    ListOfCadetVolunteerAssociations,
+    ListOfCadetVolunteerAssociations, DictOfCadetsAssociatedWithVolunteer,
 )
 
 from app.data_access.store.object_store import ObjectStore
@@ -146,15 +146,18 @@ def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
     interface: abstractInterface, cadet: Cadet, volunteer: Volunteer
 ):
     try:
-        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.add_volunteer_connection_to_cadet_in_master_list_of_volunteers,
+        interface.update(interface.object_store.data_api.data_list_of_cadet_volunteer_associations.add_volunteer_connection_to_cadet,
                          cadet=cadet, volunteer=volunteer)
     except Exception as e:
         interface.log_error("Error %s when adding connection between %s and %s" % (str(e), cadet, volunteer))
 
 
-## RAW DATA
 def get_list_of_cadet_volunteer_association(
     object_store: ObjectStore,
 ) -> ListOfCadetVolunteerAssociations:
     return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.read)
 
+def get_dict_of_cadets_associated_with_volunteers(
+    object_store: ObjectStore,
+) -> DictOfCadetsAssociatedWithVolunteer:
+    return object_store.get(object_store.data_api.data_list_of_cadet_volunteer_associations.get_dict_of_cadets_associated_with_volunteers)

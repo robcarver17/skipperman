@@ -49,7 +49,7 @@ def get_notes_field(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForC
 def get_days_attending_field(
     cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> checkboxInput:
-    availability = cadet_availability_at_event(
+    availability = cadet_availability_at_event_from_dict_of_all_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
     days_attending_field = get_availability_checkbox(
@@ -123,7 +123,7 @@ def get_input_fields_for_cadet_on_day(
     interface: abstractInterface,
     cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ) -> list:
-    availability = cadet_availability_at_event(
+    availability = cadet_availability_at_event_from_dict_of_all_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
     if not availability.available_on_day(day):

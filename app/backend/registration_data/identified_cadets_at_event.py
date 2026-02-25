@@ -20,9 +20,6 @@ from app.data_access.store.object_store import ObjectStore
 
 from app.objects.events import Event
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_identified_cadets_at_event,
-)
 from app.objects.utilities.utils import union_of_x_and_y
 
 
@@ -141,31 +138,51 @@ def identified_cadet_ids_in_raw_registration_data(
     return list_of_cadet_ids
 
 
-def mark_row_as_permanently_skip_cadet(
-    object_store: ObjectStore, event: Event, row_id: str
+def delete_cadet_from_identified_data_and_return_rows_deleted(
+    interface: abstractInterface, event: Event, cadet: Cadet, areyousure=False
 ):
-    identified_cadets_at_event = get_list_of_identified_cadets_at_event(
-        object_store=object_store, event=event
+    if not areyousure:
+        return
+
+    list_of_identified_cadets = get_list_of_identified_cadets_at_event(
+        object_store=interface.object_store, event=event
     )
-    identified_cadets_at_event.add_row_with_permanent_skip_cadet(row_id=row_id)
-    update_list_of_identified_cadets_at_event(
-        identified_cadets_at_event=identified_cadets_at_event,
-        event=event,
-        object_store=object_store,
+    rows = list_of_identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(
+        cadet_id=cadet.id
+    )
+    row_count = len(rows)
+
+    delete_cadet_from_identified_data(interface, event, cadet)
+
+    return row_count
+
+def delete_cadet_from_identified_data(
+    interface: abstractInterface, event: Event, cadet: Cadet
+):
+    interface.update(
+        interface.object_store.data_api.data_identified_cadets_at_event.delete_cadet_from_identified_data,
+        event_id=event.id,
+        cadet_id=cadet.id
+    )
+
+
+def mark_row_as_permanently_skip_cadet(
+    interface: abstractInterface, event: Event, row_id: str
+):
+    interface.update(
+        interface.object_store.data_api.data_identified_cadets_at_event.mark_row_as_permanently_skip_cadet,
+        event_id=event.id,
+        row_id=row_id
     )
 
 
 def mark_row_as_temporarily_skip_cadet(
-    object_store: ObjectStore, event: Event, row_id: str
+    interface: abstractInterface, event: Event, row_id: str
 ):
-    identified_cadets_at_event = get_list_of_identified_cadets_at_event(
-        object_store=object_store, event=event
-    )
-    identified_cadets_at_event.add_row_with_temporary_skip_cadet(row_id=row_id)
-    update_list_of_identified_cadets_at_event(
-        identified_cadets_at_event=identified_cadets_at_event,
-        event=event,
-        object_store=object_store,
+    interface.update(
+        interface.object_store.data_api.data_identified_cadets_at_event.mark_row_as_temporarily_skip_cadet,
+        event_id=event.id,
+        row_id=row_id
     )
 
 
@@ -173,7 +190,7 @@ def add_identified_cadet_and_row(
     interface: abstractInterface, event: Event, row_id: str, cadet: Cadet
 ):
     interface.update(
-        interface.object_store.data_api.data_identified_cadets_at_event.add_identified_cadet_and_row,
+        interface.object_store.data_api.data_identified_cadets_at_event.update_or_add_identified_cadet_and_row,
         event_id=event.id,
         row_id=row_id,
         cadet_id=cadet.id
@@ -216,35 +233,5 @@ def get_list_of_identified_cadets_at_event(
     )
 
 
-def update_list_of_identified_cadets_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    identified_cadets_at_event: ListOfIdentifiedCadetsAtEvent,
-):
-    object_store.DEPRECATE_update(
-        new_object=identified_cadets_at_event,
-        object_definition=object_definition_for_identified_cadets_at_event,
-        event_id=event.id,
-    )
 
 
-def delete_cadet_from_identified_data_and_return_rows_deleted(
-    object_store: ObjectStore, event: Event, cadet: Cadet, areyousure=False
-):
-    if not areyousure:
-        return
-
-    list_of_identified_cadets = get_list_of_identified_cadets_at_event(
-        object_store=object_store, event=event
-    )
-    rows = list_of_identified_cadets.list_of_row_ids_given_cadet_id_allowing_duplicates(
-        cadet_id=cadet.id
-    )
-    list_of_identified_cadets.delete_cadet_from_identified_data(cadet.id)
-    update_list_of_identified_cadets_at_event(
-        object_store=object_store,
-        identified_cadets_at_event=list_of_identified_cadets,
-        event=event,
-    )
-
-    return len(rows)

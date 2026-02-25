@@ -76,12 +76,12 @@ def post_form_config_volunteer_skills(
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_config_volunteer_skills)
 
 
 def save_from_ordinary_list_of_skills( interface: abstractInterface, new_list: List[Skill]):
     update_list_of_skills(
-        object_store=interface.object_store, list_of_skills=ListOfSkills(new_list)
+        interface=interface, list_of_skills=ListOfSkills(new_list)
     )

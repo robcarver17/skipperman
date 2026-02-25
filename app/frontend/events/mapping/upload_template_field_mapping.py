@@ -2,7 +2,7 @@ from app.backend.mapping.list_of_field_mappings import (
     save_field_mapping_template,
     get_list_of_field_mapping_template_names,
 )
-from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
+from app.data_access.csv.arch.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -82,7 +82,7 @@ def post_form_for_upload_template_field_mapping(interface: abstractInterface):
         interface=interface,
         template=template,
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     interface.log_error("Uploaded new template %s" % (template_name))
 

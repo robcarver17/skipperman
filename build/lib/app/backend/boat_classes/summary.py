@@ -7,9 +7,7 @@ from app.objects.cadets import Cadet
 
 from app.objects.boat_classes import BoatClass
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_attendance_matrix_for_list_of_cadets_at_event,
-)
+from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
 
 from app.data_access.store.object_store import ObjectStore
 

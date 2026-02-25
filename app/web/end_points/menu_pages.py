@@ -1,9 +1,6 @@
 from typing import List
 
-from app.web.html.url_define import (
-    get_urls_of_interest,
-    MAIN_HELP_PAGE, get_action_first_page_url,
-)
+from app.web.html.url_define import MAIN_HELP_PAGE, get_urls_of_interest, get_action_first_page_url
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 

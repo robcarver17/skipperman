@@ -1,22 +1,11 @@
 from dataclasses import dataclass
 from typing import Callable, Dict, Union, List
 
-from app.objects.composed.cadets_with_all_event_info import (
-    compose_dict_of_all_event_info_for_cadet,
-)
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
-    compose_dict_of_cadets_and_boat_classes_and_partners,
-)
-from app.objects.composed.dict_of_previous_cadet_groups import \
-    compose_dict_of_group_names_for_events_and_cadets_persistent_version
 from app.objects.composed.people_at_event_with_club_dinghies import (
     compose_dict_of_people_and_club_dinghies_at_event,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     compose_dict_of_cadets_with_days_and_groups_at_event,
-)
-from app.objects.composed.cadets_at_event_with_registration_data import (
-    compose_dict_of_cadets_with_event_data,
 )
 
 from app.data_access.store.data_access import *
@@ -41,9 +30,7 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 )
 from app.objects.composed.volunteers_last_role_across_events import \
     compose_dict_of_volunteers_with_last_role_and_group_across_events
-from app.objects.composed.volunteers_with_all_event_data import (
-    compose_dict_of_all_event_data_for_volunteers,
-)
+from app.data_access.composed.dict_of_all_event_data_for_volunteers import compose_dict_of_all_event_data_for_volunteers
 from app.objects.composed.volunteers_with_skills import compose_dict_of_volunteer_skills
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.composed.dict_of_volunteer_role_targets import (
@@ -372,18 +359,6 @@ object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_i
 
 #object_definition_for_list_of_last_roles_across_events_for_volunteers
 
-object_definition_for_dict_of_group_names_for_events_and_cadets_persistent_version = \
- DerivedObjectDefinition(
-composition_function=compose_dict_of_group_names_for_events_and_cadets_persistent_version,
-     dict_of_arguments_and_underlying_object_definitions=dict(
-list_of_group_names_for_events_and_cadet_persistent_version_with_ids=object_definition_for_list_of_group_names_for_events_and_cadets_persistent_version,
-list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-list_of_events=object_definition_for_list_of_events,
-     ),
-     dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-         list_of_group_names_for_events_and_cadet_persistent_version_with_ids=object_definition_for_list_of_group_names_for_events_and_cadets_persistent_version
-     ),
- )
 
 
 object_definition_for_volunteer_and_cadet_associations = DerivedObjectDefinition(
@@ -434,19 +409,6 @@ object_definition_for_dict_of_teams_with_roles = DerivedObjectDefinition(
     ),
 )
 
-object_definition_for_dict_of_cadets_with_registration_data_at_event = DerivedObjectDefinition(
-    composition_function=compose_dict_of_cadets_with_event_data,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_events=object_definition_for_list_of_events,
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        list_of_cadets_with_id_at_event=object_definition_for_cadets_with_ids_and_registration_data_at_event,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_cadets_with_id_at_event=object_definition_for_cadets_with_ids_and_registration_data_at_event
-    ),
-    required_keys=["event_id"],
-)
-
 object_definition_for_dict_of_cadets_with_groups_at_event = DerivedObjectDefinition(
     composition_function=compose_dict_of_cadets_with_days_and_groups_at_event,
     dict_of_arguments_and_underlying_object_definitions=dict(
@@ -461,19 +423,6 @@ object_definition_for_dict_of_cadets_with_groups_at_event = DerivedObjectDefinit
     required_keys=["event_id"],
 )
 
-object_definition_for_dict_of_cadets_and_boat_classes_and_partners = DerivedObjectDefinition(
-    composition_function=compose_dict_of_cadets_and_boat_classes_and_partners,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_cadets=DEPRECATE_object_definition_for_list_of_cadets,
-        list_of_events=object_definition_for_list_of_events,
-        list_of_boat_classes=object_definition_for_list_of_boat_classes,
-        list_of_cadets_at_event_with_boat_class_and_partners_with_ids=object_definition_for_cadets_with_ids_and_boat_classes_at_event,
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        list_of_cadets_at_event_with_boat_class_and_partners_with_ids=object_definition_for_cadets_with_ids_and_boat_classes_at_event
-    ),
-    required_keys=["event_id"],
-)
 
 
 
@@ -586,29 +535,6 @@ dict_of_teams_and_roles=object_definition_for_dict_of_teams_with_roles
     ),
 )
 
-
-object_definition_for_dict_of_all_event_info_for_cadet = DerivedObjectDefinition(
-    composition_function=compose_dict_of_all_event_info_for_cadet,
-    dict_of_arguments_and_underlying_object_definitions=dict(
-        list_of_events=object_definition_for_list_of_events,
-        dict_of_cadets_and_boat_class_and_partners=object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
-        dict_of_cadets_and_club_dinghies_at_event=object_definition_for_dict_of_people_and_club_dinghies_at_event,
-        dict_of_cadets_with_registration_data=object_definition_for_dict_of_cadets_with_registration_data_at_event,
-        dict_of_cadets_with_days_and_groups=object_definition_for_dict_of_cadets_with_groups_at_event,
-        dict_of_cadets_with_clothing_at_event=object_definition_for_dict_of_cadets_with_clothing_at_event,
-
-    ),
-    dict_of_properties_and_underlying_object_definitions_if_modified=dict(
-        dict_of_cadets_and_boat_class_and_partners=object_definition_for_dict_of_cadets_and_boat_classes_and_partners,
-        dict_of_cadets_and_club_dinghies_at_event=object_definition_for_dict_of_people_and_club_dinghies_at_event,
-        dict_of_cadets_with_registration_data=object_definition_for_dict_of_cadets_with_registration_data_at_event,
-        dict_of_cadets_with_days_and_groups=object_definition_for_dict_of_cadets_with_groups_at_event,
-        dict_of_cadets_with_clothing_at_event=object_definition_for_dict_of_cadets_with_clothing_at_event,
-    ),
-    required_keys=["event_id"],
-)
-
-# object_definition_for_dict_of_cadet_ids_with_registration_attendence_for_cadet_id
 
 
 

@@ -1,3 +1,4 @@
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 
 from app.backend.registration_data.volunter_relevant_information import (
@@ -9,9 +10,6 @@ from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_identified_volunteers_at_event,
-)
 from app.objects.identified_volunteer_at_event import ListOfIdentifiedVolunteersAtEvent
 from app.objects.relevant_information_for_volunteers import (
     RelevantInformationForVolunteer,
@@ -66,55 +64,70 @@ def get_list_of_unique_volunteer_ids_identified_in_registration_data(
 
 
 def mark_volunteer_as_skipped_permanently(
-    object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
+    interface: abstractInterface, event: Event, row_id: str, volunteer_index: int
 ):
-    list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_volunteers_identified.add_permanently_skipped_volunteer(
-        row_id=row_id, volunteer_index=volunteer_index
-    )
-    update_list_of_identified_volunteers_at_event(
-        list_of_identified_volunteers_at_event=list_of_volunteers_identified,
-        object_store=object_store,
-        event=event,
+    #PERMANENT_SKIP_VOLUNTEER_ID
+    interface.update(
+        interface.object_store.data_api.data_list_of_identified_volunteers_at_event.mark_volunteer_as_skipped_permanently,
+        event_id=event.id,
+        row_id=row_id,
+        volunteer_index=volunteer_index
     )
 
 
 def mark_volunteer_as_skipped_for_now(
-    object_store: ObjectStore, event: Event, row_id: str, volunteer_index: int
+    interface: abstractInterface, event: Event, row_id: str, volunteer_index: int
 ):
-    list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_volunteers_identified.add_temporarily_skipped_volunteer(
-        row_id=row_id, volunteer_index=volunteer_index
-    )
-    update_list_of_identified_volunteers_at_event(
-        list_of_identified_volunteers_at_event=list_of_volunteers_identified,
-        object_store=object_store,
-        event=event,
+    #SKIP_FOR_NOW_VOLUNTEER_ID
+    interface.update(
+        interface.object_store.data_api.data_list_of_identified_volunteers_at_event.mark_volunteer_as_skipped_for_now,
+        event_id=event.id,
+        row_id=row_id,
+        volunteer_index=volunteer_index
     )
 
 
 def add_identified_volunteer(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     volunteer: Volunteer,
     event: Event,
     row_id: str,
     volunteer_index: int,
 ):
-    list_of_volunteers_identified = get_list_of_identified_volunteers_at_event(
-        object_store=object_store, event=event
+    interface.update(
+        interface.object_store.data_api.data_list_of_identified_volunteers_at_event.add_or_update_identified_volunteer,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        row_id=row_id,
+        volunteer_index=volunteer_index
     )
-    list_of_volunteers_identified.add_identified_volunteer(
-        row_id=row_id, volunteer_id=volunteer.id, volunteer_index=volunteer_index
+
+def delete_volunteer_from_identified_data(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_identified_volunteers_at_event.delete_volunteer_from_identified_data,
+        event_id=event.id,
+        volunteer_id=volunteer.id
     )
-    update_list_of_identified_volunteers_at_event(
-        object_store=object_store,
-        list_of_identified_volunteers_at_event=list_of_volunteers_identified,
-        event=event,
+
+
+def delete_volunteer_from_identified_data_and_return_rows_deleted(
+    interface: abstractInterface, event: Event, volunteer: Volunteer, areyousure=False
+):
+    if not areyousure:
+        return
+
+    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
+        object_store=interface.object_store, event=event
     )
+    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
+        volunteer.id
+    )
+    row_count  =len(rows)
+    delete_volunteer_from_identified_data(interface, event, volunteer)
+
+    return row_count
 
 
 def get_relevant_information_for_volunteer_in_event_at_row_and_index(
@@ -155,41 +168,11 @@ def volunteer_for_this_row_and_index_already_identified_or_permanently_skipped(
 def get_list_of_identified_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfIdentifiedVolunteersAtEvent:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_identified_volunteers_at_event,
-        event_id=event.id,
+    return object_store.get(
+        object_store.data_api.data_list_of_identified_volunteers_at_event.read,
+        event_id=event.id
     )
 
 
-def update_list_of_identified_volunteers_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    list_of_identified_volunteers_at_event: ListOfIdentifiedVolunteersAtEvent,
-):
-    object_store.DEPRECATE_update(
-        object_definition=object_definition_for_identified_volunteers_at_event,
-        new_object=list_of_identified_volunteers_at_event,
-        event_id=event.id,
-    )
 
 
-def delete_volunteer_from_identified_data_and_return_rows_deleted(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer, areyousure=False
-):
-    if not areyousure:
-        return
-
-    list_of_identified_volunteers = get_list_of_identified_volunteers_at_event(
-        object_store=object_store, event=event
-    )
-    rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
-        volunteer.id
-    )
-    list_of_identified_volunteers.delete_all_rows_with_volunteer_id(volunteer.id)
-    update_list_of_identified_volunteers_at_event(
-        object_store=object_store,
-        list_of_identified_volunteers_at_event=list_of_identified_volunteers,
-        event=event,
-    )
-
-    return len(rows)

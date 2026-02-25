@@ -59,9 +59,10 @@ def name_of_highest_qualification_for_cadet(
 def sorted_list_of_named_qualifications_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> List[str]:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.sorted_list_of_named_qualifications_for_cadet,
+    ordered_list = object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
                             cadet_id=cadet.id)
 
+    return ordered_list.list_of_names()
 
 
 def get_list_of_qualifications_for_cadet(
@@ -80,6 +81,7 @@ def get_dict_of_qualifications_for_all_cadets(
 def highest_qualification_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> Union[object, Qualification]:
-    return object_store.get(
-        object_store.data_api.data_list_of_cadets_with_qualifications.highest_qualification_for_cadet, cadet=cadet)
+    ordered_list = object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
+                            cadet_id=cadet.id)
 
+    return ordered_list.highest_qualification_if_ordered()

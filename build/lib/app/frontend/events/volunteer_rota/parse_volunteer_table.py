@@ -25,11 +25,10 @@ from app.frontend.events.volunteer_rota.button_values import (
 
 from app.data_access.init_directories import temp_file_name_in_download_directory
 
-from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day
+from app.backend.rota.changes import delete_role_and_possibly_powerboat_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_at_event import (
     make_volunteer_available_on_day,
     make_volunteer_unavailable_on_day,
-    is_volunteer_currently_available_for_only_one_day,
     delete_volunteer_at_event,
 )
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix
@@ -160,7 +159,7 @@ def update_if_make_available_button_pressed(
     )
     event = get_event_from_state(interface)
     make_volunteer_available_on_day(
-        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
+        interface=interface, event=event, volunteer=volunteer, day=day
     )
 
 
@@ -191,7 +190,7 @@ def update_if_make_unavailable_across_days_button_pressed(
     )
     event = get_event_from_state(interface)
     delete_volunteer_at_event(
-        object_store=interface.object_store, event=event, volunteer=volunteer
+        interface=interface, event=event, volunteer=volunteer
     )
 
 
@@ -204,7 +203,7 @@ def update_if_make_unavailable_on_specific_day_button_pressed(
     event = get_event_from_state(interface)
 
     make_volunteer_unavailable_on_day(
-        object_store=interface.object_store, event=event, volunteer=volunteer, day=day
+        interface=interface, event=event, volunteer=volunteer, day=day
     )
 
 
@@ -231,8 +230,8 @@ def update_if_remove_role_button_pressed_on_specific_day(
         object_store=interface.object_store, button=remove_button
     )
     event = get_event_from_state(interface)
-    delete_role_at_event_for_volunteer_on_day(
-        object_store=interface.object_store,
+    delete_role_and_possibly_powerboat_at_event_for_volunteer_on_day(
+        interface=interface,
         event=event,
         volunteer=volunteer,
         day=day,
@@ -248,8 +247,8 @@ def update_if_remove_role_button_pressed_across_days(
     )
     event = get_event_from_state(interface)
     for day in event.days_in_event():
-        delete_role_at_event_for_volunteer_on_day(
-            object_store=interface.object_store,
+        delete_role_and_possibly_powerboat_at_event_for_volunteer_on_day(
+            interface=interface,
             event=event,
             volunteer=volunteer,
             day=day,

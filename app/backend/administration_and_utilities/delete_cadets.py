@@ -6,6 +6,7 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 from app.backend.cadets_at_event.instructor_marked_attendance import (
     delete_raw_attendance_for_cadet_and_return_list_of_events,
 )
+from app.backend.groups.previous_groups import delete_persistent_version_of_previous_groups_for_cadet
 from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     delete_all_qualifications_for_cadet,
 )
@@ -35,6 +36,8 @@ def delete_cadet_in_data_and_return_warnings(
         committee_message = "Not on cadet committee"
     messages.append(committee_message)
 
+    delete_persistent_version_of_previous_groups_for_cadet(interface=interface,
+                                                           cadet=cadet_to_delete)
     ## list of cadet volunteer associations - just delete
     list_of_associated_volunteers = delete_all_connections_for_cadet(
         interface=interface, cadet=cadet_to_delete, areyousure=True
@@ -91,13 +94,13 @@ def delete_cadet_in_data_and_return_warnings(
     list_of_events = get_list_of_events(interface.object_store)
     for event in list_of_events:
         event_messages = delete_cadet_from_event_and_return_messages(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,
         )
         rows_identified = delete_cadet_from_identified_data_and_return_rows_deleted(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             cadet=cadet_to_delete,
             areyousure=True,

@@ -183,7 +183,7 @@ def update_comparing_new_and_existing_cadet_at_event(
     elif reg_status_change == new_registration_replacing_deleted_or_cancelled:
         ## Replace entire original cadet, new registration
         replace_existing_cadet_at_event_where_original_cadet_was_inactive(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             new_cadet_at_event=new_cadet_at_event,
         )
@@ -192,7 +192,7 @@ def update_comparing_new_and_existing_cadet_at_event(
         ## availability is a moot point, change status
         new_status = new_cadet_at_event.status
         update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             new_status=new_status,
             cadet=cadet,
@@ -201,7 +201,7 @@ def update_comparing_new_and_existing_cadet_at_event(
     elif reg_status_change == status_still_active_but_has_changed:
         new_status = new_cadet_at_event.status
         update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             cadet=cadet,
             new_status=new_status,
@@ -212,6 +212,7 @@ def update_comparing_new_and_existing_cadet_at_event(
                 event=event,
                 cadet=cadet,
                 row_in_registration_data=new_cadet_at_event.data_in_row,
+                new_health = new_cadet_at_event.health
             )
             interface.log_error(
                 "Cadet %s was manually registered; imported details from registration form and updated health information. "
@@ -261,7 +262,7 @@ def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_ch
 
     list_of_messages = (
         update_availability_of_existing_cadet_at_event_and_return_messages(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             new_availabilty=new_availability,
             cadet=cadet,

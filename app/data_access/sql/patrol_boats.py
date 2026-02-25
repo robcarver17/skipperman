@@ -2,30 +2,30 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import arg_not_passed, MultipleMatches
+from app.objects.utilities.exceptions import arg_not_passed, MultipleMatches, missing_data
 
 PATROL_BOATS_TABLE = "patrol_boats"
 INDEX_PATROL_BOATS_TABLE = "index_patrol_boats_table"
 
 class SqlDataListOfPatrolBoats(GenericSqlData):
-    def add_new_patrol_boat(self, patrol_boat_name: str):
+    def add_new_patrol_boat(self, new_boat: PatrolBoat):
+        patrol_boat_name = new_boat.name
         if self.does_patrol_boat_with_name_exist(patrol_boat_name):
             raise Exception("Boat called %s already exists" % patrol_boat_name)
+
+        self._add_new_patrol_boat_without_checks(new_boat)
+
+    def _add_new_patrol_boat_without_checks(self,  new_boat: PatrolBoat):
 
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
 
-            id = self.next_available_id()
             idx = self.next_available_order()
-            boat = PatrolBoat(
-                patrol_boat_name,
-                hidden=False
-            )
-            self.write_boat_without_committing(
-                boat=boat,
+            new_boat.id =  str(self.next_available_id())
+            self._write_boat_without_commit_or_checks(
+                boat=new_boat,
                 idx=idx,
-                id=str(id)
             )
             self.conn.commit()
         except Exception as e1:
@@ -46,11 +46,19 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
                 raise Exception("Can't change name from %s to %s as boat called %s already exists" %
                                 (existing_boat.name, new_patrol_boat.name, new_patrol_boat.name))
 
+        self._modify_patrol_boat_without_checks(
+            existing_patrol_boat_id=existing_patrol_boat_id, new_patrol_boat=new_patrol_boat
+        )
+
+    def _modify_patrol_boat_without_checks(
+                self, existing_patrol_boat_id: str, new_patrol_boat: PatrolBoat
+        ):
+
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s', %s='%s' WHERE %s='%s' " % (
+            insertion = "UPDATE %s SET %s='%s', %s=%d WHERE %s=%d " % (
                 PATROL_BOATS_TABLE,
                 PATROL_BOAT_NAME,
                 str(new_patrol_boat.name),
@@ -69,13 +77,13 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
 
 
     def does_patrol_boat_with_name_exist(self, patrol_boat_name: str):
-        boat = self.patrol_boat_with_name(patrol_boat_name, default=None)
-        if boat is None:
+        boat = self.patrol_boat_with_name(patrol_boat_name, default=missing_data)
+        if boat is missing_data:
             return False
         else:
             return True
 
-    def patrol_boat_with_name(self, patrol_boat_name: str, default) -> PatrolBoat:
+    def patrol_boat_with_name(self, patrol_boat_name: str, default=missing_data) -> PatrolBoat:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 return default
@@ -100,13 +108,13 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
                              hidden=int2bool(raw_boat[0]),
                              id=str(raw_boat[1]))
 
-    def patrol_boat_with_id(self, patrol_boat_id: str, default) -> PatrolBoat:
+    def patrol_boat_with_id(self, patrol_boat_id: str, default=missing_data) -> PatrolBoat:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
                  HIDDEN, PATROL_BOAT_NAME, PATROL_BOATS_TABLE, PATROL_BOAT_ID, int(patrol_boat_id)
              ))
             raw_list = cursor.fetchall()
@@ -210,10 +218,9 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (PATROL_BOATS_TABLE))
 
             for idx, boat in enumerate(list_of_boats):
-                self.write_boat_without_committing(
+                self._write_boat_without_commit_or_checks(
                     boat=boat,
-                    idx=idx,
-                    id=boat.id
+                    idx=idx
                 )
             self.conn.commit()
         except Exception as e1:
@@ -221,10 +228,10 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
         finally:
             self.close()
 
-    def write_boat_without_committing(self, boat: PatrolBoat, id: str, idx: int):
+    def _write_boat_without_commit_or_checks(self, boat: PatrolBoat, idx: int):
         name = boat.name
         hidden = bool2int(boat.hidden)
-        id = int(id)
+        id = int(boat.id)
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
             PATROL_BOATS_TABLE,

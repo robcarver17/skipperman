@@ -8,9 +8,10 @@ from app.objects.qualifications import ListOfQualifications, Qualification
 def add_qualification(
     interface: abstractInterface,  name_of_entry_to_add: str
 ):
+    new_qualification = Qualification(name_of_entry_to_add)
     interface.update(
         interface.object_store.data_api.data_list_of_qualifications.add_qualification,
-        qualification_name = name_of_entry_to_add)
+        new_qualification=new_qualification)
 
 
 def modify_qualification(

@@ -3,7 +3,8 @@ from typing import List, Tuple, Union
 
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.volunteer_skills import ListOfSkills
-from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds, NO_ROLE_ALLOCATED, SI_ROLE_NAME
+from app.objects.roles_and_teams import RolesWithSkillIds, ListOfRolesWithSkillIds, NO_ROLE_ALLOCATED, SI_ROLE_NAME, \
+    no_role_allocated
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
 
@@ -30,6 +31,16 @@ class RoleWithSkills:
 
     def __repr__(self):
         return self.name
+
+    @classmethod
+    def from_name(cls, name:str):
+        skills_dict = SkillsDict.from_dict_of_str_and_bool({})
+        return cls(name=name,
+                                  skills_dict=skills_dict,
+                                  protected=False,
+                                  hidden=False,
+                                  associate_sailing_group=False
+                                  )
 
     def is_no_role_set(self):
         return self == no_role_set
@@ -83,6 +94,14 @@ from app.objects.utilities.generic_list_of_objects import (
 
 
 class ListOfRolesWithSkills(List[RoleWithSkills]):
+    def as_list_of_roles_with_skill_ids(self):
+        return ListOfRolesWithSkillIds([item.as_role_with_skill_ids() for item in self])
+
+    def add_no_role_set(self):
+        if self.contains_no_role_set():
+            return
+        self.append(no_role_allocated)
+
     def role_with_id(self, role_id, default=missing_data) -> RoleWithSkills:
         idx = get_idx_of_unique_object_with_attr_in_list(self, attr_name='id', attr_value=role_id, default=missing_data)
         if idx is missing_data:

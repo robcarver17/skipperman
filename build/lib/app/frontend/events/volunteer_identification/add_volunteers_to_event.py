@@ -97,7 +97,7 @@ def process_identified_volunteer_at_event_with_valid_registered_cadets(
         update_cadet_connections_when_volunteer_already_at_event(
             interface=interface, event=event, volunteer=volunteer
         )
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
         return next_volunteer_in_event(interface)
 
     else:
@@ -164,7 +164,7 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
 
     print("Adding %s with data %s to event" % (volunteer, str(registration_data)))
     add_volunteer_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         volunteer=volunteer,
         registration_data=registration_data,
@@ -173,5 +173,5 @@ def process_new_volunteer_at_event_with_active_cadets_with_issues_logged(
         interface=interface, event=event, volunteer=volunteer
     )
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
     return next_volunteer_in_event(interface)

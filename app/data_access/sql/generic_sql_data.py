@@ -1,7 +1,6 @@
 import datetime
 import sqlite3
-from os.path import join, exists
-from pathlib import Path
+from os.path import join
 from typing import Union
 
 SQL_FILE_NAME = "skipperman.db"
@@ -28,12 +27,15 @@ class DBConnection():
 
         return conn
 
-    def cursor(self):
-        return self.conn.cursor()
 
 class GenericSqlData(object):
-    def __init__(self, db_connection: DBConnection):
+    def __init__(self, db_connection: DBConnection, object_store: 'ObjectStore'):
         self._db_connection = db_connection
+        self._object_store = object_store
+
+    @property
+    def object_store(self):
+        return self._object_store
 
     def table_does_not_exist(self, table_name: str) -> bool:
         listOfTables = self.cursor.execute(

@@ -215,12 +215,12 @@ def post_form_allocate_cadets_when_changing_data(
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
     elif update_group_names_button.pressed(last_button):
-        update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(interface.object_store)
+        update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return interface.get_new_form_given_function(display_form_allocate_cadets)
 
@@ -231,7 +231,7 @@ def save_all_information_in_forms_on_page(interface: abstractInterface):
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def previous_form(interface: abstractInterface):

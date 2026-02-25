@@ -463,7 +463,7 @@ def update_if_swap_button_pressed_and_ready_to_swap(
         swap_data = get_swap_data(interface=interface, swap_button=swap_button)
         ## swap_type and swap_type_in_state should be consistent, going to use swap_type
         do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation(
-            object_store=interface.object_store, swap_data=swap_data
+            interface=interface, swap_data=swap_data
         )
 
     revert_to_not_swapping_state(interface)

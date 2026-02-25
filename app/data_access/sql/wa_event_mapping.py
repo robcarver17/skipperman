@@ -17,13 +17,12 @@ class SqlDataWAEventMapping(GenericSqlData):
         try:
             if self.table_does_not_exist(WA_EVENT_MAPPING_TABLE):
                 self.create_table()
-            insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
-                WA_EVENT_MAPPING_TABLE,
-            EVENT_ID, WA_ID)
-
-            self.cursor.execute(insertion, (
-                int(event_id), int(wa_id)))
-
+            self._write_row_without_checks_or_commit(
+                WAEventMap(
+                    event_id=event_id,
+                    wa_id=wa_id
+                )
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing event mappings" % str(e1))
@@ -36,7 +35,7 @@ class SqlDataWAEventMapping(GenericSqlData):
             if self.table_does_not_exist(WA_EVENT_MAPPING_TABLE):
                 return
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' " % (WA_EVENT_MAPPING_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (WA_EVENT_MAPPING_TABLE,
                                                                    EVENT_ID,
                                                                    int(event_id)))
 
@@ -52,7 +51,7 @@ class SqlDataWAEventMapping(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d ''' % (
                 WA_EVENT_MAPPING_TABLE,
                 EVENT_ID,
                 int(event_id)
@@ -77,7 +76,7 @@ class SqlDataWAEventMapping(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d ''' % (
                 WA_EVENT_MAPPING_TABLE,
                 WA_ID,
                 int(wa_id)
@@ -127,21 +126,24 @@ class SqlDataWAEventMapping(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (WA_EVENT_MAPPING_TABLE))
 
             for event_map in wa_event_mapping:
-                event_id = int(event_map.event_id)
-                wa_id = int(event_map.wa_id)
-
-                insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
-                    WA_EVENT_MAPPING_TABLE,
-                EVENT_ID, WA_ID)
-
-                self.cursor.execute(insertion, (
-                    event_id, wa_id))
+                self._write_row_without_checks_or_commit(event_map)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing event mappings" % str(e1))
         finally:
             self.close()
+
+    def _write_row_without_checks_or_commit(self,event_map: WAEventMap ):
+        event_id = int(event_map.event_id)
+        wa_id = int(event_map.wa_id)
+
+        insertion = "INSERT INTO %s (%s, %s) VALUES (?,?)" % (
+            WA_EVENT_MAPPING_TABLE,
+            EVENT_ID, WA_ID)
+
+        self.cursor.execute(insertion, (
+            event_id, wa_id))
 
     def create_table(self):
 

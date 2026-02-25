@@ -3,6 +3,8 @@ from typing import Dict, List
 
 import pandas as pd
 
+from app.data_access.configuration.field_list_groups import GROUP_ALLOCATION_FIELDS_HIDE
+
 from app.objects.utilities.utils import flatten
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 
@@ -181,6 +183,23 @@ class DaysAndGroupNames(Dict[Day, str]):
         return list(self.values())
 
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
+
+
+    def add_or_upate_group_for_cadet_on_day(
+        self,
+        cadet: Cadet,
+        day: Day,
+        group: Group,
+    ):
+        current_allocation = self.get_days_and_groups_for_cadet(cadet=cadet)
+        current_group = current_allocation.group_on_day(day)
+
+        if current_group == group:
+            return
+
+        current_allocation.update_group_on_day(day=day, group=group)
+        self[cadet] = current_allocation
+
     def days_and_groups_for_cadet(self, cadet: Cadet):
         return self.get(cadet, DaysAndGroups())
 
@@ -538,3 +557,74 @@ class DictOfEventAllocations(Dict[Cadet, Dict[Event, str]]):
     @property
     def list_of_events(self) -> ListOfEvents:
         return self._list_of_events
+
+
+@dataclass
+class GroupAllocationInfo:
+    dict_of_dicts: Dict[str, Dict[Cadet, str]]
+
+    def visible_field_names(self) -> list:
+        fields = [
+            field
+            for field in self.field_names
+            if field not in GROUP_ALLOCATION_FIELDS_HIDE
+        ]
+
+        return fields
+
+    @property
+    def field_names(self) -> list:
+        return list(self.dict_of_dicts.keys())
+
+    def dict_for_field_name(self, field_name: str) -> Dict[Cadet, str]:
+        info_dict_for_key = self.dict_of_dicts.get(field_name, None)
+        if info_dict_for_key is None:
+            raise Exception("Group allocation info not found for %s" % field_name)
+
+        return info_dict_for_key
+
+    def group_info_dict_for_cadet_as_ordered_list(self, cadet: Cadet):
+        info_dict = self.get_allocation_info_for_cadet(cadet)
+
+        return [
+            info_dict.get(field_name, "") for field_name in self.visible_field_names()
+        ]
+
+    def get_allocation_info_for_cadet(self, cadet: Cadet) -> dict:
+        field_names = self.field_names
+        info_dict = dict(
+            [
+                (
+                    field_name,
+                    cadet_info_from_info_dict(self, cadet=cadet, field_name=field_name),
+                )
+                for field_name in field_names
+            ]
+        )
+
+        return info_dict
+
+    def remove_empty_fields(self):
+        dict_of_dicts = self.dict_of_dicts
+        ## in place
+        for field_name in list(self.field_names):
+            if all_empty(self.dict_for_field_name(field_name)):
+                dict_of_dicts.pop(field_name)
+
+
+def cadet_info_from_info_dict(
+    group_allocation_info: GroupAllocationInfo, cadet: Cadet, field_name: str
+):
+    info_dict_for_key = group_allocation_info.dict_for_field_name(field_name)
+
+    cadet_value = info_dict_for_key.get(cadet, None)
+    if cadet_value is None:
+        raise Exception("Group allocation info not found for cadet %s" % cadet)
+
+    return cadet_value
+
+
+def all_empty(some_dict: dict):
+    all_values = list(some_dict.values())
+    all_values_as_str = [str(x) for x in all_values]
+    return all([len(value) == 0 for value in all_values_as_str])

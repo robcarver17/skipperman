@@ -6,10 +6,10 @@ from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
-    from_partner_name_to_cadet,
     add_unregistered_partner_cadet,
     get_registered_two_handed_partner_name_for_cadet_at_event,
 )
+from app.objects.partners import from_partner_name_to_cadet
 
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.get_or_select_cadet_forms import (

@@ -8,6 +8,138 @@ TEAMS_TABLE = "teams"
 INDEX_TEAMS_TABLE = "index_teams_table"
 
 class SqlDataListOfTeams(GenericSqlData):
+
+    def add_new_team(self, new_team: Team):
+        if self.does_team_with_name_exist(new_team.name):
+            raise Exception("Team with name %s already exists" % new_team.name)
+
+        self._add_new_team_without_checks(new_team)
+
+    def _add_new_team_without_checks(self, new_team: Team):
+        idx = self.next_available_idx()
+
+        new_team.id = str(self.next_available_id())
+        try:
+            if self.table_does_not_exist(TEAMS_TABLE):
+                self.create_table()
+
+            self._add_row_without_checks_or_commits(idx=idx, team=new_team)
+
+            self.conn.commit()
+
+        except Exception as e1:
+            raise Exception("Error %s when writing teams" % str(e1))
+        finally:
+            self.close()
+
+    def modify_team(self, original_team: Team, new_team: Team):
+        if original_team.name == new_team.name:
+            pass
+        else:
+            if self.does_team_with_name_exist(new_team.name):
+                raise Exception("Team with name %s already exists" % new_team.name)
+
+        self._modify_team_without_checks(original_team=original_team, new_team=new_team)
+
+    def _modify_team_without_checks(self,  original_team: Team, new_team: Team):
+        team_id = int(original_team.id)
+        name = new_team.name
+        location = new_team.location_for_cadet_warning.name
+        protected = bool2int(new_team.protected)
+
+        try:
+            if self.table_does_not_exist(TEAMS_TABLE):
+                self.create_table()
+            self.cursor.execute(
+                "UPDATE %s SET %s=%s, %s=%s, %s=%d WHERE %s=%d" % (
+                TEAMS_TABLE,
+                TEAM_NAME,
+                name,
+                TEAM_LOCATION,
+                location,
+                PROTECTED,
+                protected,
+                TEAM_ID,
+                team_id
+            ))
+
+            self.conn.commit()
+
+        except Exception as e1:
+            raise Exception("Error %s when writing teams" % str(e1))
+        finally:
+            self.close()
+
+    def does_team_with_name_exist(self, team_name: str):
+        try:
+            if self.table_does_not_exist(TEAMS_TABLE):
+                return False
+
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
+                TEAMS_TABLE,
+                TEAM_NAME,
+                str(team_name)
+             ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading teams" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
+    def next_available_idx(self) ->int:
+        return self.last_used_idx()+1
+
+    def last_used_idx(self)-> int:
+        try:
+            if self.table_does_not_exist(TEAMS_TABLE):
+                self.create_table()
+
+            cursor = self.cursor
+            statement = "SELECT MAX(%s) FROM %s" % (
+                TEAM_ORDER,
+                TEAMS_TABLE,
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading teams data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return -1
+        else:
+            return int(raw_list[0][0])
+
+
+    def next_available_id(self) ->int:
+        return self.last_used_id()+1
+
+    def last_used_id(self)-> int:
+        try:
+            if self.table_does_not_exist(TEAMS_TABLE):
+                self.create_table()
+
+            cursor = self.cursor
+            statement = "SELECT MAX(%s) FROM %s" % (
+                TEAM_ID,
+                TEAMS_TABLE,
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading teams data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return -1
+        else:
+            return int(raw_list[0][0])
+
     def read(self) -> ListOfTeams:
         try:
             if self.table_does_not_exist(TEAMS_TABLE):
@@ -38,22 +170,10 @@ class SqlDataListOfTeams(GenericSqlData):
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (TEAMS_TABLE))
 
             for idx, team in enumerate(list_of_teams):
-                name = team.name
-                location = team.location_for_cadet_warning.name
-                protected = bool2int(team.protected)
-                team_id = int(team.id)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
-                    TEAMS_TABLE,
-                TEAM_NAME, TEAM_LOCATION, PROTECTED, TEAM_ID, TEAM_ORDER)
-
-                self.cursor.execute(insertion, (
-                    name, location, protected, team_id, idx))
+                self._add_row_without_checks_or_commits(idx=idx, team=team)
 
             self.conn.commit()
 
@@ -61,6 +181,19 @@ class SqlDataListOfTeams(GenericSqlData):
             raise Exception("Error %s when writing teams" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_checks_or_commits(self, idx:int, team: Team):
+        name = team.name
+        location = team.location_for_cadet_warning.name
+        protected = bool2int(team.protected)
+        team_id = int(team.id)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
+            TEAMS_TABLE,
+            TEAM_NAME, TEAM_LOCATION, PROTECTED, TEAM_ID, TEAM_ORDER)
+
+        self.cursor.execute(insertion, (
+            name, location, protected, team_id, idx))
 
     def create_table(self):
 

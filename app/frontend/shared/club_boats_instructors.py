@@ -3,11 +3,11 @@ from typing import Tuple, List
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.backend.volunteers.volunteers_at_event import (
     get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies,
-    allocate_club_dinghy_to_volunteer_on_day,
-    remove_club_dinghy_from_volunteer_on_day,
-    get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy,
-    copy_club_dinghy_for_instructor_across_all_days,
+    copy_club_dinghy_for_instructor_across_all_days_attending_allow_overwrite,
 )
+from app.backend.club_boats.volunteer_with_club_dinghies import \
+    get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy, allocate_club_dinghy_to_volunteer_on_day, \
+    remove_club_dinghy_from_volunteer_on_day
 from app.backend.club_boats.list_of_club_dinghies import (
     get_club_dinghy_from_id,
     get_list_of_visible_club_dinghies,
@@ -369,7 +369,7 @@ def add_club_dinghy_for_instructor(interface: abstractInterface):
 
     event = get_event_from_state(interface)
     allocate_club_dinghy_to_volunteer_on_day(
-        object_store=interface.object_store,
+        interface=interface,
         day=day,
         event=event,
         club_dinghy=club_dinghy,
@@ -383,7 +383,7 @@ def delete_club_dinghy_for_instructor(interface: abstractInterface):
     )
     event = get_event_from_state(interface)
     remove_club_dinghy_from_volunteer_on_day(
-        object_store=interface.object_store, event=event, day=day, volunteer=volunteer
+        interface=interface, event=event, day=day, volunteer=volunteer
     )
 
 
@@ -396,10 +396,9 @@ def copy_club_dinghy_for_instructor(interface: abstractInterface):
         interface
     )
     event = get_event_from_state(interface)
-    copy_club_dinghy_for_instructor_across_all_days(
-        object_store=interface.object_store,
+    copy_club_dinghy_for_instructor_across_all_days_attending_allow_overwrite(
+        interface=interface,
         event=event,
-        day=day,
         volunteer=volunteer,
         club_dinghy=club_dinghy,
     )

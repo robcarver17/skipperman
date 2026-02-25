@@ -5,9 +5,6 @@ from app.backend.qualifications_and_ticks.dict_of_qualifications_substages_and_t
     get_qualifications_and_tick_items_as_dict,
 )
 from app.data_access.store.object_store import ObjectStore
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_tick_sub_stages,
-)
 from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.qualifications import Qualification

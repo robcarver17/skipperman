@@ -1,6 +1,9 @@
+from app.backend.rota.changes import update_role_and_group_at_event_for_volunteer_on_day
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
     get_dict_of_volunteers_with_roles_and_groups_at_event,
+get_role_and_group_on_day_for_event_and_volunteer
 )
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -9,24 +12,18 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-    update_dict_of_all_event_data_for_volunteers,
-)
-
-
 def copy_earliest_valid_role_for_volunteer(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer, allow_overwrite: bool
+    interface: abstractInterface, event: Event, volunteer: Volunteer, allow_overwrite: bool
 ):
     valid_day = get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(
-        object_store=object_store, event=event, volunteer=volunteer
+        object_store=interface.object_store, event=event, volunteer=volunteer
     )
 
     if valid_day is None:
         return
 
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-        object_store=object_store,
+       interface=interface,
         event=event,
         volunteer=volunteer,
         day=valid_day,
@@ -35,30 +32,30 @@ def copy_earliest_valid_role_for_volunteer(
 
 
 def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     volunteer: Volunteer,
     day: Day,
     allow_replacement: bool = True,
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    try:
-        all_event_data.copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
+    role_and_group =get_role_and_group_on_day_for_event_and_volunteer(object_store=interface.object_store,
+                                                                      event=event,
+                                                                      volunteer=volunteer,
+                                                                      day=day)
+
+    for other_day in event.days_in_event():
+        if day==other_day:
+            continue
+        update_role_and_group_at_event_for_volunteer_on_day(
+            interface=interface,
+            event=event,
             volunteer=volunteer,
             day=day,
-            allow_replacement=allow_replacement,
-        )
-    except Exception as e:
-        print(
-            "Can't copy across role data for %s on %s, error %s, conflicting change made?"
-            % (volunteer.name, day.name, str(e))
+            new_role=role_and_group.role,
+            new_group=role_and_group.group,
+            allow_replacement=allow_replacement
         )
 
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_event_data
-    )
 
 
 def get_day_with_earliest_valid_role_and_group_for_volunteer_or_none(

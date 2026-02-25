@@ -4,7 +4,7 @@ from app.objects.utilities.exceptions import missing_data, arg_not_passed, Missi
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list,
-    GenericListOfObjects,
+    GenericListOfObjects, get_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObjectWithIds,
@@ -43,6 +43,16 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return ClubDinghy
 
+    def club_dinghy_with_name(self, name: str, default=arg_not_passed):
+        if name == no_club_dinghy.name:
+            return no_club_dinghy
+
+        return get_unique_object_with_attr_in_list(
+            self,
+            attr_name='name',
+            attr_value=name,
+            default=default
+        )
 
     def club_dinghy_with_id(self, dinghy_id: str, default=arg_not_passed):
         if dinghy_id == no_club_dinghy_id:

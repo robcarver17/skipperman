@@ -1,6 +1,7 @@
 from copy import copy
 from dataclasses import dataclass
 
+from werkzeug.datastructures import MultiDict
 from werkzeug.exceptions import RequestEntityTooLarge
 
 from app.objects.abstract_objects.abstract_interface import (
@@ -101,3 +102,13 @@ def uploaded_file(input_name: str = "file"):
 
         raise NoFileUploaded()
     return file
+
+
+def from_multidict_to_dict(some_multi_dict: MultiDict):
+    new_dict = dict(
+        [
+            (key, some_multi_dict.get(key)) for key in some_multi_dict.keys()
+        ]
+    )
+
+    return new_dict

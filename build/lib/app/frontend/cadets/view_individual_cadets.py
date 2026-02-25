@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
 )
 from app.backend.groups.previous_groups import (
-    DEPRECATE_get_dict_of_all_event_allocations_for_single_cadet, get_dict_of_all_event_allocations_for_single_cadet,
+    get_dict_of_most_common_group_names_at_event_for_single_cadet,
 )
 from app.objects.cadets import Cadet
 
@@ -72,7 +72,7 @@ def display_form_for_selected_cadet(interface: abstractInterface, cadet: Cadet) 
 def list_of_lines_with_allocations(
     interface: abstractInterface, cadet: Cadet
 ) -> ListOfLines:
-    dict_of_allocations = get_dict_of_all_event_allocations_for_single_cadet(
+    dict_of_allocations = get_dict_of_most_common_group_names_at_event_for_single_cadet(
         object_store=interface.object_store,
         cadet=cadet
     )

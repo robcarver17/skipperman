@@ -1,8 +1,5 @@
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_list_of_groups,
-)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import ListOfGroups, Group
@@ -11,10 +8,11 @@ from app.objects.groups import ListOfGroups, Group
 def add_new_sailing_group_given_name(
         interface: abstractInterface, name_of_entry_to_add: str
 ):
+    new_group = Group(name_of_entry_to_add)
     try:
         interface.update(
             interface.object_store.data_api.data_list_of_groups.add_new_group,
-            group_name = name_of_entry_to_add
+            new_group=new_group
         )
     except Exception as e:
         interface.log_error("Error: %s, when adding group %s" % (str(e), name_of_entry_to_add))
@@ -42,11 +40,8 @@ def get_group_with_id(    object_store: ObjectStore, group_id:str, default=arg_n
 def get_group_with_name(
     object_store: ObjectStore, group_name: str, default=arg_not_passed
 ) -> Group:
-    return object_store.get(
-        object_store.data_api.data_list_of_groups.get_group_with_name,
-        group_name=group_name,
-        default=default
-    )
+    list_of_groups = get_list_of_groups(object_store)
+    return list_of_groups.group_with_name(group_name, default=default)
 
 
 def get_list_of_groups(object_store: ObjectStore) -> ListOfGroups:

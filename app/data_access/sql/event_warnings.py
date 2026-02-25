@@ -17,7 +17,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
             if self.table_does_not_exist(EVENT_WARNING_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s= '%s' WHERE %s='%s' AND %s='%s'" % (
+            insertion = "UPDATE %s SET %s=%d WHERE %s=%d AND %s=%d" % (
                 EVENT_WARNING_TABLE,
                 WARNING_IGNORE,
                 bool2int(ignore_flag),
@@ -45,7 +45,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
             original_ignore_flag = not set_active_to_ignored
             new_ignore_flag = not original_ignore_flag
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s='%s' AND %s='%s' AND %s='%s'" % (
+            insertion = "UPDATE %s SET %s=%d WHERE %s=%d AND %s='%s' AND %s='%s'" % (
                 EVENT_WARNING_TABLE,
                 WARNING_IGNORE,
                 bool2int(new_ignore_flag),
@@ -111,7 +111,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
             if self.table_does_not_exist(EVENT_WARNING_TABLE):
                 raise MissingData("Can't delete non existent warning")
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s='%s'" % (EVENT_WARNING_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d" % (EVENT_WARNING_TABLE,
                                                                   WARNING_ID,
                                                                   int(warning_id),
                                                                   EVENT_ID,
@@ -131,31 +131,26 @@ class SqlDataListOfEventWarnings(GenericSqlData):
         if self.duplicate_warning_exists_in_data(event_id=event_id, warning_log=warning_log):
             return
 
+        self._add_new_event_warning_without_checks(
+            event_id=event_id,
+            warning_log=warning_log
+        )
+
+    def _add_new_event_warning_without_checks(
+            self,
+            event_id: str,
+            warning_log: EventWarningLog
+    ):
+
         try:
             if self.table_does_not_exist(EVENT_WARNING_TABLE):
                 self.create_table()
 
-            event_id_as_int = int(event_id)
-            next_id = self.next_available_id()
-
-            insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?, ?,?,?,?,?)" % (
-                EVENT_WARNING_TABLE,
-                EVENT_ID,
-                PRIORITY,
-                CATEGORY,
-                WARNING_TEXT,
-                WARNING_AUTO_REFRESH,
-                WARNING_IGNORE,
-                WARNING_ID
+            warning_log.id = self.next_available_id()
+            self._add_row_without_commits_or_checks(
+                event_id=event_id,
+                warning=warning_log
             )
-            self.cursor.execute(insertion, (
-                event_id_as_int,
-            warning_log.priority,
-            warning_log.category,
-            warning_log.warning,
-            bool2int(warning_log.auto_refreshed),
-            bool2int(warning_log.ignored),
-            int(next_id)))
 
             self.conn.commit()
         except Exception as e1:
@@ -173,7 +168,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s='%s' AND %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s='%s' AND %s='%s' AND %s='%s' ''' % (
 
                 EVENT_WARNING_TABLE,
                 EVENT_ID,
@@ -227,7 +222,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
                 return ListOfEventWarnings.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s FROM %s WHERE %s='%s' AND %s='%s' AND %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s, %s, %s FROM %s WHERE %s=%d AND %s='%s' AND %s='%s' ''' % (
                 WARNING_TEXT,
                 WARNING_AUTO_REFRESH,
                 WARNING_IGNORE,
@@ -266,7 +261,7 @@ class SqlDataListOfEventWarnings(GenericSqlData):
                 return ListOfEventWarnings.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE %s=%d ''' % (
                 PRIORITY,
                 CATEGORY,
                 WARNING_TEXT,
@@ -303,37 +298,42 @@ class SqlDataListOfEventWarnings(GenericSqlData):
             if self.table_does_not_exist(EVENT_WARNING_TABLE):
                 self.create_table()
 
-            event_id_as_int = int(event_id)
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (EVENT_WARNING_TABLE,
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (EVENT_WARNING_TABLE,
                                                                   EVENT_ID,
-                                                                  event_id_as_int))
+                                                                  int(event_id)))
 
             for warning in event_warnings:
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?, ?,?,?,?,?)" % (
-                    EVENT_WARNING_TABLE,
-                    EVENT_ID,
-                    PRIORITY,
-                    CATEGORY,
-                    WARNING_TEXT,
-                    WARNING_AUTO_REFRESH,
-                    WARNING_IGNORE,
-                    WARNING_ID
+                self._add_row_without_commits_or_checks(
+                    event_id=event_id,
+                    warning=warning
                 )
-                self.cursor.execute(insertion, (
-                    event_id_as_int,
-                warning.priority,
-                warning.category,
-                warning.warning,
-                bool2int(warning.auto_refreshed),
-                bool2int(warning.ignored),
-                int(warning.id)))
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing event warnings" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_commits_or_checks(self, event_id: str, warning: EventWarningLog):
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?, ?,?,?,?,?)" % (
+            EVENT_WARNING_TABLE,
+            EVENT_ID,
+            PRIORITY,
+            CATEGORY,
+            WARNING_TEXT,
+            WARNING_AUTO_REFRESH,
+            WARNING_IGNORE,
+            WARNING_ID
+        )
+        self.cursor.execute(insertion, (
+            int(event_id),
+            warning.priority,
+            warning.category,
+            warning.warning,
+            bool2int(warning.auto_refreshed),
+            bool2int(warning.ignored),
+            int(warning.id)))
 
     def create_table(self):
 

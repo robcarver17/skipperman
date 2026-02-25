@@ -5,13 +5,12 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 )
 from app.backend.groups.group_allocation_info import (
     get_group_allocation_info,
-    GroupAllocationInfo,
 )
 from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
-    get_dict_of_event_allocations_given_list_of_events_from_stored_data,
+    get_dict_of_event_allocations_given_list_of_events_from_persistent_data,
 )
-from app.objects.composed.cadets_at_event_with_groups import DictOfEventAllocations
+from app.objects.composed.cadets_at_event_with_groups import DictOfEventAllocations, GroupAllocationInfo
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
@@ -257,7 +256,7 @@ def get_inner_form_for_cadet_allocation(
         day_or_none=day_or_none,
     )
     prior_events = get_prior_events_to_show(interface=interface, event=event)
-    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events_from_stored_data(
+    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
         object_store=object_store,
         list_of_cadets=list_of_cadets,
         list_of_events=prior_events,
@@ -361,7 +360,8 @@ def get_row_for_cadet(
     cadet: Cadet,
 ) -> RowInTable:
     cell_for_cadet = get_cell_for_cadet(
-        interface=interface, event=dict_of_all_event_data.event, cadet=cadet
+        interface=interface, event=dict_of_all_event_data.event, cadet=cadet,
+
     )
     previous_groups_as_list = (
         previous_groups_for_cadets.previous_group_names_for_cadet_as_list(cadet)
@@ -418,7 +418,6 @@ def get_cell_for_cadet_that_is_clicked_on(
         object_store=interface.object_store,
         event_to_exclude=event,
         cadet=cadet,
-        only_events_before_excluded_event=False,
     )
     list_of_qualifications_as_str = (
         get_qualification_status_for_single_cadet_as_list_of_str(

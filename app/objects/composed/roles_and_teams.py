@@ -38,6 +38,14 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def list_of_teams(self) -> ListOfTeams:
         return ListOfTeams(list(self.keys()))
 
+    def reorder_roles_for_team_given_list_of_names(
+        self, team: Team, new_order_of_role_names: List[str]
+    ):
+        reorder_roles_for_team_given_list_of_names(
+            dict_of_teams_with_roles=self,
+            team=team,
+            new_order_of_role_names=new_order_of_role_names,
+        )
 
 
     def roles_in_instructor_team(self) -> ListOfRolesWithSkills:
@@ -102,14 +110,6 @@ class DEPRECATE_DictOfTeamsWithRoles(Dict[Team, DEPRECATE_ListOfRolesWithSkills]
         ]
         return ListOfTeamsAndIndices(list_of_teams_and_index)
 
-    def reorder_roles_for_team_given_list_of_names(
-        self, team: Team, new_order_of_role_names: List[str]
-    ):
-        reorder_roles_for_team_given_list_of_names(
-            dict_of_teams_with_roles=self,
-            team=team,
-            new_order_of_role_names=new_order_of_role_names,
-        )
 
     def add_new_named_role_to_team(self, team: Team, new_role_name: str):
         add_new_named_role_to_team(
@@ -227,7 +227,7 @@ list_of_roles_with_skills: ListOfRolesWithSkills,
 
 
 def reorder_roles_for_team_given_list_of_names(
-    dict_of_teams_with_roles: DEPRECATE_DictOfTeamsWithRoles,
+    dict_of_teams_with_roles: DictOfTeamsWithRoles,
     team: Team,
     new_order_of_role_names: List[str],
 ):
@@ -238,7 +238,7 @@ def reorder_roles_for_team_given_list_of_names(
     ]
     raw_new_list_of_roles = [roles_for_team[idx] for idx in list_of_indices]
 
-    new_list_of_roles = DEPRECATE_ListOfRolesWithSkills.from_list_of_roles_with_skills(
+    new_list_of_roles = ListOfRolesWithSkills.from_list_of_roles_with_skills(
         raw_new_list_of_roles
     )
 

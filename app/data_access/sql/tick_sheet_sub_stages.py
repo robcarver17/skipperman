@@ -1,7 +1,7 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
 from app.objects.substages import ListOfTickSubStages, TickSubStage
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
+from app.objects.utilities.exceptions import  MultipleMatches, missing_data
 
 TICK_SUBSTAGE_TABLE = "tick_substages"
 INDEX_TICK_SUBSTAGE_TABLE = "index_tick_substages"
@@ -30,10 +30,7 @@ class SqlDataListOfTickSubStages(GenericSqlData):
             new_name: str,
     ):
         try:
-            if self.table_does_not_exist(TICK_SUBSTAGE_TABLE):
-                self.create_table()
-
-            insertion = "UPDATE %s SET %s='%s' WHERE %s='%s'" % (
+            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d" % (
                     TICK_SUBSTAGE_TABLE,
                     TICK_SUBSTAGE_NAME,
                     str(new_name),
@@ -60,7 +57,7 @@ class SqlDataListOfTickSubStages(GenericSqlData):
             if self.table_does_not_exist(TICK_SUBSTAGE_TABLE):
                 self.create_table()
 
-            self.add_substage_without_checks_or_commit(new_substage)
+            self._add_substage_without_checks_or_commit(new_substage)
 
             self.conn.commit()
         except Exception as e1:
@@ -69,16 +66,13 @@ class SqlDataListOfTickSubStages(GenericSqlData):
             self.close()
 
 
-    def get_substage_with_id(self, substage_id: str, default=arg_not_passed):
+    def get_substage_with_id(self, substage_id: str, default=missing_data):
         try:
             if self.table_does_not_exist(TICK_SUBSTAGE_TABLE):
-                if default is arg_not_passed:
-                    raise MissingData("%s not found" % substage_id)
-                else:
-                    return default
+                return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT  %s, %s FROM %s WHERE %s='%s' ''' % (
+            cursor.execute('''SELECT  %s, %s FROM %s WHERE %s=%d''' % (
                 TICK_SUBSTAGE_NAME,
                 QUALIFICATION_ID,
                 TICK_SUBSTAGE_TABLE,
@@ -93,10 +87,7 @@ class SqlDataListOfTickSubStages(GenericSqlData):
             self.close()
 
         if len(raw_list)==0:
-            if default is arg_not_passed:
-                raise MissingData("%s not found" % substage_id)
-            else:
-                return default
+            return default
         elif len(raw_list)>1:
             raise MultipleMatches("More than one %s matches" % substage_id)
 
@@ -181,12 +172,10 @@ class SqlDataListOfTickSubStages(GenericSqlData):
             if self.table_does_not_exist(TICK_SUBSTAGE_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (TICK_SUBSTAGE_TABLE))
 
             for substage in list_of_tick_substages:
-                self.add_substage_without_checks_or_commit(substage)
+                self._add_substage_without_checks_or_commit(substage)
 
             self.conn.commit()
         except Exception as e1:
@@ -194,7 +183,7 @@ class SqlDataListOfTickSubStages(GenericSqlData):
         finally:
             self.close()
 
-    def add_substage_without_checks_or_commit(self, substage: TickSubStage):
+    def _add_substage_without_checks_or_commit(self, substage: TickSubStage):
         name = substage.name
         id = int(substage.id)
         stage_id = int(substage.stage_id)

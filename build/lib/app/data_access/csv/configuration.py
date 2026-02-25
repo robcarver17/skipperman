@@ -2,8 +2,8 @@ from app.backend.reporting.arrangement.arrange_options import (
     ArrangementOptionsAndGroupOrder,
 )
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
-from app.data_access.csv.generic_csv_data import GenericCsvData
-from app.data_access.csv.resolve_paths_and_filenames import (
+from app.data_access.csv.arch.generic_csv_data import GenericCsvData
+from app.data_access.csv.arch.resolve_paths_and_filenames import (
     PRINT_OPTIONS_FILE_ID,
     ARRANGEMENT_OPTIONS_FILE_ID,
     GROUPS_FILE_ID,

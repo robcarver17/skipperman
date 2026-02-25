@@ -14,83 +14,19 @@ from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-)
 
-
-def get_patrol_boat_label_at_event_on_day(
-    object_store: ObjectStore, event: Event, day: Day, patrol_boat: PatrolBoat
-) -> str:
-    dict_of_voluteers_at_event_with_patrol_boats = (
-        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    return dict_of_voluteers_at_event_with_patrol_boats.label_for_boat_at_event_on_day(
-        patrol_boat=patrol_boat, day=day
-    )
-
-
-def get_list_of_unique_labels(object_store: ObjectStore, event: Event) -> List[str]:
-    dict_of_voluteers_at_event_with_patrol_boats = (
-        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    return (
-        dict_of_voluteers_at_event_with_patrol_boats.list_of_patrol_boat_labels.unique_set_of_labels()
-    )
-
-
-def update_patrol_boat_label_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    patrol_boat: PatrolBoat,
-    day: Day,
-    label: str,
-):
-    dict_of_voluteers_at_event_with_patrol_boats = (
-        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    dict_of_voluteers_at_event_with_patrol_boats.update_label_for_boat_at_event_on_day(
-        patrol_boat=patrol_boat, label=label, day=day
-    )
-    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store,
-        dict_of_volunteers_at_event_with_patrol_boats=dict_of_voluteers_at_event_with_patrol_boats,
-    )
-
-
-def no_volunteers_on_patrol_boats_at_event(object_store: ObjectStore, event: Event):
-    dict_of_patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_volunteers = dict_of_patrol_boat_data.list_of_volunteers_with_patrol_boats
-
-    return len(list_of_volunteers) == 0
 
 
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-    object_store: ObjectStore, event: Event
+    object_store: ObjectStore, event: Event,
+        ignore_empty: bool = False
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
+    return object_store.get(
+        object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         event_id=event.id,
+        ignore_empty=ignore_empty
     )
 
-
-def update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-    object_store: ObjectStore,
-    dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
-):
-    object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-        event_id=dict_of_volunteers_at_event_with_patrol_boats.event.id,
-        new_object=dict_of_volunteers_at_event_with_patrol_boats,
-    )
 
 
 def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
@@ -106,7 +42,7 @@ def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
     )
 
 
-def load_list_of_patrol_boats_at_event(
+def get_list_of_patrol_boats_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfPatrolBoats:
     patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
@@ -188,40 +124,12 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
     return list_of_voluteers_on_day.list_of_ids
 
 
-def is_boat_empty(
+def is_boat_empty_on_day(
     object_store: ObjectStore, event: Event, day: Day, patrol_boat: PatrolBoat
 ):
-    list_of_voluteers_at_event_with_patrol_boats = (
-        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    for (
-        volunteer
-    ) in (
-        list_of_voluteers_at_event_with_patrol_boats.list_of_volunteers_with_patrol_boats
-    ):
-        if list_of_voluteers_at_event_with_patrol_boats.patrol_boats_for_volunteer(
-            volunteer
-        ).assigned_to_boat_on_day(day, patrol_boat):
-            return False
-
-    return True
-
-
-def copy_patrol_boat_labels_across_event(
-    object_store: ObjectStore, event: Event, overwrite: bool = False
-):
-    dict_of_voluteers_at_event_with_patrol_boats = (
-        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-            object_store=object_store, event=event
-        )
-    )
-
-    dict_of_voluteers_at_event_with_patrol_boats.copy_patrol_boat_labels_across_event(
-        overwrite
-    )
-    update_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store,
-        dict_of_volunteers_at_event_with_patrol_boats=dict_of_voluteers_at_event_with_patrol_boats,
+    return \
+        object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_empty_on_day(
+        event_id=event.id,
+        day=day,
+        patrol_boat_id = patrol_boat.id
     )

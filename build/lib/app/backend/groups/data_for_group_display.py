@@ -1,10 +1,7 @@
 from enum import Enum
 from typing import Dict, List, Tuple, Union
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    cadet_is_unavailable_on_day,
-    cadet_availability_at_event,
-)
+from app.backend.cadets_at_event.cadet_availability import cadet_availability_at_event_from_dict_of_all_event_data, cadet_is_unavailable_on_day_from_dict_of_event_data
 from app.data_access.configuration.field_list import (
     CADET_GROUP_PREFERENCE,
     CADET_BOAT_CLASS,
@@ -20,7 +17,6 @@ from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.groups import unallocated_group
 from app.objects.utilities.utils import all_equal, similar
 
-## FIXME REFACTOR
 
 def get_current_group_name_across_days_or_none_if_different(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet
@@ -70,7 +66,7 @@ def get_group_names_across_days(
 def get_current_group_name_for_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-    if cadet_is_unavailable_on_day(
+    if cadet_is_unavailable_on_day_from_dict_of_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
@@ -140,7 +136,7 @@ def get_club_boat_names_across_days(
 def get_current_club_boat_name_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-    if cadet_is_unavailable_on_day(
+    if cadet_is_unavailable_on_day_from_dict_of_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
@@ -202,7 +198,7 @@ def get_boat_class_names_across_days(
 def get_name_of_class_of_boat_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-    if cadet_is_unavailable_on_day(
+    if cadet_is_unavailable_on_day_from_dict_of_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
@@ -346,7 +342,7 @@ def get_sail_numbers_across_days(
 def get_sail_number_for_boat_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-    if cadet_is_unavailable_on_day(
+    if cadet_is_unavailable_on_day_from_dict_of_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
@@ -424,7 +420,7 @@ def get_two_handed_partners_across_days(
 def get_two_handed_partner_as_str_for_cadet_on_day(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ) -> str:
-    if cadet_is_unavailable_on_day(
+    if cadet_is_unavailable_on_day_from_dict_of_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
     ):
         return NOT_AVAILABLE
@@ -569,10 +565,10 @@ def get_schedule_status_for_two_cadets(
 ) -> Schedule:
     if cadet == other_cadet:
         return same_cadet
-    this_cadet_availability = cadet_availability_at_event(
+    this_cadet_availability = cadet_availability_at_event_from_dict_of_all_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
-    other_cadet_availability = cadet_availability_at_event(
+    other_cadet_availability = cadet_availability_at_event_from_dict_of_all_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=other_cadet
     )
 
@@ -642,7 +638,7 @@ def best_option_against_boat_names(
     names = [s[1] for s in scores_and_names]
 
     max_score = max(scores)
-    if max_score < 0.3:
+    if max_score < 0.5:
         ## no idea
         return ""
 

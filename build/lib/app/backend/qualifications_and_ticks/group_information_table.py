@@ -10,35 +10,24 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.club_dinghies import no_club_dinghy
-from app.objects.composed.cadets_at_event_with_groups import DictOfCadetsWithDaysAndGroupsAtEvent
-from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
-from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.partners import no_partnership_given_partner_cadet
-
-## REFACTOR
 
 def get_group_info_table(
     object_store: ObjectStore, event: Event, group: Group
 ) -> pd.DataFrame:
-    registration_data = get_dict_of_cadets_with_registration_data(event=event, object_store=object_store)
 
     all_group_allocations_at_event = get_group_allocations_for_event_active_cadets_only(
         object_store=object_store, event=event
     )
     cadets_in_group = all_group_allocations_at_event.cadets_in_group_during_event(group)
     cadets_in_group = cadets_in_group.sort_by_firstname()
-
-    days_attending_and_in_group_for_list_of_cadets = get_days_attending_and_in_group_for_list_of_cadets(group=group,
-                                                                                                        registration_data=registration_data,
-                                                                                                        list_of_cadets=cadets_in_group,
-                                                                                                        all_group_allocations_at_event=all_group_allocations_at_event)
 
     all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
 
@@ -94,7 +83,7 @@ def get_group_info_table(
     return df
 
 
-def DEPRECATE_get_days_attending_and_in_group_for_cadet(
+def get_days_attending_and_in_group_for_cadet(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets, group: Group, cadet: Cadet
 ):
     days_attending = all_event_info_for_cadets.event_data_for_cadet(
@@ -111,42 +100,6 @@ def DEPRECATE_get_days_attending_and_in_group_for_cadet(
 
     return in_group
 
-from app.backend.registration_data.cadet_registration_data import DEPRECATE_get_dict_of_cadets_with_registration_data
-
-def get_days_attending_and_in_group_for_list_of_cadets(
-    group: Group, list_of_cadets: ListOfCadets, registration_data: DictOfCadetsWithRegistrationData,
-all_group_allocations_at_event: DictOfCadetsWithDaysAndGroupsAtEvent
-
-) -> Dict[Cadet, List[Day]]:
-
-    return dict(
-        [
-            (cadet, get_days_attending_and_in_group_for_cadet(
-                cadet=cadet,
-                group=group,
-                registration_data=registration_data,
-                all_group_allocations_at_event=all_group_allocations_at_event
-            ))
-            for cadet in list_of_cadets
-        ]
-    )
-
-def get_days_attending_and_in_group_for_cadet(
-        group: Group, cadet: Cadet, registration_data: DictOfCadetsWithRegistrationData,
-        all_group_allocations_at_event: DictOfCadetsWithDaysAndGroupsAtEvent
-
-) -> List[Day]:
-
-    days_attending = registration_data.registration_data_for_cadet(cadet).availability.days_available()
-    in_group = [
-        day
-        for day in days_attending
-        if all_group_allocations_at_event.days_and_groups_for_cadet(cadet).group_on_day(day) == group
-
-    ]
-
-    return in_group
-
 
 def get_boat_ownership_column_for_list_of_cadets(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets,
@@ -154,29 +107,13 @@ def get_boat_ownership_column_for_list_of_cadets(
     list_of_cadets: ListOfCadets,
 ):
     #dict_of_club_dinghies = get_dict_of_cadets_and_club_dinghies_at_event(object_store)
-    return DEPRECATE_get_generic_column_for_list_of_cadets(
+    return get_generic_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
         group=group,
         function_to_extract_str=get_boat_ownership_column_for_cadet_on_day,
         list_of_cadets=list_of_cadets,
     )
 
-
-def DEPRECATE_get_generic_column_for_list_of_cadets(
-    all_event_info_for_cadets: DictOfAllEventInfoForCadets,
-    group: Group,
-    list_of_cadets: ListOfCadets,
-    function_to_extract_str: Callable,
-):
-    return [
-        DEPRECATE_get_generic_column_for_cadet(
-            all_event_info_for_cadets=all_event_info_for_cadets,
-            cadet=cadet,
-            group=group,
-            function_to_extract_str=function_to_extract_str,
-        )
-        for cadet in list_of_cadets
-    ]
 
 def get_generic_column_for_list_of_cadets(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets,
@@ -185,7 +122,7 @@ def get_generic_column_for_list_of_cadets(
     function_to_extract_str: Callable,
 ):
     return [
-        DEPRECATE_get_generic_column_for_cadet(
+        get_generic_column_for_cadet(
             all_event_info_for_cadets=all_event_info_for_cadets,
             cadet=cadet,
             group=group,
@@ -195,24 +132,6 @@ def get_generic_column_for_list_of_cadets(
     ]
 
 
-def DEPRECATE_get_generic_column_for_cadet(
-    all_event_info_for_cadets: DictOfAllEventInfoForCadets,
-    group: Group,
-    cadet: Cadet,
-    function_to_extract_str: Callable,
-):
-    days_in_group = DEPRECATE_get_days_attending_and_in_group_for_cadet(
-        all_event_info_for_cadets=all_event_info_for_cadets, cadet=cadet, group=group
-    )
-    as_dict = DEPRECATE_get_generic_column_for_cadet_as_dict(
-        all_event_info_for_cadets=all_event_info_for_cadets,
-        cadet=cadet,
-        days_in_group=days_in_group,
-        function_to_extract_str=function_to_extract_str,
-    )
-
-    return annotate_item(as_dict)
-
 
 def get_generic_column_for_cadet(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets,
@@ -220,7 +139,7 @@ def get_generic_column_for_cadet(
     cadet: Cadet,
     function_to_extract_str: Callable,
 ):
-    days_in_group = DEPRECATE_get_days_attending_and_in_group_for_cadet(
+    days_in_group = get_days_attending_and_in_group_for_cadet(
         all_event_info_for_cadets=all_event_info_for_cadets, cadet=cadet, group=group
     )
     as_dict = get_generic_column_for_cadet_as_dict(
@@ -232,26 +151,6 @@ def get_generic_column_for_cadet(
 
     return annotate_item(as_dict)
 
-
-def DEPRECATE_get_generic_column_for_cadet_as_dict(
-    all_event_info_for_cadets: DictOfAllEventInfoForCadets,
-    cadet: Cadet,
-    days_in_group: List[Day],
-    function_to_extract_str: Callable,
-):
-    return dict(
-        [
-            (
-                day,
-                function_to_extract_str(
-                    all_event_info_for_cadets=all_event_info_for_cadets,
-                    cadet=cadet,
-                    day=day,
-                ),
-            )
-            for day in days_in_group
-        ]
-    )
 
 
 def get_generic_column_for_cadet_as_dict(
@@ -275,6 +174,7 @@ def get_generic_column_for_cadet_as_dict(
     )
 
 
+
 def get_boat_ownership_column_for_cadet_on_day(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day
 ):
@@ -292,7 +192,7 @@ def get_boat_class_and_sail_number_column_for_list_of_cadets(
     group: Group,
     list_of_cadets: ListOfCadets,
 ):
-    return DEPRECATE_get_generic_column_for_list_of_cadets(
+    return get_generic_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
         group=group,
         function_to_extract_str=get_boat_class_column_for_cadet_on_day,
@@ -321,7 +221,7 @@ def get_partner_column_for_list_of_cadets(
     group: Group,
     list_of_cadets: ListOfCadets,
 ):
-    return DEPRECATE_get_generic_column_for_list_of_cadets(
+    return get_generic_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
         group=group,
         function_to_extract_str=get_partner_column_for_cadet_on_day,
@@ -355,7 +255,7 @@ def get_health_column_for_list_of_cadets(
     group: Group,
     list_of_cadets: ListOfCadets,
 ):
-    return DEPRECATE_get_generic_column_for_list_of_cadets(
+    return get_generic_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
         group=group,
         function_to_extract_str=get_health_column_for_cadet_on_day,
@@ -389,7 +289,7 @@ def get_days_attending_column_for_list_of_cadets(
 def get_days_attending_column_for_single_cadets(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets, group: Group, cadet: Cadet
 ):
-    all_days_for_cadet = DEPRECATE_get_days_attending_and_in_group_for_cadet(
+    all_days_for_cadet = get_days_attending_and_in_group_for_cadet(
         cadet=cadet, group=group, all_event_info_for_cadets=all_event_info_for_cadets
     )
     event_days = all_event_info_for_cadets.event.days_in_event()

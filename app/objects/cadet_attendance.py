@@ -1,12 +1,13 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import pandas as pd
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import DaySelector, Day, all_possible_days
+from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 
-class DictOfDaySelectors(Dict[Cadet, DaySelector]):
+class DictOfDaySelectors(Dict[Union[Cadet, Volunteer], DaySelector]):
     def align_with_list_of_days(self, list_of_days: List[Day]) -> "DictOfDaySelectors":
         return DictOfDaySelectors(
             dict(
@@ -40,6 +41,10 @@ class DictOfDaySelectors(Dict[Cadet, DaySelector]):
     @property
     def list_of_cadets(self):
         return ListOfCadets(list(self.keys()))
+
+    @property
+    def list_of_volunteers(self):
+        return ListOfVolunteers(list(self.keys()))
 
 
 def from_day_selector_to_dict_for_pd(day_selector: DaySelector) -> dict:

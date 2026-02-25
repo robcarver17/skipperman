@@ -13,18 +13,19 @@ INDEX_NAME_QUALIFICATION_TABLE = "qual_id"
 class SqlDataListOfQualifications(GenericSqlData):
 
     def add_qualification(
-           self, qualification_name: str
+           self, new_qualification: Qualification
     ):
+        qualification_name=new_qualification.name
         if self.does_qualification_with_name_exist(qualification_name):
             raise Exception("Can't add %s as already exists" % qualification_name)
 
-        new_qualification = Qualification(name=qualification_name, id=str(self.next_available_id()))
+        new_qualification.id=str(self.next_available_id())
         next_idx = self.next_available_order()
         try:
             if self.table_does_not_exist(QUALIFICATION_TABLE):
                 self.create_table()
 
-            self.add_qualification_without_check_or_commit(qualification=new_qualification, idx=next_idx)
+            self._add_qualification_without_check_or_commit(qualification=new_qualification, idx=next_idx)
 
             self.conn.commit()
         except Exception as e1:
@@ -56,7 +57,7 @@ class SqlDataListOfQualifications(GenericSqlData):
             if self.table_does_not_exist(QUALIFICATION_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s='%s' " % (
+            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d " % (
                     QUALIFICATION_TABLE,
                 QUALIFICATION_NAME,
                 updated_qualification.name,
@@ -75,10 +76,7 @@ class SqlDataListOfQualifications(GenericSqlData):
     def get_qualification_with_id(self, qualification_id: str, default=arg_not_passed):
         try:
             if self.table_does_not_exist(QUALIFICATION_TABLE):
-                if default is arg_not_passed:
-                    raise MissingData("%s not found" % qualification_id)
-                else:
-                    return default
+                return default
 
             cursor = self.cursor
             cursor.execute('''SELECT  %s FROM %s WHERE %s='%s' ''' % (
@@ -93,10 +91,7 @@ class SqlDataListOfQualifications(GenericSqlData):
             self.close()
 
         if len(raw_list)==0:
-            if default is arg_not_passed:
-                raise MissingData("%s not found" % qualification_id)
-            else:
-                return default
+            return default
         elif len(raw_list)>1:
             raise MultipleMatches("More than one %s matches" % qualification_id)
 
@@ -211,12 +206,10 @@ class SqlDataListOfQualifications(GenericSqlData):
             if self.table_does_not_exist(QUALIFICATION_TABLE):
                 self.create_table()
 
-            ## NEEDS TO DELETE OLD
-            ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute("DELETE FROM %s" % (QUALIFICATION_TABLE))
 
             for idx, qualification in enumerate(list_of_qualifications):
-                self.add_qualification_without_check_or_commit(
+                self._add_qualification_without_check_or_commit(
                     qualification=qualification,
                     idx=idx
                 )
@@ -227,7 +220,7 @@ class SqlDataListOfQualifications(GenericSqlData):
         finally:
             self.close()
 
-    def add_qualification_without_check_or_commit(self, qualification: Qualification, idx: int):
+    def _add_qualification_without_check_or_commit(self, qualification: Qualification, idx: int):
         name = qualification.name
         id = int(qualification.id)
 

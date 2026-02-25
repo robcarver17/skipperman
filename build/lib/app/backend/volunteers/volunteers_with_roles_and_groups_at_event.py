@@ -1,20 +1,12 @@
 from typing import Dict
 
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-)
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
-)
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam,
-    RoleAndGroup, DictOfDaysRolesAndGroups,
+    RoleAndGroup, DictOfDaysRolesAndGroups, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 
@@ -25,24 +17,21 @@ from app.objects.events import (
     ListOfEvents,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.utilities.utils import most_common
 from app.objects.volunteers import Volunteer
 
 ALL_EVENTS = 999999999999
 
-
+## FIXME
 def get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
     object_store: ObjectStore,
     volunteer: Volunteer,
     avoid_event: Event = arg_not_passed,
-    N_events=ALL_EVENTS,
 ) -> Dict[Event, RoleAndGroup]:
     return get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order(
         object_store=object_store,
         volunteer=volunteer,
         avoid_event=avoid_event,
         sort_by=SORT_BY_START_DSC,
-        N_events=N_events,
     )
 
 
@@ -132,19 +121,15 @@ def get_role_and_groups_for_event_and_volunteer(
 
 def get_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore, event: Event
-) -> DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
+) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
     return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_dict_of_volunteers_with_roles_and_groups_at_event, event_id=event.id)
 
 
 def update_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore,
-    dict_of_volunteers_with_roles_and_groups_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    dict_of_volunteers_with_roles_and_groups_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 ):
-    return object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_volunteers_at_event_with_dict_of_days_roles_and_groups,
-        event_id=dict_of_volunteers_with_roles_and_groups_at_event.event.id,
-        new_object=dict_of_volunteers_with_roles_and_groups_at_event,
-    )
+    raise NotImplemented
 
 
 def is_volunteer_senior_instructor_at_event(

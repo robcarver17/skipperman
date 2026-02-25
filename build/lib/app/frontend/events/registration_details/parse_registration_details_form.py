@@ -121,7 +121,7 @@ def get_days_attending_for_row_in_form_and_alter_registration_data(
         return
 
     messages = update_availability_of_existing_cadet_at_event_and_return_messages(
-        object_store=interface.object_store,
+        interface=interface,
         event=registration_details.event,
         cadet=cadet,
         new_availabilty=new_attendance,
@@ -164,7 +164,7 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
 
     if new_status.is_cancelled_or_deleted:
         messages = update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_messages(
-            object_store=interface.object_store,
+            interface=interface,
             event=registration_details.event,
             cadet=cadet,
             new_status=new_status,
@@ -175,7 +175,7 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
 
     elif new_status.is_active:
         update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
-            object_store=interface.object_store,
+            interface=interface,
             event=registration_details.event,
             cadet=cadet,
             new_status=new_status,
@@ -214,7 +214,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
         return
 
     update_notes_for_existing_cadet_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         event=registration_details.event,
         new_notes=new_notes,
@@ -240,7 +240,7 @@ def get_cadet_health_for_row_in_form_and_alter_registration_data(
         return
 
     update_health_for_existing_cadet_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         event=registration_details.event,
         new_health=new_health,
@@ -283,7 +283,7 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
     )
 
     update_data_row_for_existing_cadet_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         cadet=cadet,
         event=registration_details.event,
         column_name=column_name,

@@ -1,15 +1,14 @@
+from datetime import datetime
 from typing import Dict
 
 from app.backend.events.list_of_events import get_list_of_events
 from app.backend.groups.cadets_with_groups_at_event import get_list_of_cadets_in_group
-from app.backend.registration_data.cadet_registration_data import (
-    get_availability_dict_for_cadets_at_event,
-)
+from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_cadets_at_event
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.attendance import (
     registration_not_taken,
- not_attending, unknown, Attendance,
+    not_attending, unknown, Attendance, RawAttendanceItem,
 )
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.attendance import (
@@ -76,7 +75,7 @@ def get_attendance_at_event_for_cadets_in_group_at_event(
 
 
 def mark_unknown_cadets_as_not_attending_or_unregistered(interface: abstractInterface, event: Event, group: Group, day: Day):
-    availability_dict = get_availability_dict_for_cadets_at_event(
+    availability_dict = get_attendance_matrix_for_cadets_at_event(
         object_store=interface.object_store, event=event
     )
     attendance_dict =get_attendance_on_day_for_cadets_in_group(
@@ -108,11 +107,17 @@ def mark_unknown_cadets_as_not_attending_or_unregistered(interface: abstractInte
 def update_attendance_for_cadet_on_day_at_event(interface: abstractInterface, event: Event,
                                                 cadet: Cadet, day: Day,
                                                 attendance: Attendance):
+    raw_attendance = RawAttendanceItem(
+        event_id=event.id,
+        day=day,
+        datetime_marked=datetime.now(),
+        attendance=attendance
+    )
+
     interface.update(interface.object_store.data_api.data_attendance_at_events_for_specific_cadet.update_attendance_for_cadet_on_day_at_event,
-                     event=event,
-                     cadet=cadet,
-                     day=day,
-                     attendance=attendance)
+            cadet_id= cadet.id,
+                     raw_attendance=raw_attendance)
+
 
 
 def get_attendance_on_day_for_cadets_in_group(

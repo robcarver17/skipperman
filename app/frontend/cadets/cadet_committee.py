@@ -14,13 +14,12 @@ from app.backend.cadets.list_of_cadets import (
 from app.backend.cadets.cadet_committee import (
     get_list_of_cadets_on_committee,
     get_list_of_cadets_who_are_members_but_not_on_committee_or_elected_ordered_by_name,
-    get_next_year_for_cadet_committee_after_EGM,
-    month_name_when_cadet_committee_age_bracket_begins,
     get_list_of_cadet_as_str_members_but_not_on_committee_born_in_right_age_bracket,
     add_new_cadet_to_committee,
     toggle_selection_for_cadet_committee_member,
-    start_and_end_date_on_cadet_commmittee,
 )
+from app.objects.committee import start_and_end_date_on_cadet_commmittee, get_next_year_for_cadet_committee_after_EGM, \
+    month_name_when_cadet_committee_age_bracket_begins
 
 from app.objects.composed.committee import CadetOnCommittee
 from app.objects.abstract_objects.abstract_form import (

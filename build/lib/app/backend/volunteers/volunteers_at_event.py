@@ -1,10 +1,12 @@
+from app.backend.club_boats.volunteer_with_club_dinghies import get_dict_of_volunteers_and_club_dinghies_at_event, \
+    copy_club_dinghy_for_instructor_across_list_of_days_allow_overwrite
 from app.backend.registration_data.volunteer_registration_data import (
-    get_dict_of_registration_data_for_volunteers_at_event,
+    get_dict_of_registration_data_for_volunteers_at_event, get_attendance_matrix_for_list_of_volunteers_at_event,
 )
 from app.backend.volunteers.relevant_information_for_volunteer import (
     check_any_status_is_unable,
 )
-from app.objects.cadet_attendance import DictOfDaySelectors
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import ListOfCadets
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.composed.volunteers_at_event_with_registration_data import (
@@ -15,8 +17,8 @@ from app.objects.day_selectors import DaySelector, Day
 from app.objects.relevant_information_for_volunteers import (
     ListOfRelevantInformationForVolunteer,
 )
-from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.utils import simplify_and_display
+from app.objects.volunteer_at_event_with_id import VolunteerAtEventWithId
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 
 from app.objects.composed.volunteers_with_all_event_data import (
@@ -26,145 +28,77 @@ from app.objects.events import Event
 
 from app.data_access.store.object_store import ObjectStore
 
-from app.data_access.store.object_definitions import (
-    object_definition_for_dict_of_all_event_data_for_volunteers,
-    object_definition_for_list_of_volunteers_with_ids_at_event,
-)
-
-
-def get_list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
-    object_store: ObjectStore, event: Event, day: Day, club_dinghy: ClubDinghy
-) -> ListOfVolunteers:
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-
-    return all_event_info.list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
-        day=day, club_dinghy=club_dinghy
-    )
-
 
 def get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(
     object_store: ObjectStore, event: Event, day: Day
 ) -> ListOfVolunteers:
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
+    club_dinghies = get_dict_of_volunteers_and_club_dinghies_at_event(object_store=object_store,
+                                                                      event=event)
+    list_of_volunteers_on_day_currently_allocated_to_club_dinghy = club_dinghies.list_of_volunteers_on_day_currently_allocated_to_any_club_dinghy(day)
+    availablity_matrix = get_attendance_matrix_for_list_of_volunteers_at_event(
+        object_store=object_store,
+        event=event,
     )
-    volunteers = all_event_info.get_list_of_volunteers_at_event_on_day_not_currently_allocated_to_club_dinghies(
-        day=day
-    )
-    return volunteers.sort_by_firstname()
+    new_list = []
+    for volunteer, availablity in availablity_matrix.items():
+        if availablity.available_on_day(day):
+            if volunteer not in list_of_volunteers_on_day_currently_allocated_to_club_dinghy:
+                new_list.append(volunteer)
+
+    list_of_volunteers = ListOfVolunteers(new_list)
+
+    return list_of_volunteers.sort_by_firstname()
 
 
-def allocate_club_dinghy_to_volunteer_on_day(
-    object_store: ObjectStore,
+def copy_club_dinghy_for_instructor_across_all_days_attending_allow_overwrite(
+    interface: abstractInterface,
     event: Event,
-    day: Day,
-    volunteer: Volunteer,
-    club_dinghy: ClubDinghy,
-):
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    all_event_info.allocate_club_dinghy_to_volunteer_on_day(
-        day=day, volunteer=volunteer, club_dinghy=club_dinghy
-    )
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_event_info
-    )
-
-
-def remove_club_dinghy_from_volunteer_on_day(
-    object_store: ObjectStore, event: Event, day: Day, volunteer: Volunteer
-):
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    all_event_info.remove_club_dinghy_from_volunteer_on_day(
-        day=day, volunteer=volunteer
-    )
-
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_event_info
-    )
-
-
-def copy_club_dinghy_for_instructor_across_all_days(
-    object_store: ObjectStore,
-    event: Event,
-    day: Day,
     club_dinghy: ClubDinghy,
     volunteer: Volunteer,
 ):
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
+    attendance = get_attendance_matrix_for_list_of_volunteers_at_event(object_store=interface.object_store,
+                                                                       event=event)
+    attendance_for_volunteer = attendance[volunteer]
+    list_of_days = attendance_for_volunteer.days_that_intersect_with(event.day_selector_for_days_in_event())
+    copy_club_dinghy_for_instructor_across_list_of_days_allow_overwrite(
+        interface=interface,
+        event=event,
+        volunteer=volunteer,
+        list_of_days=list_of_days,
+        club_dinghy=club_dinghy
     )
-    all_event_info.copy_club_dinghy_for_instructor_across_all_days(
-        day=day, volunteer=volunteer, club_dinghy=club_dinghy
-    )
-
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_event_info
-    )
-
-
-def get_attendance_matrix_for_list_of_volunteers_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    list_of_volunteers: ListOfVolunteers = arg_not_passed,
-) -> DictOfDaySelectors:
-    all_event_info = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    dict_of_availability = {}
-    if list_of_volunteers is arg_not_passed:
-        list_of_volunteers = all_event_info.list_of_volunteers()
-    for volunteer in list_of_volunteers:
-        volunteer_at_event_data = all_event_info.dict_of_registration_data_for_volunteers_at_event.get_data_for_volunteer(
-            volunteer, default=None
-        )
-        if volunteer_at_event_data is None:
-            dict_of_availability[volunteer] = DaySelector()
-        else:
-            dict_of_availability[volunteer] = volunteer_at_event_data.availablity
-
-    return DictOfDaySelectors(dict_of_availability)
 
 
 def add_volunteer_at_event(
-    object_store: ObjectStore,
+   interface: abstractInterface,
     event: Event,
     volunteer: Volunteer,
     registration_data: RegistrationDataForVolunteerAtEvent,
 ):
-    all_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
+    volunteer_at_event_with_id = VolunteerAtEventWithId(
+        volunteer_id=volunteer.id,
+        availablity=registration_data.availablity,
+        list_of_associated_cadet_id=registration_data.list_of_associated_cadets.list_of_ids,
+        any_other_information=registration_data.any_other_information,
+        notes=registration_data.notes,
+        preferred_duties=registration_data.preferred_duties,
+        same_or_different=registration_data.same_or_different,
+        self_declared_status=registration_data.self_declared_status,
     )
-    all_event_data.add_new_volunteer(
-        volunteer=volunteer, registration_data=registration_data
-    )
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_event_data
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event.add_volunteer_to_event,
+        volunteer_at_event_with_id=volunteer_at_event_with_id,
+        event_id = event.id
     )
 
 
 def get_dict_of_all_event_data_for_volunteers(
     object_store: ObjectStore, event: Event
 ) -> DictOfAllEventDataForVolunteers:
-    return object_store.DEPRECATE_get(
-        object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
-        event_id=event.id,
-    )
+    return object_store.get(object_store.data_api.dict_of_all_event_data_for_volunteers.get_dict_of_all_event_info_for_volunteers,
+                     event=event)
 
 
-def update_dict_of_all_event_data_for_volunteers(
-    object_store: ObjectStore, dict_of_all_event_data: DictOfAllEventDataForVolunteers
-):
-    object_store.DEPRECATE_update(
-        object_definition=object_definition_for_dict_of_all_event_data_for_volunteers,
-        event_id=dict_of_all_event_data.event.id,
-        new_object=dict_of_all_event_data,
-    )
 
 
 def get_volunteer_registration_data_from_list_of_relevant_information(
@@ -316,22 +250,10 @@ def load_list_of_volunteers_at_event(
     return registration_data.list_of_volunteers_at_event()
 
 
-def delete_volunteer_at_event(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer
-):
-    all_volunteer_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    messages = all_volunteer_data.delete_volunteer_from_event(volunteer)
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_volunteer_data
-    )
-
-    return messages
 
 
 def update_volunteer_availability_at_event(
-    object_store: ObjectStore,
+        interface: abstractInterface,
     volunteer: Volunteer,
     event: Event,
     availability: DaySelector,
@@ -339,45 +261,43 @@ def update_volunteer_availability_at_event(
     for day in event.days_in_event():
         if availability.available_on_day(day):
             make_volunteer_available_on_day(
-                object_store=object_store, event=event, volunteer=volunteer, day=day
+                interface=interface, event=event, volunteer=volunteer, day=day
             )
         else:
             make_volunteer_unavailable_on_day(
-                object_store=object_store, event=event, volunteer=volunteer, day=day
+                interface=interface, event=event, volunteer=volunteer, day=day
             )
 
 
 def make_volunteer_available_on_day(
-    object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
+    interface: abstractInterface,volunteer: Volunteer, event: Event, day: Day
 ):
-    dict_of_volunteer_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    dict_of_volunteer_data.make_volunteer_available_on_day(day=day, volunteer=volunteer)
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=dict_of_volunteer_data
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event.make_volunteer_available_on_day,
+        volunteer_id=volunteer.id,
+        event_id=event.id,
+        day=day
     )
 
 
 def make_volunteer_unavailable_on_day(
-    object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
+    interface: abstractInterface,volunteer: Volunteer, event: Event, day: Day
 ):
-    all_volunteer_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    all_volunteer_data.make_volunteer_unavailable_on_day(volunteer=volunteer, day=day)
-    update_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, dict_of_all_event_data=all_volunteer_data
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event.make_volunteer_unavailable_on_day,
+        volunteer_id=volunteer.id,
+        event_id=event.id,
+        day=day
     )
 
 
-def is_volunteer_currently_available_for_only_one_day(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer
-) -> bool:
-    registration_data = get_dict_of_registration_data_for_volunteers_at_event(
-        object_store=object_store, event=event
-    )
-    reg_for_volunteer = registration_data.get_data_for_volunteer(volunteer)
-    availabilty = reg_for_volunteer.availablity.days_available()
 
-    return len(availabilty) <= 1
+def delete_volunteer_at_event(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event.delete_volunteer_at_event,
+        volunteer_id=volunteer.id,
+        event_id=event.id
+    )
+    return ""

@@ -3,7 +3,7 @@ from typing import Dict
 
 from app.objects.club_dinghies import ClubDinghy
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent, DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteers_last_role_across_events import \
@@ -15,9 +15,8 @@ from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadet_volunteer_associations import (
     DictOfCadetsAssociatedWithVolunteer,
 )
-from app.objects.events import ListOfEvents, Event
+from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed, MissingData
-from app.objects.food import no_food_requirements
 from app.objects.groups import Group
 from app.objects.patrol_boats import PatrolBoat
 
@@ -29,7 +28,7 @@ from app.objects.composed.volunteers_with_skills import (
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfDaysRolesAndGroupsAndTeams,
     DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    RoleAndGroupAndTeam,
+    RoleAndGroupAndTeam, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
@@ -38,10 +37,6 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     PatrolBoatByDayDict,
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
-)
-from app.objects.composed.food_at_event import (
-    DictOfVolunteersWithFoodRequirementsAtEvent,
-    FoodRequirements,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
@@ -73,10 +68,10 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         event: Event,
         dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
         dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-        dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+        dict_of_volunteers_at_event_with_days_and_roles: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
         dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
         dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-        dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
             dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
     ):
         super().__init__(raw_dict)
@@ -496,87 +491,3 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         return ListOfVolunteers(list(self.keys()))
 
 
-def compose_dict_of_all_event_data_for_volunteers(
-    event_id: str,
-    list_of_events: ListOfEvents,
-    dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
-    dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-    dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
-    dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-    dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
-        dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents
-) -> DictOfAllEventDataForVolunteers:
-    event = list_of_events.event_with_id(event_id)
-
-    raw_dict = compose_raw_dict_of_all_event_data_for_volunteers(
-        dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
-        dict_of_volunteers_at_event_with_patrol_boats=dict_of_volunteers_at_event_with_patrol_boats,
-        dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
-        dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
-        dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
-        dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
-        dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events,
-
-    event=event,
-    )
-
-    return DictOfAllEventDataForVolunteers(
-        raw_dict=raw_dict,
-        event=event,
-        dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
-        dict_of_volunteers_at_event_with_patrol_boats=dict_of_volunteers_at_event_with_patrol_boats,
-        dict_of_registration_data_for_volunteers_at_event=dict_of_registration_data_for_volunteers_at_event,
-        dict_of_volunteers_at_event_with_days_and_roles=dict_of_volunteers_at_event_with_days_and_roles,
-        dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
-        dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
-        dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events
-    )
-
-
-def compose_raw_dict_of_all_event_data_for_volunteers(
-    dict_of_registration_data_for_volunteers_at_event: DictOfRegistrationDataForVolunteerAtEvent,
-    dict_of_volunteers_with_skills: DictOfVolunteersWithSkills,
-    dict_of_volunteers_at_event_with_days_and_roles: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-    dict_of_volunteers_at_event_with_patrol_boats: DictOfVolunteersAtEventWithPatrolBoatsByDay,
-    dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
-    dict_of_people_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
-        dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
-    event: Event,
-) -> Dict[Volunteer, AllEventDataForVolunteer]:
-    ## THis construction means if we delete from registration data they won't be seen elsewhere
-    volunteers_at_event = (
-        dict_of_registration_data_for_volunteers_at_event.list_of_volunteers_at_event()
-    )
-
-    return dict(
-        [
-            (
-                volunteer,
-                AllEventDataForVolunteer(
-                    volunteer=volunteer,
-                    registration_data=dict_of_registration_data_for_volunteers_at_event[
-                        volunteer
-                    ],
-                    volunteer_skills=dict_of_volunteers_with_skills.get(
-                        volunteer, SkillsDict()
-                    ),
-                    roles_and_groups=dict_of_volunteers_at_event_with_days_and_roles.get(
-                        volunteer, DictOfDaysRolesAndGroupsAndTeams()
-                    ),
-                    patrol_boats=dict_of_volunteers_at_event_with_patrol_boats.get(
-                        volunteer, PatrolBoatByDayDict()
-                    ),
-                    associated_cadets=dict_of_cadets_associated_with_volunteers.get(
-                        volunteer, ListOfCadets([])
-                    ),
-                    club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
-                        volunteer
-                    ),
-                    most_common_role_group_and_team_at_previous_events=dict_of_volunteers_with_most_common_role_and_group_across_events.get_most_common_role_and_group_for_volunteer_or_none(volunteer),
-                    event=event,
-                ),
-            )
-            for volunteer in volunteers_at_event
-        ]
-    )

@@ -1,8 +1,6 @@
-from app.backend.patrol_boats.changes import (
-    copy_across_earliest_allocation_of_boats_at_event,
-    copy_across_boats_at_event,
-)
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import copy_patrol_boat_labels_across_event
+from app.backend.patrol_boats.copying import copy_across_earliest_allocation_of_boats_at_event, \
+    copy_across_boats_at_event
+from app.backend.patrol_boats.labels import copy_patrol_boat_labels_across_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -27,7 +25,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 def copy_and_overwrite_labels(interface: abstractInterface):
     copy_patrol_boat_labels_across_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=get_event_from_state(interface),
         overwrite=True,
     )
@@ -35,8 +33,7 @@ def copy_and_overwrite_labels(interface: abstractInterface):
 
 def copy_labels(interface: abstractInterface):
     copy_patrol_boat_labels_across_event(
-        object_store=interface.object_store,
-        event=get_event_from_state(interface),
+        interface=interface,        event=get_event_from_state(interface),
         overwrite=False,
     )
 
@@ -54,7 +51,7 @@ def update_if_copy_individual_button_pressed(
 
     if copy_parameters.copy_boat:
         copy_across_boats_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             day=day,
             volunteer=volunteer,
             event=event,
@@ -63,7 +60,7 @@ def update_if_copy_individual_button_pressed(
 
     if copy_parameters.copy_role:
         copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             volunteer=volunteer,
             day=day,
@@ -80,7 +77,7 @@ def copy_across_all_boats(interface: abstractInterface):
     )
     for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=False,
         )
@@ -95,7 +92,7 @@ def overwrite_allocation_across_all_boats(interface: abstractInterface):
     )
     for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=True,
         )
@@ -110,12 +107,12 @@ def copy_across_all_boats_and_roles(interface: abstractInterface):
     )
     for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=False,
         )
         copy_earliest_valid_role_for_volunteer(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             volunteer=volunteer_with_boat_data.volunteer,
             allow_overwrite=False,
@@ -131,12 +128,12 @@ def overwrite_copy_across_all_boats_and_roles(interface: abstractInterface):
     )
     for volunteer_with_boat_data in all_volunteers_on_boats:
         copy_across_earliest_allocation_of_boats_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             volunteer_with_boat_data=volunteer_with_boat_data,
             allow_overwrite=True,
         )
         copy_earliest_valid_role_for_volunteer(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             volunteer=volunteer_with_boat_data.volunteer,
             allow_overwrite=True,

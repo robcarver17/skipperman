@@ -183,18 +183,6 @@ class ListOfVolunteersWithSkills(List[VolunteerWithSkill]):
 
 
 class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
-    def __init__(
-        self,
-        raw_dict: Dict[Volunteer, SkillsDict],
-        list_of_skills: ListOfSkills,
-        list_of_volunteers_with_skills_and_ids: ListOfVolunteerSkillsWithIds,
-    ):
-        super().__init__(raw_dict)
-
-        self._list_of_volunteers_with_skills_and_ids = (
-            list_of_volunteers_with_skills_and_ids
-        )
-        self._list_of_skills = list_of_skills
 
     def add_volunteer_driving_qualification(self, volunteer: Volunteer):
         PB2_skill = self.list_of_skills.PB2_skill

@@ -11,7 +11,7 @@ from app.backend.volunteers.volunteers_at_event import get_dict_of_all_event_dat
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import \
-    DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import unallocated_group, Group, ListOfGroups
@@ -76,7 +76,7 @@ def get_dict_of_group_annotations(object_store: ObjectStore, event: Event, list_
     return GroupAnnotations(dict_over_days)
 
 def get_dict_of_group_annotations_on_day(day: Day, list_of_roles: List[RoleWithSkills],
-                                         volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+                                         volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                          list_of_groups: ListOfGroups) -> Dict[str,str]:
 
     dict_of_group_annotations = dict(
@@ -98,7 +98,7 @@ def get_dict_of_group_annotations_on_day(day: Day, list_of_roles: List[RoleWithS
 
 
 def get_annotation_for_group(day: Day, group: Group, list_of_roles: List[RoleWithSkills],
-    volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
+    volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
                              ) -> str:
     instructors = get_instructors_at_event_for_group( day=day, group=group,
                                                      list_of_roles=list_of_roles,
@@ -110,7 +110,7 @@ def get_annotation_for_group(day: Day, group: Group, list_of_roles: List[RoleWit
 
 def get_instructors_at_event_for_group(day: Day,
                                        group: Group,
-                                       volunteers_in_roles_at_event: DEPRECATED_DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+                                       volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
                                        list_of_roles: List[RoleWithSkills]) ->str:
     instructors = []
     for role in list_of_roles:

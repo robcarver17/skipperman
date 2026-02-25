@@ -5,7 +5,7 @@ from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_list_of_visible_boat_names_excluding_boats_already_at_event,
-    load_list_of_patrol_boats_at_event,
+    get_list_of_patrol_boats_at_event,
 )
 from app.backend.rota.volunteer_table import get_dict_of_roles_for_dropdown
 
@@ -170,7 +170,7 @@ def from_dropdown_for_volunteer_to_volunteer_name(selected_dropdown: str) -> str
 def get_list_of_dropdown_names_for_adding_volunteers(
     interface: abstractInterface, event: Event
 ) -> List[str]:
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
 

@@ -1,7 +1,6 @@
 from typing import List
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
-from app.data_access.sql.skills import SqlDataListOfSkills
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
 from app.objects.composed.volunteers_with_skills import SkillsDict
 from app.objects.roles_and_teams import ListOfRolesWithSkillIds, RolesWithSkillIds
@@ -17,6 +16,151 @@ INDEX_ROLES_SKILLS_TABLE ="index_roles_and_skills_table"
 
 
 class SqlDataListOfRoles(GenericSqlData):
+    def add_role_with_skill(self, new_role: RoleWithSkills):
+        if self.does_role_with_name_already_exist(new_role.name):
+            raise Exception("Can't add as name %s already exists" % new_role.name)
+
+    def _add_role_with_skill_without_checks(self, new_role: RoleWithSkills):
+        try:
+            if self.table_does_not_exist(ROLES_TABLE):
+                self.create_table()
+
+            new_role_with_ids = new_role.as_role_with_skill_ids()
+            new_role_with_ids.id = str(self.next_available_id())
+            idx = self.next_available_idx()
+
+            self._write_row_without_checks_or_commits(idx, new_role_with_ids)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing roles" % str(e1))
+        finally:
+            self.close()
+
+
+    def next_available_id(self) ->int:
+        return self.last_used_id()+1
+
+    def last_used_id(self)-> int:
+        try:
+            if self.table_does_not_exist(ROLES_TABLE):
+                self.create_table()
+
+            cursor = self.cursor
+            statement = "SELECT MAX(%s) FROM %s" % (
+                ROLE_ID,
+                ROLES_TABLE,
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading roles data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return -1
+        else:
+            return int(raw_list[0][0])
+
+    def next_available_idx(self) ->int:
+        return self.last_used_idx()+1
+
+    def last_used_idx(self)-> int:
+        try:
+            if self.table_does_not_exist(ROLES_TABLE):
+                self.create_table()
+
+            cursor = self.cursor
+            statement = "SELECT MAX(%s) FROM %s" % (
+                ROLE_ORDER,
+                ROLES_TABLE,
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading roles data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return -1
+        else:
+            return int(raw_list[0][0])
+
+
+    def update_role_with_skill(self,
+    existing_role_with_skills: RoleWithSkills,
+    new_role_with_skills: RoleWithSkills):
+        if existing_role_with_skills.name == new_role_with_skills.name:
+            pass
+        else:
+            if self.does_role_with_name_already_exist(new_role_with_skills.name):
+                raise Exception("Can't rename %s to %s as new name already exists" % (existing_role_with_skills.name,
+                                                                                      new_role_with_skills.name))
+
+        self._update_role_with_skill_without_checks(
+            existing_role_with_skills=existing_role_with_skills,
+            new_role_with_skills=new_role_with_skills
+        )
+
+    def does_role_with_name_already_exist(self, role_name: str):
+        try:
+            if self.table_does_not_exist(ROLES_TABLE):
+                return False
+
+            cursor = self.cursor
+            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
+                ROLES_TABLE,
+                ROLE_NAME,
+                role_name
+             ))
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading roles with skills" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
+
+    def _update_role_with_skill_without_checks(self,
+    existing_role_with_skills: RoleWithSkills,
+    new_role_with_skills: RoleWithSkills):
+
+        role_id = existing_role_with_skills.id
+
+        try:
+            if self.table_does_not_exist(ROLES_TABLE):
+                raise Exception("Cannot modify as table dropped")
+            self.cursor.execute("DELETE FROM %s" % (ROLES_TABLE))
+
+            name = new_role_with_skills.name
+            hidden = bool2int(new_role_with_skills.hidden)
+            protected = bool2int(new_role_with_skills.protected)
+            associate_sailing_group = bool2int(new_role_with_skills.associate_sailing_group)
+
+            self.cursor.execute("UPDATE %s SET %s='%s', %s=%d, %s=%d, %s=%d WHERE %s=%d" % (
+                                ROLES_TABLE,
+                                ROLE_NAME,
+                                name,
+                                HIDDEN,
+                                hidden,
+                                PROTECTED,
+                                protected,
+                                ASSOCIATE_SAILING_GROUP,
+                                associate_sailing_group,
+                                ROLE_ID,
+                                int(role_id)))
+
+            skill_ids_required = new_role_with_skills.list_of_skill_ids()
+            self._write_roles_and_skills_without_commit(role_id=role_id, list_of_skill_ids=skill_ids_required)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing roles" % str(e1))
+        finally:
+            self.close()
+
     def read_list_of_roles_with_skills(self) -> ListOfRolesWithSkills:
         if self.table_does_not_exist(ROLES_TABLE):
             return ListOfRolesWithSkills()
@@ -44,9 +188,7 @@ class SqlDataListOfRoles(GenericSqlData):
 
     @property
     def list_of_skills(self) -> ListOfSkills:
-        list_of_skills = getattr(self, "_list_of_skills", None)
-        if list_of_skills is None:
-            list_of_skills = self._list_of_skills = SqlDataListOfSkills(self.db_connection).read()
+        list_of_skills = self.object_store.get(self.object_store.data_api.data_list_of_skills.read)
 
         return list_of_skills
 
@@ -60,30 +202,30 @@ class SqlDataListOfRoles(GenericSqlData):
                 ROLE_NAME, HIDDEN, PROTECTED, ASSOCIATE_SAILING_GROUP, ROLE_ID, ROLES_TABLE, ROLE_ORDER
              ))
             raw_list = cursor.fetchall()
-
-            roles_with_skills = []
-            for raw_role_data in raw_list:
-                name= str(raw_role_data[0])
-                hidden = int2bool(raw_role_data[1])
-                protected = int2bool(raw_role_data[2])
-                associate_sailing_group = int2bool(raw_role_data[3])
-                role_id = str(raw_role_data[4])
-                skill_ids =self._read_skill_ids_for_role(role_id)
-
-                roles_with_skills.append(
-                    RolesWithSkillIds(
-                        name=name,
-                        hidden=hidden,
-                        protected=protected,
-                        associate_sailing_group=associate_sailing_group,
-                        skill_ids_required=skill_ids,
-                        id=role_id
-                    )
-                )
         except Exception as e1:
             raise Exception("Error %s when reading roles with skills" % str(e1))
         finally:
             self.close()
+
+        roles_with_skills = []
+        for raw_role_data in raw_list:
+            name= str(raw_role_data[0])
+            hidden = int2bool(raw_role_data[1])
+            protected = int2bool(raw_role_data[2])
+            associate_sailing_group = int2bool(raw_role_data[3])
+            role_id = str(raw_role_data[4])
+            skill_ids =self._read_skill_ids_for_role(role_id)
+
+            roles_with_skills.append(
+                RolesWithSkillIds(
+                    name=name,
+                    hidden=hidden,
+                    protected=protected,
+                    associate_sailing_group=associate_sailing_group,
+                    skill_ids_required=skill_ids,
+                    id=role_id
+                )
+            )
 
         return ListOfRolesWithSkillIds(roles_with_skills)
 
@@ -107,21 +249,7 @@ class SqlDataListOfRoles(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (ROLES_TABLE))
 
             for idx, role in enumerate(list_of_roles):
-                name = role.name
-                hidden = bool2int(role.hidden)
-                protected= bool2int(role.protected)
-                associate_sailing_group = bool2int(role.associate_sailing_group)
-                skill_ids_required = role.skill_ids_required
-                id = int(role.id)
-
-                insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)" % (
-                   ROLES_TABLE,
-                ROLE_NAME, HIDDEN, PROTECTED, ASSOCIATE_SAILING_GROUP, ROLE_ID, ROLE_ORDER)
-
-                self.cursor.execute(insertion, (
-                    name, hidden, protected, associate_sailing_group, id, idx))
-
-                self._write_roles_and_skills(role_id=role.id, list_of_skill_ids=skill_ids_required)
+                self._write_row_without_checks_or_commits(idx, role)
 
             self.conn.commit()
         except Exception as e1:
@@ -129,8 +257,25 @@ class SqlDataListOfRoles(GenericSqlData):
         finally:
             self.close()
 
+    def _write_row_without_checks_or_commits(self, idx: int, role: RolesWithSkillIds):
+        name = role.name
+        hidden = bool2int(role.hidden)
+        protected = bool2int(role.protected)
+        associate_sailing_group = bool2int(role.associate_sailing_group)
 
-    def _write_roles_and_skills(self, role_id, list_of_skill_ids: List[str]):
+        id = int(role.id)
+
+        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)" % (
+            ROLES_TABLE,
+            ROLE_NAME, HIDDEN, PROTECTED, ASSOCIATE_SAILING_GROUP, ROLE_ID, ROLE_ORDER)
+
+        self.cursor.execute(insertion, (
+            name, hidden, protected, associate_sailing_group, id, idx))
+
+        skill_ids_required = role.skill_ids_required
+        self._write_roles_and_skills_without_commit(role_id=role.id, list_of_skill_ids=skill_ids_required)
+
+    def _write_roles_and_skills_without_commit(self, role_id, list_of_skill_ids: List[str]):
         ## no commit or closed done inside above
 
         self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (ROLES_SKILLS_TABLE, ROLE_ID, int(role_id)))

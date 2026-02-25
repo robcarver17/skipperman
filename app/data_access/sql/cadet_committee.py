@@ -1,12 +1,10 @@
 from datetime import datetime
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, date2int, bool2int, int2date, int2bool
-from app.objects.cadets import Cadet
+from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import ListOfCadetsWithIdOnCommittee, CadetWithIdCommitteeMember
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.cadets import CADETS_TABLE
 from app.objects.composed.committee import ListOfCadetsOnCommittee, CadetOnCommittee
-from app.objects.membership_status import MembershipStatus
 from app.objects.utilities.exceptions import missing_data, MultipleMatches, MissingData, DuplicateCadets
 
 CADETS_ON_COMMITTEE_TABLE ="cadets_on_committee"
@@ -21,12 +19,13 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
             raise MissingData
 
         try:
-            sql = "DELETE FROM %s WHERE %s=?" % (
+            sql = "DELETE FROM %s WHERE %s=%d" % (
                 CADETS_ON_COMMITTEE_TABLE,
-                CADET_ID
+                CADET_ID,
+                int(cadet.id)
             )
 
-            self.cursor.execute(sql, int(cadet.id))
+            self.cursor.execute(sql)
 
             self.conn.commit()
         except Exception as e1:
@@ -69,13 +68,15 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
                 raise Exception("Can't toggle selection as not on committee")
 
             new_selection = not currently_selected
-            insertion = "UPDATE %s SET %s=? WHERE %s=?" % (
+            insertion = "UPDATE %s SET %s=%d WHERE %s=%d" % (
                 CADETS_ON_COMMITTEE_TABLE,
                 COMMITTEE_DESLECTED,
-                CADET_ID
+                bool2int(new_selection),
+                CADET_ID,
+                int(cadet_id)
             )
 
-            self.cursor.execute(insertion, ( bool2int(new_selection),  int(cadet_id)))
+            self.cursor.execute(insertion)
 
             self.conn.commit()
         except Exception as e1:
@@ -96,16 +97,14 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
             if self.is_cadet_on_committe(cadet_id):
                 raise DuplicateCadets("Cadet is already on committee")
 
-            cadet_id = int(cadet_id)
-            date_term_starts = date2int(date_term_starts)
-            date_term_ends = date2int(date_term_ends)
-            deselected = bool2int(deselected)
-
-            insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
-                CADETS_ON_COMMITTEE_TABLE,
-                CADET_ID, COMMITTEE_DATE_STARTS, COMMITTEE_DATE_ENDS, COMMITTEE_DESLECTED)
-
-            self.cursor.execute(insertion, (cadet_id, date_term_starts, date_term_ends, deselected))
+            self._write_row_without_checks_or_commits(
+                CadetWithIdCommitteeMember(
+                    cadet_id=cadet_id,
+                    date_term_ends=date_term_ends,
+                    date_term_starts=date_term_starts,
+                    deselected=deselected
+                )
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -116,59 +115,25 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
 
     def  get_list_of_cadets_on_committee(self) -> ListOfCadetsOnCommittee:
         if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):
-            self.create_table()
-
-        try:
-            cursor = self.cursor
-            cursor.execute('''SELECT %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s, %s.%s FROM %s JOIN %s ON %s.%s=%s.%s''' % (
-                CADETS_TABLE, CADET_FIRST_NAME,
-                CADETS_TABLE, CADET_SURNAME,
-                CADETS_TABLE, CADET_DOB,
-                CADETS_TABLE, CADET_ID,
-                CADETS_TABLE, CADET_MEMBERSHIP_STATUS,
-                CADETS_ON_COMMITTEE_TABLE, COMMITTEE_DATE_STARTS,
-                CADETS_ON_COMMITTEE_TABLE, COMMITTEE_DATE_ENDS,
-                CADETS_ON_COMMITTEE_TABLE,COMMITTEE_DESLECTED,
-                CADETS_ON_COMMITTEE_TABLE,
-                CADETS_TABLE,
-                CADETS_ON_COMMITTEE_TABLE, CADET_ID,
-                CADETS_TABLE, CADET_ID
-
-            ))
-            raw_list = cursor.fetchall()
-        except Exception as e1:
-            raise Exception("Error %s reading cadet committee data" % str(e1))
-        finally:
-            self.close()
-
+            return ListOfCadetsOnCommittee()
 
         new_list = []
-        id_list = []
+        raw_list = self.read()
         for raw_data in raw_list:
-            cadet = Cadet(
-                first_name=raw_data[0],
-                surname=raw_data[1],
-                date_of_birth=int2date(raw_data[2]),
-                id=str(raw_data[3]),
-                membership_status=MembershipStatus[raw_data[4]]
-            )
-            cadet_with_id_on_committee=                    CadetWithIdCommitteeMember(
-                    cadet_id=str(raw_data[3]),
-                    date_term_starts = int2date(raw_data[5]),
-            date_term_ends = int2date(raw_data[6]),
-            deselected = int2bool(raw_data[7]))
-
             new_list.append(
                 CadetOnCommittee(
-                    cadet=cadet,
-                    cadet_with_id_on_committee=cadet_with_id_on_committee
-
-
-                    )
+                    cadet=self.list_of_cadets.cadet_with_id(raw_data.cadet_id),
+                    cadet_with_id_on_committee=raw_data
                 )
-            id_list.append(cadet_with_id_on_committee)
+            )
 
         return ListOfCadetsOnCommittee(new_list)
+
+    @property
+    def list_of_cadets(self) -> ListOfCadets:
+        return self.object_store.get(
+            self.object_store.data_api.data_list_of_cadets.read
+        )
 
     def is_cadet_selected(self, cadet_id:str):
         if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):
@@ -235,16 +200,7 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % CADETS_ON_COMMITTEE_TABLE)
 
             for cadet_on_committee in list_of_cadets:
-                cadet_id = int(cadet_on_committee.cadet_id)
-                date_term_starts = date2int(cadet_on_committee.date_term_starts)
-                date_term_ends = date2int(cadet_on_committee.date_term_ends)
-                deselected = bool2int(cadet_on_committee.deselected)
-
-                insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
-                CADETS_ON_COMMITTEE_TABLE,
-                CADET_ID, COMMITTEE_DATE_STARTS, COMMITTEE_DATE_ENDS, COMMITTEE_DESLECTED)
-
-                self.cursor.execute(insertion, (cadet_id, date_term_starts ,date_term_ends, deselected))
+                self._write_row_without_checks_or_commits(cadet_on_committee)
 
             self.conn.commit()
         except Exception as e1:
@@ -252,6 +208,17 @@ class SqlDataListOfCadetsOnCommitte(GenericSqlData):
         finally:
             self.close()
 
+    def _write_row_without_checks_or_commits(self, cadet_on_committee: CadetWithIdCommitteeMember):
+        cadet_id = int(cadet_on_committee.cadet_id)
+        date_term_starts = date2int(cadet_on_committee.date_term_starts)
+        date_term_ends = date2int(cadet_on_committee.date_term_ends)
+        deselected = bool2int(cadet_on_committee.deselected)
+
+        insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
+            CADETS_ON_COMMITTEE_TABLE,
+            CADET_ID, COMMITTEE_DATE_STARTS, COMMITTEE_DATE_ENDS, COMMITTEE_DESLECTED)
+
+        self.cursor.execute(insertion, (cadet_id, date_term_starts, date_term_ends, deselected))
 
     def create_table(self):
 

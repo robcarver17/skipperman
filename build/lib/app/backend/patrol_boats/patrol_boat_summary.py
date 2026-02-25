@@ -7,25 +7,20 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
-from app.backend.volunteers.volunteers_at_event import (
-    get_dict_of_all_event_data_for_volunteers,
-)
 from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats
 
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
 )
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_dict_of_patrol_boats_by_day_for_volunteer_at_event
 
-## FIXME REFACTOR
 
 def get_summary_list_of_patrol_boat_allocations_for_events(
     object_store: ObjectStore, event: Event
 ) -> PandasDFTable:
-    all_volunteer_event_data = get_dict_of_all_event_data_for_volunteers(
-        object_store=object_store, event=event
-    )
-    dict_of_volunteers_at_event_with_patrol_boats = (
-        all_volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats
+    dict_of_volunteers_at_event_with_patrol_boats = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+        object_store=object_store,
+        event=event
     )
 
     list_of_boats_at_event = (

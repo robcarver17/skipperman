@@ -121,7 +121,7 @@ def save_print_options(
 
     ## although title and filename are written here as well they are never used
     update_print_options(
-        object_store=interface.object_store,
+        interface=interface,
         report_name=report_type,
         print_options=print_options,
     )
@@ -417,7 +417,7 @@ def reset_print_report_options(
     interface: abstractInterface, report_generator: ReportGenerator
 ):
     reset_print_options_to_default(
-        object_store=interface.object_store, report_name=report_generator.report_type
+        interface=interface, report_name=report_generator.report_type
     )
     interface.clear_persistent_value(REPORT_TITLE)
     interface.clear_persistent_value(REPORT_FILENAME)
@@ -441,4 +441,4 @@ def save_print_options_from_form(
         print_options=print_options,
         interface=interface,
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()

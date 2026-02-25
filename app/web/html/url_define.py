@@ -1,5 +1,5 @@
-from app.objects.abstract_objects.form_function_mapping import HOME_PAGE_OF_ACTION
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
+from app.objects.abstract_objects.form_function_mapping import HOME_PAGE_OF_ACTION
 from app.objects.utilities.exceptions import arg_not_passed
 
 INDEX_URL = "/"
@@ -15,6 +15,7 @@ TOGGLE_READ_ONLY_GLOBAL = "toggle_read_only_global"
 STATIC_DIRECTORY = "static"
 MAKE_BACKUP = "make_backup"
 MAIN_MENU_URL = "/main/"
+
 MAIN_HELP_PAGE = "main-menu"
 
 
@@ -28,8 +29,6 @@ def get_urls_of_interest(action_name: str = arg_not_passed) -> UrlsOfInterest:
     return UrlsOfInterest(
         image_directory=get_image_directory_url(),
     )
-
-
 
 
 def get_image_directory_url():

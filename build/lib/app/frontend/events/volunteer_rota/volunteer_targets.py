@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_lines import DetailListOfLines, ListO
 from app.backend.rota.volunteer_rota_targets import (
     get_list_of_actual_and_targets_for_roles_at_event,
     RowInTableWithActualAndTargetsForRole,
-    save_new_volunteer_target,
+    update_volunteer_target,
 )
 
 
@@ -127,7 +127,7 @@ def save_volunteer_targets_for_specific_role(
     interface: abstractInterface, event: Event, role_name: str
 ):
     new_target = get_target_from_form(interface=interface, role_name=role_name)
-    save_new_volunteer_target(
+    update_volunteer_target(
         object_store=interface.object_store,
         event=event,
         role_name=role_name,

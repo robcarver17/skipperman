@@ -216,21 +216,6 @@ class ListOfVolunteerPatrolBoatDays(List[VolunteerPatrolBoatDay]):
 
 
 class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDayDict]):
-    def __init__(
-        self,
-        raw_dict: Dict[Volunteer, PatrolBoatByDayDict],
-        event: Event,
-        list_of_all_patrol_boats: ListOfPatrolBoats,
-        list_of_volunteers_with_id_at_event_with_patrol_boat_id: ListOfVolunteersWithIdAtEventWithPatrolBoatsId,
-        list_of_patrol_boat_labels: ListOfPatrolBoatLabelsAtEvents,
-    ):
-        super().__init__(raw_dict)
-        self._event = event
-        self._list_of_volunteers_with_id_at_event_with_patrol_boat_id = (
-            list_of_volunteers_with_id_at_event_with_patrol_boat_id
-        )
-        self._list_of_all_patrol_boats = list_of_all_patrol_boats
-        self._list_of_patrol_boat_labels = list_of_patrol_boat_labels
 
     def get_dict_of_patrol_boats_with_locations(self):
         all_boats = self.list_of_all_patrol_boats
@@ -535,3 +520,23 @@ def compose_dict_of_patrol_boats_by_day_for_volunteer_at_event(
         list_of_all_patrol_boats=list_of_patrol_boats,
         list_of_patrol_boat_labels=list_of_patrol_boat_labels,
     )
+
+
+@dataclass
+class BoatDayVolunteer:
+    boat: PatrolBoat
+    day: Day
+    volunteer: Volunteer
+
+
+NO_ADDITION_TO_MAKE = "No addition to make"
+
+
+class ListOfBoatDayVolunteer(list):
+    def __init__(self, input: List[BoatDayVolunteer]):
+        super().__init__(input)
+
+    def remove_no_additions(self):
+        return ListOfBoatDayVolunteer(
+            [bdv for bdv in self if not bdv is NO_ADDITION_TO_MAKE]
+        )

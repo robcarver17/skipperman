@@ -4,7 +4,7 @@ from app.web.flask.session_data_for_action import (
     clear_all_action_state_data_from_session,
 )
 from app.web.html.url_define import (
-    MAIN_HELP_PAGE, get_top_level_url,
+    get_top_level_url, MAIN_HELP_PAGE,
 )
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line

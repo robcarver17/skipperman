@@ -1,7 +1,9 @@
 import shutil
 
 from app.data_access.backups.make_backup import make_backup
-from app.data_access.csv.global_read_only import (
+from app.data_access.composed.dict_of_all_event_data_for_volunteers import ComposedDataAllEventInfoForVolunteers
+from app.data_access.composed.dict_of_all_event_info_for_cadets import ComposedDataAllEventInfoForCadets
+from app.data_access.global_read_only import (
     is_global_read_only,
     set_global_read_only,
 )
@@ -15,8 +17,8 @@ from app.data_access.sql.cadet_food import SqlDataListOfCadetsWithFoodRequiremen
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.cadets_with_ticks import SqlDataListOfCadetsWithTickListItems
 from app.data_access.sql.club_dinghies import SqlDataListOfClubDinghies
-from app.data_access.sql.club_dinghies_with_people_at_event import SqlDataListOfCadetAtEventWithClubDinghies, \
-    SqlDataListOfVolunteersAtEventWithClubDinghies
+from app.data_access.sql.club_dinghies_with_cadets_at_event import SqlDataListOfCadetAtEventWithClubDinghies
+from app.data_access.sql.club_dinghies_with_volunteers_at_event import    SqlDataListOfVolunteersAtEventWithClubDinghies
 from app.data_access.sql.club_dinghy_limits import SqlDataListOfClubDinghyLimits
 from app.data_access.sql.connections import SqlDataListOfCadetVolunteerAssociations
 from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
@@ -56,11 +58,12 @@ from app.data_access.sql.volunteers_in_roles_at_event import SqlDataListOfVolunt
 from app.data_access.sql.volunteers_with_skills import SqlDataListOfVolunteerSkills
 from app.data_access.sql.wa_event_mapping import SqlDataWAEventMapping
 
-#FIXME PROBABLY SOME CLEANUP HERE
+
 
 class MixedSqlAndCsvDataApi(object):
     def __init__(
-        self, master_data_path: str, user_data_path: str, backup_data_path: str
+        self, master_data_path: str, user_data_path: str, backup_data_path: str,
+
     ):
         self._master_data_path = master_data_path
         self._user_data_path = user_data_path
@@ -69,10 +72,22 @@ class MixedSqlAndCsvDataApi(object):
         db_connection =DBConnection(master_data_path)
         self._db_connection = db_connection
 
+    def add_object_store(self, object_store):
+        self._object_store = object_store
+
+    @property
+    def object_store(self) -> 'ObjectStore':
+        object_store = getattr(self, "_object_store", None)
+        if object_store is None:
+            raise Exception("Need to run add_object_store before calling")
+
+        return object_store
+
     @property
     def db_connection(self) -> DBConnection:
         return self._db_connection
 
+    ## USES TEMPORARY FILES AS MARKERS
     @property
     def global_read_only(self):
         return is_global_read_only(self.user_data_path)
@@ -88,39 +103,49 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
+    def dict_of_all_event_data_for_volunteers(self) -> ComposedDataAllEventInfoForVolunteers:
+        return ComposedDataAllEventInfoForVolunteers(object_store=self.object_store)
+
+    @property
+    def dict_of_all_event_data_for_cadets(self) -> ComposedDataAllEventInfoForCadets:
+        return ComposedDataAllEventInfoForCadets(object_store=self.object_store)
+
+
+    @property
     def data_list_of_cadets(self):
         return SqlDataListOfCadets(
-            self.db_connection
+            db_connection=self.db_connection,
+            object_store=self.object_store
         )
 
     @property
     def data_list_of_cadets_on_committee(self) -> SqlDataListOfCadetsOnCommitte:
         return SqlDataListOfCadetsOnCommitte(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store,
         )
 
     @property
     def data_list_of_events(self):
         return SqlDataListOfEvents(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store,
         )
 
     @property
     def data_list_of_skills(self) -> SqlDataListOfSkills:
         return SqlDataListOfSkills(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store,
         )
 
     @property
     def data_list_of_roles(self) -> SqlDataListOfRoles:
         return SqlDataListOfRoles(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store,
         )
 
     @property
     def data_list_of_teams(self) -> SqlDataListOfTeams:
         return SqlDataListOfTeams(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -128,44 +153,44 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfTeamsAndRolesWithIds:
         return SqlDataListOfTeamsAndRolesWithIds(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_groups(self) -> SqlDataListOfGroups:
         return SqlDataListOfGroups(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_wa_event_mapping(self) -> SqlDataWAEventMapping:
         return SqlDataWAEventMapping(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_wa_field_mapping(self) -> SqlDataWAFieldMapping:
         return SqlDataWAFieldMapping(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_wa_field_mapping_templates(self) -> SqlDataWAFieldMappingTemplates:
         return SqlDataWAFieldMappingTemplates(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
 
     @property
     def data_registration_data(self) -> SqlDataMappedRegistrationData:
         return SqlDataMappedRegistrationData(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_event_warnings(self) -> SqlDataListOfEventWarnings:
         return SqlDataListOfEventWarnings(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -173,7 +198,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfIdentifiedCadetsAtEvent:
         return SqlDataListOfIdentifiedCadetsAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -181,7 +206,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsAtEvent:
         return SqlDataListOfCadetsAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -189,13 +214,13 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithGroups:
         return SqlDataListOfCadetsWithGroups(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_print_options(self) -> sqlDataListOfPrintOptions:
         return sqlDataListOfPrintOptions(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -203,19 +228,19 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfArrangementOptions:
         return SqlDataListOfArrangementOptions(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_volunteers(self) -> SqlDataListOfVolunteers:
         return SqlDataListOfVolunteers(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_volunteer_skills(self) -> SqlDataListOfVolunteerSkills:
         return SqlDataListOfVolunteerSkills(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -223,13 +248,13 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetVolunteerAssociations:
         return SqlDataListOfCadetVolunteerAssociations(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_volunteers_at_event(self) -> SqlDataListOfVolunteersAtEvent:
         return SqlDataListOfVolunteersAtEvent(
-        self.db_connection
+        db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -237,7 +262,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) ->SqlDataListOfIdentifiedVolunteersAtEvent:
         return SqlDataListOfIdentifiedVolunteersAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -245,32 +270,32 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfVolunteersInRolesAtEvent:
         return SqlDataListOfVolunteersInRolesAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_patrol_boats(self) -> SqlDataListOfPatrolBoats:
         return SqlDataListOfPatrolBoats(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_List_of_club_dinghies(self) -> SqlDataListOfClubDinghies:
         return SqlDataListOfClubDinghies(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_List_of_club_dinghy_limits(self) -> SqlDataListOfClubDinghyLimits:
         return SqlDataListOfClubDinghyLimits(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
 
     @property
     def data_list_of_group_names_for_events_and_cadets_persistent_version(self) -> SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion:
         return SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -278,7 +303,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataAttendanceAtEventsForSpecificCadet:
         return SqlDataAttendanceAtEventsForSpecificCadet(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -286,7 +311,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfVolunteersAtEventWithPatrolBoats:
         return SqlDataListOfVolunteersAtEventWithPatrolBoats(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -294,7 +319,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetAtEventWithClubDinghies:
         return SqlDataListOfCadetAtEventWithClubDinghies(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -302,7 +327,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfVolunteersAtEventWithClubDinghies:
         return SqlDataListOfVolunteersAtEventWithClubDinghies(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -310,19 +335,19 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetAtEventWithDinghies:
         return SqlDataListOfCadetAtEventWithDinghies(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_dinghies(self) -> SqlDataListOfDinghies:
         return SqlDataListOfDinghies(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_qualifications(self) -> SqlDataListOfQualifications:
         return SqlDataListOfQualifications(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -330,19 +355,19 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlListOfCadetsWithQualifications:
         return SqlListOfCadetsWithQualifications(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_tick_sub_stages(self) -> SqlDataListOfTickSubStages:
         return SqlDataListOfTickSubStages(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_tick_sheet_items(self) -> SqlDataListOfTickSheetItems:
         return SqlDataListOfTickSheetItems(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -350,7 +375,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithTickListItems:
         return SqlDataListOfCadetsWithTickListItems(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -358,7 +383,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfTargetForRoleAtEvent:
         return SqlDataListOfTargetForRoleAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -366,7 +391,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithFoodRequirementsAtEvent:
         return SqlDataListOfCadetsWithFoodRequirementsAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -374,7 +399,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfVolunteersWithFoodRequirementsAtEvent:
         return SqlDataListOfVolunteersWithFoodRequirementsAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -382,31 +407,31 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithClothingAtEvent:
         return SqlDataListOfCadetsWithClothingAtEvent(
-        self.db_connection
+        db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_group_notes_at_event(self) -> SqlDataListOfGroupNotesAtEvent:
         return SqlDataListOfGroupNotesAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_notes(self) ->SqlDataListOfNotes:
         return SqlDataListOfNotes(
-        self.db_connection
+        db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_patrol_boat_labels(self) -> SqlDataListOfPatrolBoatLabelsAtEvent:
         return SqlDataListOfPatrolBoatLabelsAtEvent(
-            self.db_connection
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_last_roles_across_events_for_volunteers(self) ->SqlDataListOfLastRolesAcrossEventsForVolunteers:
         return SqlDataListOfLastRolesAcrossEventsForVolunteers(
-self.db_connection
+db_connection=self.db_connection, object_store=self.object_store
         )
 
     #### USERS

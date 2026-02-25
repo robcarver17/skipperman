@@ -2,7 +2,7 @@ from copy import copy
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
+from app.objects.utilities.exceptions import arg_not_passed,  MultipleMatches, missing_data
 from app.objects.volunteers import ListOfVolunteers, Volunteer, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
 
 VOLUNTEERS_TABLE = "volunteers"
@@ -36,6 +36,17 @@ class SqlDataListOfVolunteers(GenericSqlData):
         if self.does_matching_volunteer_exist(updated_volunteer):
             if not existing_volunteer.name == updated_volunteer.name:
                 raise Exception("Volunteer %s with identical name already exists!" % str(updated_volunteer))
+
+        self._modify_volunteer_without_checks(
+            existing_volunteer=existing_volunteer,
+            updated_volunteer=updated_volunteer
+        )
+
+    def _modify_volunteer_without_checks(
+                self,
+                existing_volunteer: Volunteer,
+                updated_volunteer: Volunteer,
+        ):
         try:
             first_name = updated_volunteer.first_name
             surname = updated_volunteer.surname
@@ -59,16 +70,11 @@ class SqlDataListOfVolunteers(GenericSqlData):
     def add_new_volunteer(self, volunteer: Volunteer):
         if self.does_matching_volunteer_exist(volunteer):
             raise Exception("Volunteer %s with identical name already exists!" % str(volunteer))
+
+        volunteer.id = str(self.next_available_volunteer_id())
+
         try:
-            first_name = volunteer.first_name
-            surname = volunteer.surname
-            id = self.next_available_volunteer_id()
-
-            insertion = "INSERT INTO %s ( %s, %s, %s) VALUES ( ?,?,?)" % (
-VOLUNTEERS_TABLE, VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
-
-            self.cursor.execute(insertion, (first_name, surname, id))
-
+            self._add_row_without_check_or_commit(volunteer)
             self.conn.commit()
         except Exception as e1:
             raise Exception("error %s when adding volunteer %s to table" % (str(e1), volunteer))
@@ -117,7 +123,7 @@ VOLUNTEERS_TABLE, VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
         ## matches everything except id
         volunteer_id = self.get_id_of_matching_volunteer(volunteer, default=missing_data)
         if volunteer_id is missing_data:
-            return volunteer_id
+            return default
 
         new_volunteer= copy(volunteer)
         new_volunteer.id = volunteer_id
@@ -154,9 +160,9 @@ VOLUNTEERS_TABLE, VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
             return str(raw_list[0][0])
 
 
-    def get_volunteer_from_id(self, volunteer_id: str) -> Volunteer:
+    def get_volunteer_from_id(self, volunteer_id: str, default=missing_data) -> Volunteer:
         if self.table_does_not_exist(VOLUNTEERS_TABLE):
-            raise MissingData("No volunteer matches %s" % volunteer_id)
+            return default
 
         try:
             cursor = self.cursor
@@ -174,7 +180,7 @@ VOLUNTEERS_TABLE, VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
             self.close()
 
         if len(raw_list)==0:
-            raise MissingData("No volunteer matches %s" % volunteer_id)
+            return default
         elif len(raw_list)>1:
             raise MultipleMatches("More than one volunteer has id %s" % volunteer_id)
 
@@ -227,21 +233,25 @@ VOLUNTEERS_TABLE, VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
             self.cursor.execute("DELETE FROM %s" % (VOLUNTEERS_TABLE))
 
             for volunteer in list_of_volunteers:
-                first_name = volunteer.first_name
-                surname = volunteer.surname
-                id = int(volunteer.id)
-                insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)" % (
-                    VOLUNTEERS_TABLE,
-                VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
-
-                self.cursor.execute(insertion, (
-                    first_name, surname, id))
+                self._add_row_without_check_or_commit(volunteer)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing volunteers" % str(e1))
         finally:
             self.close()
+
+    def _add_row_without_check_or_commit(self, volunteer: Volunteer):
+        first_name = volunteer.first_name
+        surname = volunteer.surname
+        id = int(volunteer.id)
+        insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)" % (
+            VOLUNTEERS_TABLE,
+        VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
+
+        self.cursor.execute(insertion, (
+            first_name, surname, id))
+
 
     def create_table(self):
 

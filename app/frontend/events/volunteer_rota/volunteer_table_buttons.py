@@ -41,13 +41,12 @@ from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoFo
 
 def get_location_button(
     interface: abstractInterface,
-    dict_of_all_cadet_event_data: DictOfAllEventInfoForCadets,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Button:
     ready_to_swap = is_ready_to_swap(interface)
 
     location = get_cadet_location_string_for_volunteer(
-        dict_of_all_cadet_event_data=dict_of_all_cadet_event_data,
+        object_store=interface.object_store,
         volunteer_data_at_event=volunteer_data_at_event,
     )
 

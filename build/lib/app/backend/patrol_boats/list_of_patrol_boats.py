@@ -5,10 +5,11 @@ from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 
 
 def add_new_patrol_boat(interface: abstractInterface, name_of_entry_to_add: str):
+    new_boat = PatrolBoat(name_of_entry_to_add)
     try:
         interface.update(
         interface.object_store.data_api.data_list_of_patrol_boats.add_new_patrol_boat,
-        patrol_boat_name= name_of_entry_to_add
+        new_boat=new_boat
     )
     except Exception as e:
         interface.log_error("Error: %s when adding boat %s" % (str(e), name_of_entry_to_add))

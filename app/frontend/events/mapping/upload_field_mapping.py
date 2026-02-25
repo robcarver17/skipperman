@@ -2,7 +2,7 @@ from app.backend.mapping.list_of_field_mappings import (
     save_field_mapping_for_event,
     does_event_already_have_mapping,
 )
-from app.data_access.csv.wa_field_mapping import read_mapping_from_csv_file_object
+from app.data_access.csv.arch.wa_field_mapping import read_mapping_from_csv_file_object
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
     get_file_from_interface,
@@ -81,7 +81,7 @@ def post_form_for_upload_custom_field_mapping(interface: abstractInterface):
         save_field_mapping_for_event(
            interface=interface, event=event, mapping=mapping
         )
-        interface.DEPRECATE_flush_and_clear()
+        interface.clear()
 
     except Exception as e:
         interface.log_error("Something went wrong uploading file %s" % str(e))

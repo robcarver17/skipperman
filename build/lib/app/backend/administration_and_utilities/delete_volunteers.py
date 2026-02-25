@@ -3,6 +3,8 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 )
 from app.backend.volunteers.connected_cadets import delete_all_connections_for_volunteer
 from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event
+from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import \
+    delete_volunteer_from_most_common_role_and_group_data
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.volunteers import Volunteer
 from app.backend.volunteers.list_of_volunteers import delete_volunteer
@@ -25,6 +27,8 @@ def delete_volunteer_in_data_and_return_warnings(
             "Will delete skills %s" % ", ".join([skill.name for skill in skills])
         )
 
+    delete_volunteer_from_most_common_role_and_group_data(interface=interface,
+                                                          volunteer=volunteer_to_delete)
     connections = delete_all_connections_for_volunteer(
         interface=interface, volunteer=volunteer_to_delete, areyousure=True
     )

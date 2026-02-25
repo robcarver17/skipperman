@@ -92,9 +92,7 @@ class SqlDataListOfArrangementOptions(
 ):
     def read(self, report_name: str) -> ArrangementOptionsAndGroupOrder:
         try:
-            print(".............")
             if self.table_does_not_exist(LIST_OF_ARRANGEMENTS_TABLE):
-                print("EMPTY")
                 return ArrangementOptionsAndGroupOrder.create_empty()
 
             cursor = self.cursor
@@ -154,6 +152,7 @@ class SqlDataListOfArrangementOptions(
             raise Exception("Error %s when writing to print options for report name %s" % (str(e1), report_name))
         finally:
             self.close()
+
 
     def create_table(self):
 

@@ -5,14 +5,86 @@ from app.data_access.sql.shared_column_names import *
 from app.objects.composed.roles_and_teams import  DictOfTeamsWithRoles
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 from app.objects.roles_and_teams import ListOfTeamsAndRolesWithIds, TeamsAndRolesWithIds,   ListOfTeams
-from app.data_access.sql.teams import  SqlDataListOfTeams
-from app.data_access.sql.roles import SqlDataListOfRoles
 from app.objects.utilities.exceptions import arg_not_passed
 
 TEAMS_AND_ROLES_TABLE = "teams_and_roles"
 INDEX_TEAMS_AND_ROLES_TABLE = "index_teams_and_roles"
 
 class SqlDataListOfTeamsAndRolesWithIds(GenericSqlData):
+
+    def add_new_role_to_team(
+            self, team_id: str, role_id: str
+    ):
+        idx = self.next_available_idx_for_team(team_id)
+        team_with_role = TeamsAndRolesWithIds(team_id=team_id,
+                                              role_id=role_id,
+                                              order_idx=idx)
+
+        try:
+            if self.table_does_not_exist(TEAMS_AND_ROLES_TABLE):
+                self.create_table()
+
+
+            self._write_row_without_commit_or_check(team_with_role)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing teams and roles" % str(e1))
+        finally:
+            self.close()
+
+
+    def next_available_idx_for_team(self, team_id:str) ->int:
+        return self.last_used_idx_for_team(team_id)+1
+
+    def last_used_idx_for_team(self, team_id: str)-> int:
+        try:
+            if self.table_does_not_exist(TEAMS_AND_ROLES_TABLE):
+                self.create_table()
+
+            cursor = self.cursor
+            statement = "SELECT MAX(%s) FROM %s WHERE %s=%s" % (
+                TEAM_IDX,
+                TEAMS_AND_ROLES_TABLE,
+                TEAM_ID,
+                int(team_id)
+            )
+            cursor.execute(statement)
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s reading teams data" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return -1
+        else:
+            return int(raw_list[0][0])
+
+
+    def update_roles_for_team(self,
+       team_id: str,
+
+    new_list_of_roles_with_ids: ListOfTeamsAndRolesWithIds):
+
+        try:
+            if self.table_does_not_exist(TEAMS_AND_ROLES_TABLE):
+                self.create_table()
+
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (TEAMS_AND_ROLES_TABLE,
+                                                                TEAM_ID,
+                                                                int(team_id)))
+
+            for team_with_role in new_list_of_roles_with_ids:
+                self._write_row_without_commit_or_check(team_with_role)
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing teams and roles" % str(e1))
+        finally:
+            self.close()
+
+
     def get_dict_of_teams_and_roles(self) -> DictOfTeamsWithRoles:
         list_of_teams = self.list_of_teams
 
@@ -35,17 +107,13 @@ class SqlDataListOfTeamsAndRolesWithIds(GenericSqlData):
 
     @property
     def list_of_roles(self) -> ListOfRolesWithSkills:
-        list_of_roles = getattr(self, "_list_of_roles", None)
-        if list_of_roles is None:
-            list_of_roles = self._list_of_roles = SqlDataListOfRoles(self.db_connection).read_list_of_roles_with_skills()
+        list_of_roles =    self.object_store.get(self.object_store.data_api.data_list_of_roles.read_list_of_roles_with_skills)
 
         return list_of_roles
 
     @property
     def list_of_teams(self) -> ListOfTeams:
-        list_of_teams = getattr(self, "_list_of_teams", None)
-        if list_of_teams is None:
-            list_of_teams = self._list_of_teams = SqlDataListOfTeams(self.db_connection).read()
+        list_of_teams = self.object_store.get(self.object_store.data_api.data_list_of_teams.read)
 
         return list_of_teams
 
@@ -98,24 +166,27 @@ class SqlDataListOfTeamsAndRolesWithIds(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (TEAMS_AND_ROLES_TABLE))
 
             for team_with_role in list_of_teams_and_roles_with_ids:
-                team_id = int(team_with_role.team_id)
-                role_id = int(team_with_role.role_id)
-                team_idx = int(team_with_role.order_idx)
-
-                insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)" % (
-                    TEAMS_AND_ROLES_TABLE,
-                    TEAM_ID,
-                    ROLE_ID,
-                    TEAM_IDX)
-
-                self.cursor.execute(insertion, (
-                    team_id, role_id, team_idx))
+                self._write_row_without_commit_or_check(team_with_role)
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing teams and roles" % str(e1))
         finally:
             self.close()
+
+    def _write_row_without_commit_or_check(self,  team_with_role: TeamsAndRolesWithIds):
+        team_id = int(team_with_role.team_id)
+        role_id = int(team_with_role.role_id)
+        team_idx = int(team_with_role.order_idx)
+
+        insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)" % (
+            TEAMS_AND_ROLES_TABLE,
+            TEAM_ID,
+            ROLE_ID,
+            TEAM_IDX)
+
+        self.cursor.execute(insertion, (
+            team_id, role_id, team_idx))
 
     def create_table(self):
 

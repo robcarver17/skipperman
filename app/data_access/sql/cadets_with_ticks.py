@@ -1,11 +1,7 @@
 from typing import List, Dict
 
-from app.data_access.sql.cadets import SqlDataListOfCadets
-from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.data_access.sql.qualifications import SqlDataListOfQualifications
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.tick_sheet_sub_stages import SqlDataListOfTickSubStages
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.ticks_for_qualification import TicksForQualification, DictOfTickSheetItemsAndTicksForCadet
 from app.objects.composed.ticksheet import DictOfCadetsWithQualificationsAndTicks, QualificationsAndTicksForCadet
@@ -18,7 +14,6 @@ TICKS_FOR_CADET_TABLE = "ticks_for_cadet"
 INDEX_TICKS_FOR_CADET_TABLE = "index_ticks_for_cadet_table"
 
 
-from app.data_access.sql.tick_sheet_items import SqlDataListOfTickSheetItems
 
 class SqlDataListOfCadetsWithTickListItems(
     GenericSqlData
@@ -32,7 +27,7 @@ class SqlDataListOfCadetsWithTickListItems(
             if self.table_does_not_exist(TICKS_FOR_CADET_TABLE):
                 return
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (TICKS_FOR_CADET_TABLE, CADET_ID, int(cadet_id)))
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (TICKS_FOR_CADET_TABLE, CADET_ID, int(cadet_id)))
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing ticks" % str(e1))
@@ -67,7 +62,7 @@ class SqlDataListOfCadetsWithTickListItems(
             if self.table_does_not_exist(TICKS_FOR_CADET_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s='%s' AND %s='%s'" % (
+            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d " % (
                 TICKS_FOR_CADET_TABLE,
                 TICK_VALUE,
                 new_tick.name,
@@ -89,7 +84,7 @@ class SqlDataListOfCadetsWithTickListItems(
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s="%s" AND %s="%s" ''' % (
+            cursor.execute('''SELECT * FROM %s WHERE %s=%d AND %s=%d ''' % (
                 TICKS_FOR_CADET_TABLE,
                 CADET_ID,
                 int(cadet_id),
@@ -164,7 +159,7 @@ class SqlDataListOfCadetsWithTickListItems(
                 return {}
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s="%s" ''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
                 TICK_SHEET_ITEM_ID,
                 TICK_VALUE,
                 TICKS_FOR_CADET_TABLE,
@@ -189,41 +184,33 @@ class SqlDataListOfCadetsWithTickListItems(
 
     @property
     def list_of_tick_sheet_items(self)-> ListOfTickSheetItems:
-        list_of_tick_sheet_items =getattr(self, "_list_of_tick_sheet_items", None)
-        if list_of_tick_sheet_items is None:
-            list_of_tick_sheet_items = self._list_of_tick_sheet_items = SqlDataListOfTickSheetItems(self.db_connection).read()
+        list_of_tick_sheet_items = self.object_store.get(self.object_store.data_api.data_list_of_tick_sheet_items.read)
 
         return list_of_tick_sheet_items
 
     @property
     def list_of_cadets_with_qualifications(self) -> ListOfCadetsWithIdsAndQualifications:
-        list_of_cadets_with_qualifications = getattr(self, "_list_of_cadets_with_qualifications", None)
-        if list_of_cadets_with_qualifications is None:
-            list_of_cadets_with_qualifications = self._list_of_cadets_with_qualifications = SqlListOfCadetsWithQualifications(self.db_connection).read()
+        list_of_cadets_with_qualifications = self.object_store.get(self.object_store.data_api.data_list_of_cadets_with_qualifications.read)
 
         return list_of_cadets_with_qualifications
 
     @property
     def list_of_substages(self) -> ListOfTickSubStages:
-        list_of_substages =getattr(self, "_list_of_substages", None)
-        if list_of_substages is None:
-            list_of_substages = self._list_of_substages = SqlDataListOfTickSubStages(self.db_connection).read()
+        list_of_substages = self.object_store.get(
+        self.object_store.data_api.data_list_of_tick_sub_stages.read
+    )
 
         return list_of_substages
 
     @property
     def list_of_qualifications(self) ->ListOfQualifications:
-        list_of_qualifications = getattr(self, "_list_of_qualifications", None)
-        if list_of_qualifications is None:
-            list_of_qualifications = self._list_of_qualifications = SqlDataListOfQualifications(self.db_connection).read()
+        list_of_qualifications = self.object_store.get(self.object_store.data_api.data_list_of_qualifications.read)
 
         return list_of_qualifications
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
-        list_of_cadets = getattr(self, "_list_of_cadets", None)
-        if list_of_cadets is None:
-            list_of_cadets = self._list_of_cadets = SqlDataListOfCadets(self.db_connection).read()
+        list_of_cadets = self.object_store.get(self.object_store.data_api.data_list_of_cadets.read)
 
         return list_of_cadets
 
@@ -235,7 +222,7 @@ class SqlDataListOfCadetsWithTickListItems(
                 return ListOfTickListItemsAndTicksForSpecificCadet.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s="%s" ''' % (
+            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
 
                 TICK_SHEET_ITEM_ID,
                 TICK_VALUE,
@@ -279,7 +266,7 @@ class SqlDataListOfCadetsWithTickListItems(
             if self.table_does_not_exist(TICKS_FOR_CADET_TABLE):
                 self.create_table()
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s'" % (TICKS_FOR_CADET_TABLE, CADET_ID, int(cadet_id)))
+            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (TICKS_FOR_CADET_TABLE, CADET_ID, int(cadet_id)))
 
             dict_of_ticks_this_item = list_of_cadets_with_tick_list_items[0].dict_of_ticks_with_items
 

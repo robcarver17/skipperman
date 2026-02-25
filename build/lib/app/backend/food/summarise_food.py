@@ -2,9 +2,7 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.backend.registration_data.cadet_registration_data import (
-    get_availability_dict_for_cadets_at_event,
-)
+from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_cadets_at_event
 from app.objects.cadets import Cadet
 from app.objects.composed.food_at_event import DictOfCadetsWithFoodRequirementsAtEvent
 from app.objects.volunteers import Volunteer
@@ -91,7 +89,7 @@ def summarise_food_data_by_day_for_cadets(
             object_store=object_store, event=event
         )
     )
-    availability_dict = get_availability_dict_for_cadets_at_event(
+    availability_dict = get_attendance_matrix_for_cadets_at_event(
         object_store=object_store, event=event
     )
 

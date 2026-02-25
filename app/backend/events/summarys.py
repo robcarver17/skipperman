@@ -1,20 +1,21 @@
 from typing import Dict, List, Callable
 
 import pandas as pd
+
+from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+from app.backend.groups.list_of_groups import get_list_of_groups
+from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
 from app.objects.cadets import ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_groups import (
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+     DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-    get_attendance_matrix_for_list_of_cadets_at_event,
-)
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
+from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
+from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
 from app.objects.composed.cadets_with_all_event_info_functions import (
     cadets_not_allocated_to_group_but_attending_on_day,
 )
@@ -22,21 +23,18 @@ from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group
-## FIXME REFACTOR
+
 
 def summarise_allocations_for_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-
+    registration_data =get_dict_of_cadets_with_registration_data(event=event, object_store=object_store)
     availability_dict = get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event
     )
-    dict_of_cadets_with_days_and_groups = (
-        cadets_at_event_data.dict_of_cadets_with_days_and_groups
-    )
-
-    groups = dict_of_cadets_with_days_and_groups.all_groups_at_event()
+    dict_of_cadets_with_days_and_groups = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
+    all_groups = get_list_of_groups((object_store))
+    groups = dict_of_cadets_with_days_and_groups.sorted_all_groups_at_event(all_groups)
     groups.remove_unallocated()
 
     df = summarise_generic_counts_for_event_over_days_returning_df(
@@ -44,11 +42,13 @@ def summarise_allocations_for_event(
         event=event,
         groups=groups,
         availability_dict=availability_dict,
-        list_of_ids_with_groups=dict_of_cadets_with_days_and_groups,
+        list_of_ids_with_groups=dict_of_cadets_with_days_and_groups, ## ignore warning
         include_total=False,  ## add with unallocated
     )
 
-    df = add_unallocated_row(cadets_at_event_data=cadets_at_event_data, df=df)
+    df = add_unallocated_row(dict_of_cadets_with_registration_data=registration_data,
+                dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups, df=df,
+                             event=event)
 
     df.loc["TOTAL"] = df.sum(axis=0, numeric_only=True)
 
@@ -58,7 +58,7 @@ def summarise_allocations_for_event(
 def get_relevant_cadets_for_group_on_day(
     group: Group,
     event: Event,
-    list_of_ids_with_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    list_of_ids_with_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
 ) -> Dict[Day, ListOfCadets]:
     result_dict = {}
     for day in event.days_in_event():
@@ -156,13 +156,16 @@ def available_on_day(
 
 
 def add_unallocated_row(
-    cadets_at_event_data: DictOfAllEventInfoForCadets, df: pd.DataFrame
+    dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+        dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+        event: Event,
+        df: pd.DataFrame
 ):
     count = {}
-    for day in cadets_at_event_data.event.days_in_event():
+    for day in event.days_in_event():
         list_of_cadets = cadets_not_allocated_to_group_but_attending_on_day(
-            dict_of_cadets_with_days_and_groups=cadets_at_event_data.dict_of_cadets_with_days_and_groups,
-            dict_of_cadets_with_registration_data=cadets_at_event_data.dict_of_cadets_with_registration_data,
+            dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
+            dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
             day=day,
         )
         count[day.name] = len(list_of_cadets)

@@ -1,9 +1,9 @@
 from typing import Union
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    load_list_of_patrol_boats_at_event,
-    update_patrol_boat_label_at_event,
+    get_list_of_patrol_boats_at_event,
 )
+from app.backend.patrol_boats.labels import update_patrol_boat_label_at_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -27,14 +27,13 @@ from app.backend.volunteers.skills import (
 from app.frontend.forms.swaps import is_ready_to_swap
 
 from app.backend.patrol_boats.changes import (
-    BoatDayVolunteer,
-    NO_ADDITION_TO_MAKE,
-    ListOfBoatDayVolunteer,
     add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts,
     add_named_boat_to_event_with_no_allocation,
     remove_patrol_boat_and_all_associated_volunteers_from_event,
     delete_volunteer_from_patrol_boat_on_day_at_event,
 )
+from app.objects.composed.volunteers_at_event_with_patrol_boats import BoatDayVolunteer, NO_ADDITION_TO_MAKE, \
+    ListOfBoatDayVolunteer
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
@@ -64,7 +63,7 @@ def update_if_delete_boat_button_pressed(
     print("Deleting %s" % patrol_boat_name)
     try:
         remove_patrol_boat_and_all_associated_volunteers_from_event(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             patrol_boat_name=patrol_boat_name,
         )
@@ -90,12 +89,12 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     )  ## must come last or will confuse role and skills
     save_warnings_from_table(interface)
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
 
 def update_boat_labels(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_boats_at_event = load_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
     for day in event.days_in_event():
@@ -116,7 +115,7 @@ def update_boat_labels_for_specific_boat_and_day(
         return
 
     update_patrol_boat_label_at_event(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         patrol_boat=patrol_boat,
         day=day,
@@ -135,7 +134,7 @@ def update_adding_volunteers_to_specific_boats_and_days(interface: abstractInter
 
     messages = (
         add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
-            object_store=interface.object_store,
+            interface=interface,
             list_of_volunteer_additions_to_boats=list_of_volunteer_additions_to_boats,
             event=event,
         )
@@ -219,13 +218,13 @@ def update_skills_checkbox_for_specific_volunteer(
             return
         else:
             add_boat_related_skill_for_volunteer(
-                object_store=interface.object_store, volunteer=volunteer
+                interface=interface, volunteer=volunteer
             )
             return
     else:
         if currently_has_boat_skill:
             remove_boat_related_skill_for_volunteer(
-                object_store=interface.object_store, volunteer=volunteer
+                interface=interface, volunteer=volunteer
             )
             return
         else:
@@ -276,11 +275,13 @@ def update_role_dropdown_for_volunteer_on_day(
         return
 
     update_role_and_group_at_event_for_volunteer_on_day(
-        object_store=interface.object_store,
+        interface=interface,
         event=volunteer_on_boat.event,
         volunteer=volunteer_on_boat.volunteer,
         day=day,
         new_role=role_selected,
+        allow_replacement=True
+
         ## do not pass group
     )
 
@@ -295,7 +296,7 @@ def update_adding_boat(interface: abstractInterface):
         if name_of_boat_added is MISSING_FROM_FORM:
             raise "Form value missing for boat"
         add_named_boat_to_event_with_no_allocation(
-            object_store=interface.object_store,
+            interface=interface,
             name_of_boat_added=name_of_boat_added,
             event=event,
         )
@@ -315,7 +316,7 @@ def update_if_delete_volunteer_button_pressed(
 
     try:
         delete_volunteer_from_patrol_boat_on_day_at_event(
-            object_store=interface.object_store,
+            interface=interface,
             event=event,
             day=day,
             volunteer=volunteer,

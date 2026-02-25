@@ -20,6 +20,15 @@ from app.objects.partners import (
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
 
+@dataclass
+class CadetWithDinghySailNumberBoatClassAndPartner:
+    cadet: Cadet
+    sail_number: str
+    boat_class_name: str
+    two_handed_partner_cadet_as_str: str
+    group_name: str
+    club_boat_name: str
+
 
 @dataclass
 class CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay:
@@ -130,3 +139,45 @@ def are_partners_equal(
         return partner == other_partner
     else:
         raise Exception
+
+
+def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
+    new_list: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+    existing_list: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+):
+    updated_list = ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay([])
+    for potentially_updated_cadet_at_event_with_info in new_list:
+        cadet_in_existing_list = existing_list.element_on_day_for_cadet(
+            cadet=potentially_updated_cadet_at_event_with_info.cadet,
+            day=potentially_updated_cadet_at_event_with_info.day,
+            default=missing_data,
+        )
+
+        already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
+            updated_list=updated_list,
+            potentially_updated_cadet_at_event_with_info=potentially_updated_cadet_at_event_with_info,
+        )
+
+        if already_in_a_changed_partnership:
+            continue
+
+        if cadet_in_existing_list is not missing_data:
+            if cadet_in_existing_list == potentially_updated_cadet_at_event_with_info:
+                ## no change
+                continue
+
+        ## changed,  includes missing data
+        updated_list.append(potentially_updated_cadet_at_event_with_info)
+
+    return updated_list
+
+
+def is_cadet_already_in_changed_partnership(
+    updated_list: ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+    potentially_updated_cadet_at_event_with_info: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+) -> bool:
+    list_of_changed_partners = updated_list.list_of_valid_partners()
+    cadet = potentially_updated_cadet_at_event_with_info.cadet
+    changed = cadet in list_of_changed_partners
+
+    return changed

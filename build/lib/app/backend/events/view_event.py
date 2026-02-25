@@ -1,27 +1,22 @@
 import pandas as pd
 
 from app.backend.registration_data.cadet_registration_data import (
-    DEPRECATE_get_dict_of_cadets_with_registration_data,
+    get_dict_of_cadets_with_registration_data, get_list_of_active_cadets_at_event
 )
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_raw_mapped_registration_data,
 )
 from app.data_access.configuration.field_list_groups import MAX_CONFIGURABLE_VOLUNTEERS
 from app.objects.composed.cadets_at_event_with_registration_data import (
-    DEPRECATE_DictOfCadetsWithRegistrationData,
+    DictOfCadetsWithRegistrationData,
 )
 from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
 
-
-## FIXME REFACTOR
 
 def identify_birthdays(object_store: ObjectStore, event: Event) -> list:
-    cadets_at_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    active_cadets = cadets_at_event_data.list_of_cadets
+
+    active_cadets = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
     dates_in_event = event.dates_in_event()
 
     matching_cadets = []
@@ -77,7 +72,7 @@ def summarise_registrations_for_event(
         - list_of_identified_cadets.count_of_cadets_in_rows()
     )
 
-    cadets_at_event = DEPRECATE_get_dict_of_cadets_with_registration_data(
+    cadets_at_event = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
     summary_data["(G) Cadets in event data (including cancelled)"] = len(
@@ -94,7 +89,7 @@ def summarise_registrations_for_event(
 
 
 def summarise_status(
-    cadets_with_registration_data_at_event: DEPRECATE_DictOfCadetsWithRegistrationData,
+    cadets_with_registration_data_at_event: DictOfCadetsWithRegistrationData,
 ) -> dict:
     all_status = {}
     for cadet_data in list(cadets_with_registration_data_at_event.values()):

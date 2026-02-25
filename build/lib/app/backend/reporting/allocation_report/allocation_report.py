@@ -3,6 +3,7 @@ from typing import Dict
 
 import pandas as pd
 
+from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
 from app.data_access.store.object_store import ObjectStore
 from app.objects.utilities.exceptions import missing_data
 from app.objects.events import Event
@@ -18,11 +19,12 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 
 from app.backend.groups.list_of_groups import get_list_of_groups
 
-from app.backend.club_boats.people_with_club_dinghies_at_event import (
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
      get_dict_of_cadets_and_club_dinghies_at_event,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent, DictOfPeopleAndClubDinghiesAtEvent,
+
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 
@@ -85,9 +87,6 @@ def add_club_boat_asterix_to_cadet_with_group_on_day(
         cadet_with_group.cadet = cadet_with_group.cadet.add_asterix_to_name()
 
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-)
 
 
 def get_dict_of_df_for_reporting_allocations_with_flags(
@@ -97,10 +96,7 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True,
 ) -> Dict[str, pd.DataFrame]:
-    all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    group_allocations_data = (
-        all_event_data.dict_of_cadets_with_groups_for_all_cadets_in_data()
-    )
+    group_allocations_data = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
     dict_of_df = {}
     for day in event.days_in_event():
         list_of_cadets_with_groups = (

@@ -7,9 +7,8 @@ from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day,
-    get_patrol_boat_label_at_event_on_day,
-    get_list_of_unique_labels,
 )
+from app.backend.patrol_boats.labels import get_patrol_boat_label_at_event_on_day, get_list_of_unique_labels
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
 )
@@ -227,7 +226,7 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     process_all_warnings_for_patrol_boats(
         interface=interface, event=event
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
     all_warnings = get_all_saved_warnings_for_patrol_boats(
         object_store=interface.object_store, event=event
     )

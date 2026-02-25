@@ -1,10 +1,9 @@
 
 from app.data_access.sql.generic_sql_data import GenericSqlData, date2int, bool2int, int2date, int2bool
 from app.data_access.sql.shared_column_names import *
-from app.data_access.sql.volunteers import SqlDataListOfVolunteers
 from app.objects.composed.notes_with_volunteers import ListOfNotesWithVolunteers, NoteWithVolunteer
 from app.objects.notes import ListOfNotes, Note
-from app.objects.volunteers import Volunteer, ListOfVolunteers
+from app.objects.volunteers import Volunteer
 
 NOTES_TABLE = "SM_notes_table"
 INDEX_NOTES_TABLE = "index_SM_notes_table"
@@ -31,10 +30,8 @@ class SqlDataListOfNotes( GenericSqlData):
         return self.list_of_volunteers.volunteer_with_id(volunteer_id)
 
     @property
-    def list_of_volunteers(self) -> ListOfVolunteers:
-        list_of_volunteers = getattr(self, "_list_of_volunteers", None)
-        if list_of_volunteers is None:
-            self._list_of_volunteers = list_of_volunteers = SqlDataListOfVolunteers(self.db_connection).read()
+    def list_of_volunteers(self):
+        list_of_volunteers =self.object_store.get(self.object_store.data_api.data_list_of_volunteers.read)
 
         return list_of_volunteers
 
@@ -84,7 +81,7 @@ class SqlDataListOfNotes( GenericSqlData):
                 if self.table_does_not_exist(NOTES_TABLE):
                     self.create_table()
 
-                self.insert_note_and_do_not_commit(note)
+                self._insert_note_without_commit_or_checks(note)
 
                 self.conn.commit()
             except Exception as e1:
@@ -161,7 +158,7 @@ class SqlDataListOfNotes( GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (NOTES_TABLE))
 
             for note in list_of_notes:
-                self.insert_note_and_do_not_commit(note)
+                self._insert_note_without_commit_or_checks(note)
 
             self.conn.commit()
         except Exception as e1:
@@ -169,7 +166,7 @@ class SqlDataListOfNotes( GenericSqlData):
         finally:
             self.close()
 
-    def insert_note_and_do_not_commit(self, note: Note):
+    def _insert_note_without_commit_or_checks(self, note: Note):
         text = str(note.text)
         author_volunteer_id = int(note.author_volunteer_id)
         created_datetime = date2int(note.created_datetime)

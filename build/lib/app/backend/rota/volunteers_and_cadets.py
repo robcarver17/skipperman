@@ -1,11 +1,10 @@
-from typing import List
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.volunteers import Volunteer
 
 from app.objects.events import Event
-from app.objects.groups import Group, ListOfGroups
+from app.objects.groups import ListOfGroups
 
 from app.backend.volunteers.connected_cadets import (
     get_list_of_cadets_associated_with_volunteer,

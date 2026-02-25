@@ -17,7 +17,7 @@ from app.objects.day_selectors import DaySelector, Day
 @dataclass
 class RegistrationDataForVolunteerAtEvent:
     availablity: DaySelector
-    list_of_associated_cadets: ListOfCadets
+    list_of_associated_cadets: ListOfCadets ## backward compatability not used
     self_declared_status: str = ""  ## info only
     preferred_duties: str = ""  ## information only
     same_or_different: str = ""  ## information only
@@ -37,13 +37,11 @@ class RegistrationDataForVolunteerAtEvent:
     def from_volunteer_at_event_with_id(
         cls,
         volunteer_at_event_with_id: VolunteerAtEventWithId,
-        list_of_cadets: ListOfCadets,
+
     ):
         return cls(
             availablity=volunteer_at_event_with_id.availablity,
-            list_of_associated_cadets=list_of_cadets.subset_from_list_of_ids_retaining_order(
-                list_of_ids=volunteer_at_event_with_id.list_of_associated_cadet_id,
-            ),
+            list_of_associated_cadets=ListOfCadets([]),
             preferred_duties=volunteer_at_event_with_id.preferred_duties,
             same_or_different=volunteer_at_event_with_id.same_or_different,
             any_other_information=volunteer_at_event_with_id.any_other_information,
@@ -55,15 +53,6 @@ class RegistrationDataForVolunteerAtEvent:
 class DictOfRegistrationDataForVolunteerAtEvent(
     Dict[Volunteer, RegistrationDataForVolunteerAtEvent]
 ):
-    def __init__(
-        self,
-        raw_dict: Dict[Volunteer, RegistrationDataForVolunteerAtEvent],
-        event: Event,
-        list_of_volunteers_at_event_with_id: ListOfVolunteersAtEventWithId,
-    ):
-        super().__init__(raw_dict)
-        self._event = event
-        self._list_of_volunteers_at_event_with_id = list_of_volunteers_at_event_with_id
 
     def add_new_volunteer(
         self,

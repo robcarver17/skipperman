@@ -1,6 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
-from typing import Dict, List, Union
+from typing import Dict, List
 
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
@@ -14,43 +14,38 @@ from app.objects.composed.cadets_with_all_event_info_functions import (
 from app.objects.day_selectors import DaySelector, Day
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
-from app.objects.food import no_food_requirements
 from app.objects.groups import Group, unallocated_group
 
 from app.objects.registration_status import RegistrationStatus
 
-from app.objects.events import Event, ListOfEvents
+from app.objects.events import Event
 
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfDaysBoatClassAndPartners,
-    DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
+     DictOfCadetsAndBoatClassAndPartners,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfDaysAndClubDinghiesAtEventForPerson,
-    DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
+     DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
     CadetRegistrationData,
-    DEPRECATE_DictOfCadetsWithRegistrationData,
+    DictOfCadetsWithRegistrationData,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DaysAndGroups,
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 
 from app.objects.composed.clothing_at_event import (
-    DEPRECATE_DictOfCadetsWithClothingAtEvent,
+    DEPRECATE_DictOfCadetsWithClothingAtEvent, DictOfCadetsWithClothingAtEvent,
 )
 from app.objects.clothing import ClothingAtEvent, no_clothing_requirements
-from app.objects.composed.food_at_event import (
-    DictOfCadetsWithFoodRequirementsAtEvent,
-
-)
 
 
 @dataclass
@@ -59,7 +54,6 @@ class AllEventInfoForCadet:
     days_and_groups: DaysAndGroups
     days_and_club_dinghies: DictOfDaysAndClubDinghiesAtEventForPerson
     days_and_boat_class: DictOfDaysBoatClassAndPartners
-    clothing: ClothingAtEvent
 
     def is_active_registration(self):
         return self.registration_data.status.is_active
@@ -72,11 +66,10 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def __init__(
         self,
         raw_dict: Dict[Cadet, AllEventInfoForCadet],
-        dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
-        dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
-        dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-        dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
-        dict_of_cadets_with_clothing_at_event: DEPRECATE_DictOfCadetsWithClothingAtEvent,
+        dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
+        dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
+        dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+        dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
         event: Event,
     ):
         super().__init__(raw_dict)
@@ -92,9 +85,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
         self._event = event
-        self._dict_of_cadets_with_clothing_at_event = (
-            dict_of_cadets_with_clothing_at_event
-        )
 
     def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
         messages = []
@@ -107,7 +97,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         #messages += self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
         #    cadet
         #)
-        messages += self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(
+        messages += self.dict_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event(
             cadet
         )
         messages += (
@@ -335,13 +325,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return [message]
 
-    def update_registration_data_for_existing_cadet(
-        self, cadet: Cadet, row_in_registration_data: RowInRegistrationData
-    ):
-        self.dict_of_cadets_with_registration_data.update_registration_data_for_existing_cadet(
-            cadet=cadet, row_in_registration_data=row_in_registration_data
-        )
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
     def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
         self,
@@ -367,7 +350,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event(cadet=cadet)
 
-        self.dict_of_cadets_with_clothing_at_event.remove_clothing_for_cadet_at_event(
+        self.dict_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event(
             cadet=cadet
         )
 
@@ -432,7 +415,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_and_club_dinghies_at_event
 
     @property
-    def dict_of_cadets_with_registration_data(self) -> DEPRECATE_DictOfCadetsWithRegistrationData:
+    def dict_of_cadets_with_registration_data(self) -> DictOfCadetsWithRegistrationData:
         return self._dict_of_cadets_with_registration_data
 
     @property
@@ -441,9 +424,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
         return self._dict_of_cadets_with_days_and_groups
 
-    @property
-    def dict_of_cadets_with_clothing_at_event(self) -> DEPRECATE_DictOfCadetsWithClothingAtEvent:
-        return self._dict_of_cadets_with_clothing_at_event
 
 
     @property
@@ -455,66 +435,3 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return ListOfCadets(list(self.keys()))
 
 
-def compose_dict_of_all_event_info_for_cadet(
-    event_id: str,
-    list_of_events: ListOfEvents,
-    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
-    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
-    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
-    dict_of_cadets_with_clothing_at_event: DEPRECATE_DictOfCadetsWithClothingAtEvent,
-
-) -> DictOfAllEventInfoForCadets:
-    event = list_of_events.event_with_id(event_id)
-    raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
-        dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
-        dict_of_cadets_and_club_dinghies_at_event=dict_of_cadets_and_club_dinghies_at_event,
-        dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
-        dict_of_cadets_and_boat_class_and_partners=dict_of_cadets_and_boat_class_and_partners,
-        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
-    )
-    return DictOfAllEventInfoForCadets(
-        raw_dict=raw_dict,
-        dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,
-        dict_of_cadets_and_club_dinghies_at_event=dict_of_cadets_and_club_dinghies_at_event,
-        dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
-        dict_of_cadets_and_boat_class_and_partners=dict_of_cadets_and_boat_class_and_partners,
-        dict_of_cadets_with_clothing_at_event=dict_of_cadets_with_clothing_at_event,
-        event=event,
-    )
-
-
-def compose_raw_dict_of_all_event_info_for_cadet(
-    dict_of_cadets_and_boat_class_and_partners: DEPRECATE_DictOfCadetsAndBoatClassAndPartners,
-    dict_of_cadets_and_club_dinghies_at_event: DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent,
-    dict_of_cadets_with_registration_data: DEPRECATE_DictOfCadetsWithRegistrationData,
-    dict_of_cadets_with_days_and_groups: DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
-    dict_of_cadets_with_clothing_at_event: DEPRECATE_DictOfCadetsWithClothingAtEvent,
-) -> Dict[Cadet, AllEventInfoForCadet]:
-    list_of_all_cadets_with_event_data = (
-        dict_of_cadets_with_registration_data.list_of_active_cadets()
-    )
-
-    return dict(
-        [
-            (
-                cadet,
-                AllEventInfoForCadet(
-                    registration_data=dict_of_cadets_with_registration_data[cadet],
-                    days_and_boat_class=dict_of_cadets_and_boat_class_and_partners.get(
-                        cadet, DictOfDaysBoatClassAndPartners()
-                    ),
-                    days_and_groups=dict_of_cadets_with_days_and_groups.get(
-                        cadet, DaysAndGroups()
-                    ),
-                    days_and_club_dinghies=dict_of_cadets_and_club_dinghies_at_event.get(
-                        cadet, DictOfDaysAndClubDinghiesAtEventForPerson()
-                    ),
-                    clothing=dict_of_cadets_with_clothing_at_event.get(
-                        cadet, no_clothing_requirements
-                    ),
-                ),
-            )
-            for cadet in list_of_all_cadets_with_event_data
-        ]
-    )

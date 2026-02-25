@@ -32,7 +32,7 @@ def delete_cadet(interface: abstractInterface, cadet: Cadet, areyousure=False):
         interface.log_error("error %s when deleting %s" % (str(e), cadet))
 
 def get_matching_cadet(object_store: ObjectStore, cadet: Cadet) -> Cadet:
-    return object_store.get(object_store.data_api.data_list_of_cadets.get_matching_cadet, cadet=cadet)
+    return object_store.data_api.data_list_of_cadets.get_matching_cadet(cadet=cadet) ## used for iterations, safer not to cache or used cache
 
 
 def are_there_no_similar_cadets(
@@ -80,9 +80,8 @@ def get_cadet_from_list_of_cadets_given_name_of_cadet(
 
 
 def get_cadet_from_id(object_store: ObjectStore, cadet_id: str) -> Cadet:
-    cadet =  object_store.get(object_store.data_api.data_list_of_cadets.get_cadet_from_id, cadet_id = cadet_id)
-
-    return cadet
+    list_of_cadets =get_list_of_cadets(object_store)
+    return list_of_cadets.cadet_with_id(cadet_id)
 
 def get_list_of_cadets(object_store: ObjectStore) -> ListOfCadets:
     return get_list_of_cadets_sorted_by_surname(object_store)
@@ -113,7 +112,7 @@ def get_sorted_list_of_cadets(object_store: ObjectStore, sort_by: str = arg_not_
         raise Exception("Sort order %s not known" % sort_by)
 
 
-def update_list_of_cadets(
+def bulk_update_of_list_of_cadets(
     interface: abstractInterface, updated_list_of_cadets: ListOfCadets
 ):
     interface.update(interface.object_store.data_api.data_list_of_cadets.write, list_of_cadets=updated_list_of_cadets)

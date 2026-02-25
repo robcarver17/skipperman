@@ -3,7 +3,7 @@ from typing import List
 from app.backend.groups.group_notes_at_event import (
     update_group_notes_at_event_for_group,
 )
-from app.backend.rota.volunteer_rota_summary import get_sorted_list_of_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import get_sorted_list_of_groups_at_event
 from app.backend.rota.volunteer_summary_of_instructors import (
     get_summary_table_of_instructors_and_groups_for_event,
     get_group_notes_field_value,
@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_lines import DetailListOfLines, ListO
 from app.backend.rota.volunteer_rota_targets import (
     get_list_of_actual_and_targets_for_roles_at_event,
     RowInTableWithActualAndTargetsForRole,
-    save_new_volunteer_target,
+    update_volunteer_target,
 )
 
 
@@ -142,8 +142,8 @@ def save_volunteer_targets_for_specific_role(
     if new_target is MISSING_FROM_FORM:
         return
 
-    save_new_volunteer_target(
-        object_store=interface.object_store,
+    update_volunteer_target(
+        interface=interface,
         event=event,
         role=role,
         target=new_target,

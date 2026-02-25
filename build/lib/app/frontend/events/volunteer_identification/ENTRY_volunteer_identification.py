@@ -345,7 +345,7 @@ def action_when_permanently_skipping_volunteer(interface: abstractInterface) -> 
     )
 
     mark_volunteer_as_skipped_permanently(
-        object_store=interface.object_store,
+        interface=interface,
         event=event,
         row_id=current_row_id,
         volunteer_index=int(current_index),
@@ -365,7 +365,7 @@ def action_when_temporarily_skipping_volunteer(interface: abstractInterface) -> 
     )
 
     mark_volunteer_as_skipped_for_now(
-        object_store=interface.object_store,
+        interface=interface ,
         event=event,
         row_id=current_row_id,
         volunteer_index=int(current_index),
@@ -389,7 +389,7 @@ def process_identification_when_volunteer_matched(
     
     try:
         add_identified_volunteer(
-            object_store=interface.object_store,
+            interface=interface,
             volunteer=volunteer,
             event=event,
             row_id=current_row_id,
@@ -401,7 +401,7 @@ def process_identification_when_volunteer_matched(
             % (volunteer.name, str(e))
         )
 
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return next_volunteer_in_current_row(interface)
 

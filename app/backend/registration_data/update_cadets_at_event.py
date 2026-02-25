@@ -1,18 +1,10 @@
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
-    update_dict_of_all_event_info_for_cadets,
-)
-from app.data_access.store.object_store import ObjectStore
+
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
 
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
-from app.objects.registration_data import RowInRegistrationData
-from app.backend.registration_data.cadet_registration_data import (
-    get_list_of_cadets_with_id_and_registration_data_at_event,
-    update_list_of_cadets_with_id_and_registration_data_at_event,
-)
 
 
 def no_important_difference_between_cadets_at_event(
@@ -106,61 +98,48 @@ def new_status_and_status_message(
 
 
 def replace_existing_cadet_at_event_where_original_cadet_was_inactive(
-    object_store: ObjectStore, event: Event, new_cadet_at_event: CadetWithIdAtEvent
+    interface: abstractInterface, event: Event, new_cadet_at_event: CadetWithIdAtEvent
 ):
-    list_of_cadets_with_id_at_event = (
-        get_list_of_cadets_with_id_and_registration_data_at_event(
-            object_store=object_store, event=event
-        )
-    )
-    list_of_cadets_with_id_at_event.replace_existing_cadet_at_event(
+    interface.update(
+        interface.object_store.data_api.data_cadets_at_event.replace_existing_cadet_at_event_where_original_cadet_was_inactive,
+        event_id=event.id,
         new_cadet_at_event=new_cadet_at_event
-    )
-    update_list_of_cadets_with_id_and_registration_data_at_event(
-        object_store=object_store,
-        event=event,
-        list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
     )
 
 
 def update_notes_for_existing_cadet_at_event(
-    object_store: ObjectStore, event: Event, cadet: Cadet, new_notes: str
+    interface: abstractInterface, event: Event, cadet: Cadet, new_notes: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    dict_of_all_event_data.update_notes_for_existing_cadet_at_event(
-        cadet=cadet, notes=new_notes
-    )
-    update_dict_of_all_event_info_for_cadets(
-        object_store=object_store,
-        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
+    interface.update(
+        interface.object_store.data_api.data_cadets_at_event.update_notes_for_existing_cadet_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        new_notes=new_notes
     )
 
 
 def update_health_for_existing_cadet_at_event(
-    object_store: ObjectStore, event: Event, cadet: Cadet, new_health: str
+        interface: abstractInterface, event: Event, cadet: Cadet, new_health: str
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    dict_of_all_event_data.update_health_for_existing_cadet_at_event(
-        cadet=cadet, new_health=new_health
+    interface.update(
+        interface.object_store.data_api.data_cadets_at_event.update_health_for_existing_cadet_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        new_health=new_health
     )
-    update_dict_of_all_event_info_for_cadets(
-        object_store=object_store,
-        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
-    )
-
 
 def update_data_row_for_existing_cadet_at_event(
-    object_store: ObjectStore,
+    interface: abstractInterface,
     event: Event,
     cadet: Cadet,
     column_name: str,
     new_value_for_column,
 ):
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    dict_of_all_event_data.update_data_row_for_existing_cadet_at_event(
-        cadet=cadet, column_name=column_name, new_value_for_column=new_value_for_column
+    interface.update(
+        interface.object_store.data_api.data_cadets_at_event.update_row_in_registration_data_for_existing_cadet_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        column_name=column_name,
+        new_value_for_colum=new_value_for_column
     )
-    update_dict_of_all_event_info_for_cadets(
-        object_store=object_store,
-        dict_of_all_event_info_for_cadets=dict_of_all_event_data,
-    )
+

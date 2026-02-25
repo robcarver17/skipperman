@@ -20,20 +20,36 @@ from app.objects.cadet_with_id_at_event import (
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets
-from app.objects.day_selectors import DaySelector, Day
+from app.objects.day_selectors import DaySelector, Day, empty_day_selector
 from app.objects.events import Event, ListOfEvents
 from app.objects.registration_data import RowInRegistrationData
-from app.objects.registration_status import RegistrationStatus
+from app.objects.registration_status import RegistrationStatus, empty_status
 
 
 @dataclass
 class CadetRegistrationData:
-    event: Event
     availability: DaySelector
     status: RegistrationStatus
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
+
+
+    def availability_empty_if_inactive(self):
+        if self.status.is_active:
+            return self.availability
+        else:
+            return empty_day_selector
+
+    @classmethod
+    def create_empty(cls):
+        return cls(
+            availability=empty_day_selector,
+            status=empty_status,
+            data_in_row=RowInRegistrationData.create_empty(),
+            notes='',
+            health=''
+        )
 
     def update_column_in_data(self, column_name: str, new_value_for_column):
         self.data_in_row[column_name] = new_value_for_column
@@ -73,7 +89,6 @@ class CadetRegistrationData:
         )
 
         return cls(
-            event=event,
             availability=availability,
             status=cadet_with_id_at_event.status,
             data_in_row=cadet_with_id_at_event.data_in_row,
@@ -91,92 +106,9 @@ class CadetRegistrationData:
     def update_health(self, new_health: str):
         self.health = new_health
 
+
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
-    def availability_dict(self) -> Dict[Cadet, DaySelector]:
-        return dict(
-            [
-                (cadet, self.registration_data_for_cadet(cadet).availability)
-                for cadet in self.list_of_cadets()
-            ]
-        )
 
-    def list_of_registration_fields(self):
-        all_fields = [reg_data.data_fields for reg_data in list(self.values())]
-        all_fields = flatten(all_fields)
-        list_of_fields = list(set(all_fields))
-
-        return get_ordered_list_of_columns_excluding_special_fields(list_of_fields)
-
-    def get_emergency_contact_for_list_of_cadets_at_event(
-        self, list_of_cadets: ListOfCadets
-    ) -> List[str]:
-        list_of_contacts = []
-        for cadet in list_of_cadets:
-            reg_data = self.registration_data_for_cadet(cadet, default=missing_data)
-            if reg_data is missing_data:
-                list_of_contacts.append("")
-            else:
-                list_of_contacts.append(reg_data.emergency_contact)
-
-        return list_of_contacts
-
-    def get_health_notes_for_list_of_cadets_at_event(
-        self, list_of_cadets: ListOfCadets
-    ) -> List[str]:
-        list_of_contacts = []
-        for cadet in list_of_cadets:
-            reg_data = self.registration_data_for_cadet(cadet, default=missing_data)
-            if reg_data is missing_data:
-                list_of_contacts.append("")
-            else:
-                list_of_contacts.append(reg_data.health)
-
-        return list_of_contacts
-
-    def registration_data_for_cadet(
-        self, cadet: Cadet, default=arg_not_passed
-    ) -> CadetRegistrationData:
-        reg_data = self.get(cadet, missing_data)
-        if reg_data is missing_data:
-            if default is arg_not_passed:
-                raise MissingData
-            else:
-                return default
-
-        return reg_data
-
-    def list_of_active_cadets(self) -> ListOfCadets:
-        return ListOfCadets(
-            [
-                cadet
-                for cadet, registration_data in self.items()
-                if registration_data.active
-            ]
-        )
-
-    def list_of_cadets(self):
-        return ListOfCadets(list(self.keys()))
-
-class DEPRECATE_DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
-    def __init__(
-        self,
-        raw_list: Dict[Cadet, CadetRegistrationData],
-        list_of_cadets_with_id_at_event: ListOfCadetsWithIDAtEvent,
-    ):
-        super().__init__(raw_list)
-        self._list_of_cadets_with_id_at_event = list_of_cadets_with_id_at_event
-
-    def update_registration_data_for_existing_cadet(
-        self, cadet: Cadet, row_in_registration_data: RowInRegistrationData
-    ):
-        registration_data_for_cadet = self.registration_data_for_cadet(cadet)
-        registration_data_for_cadet.data_in_row = row_in_registration_data
-        self[cadet] = registration_data_for_cadet
-
-        self.list_of_cadets_with_id_at_event.update_all_data_in_row_for_existing_cadet_at_event(
-            cadet_id=cadet.id,
-            data_row=row_in_registration_data.as_dict_excluding_special_keys(),
-        )
 
     def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
         try:
@@ -228,7 +160,7 @@ class DEPRECATE_DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationDa
     def availability_dict(self) -> Dict[Cadet, DaySelector]:
         return dict(
             [
-                (cadet, self.registration_data_for_cadet(cadet).availability)
+                (cadet, self.registration_data_for_cadet(cadet).availability_empty_if_inactive())
                 for cadet in self.list_of_cadets()
             ]
         )
@@ -316,7 +248,7 @@ class DEPRECATE_DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationDa
         reg_data = self.get(cadet, missing_data)
         if reg_data is missing_data:
             if default is arg_not_passed:
-                raise MissingData
+                return CadetRegistrationData.create_empty()
             else:
                 return default
 
@@ -336,53 +268,14 @@ class DEPRECATE_DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationDa
 
     def sort_by(
         self, sort_by: str = arg_not_passed
-    ) -> "DEPRECATE_DictOfCadetsWithRegistrationData":
+    ) -> "DictOfCadetsWithRegistrationData":
         list_of_cadets = self.list_of_cadets()
         sorted_list_of_cadets = sort_a_list_of_cadets(list_of_cadets, sort_by=sort_by)
 
-        return DEPRECATE_DictOfCadetsWithRegistrationData(
-            dict([(cadet, self[cadet]) for cadet in sorted_list_of_cadets]),
-            list_of_cadets_with_id_at_event=self.list_of_cadets_with_id_at_event,
+        return DictOfCadetsWithRegistrationData(
+            dict([(cadet, self[cadet]) for cadet in sorted_list_of_cadets])
         )
 
-    @property
-    def list_of_cadets_with_id_at_event(self) -> ListOfCadetsWithIDAtEvent:
-        return self._list_of_cadets_with_id_at_event
-
-
-def compose_dict_of_cadets_with_event_data(
-    list_of_cadets: ListOfCadets,
-    list_of_events: ListOfEvents,
-    event_id: str,
-    list_of_cadets_with_id_at_event: ListOfCadetsWithIDAtEvent,
-) -> DEPRECATE_DictOfCadetsWithRegistrationData:
-    event = list_of_events.event_with_id(event_id)
-    raw_dict = compose_raw_dict_of_cadets_with_event_data(
-        event=event,
-        list_of_cadets=list_of_cadets,
-        list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event,
-    )
-    return DEPRECATE_DictOfCadetsWithRegistrationData(
-        raw_dict, list_of_cadets_with_id_at_event=list_of_cadets_with_id_at_event
-    )
-
-
-def compose_raw_dict_of_cadets_with_event_data(
-    event: Event,
-    list_of_cadets: ListOfCadets,
-    list_of_cadets_with_id_at_event: ListOfCadetsWithIDAtEvent,
-) -> Dict[Cadet, CadetRegistrationData]:
-    return dict(
-        [
-            (
-                list_of_cadets.cadet_with_id(cadet_with_id_at_event.cadet_id),
-                CadetRegistrationData.from_cadet_with_id_at_event(
-                    cadet_with_id_at_event=cadet_with_id_at_event, event=event
-                ),
-            )
-            for cadet_with_id_at_event in list_of_cadets_with_id_at_event
-        ]
-    )
 
 
 def get_ordered_list_of_columns_excluding_special_fields(

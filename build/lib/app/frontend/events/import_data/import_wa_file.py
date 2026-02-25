@@ -55,7 +55,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     process_uploaded_wa_event_file(
         filename=filename, event=event, interface=interface
     )
-    interface.DEPRECATE_flush_and_clear()
+    interface.clear()
 
     return import_controller_form(interface)
 

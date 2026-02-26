@@ -121,7 +121,7 @@ def get_row_for_cadet_in_ticksheet(
     already_qualified = row_in_ticksheet_data.already_qualified
     first_cell_in_row = get_cadet_cell_at_start_of_row(
         interface=interface,
-        qualification=row_in_ticksheet_data._qualification,
+        qualification=row_in_ticksheet_data.qualification,
         already_qualified=already_qualified,
         cadet=cadet,
     )

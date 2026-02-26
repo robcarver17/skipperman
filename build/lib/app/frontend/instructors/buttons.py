@@ -1,22 +1,11 @@
-from typing import List, Tuple, Union
+from typing import  Tuple, Union
 
-from app.backend.qualifications_and_ticks.ticksheets import (
-    get_ticksheet_data_for_cadets_at_event_in_group_with_qualification,
-)
-
-from app.frontend.shared.events_state import get_event_from_state
-from app.frontend.shared.cadet_state import (
-    update_state_for_specific_cadet_id,
-    update_state_for_specific_cadet,
-)
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
     get_edit_state_of_ticksheet,
     EDIT_DROPDOWN_STATE,
     NO_EDIT_STATE,
-    get_group_from_state,
-    get_qualification_from_state,
     return_true_if_a_cadet_id_been_set,
 )
 from app.frontend.instructors.ticksheet_table_elements import (
@@ -35,7 +24,6 @@ from app.objects.ticks import (
 from app.objects.substages import TickSheetItem
 from app.frontend.shared.buttons import (
     get_button_value_for_cadet_selection,
-    cadet_from_button_pressed,
     get_button_value_given_type_and_attributes,
     get_attributes_from_button_pressed_of_known_type,
     is_button_of_type,

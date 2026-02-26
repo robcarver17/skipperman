@@ -54,7 +54,7 @@ from app.objects.cadets import Cadet
 from app.objects.event_warnings import (
     VOLUNTEER_IDENTITY,
 )
-from app.data_access.configuration.fixed import MEDIUM_PRIORITY, HIGH_PRIORITY
+from app.data_access.configuration.fixed import  HIGH_PRIORITY
 
 from app.objects.utilities.exceptions import NoMoreData, arg_not_passed, missing_data
 from app.objects.relevant_information_for_volunteers import (
@@ -76,11 +76,11 @@ def begin_volunteer_identification_process(
 
     return process_volunteer_on_next_row_of_event_data(interface)
 
+
 def post_volunteer_identification_process(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
     raise Exception("Shouldn't be called")
-
 
 
 def process_volunteer_on_next_row_of_event_data(
@@ -235,8 +235,9 @@ def add_passed_volunteer_if_very_similar_or_display_form_if_not(
             "Volunteer %s not matched with single similar volunteer, going to form"
             % str(volunteer)
         )
-        return interface.get_new_form_given_function(display_form_volunteer_identification)
-
+        return interface.get_new_form_given_function(
+            display_form_volunteer_identification
+        )
 
 
 def log_very_similar_volunteer(
@@ -261,12 +262,9 @@ def log_very_similar_volunteer(
     )  ## warning will sit on system until cleared
 
 
-
-
 def display_form_volunteer_identification(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-
     relevant_information = get_relevant_information_for_current_volunteer(interface)
     volunteer = get_volunteer_from_relevant_information(relevant_information)
 
@@ -281,7 +279,6 @@ def display_form_volunteer_identification(
         cadet=cadet_in_row,
         parameters=parameters,
     )
-
 
 
 def get_form_parameters(
@@ -365,7 +362,7 @@ def action_when_temporarily_skipping_volunteer(interface: abstractInterface) -> 
     )
 
     mark_volunteer_as_skipped_for_now(
-        interface=interface ,
+        interface=interface,
         event=event,
         row_id=current_row_id,
         volunteer_index=int(current_index),
@@ -386,7 +383,7 @@ def process_identification_when_volunteer_matched(
         "Adding volunteer %s as identified for event %s, row_id %s, volunteer index %d"
         % (str(volunteer), str(event), current_row_id, current_index)
     )
-    
+
     try:
         add_identified_volunteer(
             interface=interface,

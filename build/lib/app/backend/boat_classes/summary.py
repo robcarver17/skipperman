@@ -7,14 +7,18 @@ from app.objects.cadets import Cadet
 
 from app.objects.boat_classes import BoatClass
 
-from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.backend.events.summarys import (
     summarise_generic_counts_for_event_over_days_returning_df,
 )
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import DictOfCadetsAndBoatClassAndPartners
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
+    DictOfCadetsAndBoatClassAndPartners,
+)
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 
@@ -32,8 +36,8 @@ def summarise_class_attendance_for_event(
         )
     )
     list_of_boat_classes = get_list_of_boat_classes(object_store)
-    list_of_boat_classes_at_event = (
-        dict_of_cadets_and_boat_classes_and_partners_at_events.unique_sorted_list_of_boat_classes_at_event(list_of_boat_classes)
+    list_of_boat_classes_at_event = dict_of_cadets_and_boat_classes_and_partners_at_events.unique_sorted_list_of_boat_classes_at_event(
+        list_of_boat_classes
     )
     row_names = list_of_boat_classes_at_event.list_of_names()
     availability_dict = get_attendance_matrix_for_list_of_cadets_at_event(

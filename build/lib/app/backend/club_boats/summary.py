@@ -3,11 +3,14 @@ from typing import Dict, List
 import pandas as pd
 
 from app.backend.club_boats.list_of_club_dinghies import get_list_of_club_dinghies
-from app.backend.registration_data.volunteer_registration_data import \
-    get_attendance_matrix_for_list_of_volunteers_at_event
+from app.backend.registration_data.volunteer_registration_data import (
+    get_attendance_matrix_for_list_of_volunteers_at_event,
+)
 from app.objects.cadets import Cadet
 
-from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -19,11 +22,15 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
- DictOfPeopleAndClubDinghiesAtEvent,
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import      get_dict_of_cadets_and_club_dinghies_at_event
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
+    get_dict_of_cadets_and_club_dinghies_at_event,
+)
 
-from app.backend.club_boats.volunteer_with_club_dinghies import    get_dict_of_volunteers_and_club_dinghies_at_event
+from app.backend.club_boats.volunteer_with_club_dinghies import (
+    get_dict_of_volunteers_and_club_dinghies_at_event,
+)
 from app.objects.volunteers import Volunteer
 
 
@@ -50,8 +57,8 @@ def summarise_club_boat_allocations_for_cadets_at_event(
         )
     )
     sorted_list_of_dinghies = get_list_of_club_dinghies(object_store)
-    list_of_dinghys_at_event = (
-        dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(sorted_list_of_dinghies=sorted_list_of_dinghies)
+    list_of_dinghys_at_event = dict_of_cadets_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
+        sorted_list_of_dinghies=sorted_list_of_dinghies
     )
 
     row_names = list_of_dinghys_at_event.list_of_names()
@@ -103,8 +110,8 @@ def summarise_club_boat_allocations_for_volunteers_at_event(
     )
     sorted_list_of_dinghies = get_list_of_club_dinghies(object_store)
 
-    list_of_dinghys_at_event = (
-        dict_of_volunteers_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(sorted_list_of_dinghies)
+    list_of_dinghys_at_event = dict_of_volunteers_and_club_dinghies_at_event.unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
+        sorted_list_of_dinghies
     )
 
     row_names = list_of_dinghys_at_event.list_of_names()

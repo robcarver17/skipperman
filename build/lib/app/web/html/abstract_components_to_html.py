@@ -9,7 +9,7 @@ from app.web.html.url_define import MAIN_MENU_URL, get_help_url
 
 
 def get_html_for_simple_element_in_line(
-        ## Non recursive elements
+    ## Non recursive elements
     element_in_line: Union[
         Arrow,
         DetailLine,
@@ -31,7 +31,6 @@ def get_html_for_simple_element_in_line(
         textInput,
     ],
 ) -> Html:
-
     try:
         function_to_call = dict_of_html_to_function_mappings[type(element_in_line)]
     except KeyError:
@@ -43,9 +42,8 @@ def get_html_for_simple_element_in_line(
     return function_to_call(element_in_line)
 
 
-def html_string_int_or_float(element: Union[str,int, float]):
+def html_string_int_or_float(element: Union[str, int, float]):
     return Html(str(element))
-
 
 
 def get_html_for_heading(heading: Heading):
@@ -69,7 +67,7 @@ def get_html_for_heading(heading: Heading):
 
 
 def get_html_image(image: Image):
-    image_directory=image.image_directory
+    image_directory = image.image_directory
     passed_height_width = image.px_height_width is not arg_not_passed
     passed_ratio_size = image.ratio_size is not arg_not_passed
 
@@ -239,15 +237,15 @@ def arrow_text(arrow: Arrow) -> str:
 
 
 arrow_dict = {
-up_arrow: "&uarr;",
-down_arrow: "&darr;",
-right_arrow: "&rarr;",
-left_arrow: "&larr;",
-up_down_arrow: "&#8693;",
-left_right_arrow: "&#8646;",
-    outline_left_right_arrow: "&#10234;"
-
+    up_arrow: "&uarr;",
+    down_arrow: "&darr;",
+    right_arrow: "&rarr;",
+    left_arrow: "&larr;",
+    up_down_arrow: "&#8693;",
+    left_right_arrow: "&#8646;",
+    outline_left_right_arrow: "&#10234;",
 }
+
 
 def pointer_text(pointer: Pointer) -> str:
     try:
@@ -255,11 +253,14 @@ def pointer_text(pointer: Pointer) -> str:
     except KeyError:
         raise Exception("pointer %s not known" % str(pointer))
 
-pointer_dict = { up_pointer:"&#9757;",
+
+pointer_dict = {
+    up_pointer: "&#9757;",
     down_pointer: "&#9759;",
- left_pointer: "&#9754;",
- right_pointer:"&#9755;"
+    left_pointer: "&#9754;",
+    right_pointer: "&#9755;",
 }
+
 
 def symbol_text(symbol: Symbol) -> str:
     if symbol == copyright_symbol:
@@ -335,6 +336,3 @@ dict_of_html_to_function_mappings = {
     textAreaInput: html_form_text_area_input,
     textInput: html_form_text_input,
 }
-
-
-

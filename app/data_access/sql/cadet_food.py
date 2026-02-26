@@ -1,39 +1,50 @@
-from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.transform_data import bool2int, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.food_at_event import DictOfCadetsWithFoodRequirementsAtEvent
 
-from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, CadetWithFoodRequirementsAtEvent, FoodRequirements
+from app.objects.food import (
+    ListOfCadetsWithFoodRequirementsAtEvent,
+    CadetWithFoodRequirementsAtEvent,
+    FoodRequirements,
+)
 
 CADET_FOOD_REQUIRED_TABLE = "cadet_food_requirements"
 INDEX_CADET_FOOD_REQUIRED_TABLE = "index_cadet_food_requirements"
 
 
-class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
-    GenericSqlData
-):
+class SqlDataListOfCadetsWithFoodRequirementsAtEvent(GenericSqlData):
     def delete_cadet_from_event_and_return_messages(self, event_id: str, cadet_id: str):
-        if not self.is_cadet_with_already_at_event_with_food(event_id=event_id, cadet_id=cadet_id):
+        if not self.is_cadet_with_already_at_event_with_food(
+            event_id=event_id, cadet_id=cadet_id
+        ):
             return []
 
-        self.remove_food_requirements_for_cadet_at_event(event_id=event_id, cadet_id=cadet_id)
+        self.remove_food_requirements_for_cadet_at_event(
+            event_id=event_id, cadet_id=cadet_id
+        )
 
         return ["Removed food at event %s for cadet %s" % (event_id, cadet_id)]
 
     def is_cadet_with_already_at_event_with_food(
-            self, event_id: str, cadet_id: str
+        self, event_id: str, cadet_id: str
     ) -> bool:
         if self.table_does_not_exist(CADET_FOOD_REQUIRED_TABLE):
             return False
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT *  FROM %s WHERE %s='%s' AND %s='%s' ''' % (
-            CADET_FOOD_REQUIRED_TABLE,
-            CADET_ID,
-            int(cadet_id),
-            EVENT_ID,
-            int(event_id)))
+            cursor.execute(
+                """SELECT *  FROM %s WHERE %s='%s' AND %s='%s' """
+                % (
+                    CADET_FOOD_REQUIRED_TABLE,
+                    CADET_ID,
+                    int(cadet_id),
+                    EVENT_ID,
+                    int(event_id),
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -41,13 +52,17 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
         finally:
             self.close()
 
-        return len(raw_list)>0
+        return len(raw_list) > 0
 
     def add_new_cadet_with_food_to_event(
-            self, event_id: str, cadet_id: str,
+        self,
+        event_id: str,
+        cadet_id: str,
         food_requirements: FoodRequirements,
     ):
-        if self.is_cadet_with_already_at_event_with_food(event_id=event_id, cadet_id=cadet_id):
+        if self.is_cadet_with_already_at_event_with_food(
+            event_id=event_id, cadet_id=cadet_id
+        ):
             raise Exception("Can't write food for cadet already at event with food")
 
         try:
@@ -56,29 +71,35 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
             self._write_cadet_with_food_without_commit_or_check(
                 cadet_with_food=CadetWithFoodRequirementsAtEvent(
-                cadet_id=cadet_id,
-                food_requirements=food_requirements
-            ), event_id=event_id)
+                    cadet_id=cadet_id, food_requirements=food_requirements
+                ),
+                event_id=event_id,
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing cadet food at event" % str(e1))
         finally:
             self.close()
 
-
-
     def remove_food_requirements_for_cadet_at_event(
-            self, event_id: str, cadet_id: str,
+        self,
+        event_id: str,
+        cadet_id: str,
     ):
         try:
             if self.table_does_not_exist(CADET_FOOD_REQUIRED_TABLE):
                 self.create_table()
 
-            self.cursor.execute("DELETE FROM %s WHERE %s=%d AND %s=%d " % (CADET_FOOD_REQUIRED_TABLE,
-                                                                  EVENT_ID,
-                                                                  int(event_id),
-                                                                    CADET_ID,
-                                                                    int(cadet_id)))
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d AND %s=%d "
+                % (
+                    CADET_FOOD_REQUIRED_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
+                )
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -87,30 +108,39 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
             self.close()
 
     def update_cadet_food_data(
-            self, event_id: str, cadet_id: str,            new_food_requirements: FoodRequirements,
+        self,
+        event_id: str,
+        cadet_id: str,
+        new_food_requirements: FoodRequirements,
     ):
-        self.remove_food_requirements_for_cadet_at_event(cadet_id=cadet_id,
-                                                         event_id=event_id)
-        self.add_new_cadet_with_food_to_event(event_id=event_id,
-                                               cadet_id=cadet_id,
-                                              food_requirements=new_food_requirements
-                                              )
+        self.remove_food_requirements_for_cadet_at_event(
+            cadet_id=cadet_id, event_id=event_id
+        )
+        self.add_new_cadet_with_food_to_event(
+            event_id=event_id,
+            cadet_id=cadet_id,
+            food_requirements=new_food_requirements,
+        )
 
     def get_dict_of_cadets_with_food_requirements_at_event(
-            self, event_id: str
+        self, event_id: str
     ) -> DictOfCadetsWithFoodRequirementsAtEvent:
         raw_list = self.read(event_id)
         return DictOfCadetsWithFoodRequirementsAtEvent(
             [
-                (self.list_of_cadets.cadet_with_id(raw_item.cadet_id),
-                 raw_item.food_requirements)
+                (
+                    self.list_of_cadets.cadet_with_id(raw_item.cadet_id),
+                    raw_item.food_requirements,
+                )
                 for raw_item in raw_list
             ]
         )
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
-        list_of_cadets = self.object_store.get(self.object_store.data_api.data_list_of_cadets.read)
+        list_of_cadets = self.object_store.get(
+            self.object_store.data_api.data_list_of_cadets.read
+        )
 
         return list_of_cadets
 
@@ -120,39 +150,50 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s,%s,%s  FROM %s WHERE %s=%d ''' % (
-                CADET_ID,
-                FOOD_REQUIRED_KEY,
-                FOOD_REQUIRED_BOOL_VALUE,
-                FOOD_REQUIRED_VALUE,
-
-            CADET_FOOD_REQUIRED_TABLE,
-
-            EVENT_ID,
-            int(event_id)))
+            cursor.execute(
+                """SELECT %s, %s,%s,%s  FROM %s WHERE %s=%d """
+                % (
+                    CADET_ID,
+                    FOOD_REQUIRED_KEY,
+                    FOOD_REQUIRED_BOOL_VALUE,
+                    FOOD_REQUIRED_VALUE,
+                    CADET_FOOD_REQUIRED_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
-            raise Exception("Error %s when reading volunteer targets at event" % str(e1))
+            raise Exception(
+                "Error %s when reading volunteer targets at event" % str(e1)
+            )
         finally:
             self.close()
 
         new_dict = {}
         for raw_item in raw_list:
-            cadet_id=str(raw_item[0])
+            cadet_id = str(raw_item[0])
             food_required_key = raw_item[1]
             food_required_bool_vale = int2bool(raw_item[2])
             food_required_text_vale = raw_item[3]
-            food_requirements_this_cadet = new_dict.get(cadet_id, CadetWithFoodRequirementsAtEvent(
-                cadet_id=cadet_id,
-                food_requirements=FoodRequirements()
-            ))
+            food_requirements_this_cadet = new_dict.get(
+                cadet_id,
+                CadetWithFoodRequirementsAtEvent(
+                    cadet_id=cadet_id, food_requirements=FoodRequirements()
+                ),
+            )
 
-            if food_required_key==OTHER_KEY:
-
-                food_requirements_this_cadet.food_requirements.other = food_required_text_vale
+            if food_required_key == OTHER_KEY:
+                food_requirements_this_cadet.food_requirements.other = (
+                    food_required_text_vale
+                )
             else:
-                setattr(food_requirements_this_cadet.food_requirements, food_required_key, food_required_bool_vale)
+                setattr(
+                    food_requirements_this_cadet.food_requirements,
+                    food_required_key,
+                    food_required_bool_vale,
+                )
 
             new_dict[cadet_id] = food_requirements_this_cadet
 
@@ -169,12 +210,15 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
 
             ## NEEDS TO DELETE OLD
             ## TEMPORARY UNTIL CAN DO PROPERLY
-            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (CADET_FOOD_REQUIRED_TABLE,
-                                                                  EVENT_ID,
-                                                                  int(event_id)))
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d "
+                % (CADET_FOOD_REQUIRED_TABLE, EVENT_ID, int(event_id))
+            )
 
             for cadet_with_food in list_of_cadets_with_food:
-                self._write_cadet_with_food_without_commit_or_check(cadet_with_food=cadet_with_food, event_id=event_id)
+                self._write_cadet_with_food_without_commit_or_check(
+                    cadet_with_food=cadet_with_food, event_id=event_id
+                )
 
             self.conn.commit()
         except Exception as e1:
@@ -182,7 +226,9 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
         finally:
             self.close()
 
-    def _write_cadet_with_food_without_commit_or_check(self, event_id: str, cadet_with_food: CadetWithFoodRequirementsAtEvent):
+    def _write_cadet_with_food_without_commit_or_check(
+        self, event_id: str, cadet_with_food: CadetWithFoodRequirementsAtEvent
+    ):
         cadet_id = int(cadet_with_food.cadet_id)
         food_required = cadet_with_food.food_requirements
         other_value = food_required.other
@@ -203,19 +249,14 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
                 CADET_ID,
                 FOOD_REQUIRED_KEY,
                 FOOD_REQUIRED_BOOL_VALUE,
-                FOOD_REQUIRED_VALUE
+                FOOD_REQUIRED_VALUE,
             )
 
-            self.cursor.execute(insertion, (
-                int(event_id),
-                cadet_id,
-                key,
-                bool_value,
-                text_value
-            ))
+            self.cursor.execute(
+                insertion, (int(event_id), cadet_id, key, bool_value, text_value)
+            )
 
     def create_table(self):
-
         # name: str
         # hidden: bool
         # id: str = arg_not_passed
@@ -229,18 +270,22 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
                     %s STR
                     
                 );
-            """ % (CADET_FOOD_REQUIRED_TABLE,
-                   EVENT_ID,
-                   CADET_ID,
-                   FOOD_REQUIRED_KEY,
-                   FOOD_REQUIRED_BOOL_VALUE,
-                   FOOD_REQUIRED_VALUE)
+            """ % (
+            CADET_FOOD_REQUIRED_TABLE,
+            EVENT_ID,
+            CADET_ID,
+            FOOD_REQUIRED_KEY,
+            FOOD_REQUIRED_BOOL_VALUE,
+            FOOD_REQUIRED_VALUE,
+        )
 
-        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s, %s, %s)" % (INDEX_CADET_FOOD_REQUIRED_TABLE,
-                                                                          CADET_FOOD_REQUIRED_TABLE,
-                                                                          EVENT_ID,
-                                                                          CADET_ID,
-                                                                          FOOD_REQUIRED_KEY)
+        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s, %s, %s)" % (
+            INDEX_CADET_FOOD_REQUIRED_TABLE,
+            CADET_FOOD_REQUIRED_TABLE,
+            EVENT_ID,
+            CADET_ID,
+            FOOD_REQUIRED_KEY,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -250,5 +295,6 @@ class SqlDataListOfCadetsWithFoodRequirementsAtEvent(
             raise Exception("Error %s when creating food required table" % str(e1))
         finally:
             self.close()
+
 
 OTHER_KEY = "other_food_field"

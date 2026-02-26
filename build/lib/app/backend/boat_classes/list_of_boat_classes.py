@@ -10,21 +10,25 @@ def get_boat_class_from_name(
     list_of_boats = get_list_of_boat_classes(object_store)
     return list_of_boats.get_boat_with_name(boat_class_name, default=default)
 
+
 def add_new_boat_class_given_string(
     interface: abstractInterface, name_of_entry_to_add: str
 ):
     new_boat = BoatClass(name_of_entry_to_add)
-    interface.update(interface.object_store.data_api.data_list_of_dinghies.add_new_boat_class_given_string,
-                       new_boat=new_boat)
+    interface.update(
+        interface.object_store.data_api.data_list_of_dinghies.add_new_boat_class_given_string,
+        new_boat=new_boat,
+    )
 
 
 def modify_boat_class(
-    interface: abstractInterface,  existing_object: BoatClass, new_object: BoatClass
+    interface: abstractInterface, existing_object: BoatClass, new_object: BoatClass
 ):
-    interface.update(interface.object_store.data_api.data_list_of_dinghies.modify_boat_class,
-                       existing_boat =existing_object,
-                     new_boat = new_object)
-
+    interface.update(
+        interface.object_store.data_api.data_list_of_dinghies.modify_boat_class,
+        existing_boat=existing_object,
+        new_boat=new_object,
+    )
 
 
 def get_list_of_boat_classes(object_store: ObjectStore) -> ListOfBoatClasses:
@@ -34,5 +38,7 @@ def get_list_of_boat_classes(object_store: ObjectStore) -> ListOfBoatClasses:
 def update_list_of_boat_classes(
     interface: abstractInterface, updated_list_of_boat_classes: ListOfBoatClasses
 ):
-    interface.update(interface.object_store.data_api.data_list_of_dinghies.write,
-                        list_of_boats = updated_list_of_boat_classes)
+    interface.update(
+        interface.object_store.data_api.data_list_of_dinghies.write,
+        list_of_boats=updated_list_of_boat_classes,
+    )

@@ -16,7 +16,8 @@ from app.frontend.events.volunteer_rota.volunteer_rota_buttons import (
     add_volunteer_button,
     last_button_pressed_was_copy_button,
     access_copy_menu,
-    quick_report_button, update_most_common_role_button,
+    quick_report_button,
+    update_most_common_role_button,
 )
 from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import (
     save_targets_button,
@@ -24,7 +25,6 @@ from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import
 )
 from app.frontend.shared.buttons import is_button_sort_order
 from app.frontend.shared.warnings_table import (
-    save_warnings_button,
     is_save_warnings_button_pressed,
 )
 from app.objects.abstract_objects.abstract_buttons import (

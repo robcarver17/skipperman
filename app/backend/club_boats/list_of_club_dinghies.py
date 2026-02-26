@@ -8,10 +8,8 @@ from app.objects.utilities.exceptions import arg_not_passed
 def get_club_dinghy_from_id(
     object_store: ObjectStore, club_dinghy_id: str, default=arg_not_passed
 ) -> ClubDinghy:
-    return \
-        object_store.data_api.data_List_of_club_dinghies.get_club_dinghy_from_id(
-        club_dinghy_id=club_dinghy_id,
-        default = default
+    return object_store.data_api.data_List_of_club_dinghies.get_club_dinghy_from_id(
+        club_dinghy_id=club_dinghy_id, default=default
     )
 
 
@@ -23,24 +21,30 @@ def get_club_dinghy_with_name(
 
 
 def add_new_club_dinghy_given_string(
-    interface: abstractInterface,  name_of_entry_to_add: str
+    interface: abstractInterface, name_of_entry_to_add: str
 ):
     try:
         interface.update(
             interface.object_store.data_api.data_List_of_club_dinghies.add_new_club_dinghy_with_name,
-            dinghy_name=name_of_entry_to_add
+            dinghy_name=name_of_entry_to_add,
         )
     except Exception as e:
-        interface.log_error("Can't add club dinghy %s, %s" % (name_of_entry_to_add, str(e)))
+        interface.log_error(
+            "Can't add club dinghy %s, %s" % (name_of_entry_to_add, str(e))
+        )
 
-    club_dinghy_id = interface.object_store.data_api.data_List_of_club_dinghies.get_club_dinghy_with_name(name_of_entry_to_add).id
+    club_dinghy_id = interface.object_store.data_api.data_List_of_club_dinghies.get_club_dinghy_with_name(
+        name_of_entry_to_add
+    ).id
     try:
         interface.update(
             interface.object_store.data_api.data_List_of_club_dinghy_limits.add_generic_limit_for_club_dinghy,
-            club_dinghy_id=club_dinghy_id
+            club_dinghy_id=club_dinghy_id,
         )
     except Exception as e:
-        interface.log_error("Problem %s adding limit for %s" % (str(e), name_of_entry_to_add))
+        interface.log_error(
+            "Problem %s adding limit for %s" % (str(e), name_of_entry_to_add)
+        )
 
 
 def modify_club_dinghy(
@@ -49,12 +53,13 @@ def modify_club_dinghy(
     try:
         interface.update(
             interface.object_store.data_api.data_List_of_club_dinghies.modify_club_dinghy,
-            existing_club_dinghy_id = existing_object.id,
-            new_club_dinghy = new_object
+            existing_club_dinghy_id=existing_object.id,
+            new_club_dinghy=new_object,
         )
     except Exception as e:
-        interface.log_error("Can't modify club dinghy %s, %s" % (str(existing_object), str(e)))
-
+        interface.log_error(
+            "Can't modify club dinghy %s, %s" % (str(existing_object), str(e))
+        )
 
 
 def get_list_of_club_dinghies(object_store: ObjectStore) -> ListOfClubDinghies:
@@ -66,15 +71,17 @@ def update_list_of_club_dinghies(
 ):
     interface.update(
         interface.object_store.data_api.data_List_of_club_dinghies.write,
-        list_of_boats = updated_list_of_club_dinghies
+        list_of_boats=updated_list_of_club_dinghies,
     )
 
+
 def get_list_of_visible_club_dinghies(object_store: ObjectStore):
+    return object_store.get(
+        object_store.data_api.data_List_of_club_dinghies.get_list_of_visible_club_dinghies
+    )
 
-    return object_store.get(object_store.data_api.data_List_of_club_dinghies.get_list_of_visible_club_dinghies)
-
-    #visible_dinghies = ListOfClubDinghies(
+    # visible_dinghies = ListOfClubDinghies(
     #    [dinghy for dinghy in visible_dinghies if len(dinghy.name) > 0]
-    #)  ##FIXME exists because of weird bug
+    # )  ## exists because of weird bug
 
-    #return visible_dinghies
+    # return visible_dinghies

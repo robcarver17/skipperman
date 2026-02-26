@@ -22,7 +22,6 @@ def get_print_options(
     return object_store.data_api.data_print_options.read("%s_default" % report_name)
 
 
-
 def reset_print_options_to_default(interface: abstractInterface, report_name: str):
     print_options = get_default_print_options(
         object_store=interface.object_store, report_name=report_name
@@ -37,5 +36,6 @@ def update_print_options(
 ):
     interface.update(
         interface.object_store.data_api.data_print_options.write,
-        print_options=print_options
+        print_options=print_options,
+        report_name=report_name,
     )

@@ -228,7 +228,6 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_location_of_connected_cadet
             volunteer_data_at_event=dict_of_all_event_data_for_volunteers.get_data_for_volunteer(
                 volunteer
             ),
-
         )
         for volunteer in dict_of_all_event_data_for_volunteers.list_of_volunteers()
     ]
@@ -302,7 +301,9 @@ def get_sorted_list_of_volunteers_at_event_sorted_by_role_and_group_on_day(
         object_store=object_store, list_of_tuples=tuple_of_volunteers_at_event_and_roles
     )
 
-    sorted_list_of_volunteers = ListOfVolunteers([tuple[0] for tuple in sorted_tuples]) ## ignore type error
+    sorted_list_of_volunteers = ListOfVolunteers(
+        [tuple[0] for tuple in sorted_tuples]
+    )  ## ignore type error
 
     return sorted_list_of_volunteers
 
@@ -324,11 +325,11 @@ def get_explanation_of_sorts_and_filters(sorts_and_filters: RotaSortsAndFilters)
     explanation += print_dict_nicely(
         " Availability filter", sorts_and_filters.availability_filter
     )
-    explanation+=". "
+    explanation += ". "
     explanation += explain_skills_filter(
         skills_filter=sorts_and_filters.skills_filter, prepend_text=" Skills filter"
     )
-    explanation+=". "
+    explanation += ". "
 
     return explanation
 
@@ -353,27 +354,45 @@ FILTER_OPTIONS = [
     FILTER_UNAVAILABLE,
 ]
 
-filter_options_dict = {1: FILTER_ALL, 2: FILTER_AVAILABLE, 3: FILTER_UNAVAILABLE,
-                       4: FILTER_UNALLOC_AVAILABLE, 5: FILTER_ALLOC_AVAILABLE}
+filter_options_dict = {
+    1: FILTER_ALL,
+    2: FILTER_AVAILABLE,
+    3: FILTER_UNAVAILABLE,
+    4: FILTER_UNALLOC_AVAILABLE,
+    5: FILTER_ALLOC_AVAILABLE,
+}
 
-rev_filter_options_dict = dict([(key,value) for value, key in filter_options_dict.items()])
+rev_filter_options_dict = dict(
+    [(key, value) for value, key in filter_options_dict.items()]
+)
+
 
 def filter_option_as_int(filter_option: str) -> int:
     return rev_filter_options_dict[filter_option]
 
+
 def from_int_to_filter_option(filter_int: int) -> str:
     return filter_options_dict[filter_int]
 
-def from_str_to_dict_of_filter_options(single_str:str) -> Dict[str,str]:
+
+def from_str_to_dict_of_filter_options(single_str: str) -> Dict[str, str]:
     as_dict_with_str_ints = dict_from_str(single_str)
-    as_dict_with_filters = dict([(day_name, from_int_to_filter_option(int(filter_int_as_str)))
-                            for day_name, filter_int_as_str in as_dict_with_str_ints.items()])
+    as_dict_with_filters = dict(
+        [
+            (day_name, from_int_to_filter_option(int(filter_int_as_str)))
+            for day_name, filter_int_as_str in as_dict_with_str_ints.items()
+        ]
+    )
 
     return as_dict_with_filters
 
-def from_dict_of_filter_options_to_single_str(availability_filter: Dict[str,str]):
-    dict_with_ints = dict([(day_name, str(filter_option_as_int(filter))) for day_name, filter in availability_filter.items()])
+
+def from_dict_of_filter_options_to_single_str(availability_filter: Dict[str, str]):
+    dict_with_ints = dict(
+        [
+            (day_name, str(filter_option_as_int(filter)))
+            for day_name, filter in availability_filter.items()
+        ]
+    )
 
     return dict_as_str(dict_with_ints)
-
-

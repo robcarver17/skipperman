@@ -86,9 +86,7 @@ def get_size_and_colour_from_form(
 def distribute_colour_groups(interface: abstractInterface):
     event = get_event_from_state(interface)
     try:
-        distribute_colour_groups_at_event(
-            interface=interface, event=event
-        )
+        distribute_colour_groups_at_event(interface=interface, event=event)
     except NotEnoughColours as error:
         interface.log_error(str(error))
 
@@ -101,6 +99,4 @@ def clear_all_colours(interface: abstractInterface):
     )
 
     for cadet in dict_of_cadets_with_clothing.list_of_cadets:
-        clear_colour_group_for_cadet(
-            interface=interface, event=event, cadet=cadet
-        )
+        clear_colour_group_for_cadet(interface=interface, event=event, cadet=cadet)

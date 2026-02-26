@@ -25,13 +25,17 @@ def is_a_club_dinghy_allocated_for_list_of_cadets_on_any_day_at_event(
 def is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
-    return object_store.get(object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event,
-                            event_id=event.id,
-                            cadet_id=cadet.id)
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+    )
 
 
 def get_dict_of_cadets_and_club_dinghies_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfPeopleAndClubDinghiesAtEvent:
-    return object_store.get(object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.read_dict_of_cadets_and_club_dinghies_at_event, event_id=event.id)
-
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.read_dict_of_cadets_and_club_dinghies_at_event,
+        event_id=event.id,
+    )

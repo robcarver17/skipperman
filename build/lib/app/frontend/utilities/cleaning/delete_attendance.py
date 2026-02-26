@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.cadets_at_event.instructor_marked_attendance import clean_attendance_data_for_event
+from app.backend.cadets_at_event.instructor_marked_attendance import (
+    clean_attendance_data_for_event,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -49,10 +51,8 @@ def display_form_for_event_attendance(interface: abstractInterface):
 def display_form_for_event_attendance_sort_order_passed(
     interface: abstractInterface, sort_by: str = SORT_BY_START_DSC
 ):
-    list_of_events_with_buttons = (
-        display_list_of_events_with_buttons(
-            interface=interface, sort_by=sort_by
-        )
+    list_of_events_with_buttons = display_list_of_events_with_buttons(
+        interface=interface, sort_by=sort_by
     )
     navbar = ButtonBar([back_menu_button, HelpButton("delete_attendance_help")])
 
@@ -103,13 +103,15 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
         value_of_button_pressed=interface.last_button_pressed(),
         object_store=interface.object_store,
     )
-    
+
     clean_attendance_data_for_event(interface=interface, event=event)
     interface.clear()
 
-    interface.log_error( "Cleaned attendance data for event %s" % str(event))
+    interface.log_error("Cleaned attendance data for event %s" % str(event))
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_event_attendance)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_for_event_attendance
+    )
 
 
 def display_list_of_events_with_buttons(

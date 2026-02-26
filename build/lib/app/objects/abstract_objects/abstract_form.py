@@ -24,6 +24,7 @@ class Form(list):
     def form_name(self):
         return self.title
 
+
 @dataclass
 class Link:
     string: str
@@ -43,8 +44,6 @@ class Image:
     px_height_width: Tuple[int, int] = arg_not_passed
     ratio_size: int = arg_not_passed
     image_directory: str = arg_not_passed
-
-
 
 
 def form_with_message(message: str) -> Form:
@@ -171,6 +170,7 @@ class NewFormWithRedirectInfo:
     action_name: str
     new_form_name: str
     args_passed: dict
+
 
 @dataclass
 class NewForm:

@@ -1,9 +1,11 @@
-from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.transform_data import bool2int, int2bool
 from app.objects.volunteer_skills import ListOfSkills, Skill
 from app.data_access.sql.shared_column_names import *
 
 LIST_OF_SKILLS_TABLE = "list_of_skills"
 INDEX_LIST_OF_SKILLS_TABLE = "index_list_of_skills"
+
 
 class SqlDataListOfSkills(GenericSqlData):
     def add_new_skill(self, new_skill: Skill):
@@ -35,9 +37,11 @@ class SqlDataListOfSkills(GenericSqlData):
             if self.does_skill_with_name_exist(new_skill.name):
                 raise Exception("skill with name %s already exists" % new_skill.name)
 
-        self._modify_skill_without_checks(original_skill=original_skill, new_skill=new_skill)
+        self._modify_skill_without_checks(
+            original_skill=original_skill, new_skill=new_skill
+        )
 
-    def _modify_skill_without_checks(self,  original_skill: Skill, new_skill: Skill):
+    def _modify_skill_without_checks(self, original_skill: Skill, new_skill: Skill):
         name = str(new_skill.name)
         protected = bool2int(new_skill.protected)
         id = int(original_skill.id)
@@ -47,15 +51,17 @@ class SqlDataListOfSkills(GenericSqlData):
                 self.create_table()
 
             self.cursor.execute(
-                "UPDATE %s SET %s=%s, %s=%d WHERE %s=%d" % (
-                LIST_OF_SKILLS_TABLE,
+                "UPDATE %s SET %s=%s, %s=%d WHERE %s=%d"
+                % (
+                    LIST_OF_SKILLS_TABLE,
                     SKILL_NAME,
                     name,
                     PROTECTED,
                     protected,
                     SKILL_ID,
-                    id
-            ))
+                    id,
+                )
+            )
 
             self.conn.commit()
 
@@ -70,23 +76,22 @@ class SqlDataListOfSkills(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
-                LIST_OF_SKILLS_TABLE,
-                SKILL_NAME,
-                str(skill_name)
-             ))
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s='%s' """
+                % (LIST_OF_SKILLS_TABLE, SKILL_NAME, str(skill_name))
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading skills" % str(e1))
         finally:
             self.close()
 
-        return len(raw_list)>0
+        return len(raw_list) > 0
 
-    def next_available_idx(self) ->int:
-        return self.last_used_idx()+1
+    def next_available_idx(self) -> int:
+        return self.last_used_idx() + 1
 
-    def last_used_idx(self)-> int:
+    def last_used_idx(self) -> int:
         try:
             if self.table_does_not_exist(LIST_OF_SKILLS_TABLE):
                 self.create_table()
@@ -108,11 +113,10 @@ class SqlDataListOfSkills(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
+    def next_available_id(self) -> int:
+        return self.last_used_id() + 1
 
-    def next_available_id(self) ->int:
-        return self.last_used_id()+1
-
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(LIST_OF_SKILLS_TABLE):
                 self.create_table()
@@ -134,18 +138,16 @@ class SqlDataListOfSkills(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-
     def read(self) -> ListOfSkills:
         try:
             if self.table_does_not_exist(LIST_OF_SKILLS_TABLE):
                 return ListOfSkills.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s ORDER BY %s''' % (
-                SKILL_NAME, PROTECTED, SKILL_ID,
-                LIST_OF_SKILLS_TABLE,
-                SKILL_ORDER
-            ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s ORDER BY %s"""
+                % (SKILL_NAME, PROTECTED, SKILL_ID, LIST_OF_SKILLS_TABLE, SKILL_ORDER)
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading skills" % str(e1))
@@ -153,13 +155,15 @@ class SqlDataListOfSkills(GenericSqlData):
             self.close()
 
         new_list = [
-        Skill(name=raw_skill[0],
-              protected=int2bool(raw_skill[1]),
-              id=str(raw_skill[2]))
-        for raw_skill in raw_list]
+            Skill(
+                name=raw_skill[0],
+                protected=int2bool(raw_skill[1]),
+                id=str(raw_skill[2]),
+            )
+            for raw_skill in raw_list
+        ]
 
         return ListOfSkills(new_list)
-
 
     def write(self, list_of_skills: ListOfSkills):
         try:
@@ -179,20 +183,22 @@ class SqlDataListOfSkills(GenericSqlData):
         finally:
             self.close()
 
-    def _add_row_without_commits_or_checks(self, idx:int, skill:Skill):
+    def _add_row_without_commits_or_checks(self, idx: int, skill: Skill):
         name = skill.name
         protected = bool2int(skill.protected)
         id = int(skill.id)
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
             LIST_OF_SKILLS_TABLE,
-            SKILL_NAME, PROTECTED, SKILL_ID, SKILL_ORDER)
+            SKILL_NAME,
+            PROTECTED,
+            SKILL_ID,
+            SKILL_ORDER,
+        )
 
-        self.cursor.execute(insertion, (
-            name, protected, id, idx))
+        self.cursor.execute(insertion, (name, protected, id, idx))
 
     def create_table(self):
-
         table_creation_query = """
             CREATE TABLE %s (
                 %s STR, 
@@ -200,10 +206,19 @@ class SqlDataListOfSkills(GenericSqlData):
                 %s INTEGER,
                 %s INTEGER
             );
-        """ % (LIST_OF_SKILLS_TABLE,
-               SKILL_NAME, SKILL_ID, PROTECTED, SKILL_ORDER)
+        """ % (
+            LIST_OF_SKILLS_TABLE,
+            SKILL_NAME,
+            SKILL_ID,
+            PROTECTED,
+            SKILL_ORDER,
+        )
 
-        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (INDEX_LIST_OF_SKILLS_TABLE, LIST_OF_SKILLS_TABLE, SKILL_ID)
+        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
+            INDEX_LIST_OF_SKILLS_TABLE,
+            LIST_OF_SKILLS_TABLE,
+            SKILL_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -213,8 +228,3 @@ class SqlDataListOfSkills(GenericSqlData):
             raise Exception("Error %s when creating groups table" % str(e1))
         finally:
             self.close()
-
-
-
-
-

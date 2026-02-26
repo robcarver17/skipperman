@@ -81,12 +81,12 @@ class Event(GenericSkipperManObjectWithIds):
             return "Length of event greater than 7 days"
 
         try:
-            assert self.end_date>=self.start_date
+            assert self.end_date >= self.start_date
         except:
             return "Event end date before start date"
 
         try:
-            assert len(self.name)>0
+            assert len(self.name) > 0
         except:
             return "Empty event name"
 
@@ -106,7 +106,9 @@ class Event(GenericSkipperManObjectWithIds):
         return timediff.days + 1
 
     def similarity_event_name(self, other_event: "Event") -> float:
-        if self.event_year == other_event.event_year: ## don't mind if same event name in different years
+        if (
+            self.event_year == other_event.event_year
+        ):  ## don't mind if same event name in different years
             return similar(self.event_name, other_event.event_name)
         else:
             return 0
@@ -191,16 +193,14 @@ class ListOfEvents(GenericListOfObjectsWithIds):
     def event_with_id(self, event_id: str, default=arg_not_passed):
         return self.object_with_id(event_id, default=default)
 
-    def add(self, event: Event):
-        self.confirm_event_does_not_already_exist(event)
-        event.id = self.next_id()
-        self.append(event)
 
     def confirm_event_does_not_already_exist(self, event: Event):
         exists = event.event_description in self.list_of_event_descriptions
 
         if exists:
-            raise Exception("Event with same year and name %s already in data" % str(event))
+            raise Exception(
+                "Event with same year and name %s already in data" % str(event)
+            )
 
     def event_with_description(
         self, event_description: str, default=arg_not_passed
@@ -268,15 +268,11 @@ SORT_BY_START_DSC = "Sort by start date, descending"
 
 def list_of_events_excluding_one_event_and_past_events(
     list_of_events: ListOfEvents,
-    event_to_exclude: Event =arg_not_passed,
+    event_to_exclude: Event = arg_not_passed,
     sort_by: str = SORT_BY_START_ASC,
 ) -> ListOfEvents:
     list_of_events = ListOfEvents(
-        [
-            event
-            for event in list_of_events
-            if event.start_date < datetime.date.today()
-        ]
+        [event for event in list_of_events if event.start_date < datetime.date.today()]
     )
 
     if not event_to_exclude is arg_not_passed:

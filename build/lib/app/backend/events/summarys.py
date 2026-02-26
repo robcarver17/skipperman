@@ -2,20 +2,28 @@ from typing import Dict, List, Callable
 
 import pandas as pd
 
-from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_dict_of_cadets_with_groups_at_event,
+)
 from app.backend.groups.list_of_groups import get_list_of_groups
-from app.backend.registration_data.cadet_registration_data import get_dict_of_cadets_with_registration_data
+from app.backend.registration_data.cadet_registration_data import (
+    get_dict_of_cadets_with_registration_data,
+)
 from app.objects.cadets import ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_groups import (
-     DictOfCadetsWithDaysAndGroupsAtEvent,
+    DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
-from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
-from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
+)
+from app.objects.composed.cadets_at_event_with_registration_data import (
+    DictOfCadetsWithRegistrationData,
+)
 from app.objects.composed.cadets_with_all_event_info_functions import (
     cadets_not_allocated_to_group_but_attending_on_day,
 )
@@ -28,11 +36,15 @@ from app.objects.groups import Group
 def summarise_allocations_for_event(
     object_store: ObjectStore, event: Event
 ) -> pd.DataFrame:
-    registration_data =get_dict_of_cadets_with_registration_data(event=event, object_store=object_store)
+    registration_data = get_dict_of_cadets_with_registration_data(
+        event=event, object_store=object_store
+    )
     availability_dict = get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event
     )
-    dict_of_cadets_with_days_and_groups = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
+    dict_of_cadets_with_days_and_groups = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
+    )
     all_groups = get_list_of_groups((object_store))
     groups = dict_of_cadets_with_days_and_groups.sorted_all_groups_at_event(all_groups)
     groups.remove_unallocated()
@@ -42,13 +54,16 @@ def summarise_allocations_for_event(
         event=event,
         groups=groups,
         availability_dict=availability_dict,
-        list_of_ids_with_groups=dict_of_cadets_with_days_and_groups, ## ignore warning
+        list_of_ids_with_groups=dict_of_cadets_with_days_and_groups,  ## ignore warning
         include_total=False,  ## add with unallocated
     )
 
-    df = add_unallocated_row(dict_of_cadets_with_registration_data=registration_data,
-                dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups, df=df,
-                             event=event)
+    df = add_unallocated_row(
+        dict_of_cadets_with_registration_data=registration_data,
+        dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
+        df=df,
+        event=event,
+    )
 
     df.loc["TOTAL"] = df.sum(axis=0, numeric_only=True)
 
@@ -157,9 +172,9 @@ def available_on_day(
 
 def add_unallocated_row(
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-        dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
-        event: Event,
-        df: pd.DataFrame
+    dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
+    event: Event,
+    df: pd.DataFrame,
 ):
     count = {}
     for day in event.days_in_event():

@@ -9,7 +9,6 @@ from app.backend.reporting.options_and_parameters.marked_up_list_from_df_paramet
 from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
     reset_arrangement_report_options,
 )
-from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.backend.reporting.options_and_parameters.report_options import ReportingOptions
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     SpecificParametersForTypeOfReport,

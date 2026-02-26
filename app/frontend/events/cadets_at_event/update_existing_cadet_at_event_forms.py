@@ -116,9 +116,7 @@ def get_line_in_form_for_attendance_change(
     new_attendance = new_cadet_at_event_data.availability
 
     if original_attendance == new_attendance:
-        header_line = Line(
-            "Attendance at event (unchanged from original data)"
-        )
+        header_line = Line("Attendance at event (unchanged from original data)")
     else:
         header_line = Line(
             "Originally was attending %s, now attending %s"
@@ -149,20 +147,21 @@ def get_line_in_form_for_status_change(
     )
 
     if status_message is NO_STATUS_CHANGE:
-        header_line =  Line("Status (unchanged from original data)")
+        header_line = Line("Status (unchanged from original data)")
     else:
         header_line = Line(status_message)
 
     return ListOfLines(
-            [
-                header_line,
-                dropdown_input_for_status_change(
-                    input_label="Select status ",
-                    default_status=new_status,
-                    input_name=ROW_STATUS,
-                )  ## no dict passed, so all shared will be on the table
-            ]
-        )
+        [
+            header_line,
+            dropdown_input_for_status_change(
+                input_label="Select status ",
+                default_status=new_status,
+                input_name=ROW_STATUS,
+            ),  ## no dict passed, so all shared will be on the table
+        ]
+    )
+
 
 ROW_STATUS = "row_status"
 ATTENDANCE = "attendance"

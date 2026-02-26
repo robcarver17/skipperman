@@ -178,16 +178,15 @@ class ArrangementOptionsAndGroupOrder:
 
         return dict(method=method, columns=columns, group_order=group_order)
 
-
     @classmethod
     def from_dict_of_str(cls, dict_of_str: Dict[str, str]):
-        method_str = dict_of_str.get('method', None)
+        method_str = dict_of_str.get("method", None)
         if method_str is None:
             method = DEFAULT_ARRANGEMENT
         else:
             method = ArrangementMethod[method_str]
 
-        columns_str = dict_of_str.get('columns', None)
+        columns_str = dict_of_str.get("columns", None)
         if columns_str is None:
             columns = ArrangementOfColumns()
         else:
@@ -205,7 +204,6 @@ class ArrangementOptionsAndGroupOrder:
             ),
             group_order=group_order,
         )
-
 
     @classmethod
     def from_df_of_str(cls, df: pd.DataFrame):

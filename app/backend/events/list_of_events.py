@@ -21,15 +21,18 @@ def list_of_previously_used_event_names(object_store: ObjectStore) -> list:
 
 def add_new_verified_event(interface: abstractInterface, event: Event):
     interface.update(
-        interface.object_store.data_api.data_list_of_events.add_event,
-        event=event
+        interface.object_store.data_api.data_list_of_events.add_event, event=event
     )
+
 
 def get_event_from_id(
     object_store: ObjectStore, event_id: str, default=arg_not_passed
 ) -> Event:
-    return object_store.get(object_store.data_api.data_list_of_events.get_event_from_id,
-                            event_id=event_id, default=default)
+    return object_store.get(
+        object_store.data_api.data_list_of_events.get_event_from_id,
+        event_id=event_id,
+        default=default,
+    )
 
 
 def get_event_from_list_of_events_given_event_description(
@@ -43,8 +46,10 @@ def get_event_from_list_of_events_given_event_description(
 def get_sorted_list_of_events(
     object_store: ObjectStore, sort_by=SORT_BY_START_DSC
 ) -> ListOfEvents:
-    return object_store.get(object_store.data_api.data_list_of_events.read,
-                            sort_by=sort_by)
+    return object_store.get(
+        object_store.data_api.data_list_of_events.read, sort_by=sort_by
+    )
+
 
 def get_list_of_events(object_store: ObjectStore) -> ListOfEvents:
     return object_store.get(object_store.data_api.data_list_of_events.read)
@@ -61,7 +66,9 @@ def get_list_of_last_N_events(
     only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
-    list_of_events_sorted_by_date_asc = copy(get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_ASC))
+    list_of_events_sorted_by_date_asc = copy(
+        get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_ASC)
+    )
     list_of_events = remove_event_and_possibly_past_events_and_sort(
         list_of_events_sorted_by_date_asc=list_of_events_sorted_by_date_asc,
         excluding_event=excluding_event,
@@ -80,7 +87,6 @@ def remove_event_and_possibly_past_events_and_sort(
     excluding_event: Event = arg_not_passed,
     only_events_before_excluded_event: bool = True,
 ):
-
     try:  # weird not a singleton error
         if excluding_event == arg_not_passed:
             return list_of_events_sorted_by_date_asc

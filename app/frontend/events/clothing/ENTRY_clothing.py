@@ -65,7 +65,7 @@ def post_form_view_for_clothing_requirements(
         return previous_form(interface)
 
     ### save
-    
+
     if save_menu_button.pressed(last_button_pressed):
         save_clothing_data(interface)
         interface.clear()
@@ -84,7 +84,9 @@ def post_form_view_for_clothing_requirements(
 
     elif filter_all_button.pressed(last_button_pressed):
         set_to_showing_all(interface)
-        return interface.get_new_form_given_function(display_form_view_for_clothing_requirements)
+        return interface.get_new_form_given_function(
+            display_form_view_for_clothing_requirements
+        )
 
     elif filter_committee_button.pressed(last_button_pressed):
         set_to_showing_only_committee(interface)
@@ -101,7 +103,9 @@ def post_form_view_for_clothing_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    return interface.get_new_form_given_function(display_form_view_for_clothing_requirements)
+    return interface.get_new_form_given_function(
+        display_form_view_for_clothing_requirements
+    )
 
 
 def previous_form(interface: abstractInterface):

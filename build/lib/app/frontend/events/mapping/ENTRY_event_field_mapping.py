@@ -1,7 +1,6 @@
 from app.backend.registration_data.raw_mapped_registration_data import (
     does_event_have_imported_registration_data,
 )
-from app.data_access.store.object_store import ObjectStore
 
 from app.frontend.events.mapping.mapping_table import *
 from app.frontend.events.mapping.parse_field_mapping import (

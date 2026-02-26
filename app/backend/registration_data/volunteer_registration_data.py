@@ -12,12 +12,12 @@ from app.objects.events import Event
 from app.objects.volunteer_at_event_with_id import ListOfVolunteersAtEventWithId
 from app.objects.volunteers import Volunteer
 
+
 def get_availability_volunteer_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> DaySelector:
     dict_of_availability = get_availability_dict_for_volunteers_at_event(
-        object_store=object_store,
-        event=event
+        object_store=object_store, event=event
     )
     return dict_of_availability[volunteer]
 
@@ -27,15 +27,16 @@ def get_availability_dict_for_volunteers_at_event(
 ) -> Dict[Volunteer, DaySelector]:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event.get_availability_dict_for_volunteers_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
+
 
 def get_dict_of_registration_data_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfRegistrationDataForVolunteerAtEvent:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event.get_dict_of_registration_data_for_volunteers_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
 
 
@@ -43,20 +44,21 @@ def get_list_of_registration_data_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfVolunteersAtEventWithId:
     return object_store.get(
-        object_store.data_api.data_list_of_volunteers_at_event.read,
-        event_id=event.id
+        object_store.data_api.data_list_of_volunteers_at_event.read, event_id=event.id
     )
 
 
 def update_list_of_registration_data_for_volunteers_at_event(
-    interface: abstractInterface, event: Event,
-list_of_volunteers_at_event: ListOfVolunteersAtEventWithId
+    interface: abstractInterface,
+    event: Event,
+    list_of_volunteers_at_event: ListOfVolunteersAtEventWithId,
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event.write,
         list_of_volunteers_at_event=list_of_volunteers_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
+
 
 def is_volunteer_already_at_event(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
@@ -70,9 +72,16 @@ def get_attendance_matrix_for_list_of_volunteers_at_event(
     object_store: ObjectStore,
     event: Event,
 ) -> DictOfDaySelectors:
-    dict_of_registration_data_for_volunteers_at_event= get_dict_of_registration_data_for_volunteers_at_event(object_store=object_store, event=event)
-    dict_of_availability = dict([
-        (volunteer, registration_data.availablity) for volunteer, registration_data in dict_of_registration_data_for_volunteers_at_event.items()
-    ])
+    dict_of_registration_data_for_volunteers_at_event = (
+        get_dict_of_registration_data_for_volunteers_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    dict_of_availability = dict(
+        [
+            (volunteer, registration_data.availablity)
+            for volunteer, registration_data in dict_of_registration_data_for_volunteers_at_event.items()
+        ]
+    )
 
     return DictOfDaySelectors(dict_of_availability)

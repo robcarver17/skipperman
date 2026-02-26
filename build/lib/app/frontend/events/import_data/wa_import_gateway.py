@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
+from app.objects.abstract_objects.abstract_lines import  ListOfLines
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -204,9 +204,8 @@ def previous_form(interface: abstractInterface) -> NewForm:
 
 
 def clear_wa_event_id_mapping_from_data(interface: abstractInterface):
-
     event = get_event_from_state(interface)
-    
+
     clear_wa_event_id_mapping(interface=interface, event=event)
     interface.clear()
     interface.log_error(

@@ -18,8 +18,7 @@ LOCATIONS = [RIVER_SAFETY, LAKE_SAFETY]
 
 
 def get_specific_parameters_for_patrol_boat_report(
-    object_store: ObjectStore,
-        event: Event
+    object_store: ObjectStore, event: Event
 ) -> SpecificParametersForTypeOfReport:
     specific_parameters_for_patrol_boat_report = SpecificParametersForTypeOfReport(
         group_by_column=LOCATION,

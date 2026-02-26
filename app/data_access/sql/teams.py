@@ -1,5 +1,5 @@
-
-from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.transform_data import bool2int, int2bool
 from app.objects.roles_and_teams import Team, ListOfTeams, RoleLocation
 from app.data_access.sql.shared_column_names import *
 
@@ -7,8 +7,8 @@ from app.data_access.sql.shared_column_names import *
 TEAMS_TABLE = "teams"
 INDEX_TEAMS_TABLE = "index_teams_table"
 
-class SqlDataListOfTeams(GenericSqlData):
 
+class SqlDataListOfTeams(GenericSqlData):
     def add_new_team(self, new_team: Team):
         if self.does_team_with_name_exist(new_team.name):
             raise Exception("Team with name %s already exists" % new_team.name)
@@ -41,7 +41,7 @@ class SqlDataListOfTeams(GenericSqlData):
 
         self._modify_team_without_checks(original_team=original_team, new_team=new_team)
 
-    def _modify_team_without_checks(self,  original_team: Team, new_team: Team):
+    def _modify_team_without_checks(self, original_team: Team, new_team: Team):
         team_id = int(original_team.id)
         name = new_team.name
         location = new_team.location_for_cadet_warning.name
@@ -51,17 +51,19 @@ class SqlDataListOfTeams(GenericSqlData):
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
             self.cursor.execute(
-                "UPDATE %s SET %s=%s, %s=%s, %s=%d WHERE %s=%d" % (
-                TEAMS_TABLE,
-                TEAM_NAME,
-                name,
-                TEAM_LOCATION,
-                location,
-                PROTECTED,
-                protected,
-                TEAM_ID,
-                team_id
-            ))
+                "UPDATE %s SET %s=%s, %s=%s, %s=%d WHERE %s=%d"
+                % (
+                    TEAMS_TABLE,
+                    TEAM_NAME,
+                    name,
+                    TEAM_LOCATION,
+                    location,
+                    PROTECTED,
+                    protected,
+                    TEAM_ID,
+                    team_id,
+                )
+            )
 
             self.conn.commit()
 
@@ -76,23 +78,22 @@ class SqlDataListOfTeams(GenericSqlData):
                 return False
 
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' ''' % (
-                TEAMS_TABLE,
-                TEAM_NAME,
-                str(team_name)
-             ))
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s='%s' """
+                % (TEAMS_TABLE, TEAM_NAME, str(team_name))
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading teams" % str(e1))
         finally:
             self.close()
 
-        return len(raw_list)>0
+        return len(raw_list) > 0
 
-    def next_available_idx(self) ->int:
-        return self.last_used_idx()+1
+    def next_available_idx(self) -> int:
+        return self.last_used_idx() + 1
 
-    def last_used_idx(self)-> int:
+    def last_used_idx(self) -> int:
         try:
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
@@ -114,11 +115,10 @@ class SqlDataListOfTeams(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
+    def next_available_id(self) -> int:
+        return self.last_used_id() + 1
 
-    def next_available_id(self) ->int:
-        return self.last_used_id()+1
-
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
@@ -146,26 +146,36 @@ class SqlDataListOfTeams(GenericSqlData):
                 return ListOfTeams.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s FROM %s ORDER BY %s''' % (
-                TEAM_NAME, TEAM_LOCATION, PROTECTED, TEAM_ID, TEAMS_TABLE, TEAM_ORDER
-             ))
+            cursor.execute(
+                """SELECT %s, %s, %s, %s FROM %s ORDER BY %s"""
+                % (
+                    TEAM_NAME,
+                    TEAM_LOCATION,
+                    PROTECTED,
+                    TEAM_ID,
+                    TEAMS_TABLE,
+                    TEAM_ORDER,
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading teams" % str(e1))
         finally:
             self.close()
 
-        new_list = [Team(name=raw_team[0],
-                         location_for_cadet_warning = RoleLocation[raw_team[1]],
-                         protected = int2bool(raw_team[2]),
-                         id =str(raw_team[3]),
-                         ) for raw_team in raw_list]
+        new_list = [
+            Team(
+                name=raw_team[0],
+                location_for_cadet_warning=RoleLocation[raw_team[1]],
+                protected=int2bool(raw_team[2]),
+                id=str(raw_team[3]),
+            )
+            for raw_team in raw_list
+        ]
 
         return ListOfTeams(new_list)
 
-
     def write(self, list_of_teams: ListOfTeams):
-
         try:
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
@@ -182,7 +192,7 @@ class SqlDataListOfTeams(GenericSqlData):
         finally:
             self.close()
 
-    def _add_row_without_checks_or_commits(self, idx:int, team: Team):
+    def _add_row_without_checks_or_commits(self, idx: int, team: Team):
         name = team.name
         location = team.location_for_cadet_warning.name
         protected = bool2int(team.protected)
@@ -190,13 +200,16 @@ class SqlDataListOfTeams(GenericSqlData):
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)" % (
             TEAMS_TABLE,
-            TEAM_NAME, TEAM_LOCATION, PROTECTED, TEAM_ID, TEAM_ORDER)
+            TEAM_NAME,
+            TEAM_LOCATION,
+            PROTECTED,
+            TEAM_ID,
+            TEAM_ORDER,
+        )
 
-        self.cursor.execute(insertion, (
-            name, location, protected, team_id, idx))
+        self.cursor.execute(insertion, (name, location, protected, team_id, idx))
 
     def create_table(self):
-
         # name: str
         # hidden: bool
         # id: str = arg_not_passed
@@ -209,11 +222,20 @@ class SqlDataListOfTeams(GenericSqlData):
                     %s INTEGER,
                     %s INTEGER
                 );
-            """ % (TEAMS_TABLE,
-                   TEAM_NAME, TEAM_LOCATION, PROTECTED, TEAM_ID, TEAM_ORDER)
+            """ % (
+            TEAMS_TABLE,
+            TEAM_NAME,
+            TEAM_LOCATION,
+            PROTECTED,
+            TEAM_ID,
+            TEAM_ORDER,
+        )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
-        INDEX_TEAMS_TABLE, TEAMS_TABLE, TEAM_ID)
+            INDEX_TEAMS_TABLE,
+            TEAMS_TABLE,
+            TEAM_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -223,4 +245,3 @@ class SqlDataListOfTeams(GenericSqlData):
             raise Exception("Error %s when creating teams table" % str(e1))
         finally:
             self.close()
-

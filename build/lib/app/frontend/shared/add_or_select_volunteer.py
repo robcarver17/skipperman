@@ -7,7 +7,7 @@ from app.backend.volunteers.connected_cadets import get_list_of_similar_voluntee
 from app.backend.volunteers.list_of_volunteers import (
     get_list_of_volunteers,
     sort_list_of_volunteers,
-     get_volunteer_from_name,
+    get_volunteer_from_name,
 )
 from app.frontend.shared.add_edit_or_choose_volunteer_form import (
     VolunteerAndVerificationText,
@@ -32,8 +32,13 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
-from app.objects.volunteers import Volunteer, default_volunteer, SORT_BY_SURNAME, SORT_BY_FIRSTNAME, \
-    SORT_BY_NAME_SIMILARITY
+from app.objects.volunteers import (
+    Volunteer,
+    default_volunteer,
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
+    SORT_BY_NAME_SIMILARITY,
+)
 
 
 @dataclass
@@ -385,7 +390,7 @@ def get_existing_volunteer_selected_from_button(
     volunteer = get_volunteer_from_name(
         object_store=interface.object_store,
         volunteer_name=volunteer_selected_as_str,
-        default=missing_data
+        default=missing_data,
     )
     if volunteer is missing_data:
         raise Exception("Volunteer %s has gone missing!" % volunteer_selected_as_str)

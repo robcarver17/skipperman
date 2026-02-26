@@ -2,10 +2,13 @@ from typing import List
 
 import pandas as pd
 
-from app.backend.groups.cadets_with_groups_at_event import get_sorted_list_of_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_sorted_list_of_groups_at_event,
+)
 from app.backend.volunteers.roles_and_teams import get_list_of_teams, get_list_of_roles
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_dict_of_volunteers_with_roles_and_groups_at_event
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_dict_of_volunteers_with_roles_and_groups_at_event,
+)
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -13,7 +16,8 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     RoleAndGroupAndTeam,
-    RoleAndGroup, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    RoleAndGroup,
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -53,8 +57,10 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store, event=event
+    volunteers_in_roles_at_event = (
+        get_dict_of_volunteers_with_roles_and_groups_at_event(
+            object_store=object_store, event=event
+        )
     )
     if len(volunteers_in_roles_at_event) == 0:
         return []
@@ -78,7 +84,6 @@ def get_list_of_day_summaries_for_roles_at_event(
         all_day_summaries.append(this_day_summary)
 
     return all_day_summaries
-
 
 
 def get_summary_of_roles_and_groups_for_events_on_day(
@@ -146,8 +151,10 @@ def get_summary_list_of_teams_and_groups_for_events_as_pd_df(
 def get_list_of_day_summaries_teams_and_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
-    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store, event=event
+    volunteers_in_roles_at_event = (
+        get_dict_of_volunteers_with_roles_and_groups_at_event(
+            object_store=object_store, event=event
+        )
     )
 
     sorted_teams_at_event = get_sorted_list_of_teams_at_event(
@@ -219,7 +226,9 @@ def from_list_of_day_summaries_to_single_df(
     days_at_event = event.days_in_event()
     single_df = pd.concat(all_day_summaries, axis=1)
     single_df.columns = [day.name for day in days_at_event]
-    single_df = single_df.loc[~(single_df == 0).all(axis=1)]  ## missing values IGNORE warning
+    single_df = single_df.loc[
+        ~(single_df == 0).all(axis=1)
+    ]  ## missing values IGNORE warning
 
     return single_df
 
@@ -227,8 +236,10 @@ def from_list_of_day_summaries_to_single_df(
 def get_sorted_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfRolesWithSkills:
-    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store, event=event
+    volunteers_in_roles_at_event = (
+        get_dict_of_volunteers_with_roles_and_groups_at_event(
+            object_store=object_store, event=event
+        )
     )
 
     list_of_roles = get_list_of_roles(object_store)
@@ -244,8 +255,10 @@ def get_sorted_roles_at_event(
 
 
 def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
-    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(
-        object_store=object_store, event=event
+    volunteers_in_roles_at_event = (
+        get_dict_of_volunteers_with_roles_and_groups_at_event(
+            object_store=object_store, event=event
+        )
     )
     list_of_teams = get_list_of_teams(object_store)
     all_teams_at_event = ListOfTeams(volunteers_in_roles_at_event.all_teams_at_event)
@@ -256,5 +269,3 @@ def get_sorted_list_of_teams_at_event(object_store: ObjectStore, event: Event):
         sorted_teams_at_event = sorted_teams_at_event + [no_team]
 
     return sorted_teams_at_event
-
-

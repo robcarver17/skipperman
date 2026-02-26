@@ -11,7 +11,9 @@ from app.objects.substages import ListOfTickSheetItems, TickSheetItem, TickSubSt
 
 
 class DictOfCadetsAndTicksWithinQualification(Dict[Cadet, TicksForQualification]):
-    def __init__(self, raw_dict: Dict[Cadet, TicksForQualification], qualification: Qualification):
+    def __init__(
+        self, raw_dict: Dict[Cadet, TicksForQualification], qualification: Qualification
+    ):
         super().__init__(raw_dict)
         self._qualification = qualification
 
@@ -25,31 +27,41 @@ class DictOfCadetsAndTicksWithinQualification(Dict[Cadet, TicksForQualification]
 
     def subset_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
         return DictOfCadetsAndTicksWithinQualification(
-            dict([(cadet, self[cadet]) for cadet in list_of_cadets]),
-            self.qualification
+            dict([(cadet, self[cadet]) for cadet in list_of_cadets]), self.qualification
         )
 
     @property
     def list_of_tick_sheet_items_for_this_qualification(self) -> ListOfTickSheetItems:
         the_list = []
-        for tick_list_items in list(self.dict_of_substage_names_and_ticksheet_items.values()):
-            the_list +=tick_list_items
+        for tick_list_items in list(
+            self.dict_of_substage_names_and_ticksheet_items.values()
+        ):
+            the_list += tick_list_items
 
         return ListOfTickSheetItems(the_list)
 
     @property
     def list_of_substage_names_aligned_to_tick_sheet_items(self) -> List[str]:
         the_list = []
-        for substage, tick_list_items in self.dict_of_substage_names_and_ticksheet_items.items():
-            the_list +=[substage.name]*len(tick_list_items)
+        for (
+            substage,
+            tick_list_items,
+        ) in self.dict_of_substage_names_and_ticksheet_items.items():
+            the_list += [substage.name] * len(tick_list_items)
 
         return the_list
 
     @property
-    def dict_of_substage_names_and_ticksheet_items(self) -> Dict[TickSubStage, ListOfTickSheetItems]:
-        vals = [ticks_for_qualification_and_cadet.dict_of_substages_and_ticksheet_items for ticks_for_qualification_and_cadet in self.values()]
+    def dict_of_substage_names_and_ticksheet_items(
+        self,
+    ) -> Dict[TickSubStage, ListOfTickSheetItems]:
+        vals = [
+            ticks_for_qualification_and_cadet.dict_of_substages_and_ticksheet_items
+            for ticks_for_qualification_and_cadet in self.values()
+        ]
         ## should be the same...
         return vals[0]
+
 
 class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification]):
     pass
@@ -58,11 +70,9 @@ class QualificationsAndTicksForCadet(Dict[Qualification, TicksForQualification])
 class DictOfCadetsWithQualificationsAndTicks(
     Dict[Cadet, QualificationsAndTicksForCadet]
 ):
-
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
 
     def subset_for_qualification(
         self, qualification: Qualification
@@ -73,7 +83,6 @@ class DictOfCadetsWithQualificationsAndTicks(
                     (cadet, qualifications_and_ticks_for_cadet[qualification])
                     for cadet, qualifications_and_ticks_for_cadet in self.items()
                 ]
-
-        ), qualification=qualification)
-
-
+            ),
+            qualification=qualification,
+        )

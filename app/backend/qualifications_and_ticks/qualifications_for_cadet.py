@@ -5,7 +5,8 @@ from app.objects.cadets import Cadet
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.composed.cadets_with_qualifications import (
-    QualificationsForCadet, DictOfQualificationsForCadets,
+    QualificationsForCadet,
+    DictOfQualificationsForCadets,
 )
 from app.objects.qualifications import Qualification, NoQualifications
 
@@ -19,9 +20,10 @@ def apply_qualification_to_cadet(
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_qualifications.apply_qualification_to_cadet,
         cadet_id=cadet.id,
-    qualification_id= qualification.id,
-    awarded_by=awarded_by
+        qualification_id=qualification.id,
+        awarded_by=awarded_by,
     )
+
 
 def remove_qualification_from_cadet(
     interface: abstractInterface, cadet: Cadet, qualification: Qualification
@@ -29,8 +31,9 @@ def remove_qualification_from_cadet(
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_qualifications.remove_qualification_from_cadet,
         cadet_id=cadet.id,
-    qualification_id= qualification.id,
+        qualification_id=qualification.id,
     )
+
 
 def delete_all_qualifications_for_cadet(
     interface: abstractInterface, cadet: Cadet, areyousure=False
@@ -54,13 +57,13 @@ def name_of_highest_qualification_for_cadet(
     return highest_qualification.name
 
 
-
-
 def sorted_list_of_named_qualifications_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> List[str]:
-    ordered_list = object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
-                            cadet_id=cadet.id)
+    ordered_list = object_store.get(
+        object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
+        cadet_id=cadet.id,
+    )
 
     return ordered_list.list_of_names()
 
@@ -68,20 +71,26 @@ def sorted_list_of_named_qualifications_for_cadet(
 def get_list_of_qualifications_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> QualificationsForCadet:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_dict_of_qualifications_for_all_cadets,
-                            cadet=cadet)
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_qualifications.get_dict_of_qualifications_for_all_cadets,
+        cadet=cadet,
+    )
 
 
 def get_dict_of_qualifications_for_all_cadets(
     object_store: ObjectStore,
 ) -> DictOfQualificationsForCadets:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_dict_of_qualifications_for_all_cadets)
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_qualifications.get_dict_of_qualifications_for_all_cadets
+    )
 
 
 def highest_qualification_for_cadet(
     object_store: ObjectStore, cadet: Cadet
 ) -> Union[object, Qualification]:
-    ordered_list = object_store.get(object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
-                            cadet_id=cadet.id)
+    ordered_list = object_store.get(
+        object_store.data_api.data_list_of_cadets_with_qualifications.get_ordered_list_of_qualifications_for_cadet,
+        cadet_id=cadet.id,
+    )
 
     return ordered_list.highest_qualification_if_ordered()

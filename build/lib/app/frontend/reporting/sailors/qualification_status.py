@@ -13,9 +13,6 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.events import Event
 
-from app.backend.events.list_of_events import (
-    get_event_from_list_of_events_given_event_description,
-)
 
 from app.frontend.shared.event_selection import display_list_of_events_with_buttons
 

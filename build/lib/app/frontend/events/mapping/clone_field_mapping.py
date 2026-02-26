@@ -1,7 +1,6 @@
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
-
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
@@ -46,16 +45,16 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     else:
         return Form(
             ListOfLines(
-            [
-                nav_bar,
-                Line(
-                    "Choose event to clone event field mapping for %s"
-                    % str(current_event),
-                ),
-                warning,
-                _______________,
-                list_of_events_with_buttons,
-            ]
+                [
+                    nav_bar,
+                    Line(
+                        "Choose event to clone event field mapping for %s"
+                        % str(current_event),
+                    ),
+                    warning,
+                    _______________,
+                    list_of_events_with_buttons,
+                ]
             )
         )
 
@@ -91,9 +90,9 @@ def display_list_of_events_with_field_mapping_buttons(
 
 def post_form_for_clone_event_field_mapping(interface: abstractInterface):
     last_button = interface.last_button_pressed()
-    previous_form =interface.get_new_display_form_for_parent_of_function(
-            display_form_for_clone_event_field_mapping
-        )
+    previous_form = interface.get_new_display_form_for_parent_of_function(
+        display_form_for_clone_event_field_mapping
+    )
     if cancel_menu_button.pressed(last_button):
         return previous_form
 
@@ -120,10 +119,8 @@ def clone_field_mapping_for_selected_event_and_return_message(
         )
         assert len(mapping) > 0
     except:
-
         return "No mapping set up for event of mapping file is corrupted - try another event"
 
-    
     save_field_mapping_for_event(
         interface=interface, event=current_event, mapping=mapping
     )

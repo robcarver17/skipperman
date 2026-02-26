@@ -2,51 +2,62 @@ from copy import copy
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import arg_not_passed,  MultipleMatches, missing_data
-from app.objects.volunteers import ListOfVolunteers, Volunteer, SORT_BY_SURNAME, SORT_BY_FIRSTNAME
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    MultipleMatches,
+    missing_data,
+)
+from app.objects.volunteers import (
+    ListOfVolunteers,
+    Volunteer,
+    SORT_BY_SURNAME,
+    SORT_BY_FIRSTNAME,
+)
 
 VOLUNTEERS_TABLE = "volunteers"
 INDEX_VOLUNTEERS_TABLE = "index_volunteers_table"
 
+
 class SqlDataListOfVolunteers(GenericSqlData):
     def delete_volunteer(
-            self,
-            volunteer: Volunteer,
+        self,
+        volunteer: Volunteer,
     ):
         if self.table_does_not_exist(VOLUNTEERS_TABLE):
             return
 
         try:
-            self.cursor.execute("DELETE FROM %s WHERE %s=%d" % (VOLUNTEERS_TABLE,
-                                                                VOLUNTEER_ID,
-                                                                int(volunteer.id)))
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d"
+                % (VOLUNTEERS_TABLE, VOLUNTEER_ID, int(volunteer.id))
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing volunteers" % str(e1))
         finally:
             self.close()
 
-
-
     def modify_volunteer(
-            self,
-            existing_volunteer: Volunteer,
-            updated_volunteer: Volunteer,
+        self,
+        existing_volunteer: Volunteer,
+        updated_volunteer: Volunteer,
     ):
         if self.does_matching_volunteer_exist(updated_volunteer):
             if not existing_volunteer.name == updated_volunteer.name:
-                raise Exception("Volunteer %s with identical name already exists!" % str(updated_volunteer))
+                raise Exception(
+                    "Volunteer %s with identical name already exists!"
+                    % str(updated_volunteer)
+                )
 
         self._modify_volunteer_without_checks(
-            existing_volunteer=existing_volunteer,
-            updated_volunteer=updated_volunteer
+            existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer
         )
 
     def _modify_volunteer_without_checks(
-                self,
-                existing_volunteer: Volunteer,
-                updated_volunteer: Volunteer,
-        ):
+        self,
+        existing_volunteer: Volunteer,
+        updated_volunteer: Volunteer,
+    ):
         try:
             first_name = updated_volunteer.first_name
             surname = updated_volunteer.surname
@@ -54,9 +65,13 @@ class SqlDataListOfVolunteers(GenericSqlData):
 
             update = "UPDATE %s SET %s='%s', %s='%s' WHERE %s=%d" % (
                 VOLUNTEERS_TABLE,
-                VOLUNTEER_FIRST_NAME,first_name,
-                VOLUNTEER_SURNAME,surname,
-                VOLUNTEER_ID, existing_id)
+                VOLUNTEER_FIRST_NAME,
+                first_name,
+                VOLUNTEER_SURNAME,
+                surname,
+                VOLUNTEER_ID,
+                existing_id,
+            )
 
             self.cursor.execute(update)
 
@@ -69,7 +84,9 @@ class SqlDataListOfVolunteers(GenericSqlData):
 
     def add_new_volunteer(self, volunteer: Volunteer):
         if self.does_matching_volunteer_exist(volunteer):
-            raise Exception("Volunteer %s with identical name already exists!" % str(volunteer))
+            raise Exception(
+                "Volunteer %s with identical name already exists!" % str(volunteer)
+            )
 
         volunteer.id = str(self.next_available_volunteer_id())
 
@@ -77,14 +94,16 @@ class SqlDataListOfVolunteers(GenericSqlData):
             self._add_row_without_check_or_commit(volunteer)
             self.conn.commit()
         except Exception as e1:
-            raise Exception("error %s when adding volunteer %s to table" % (str(e1), volunteer))
+            raise Exception(
+                "error %s when adding volunteer %s to table" % (str(e1), volunteer)
+            )
         finally:
             self.close()
 
-    def next_available_volunteer_id(self) ->int:
-        return self.last_used_volunteer_id()+1
+    def next_available_volunteer_id(self) -> int:
+        return self.last_used_volunteer_id() + 1
 
-    def last_used_volunteer_id(self)-> int:
+    def last_used_volunteer_id(self) -> int:
         try:
             if self.table_does_not_exist(VOLUNTEERS_TABLE):
                 self.create_table()
@@ -106,7 +125,6 @@ class SqlDataListOfVolunteers(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-
     def does_matching_volunteer_exist(self, volunteer: Volunteer):
         try:
             id = self.get_id_of_matching_volunteer(volunteer, default=missing_data)
@@ -117,19 +135,23 @@ class SqlDataListOfVolunteers(GenericSqlData):
         except MultipleMatches:
             return True
         except Exception as e:
-            raise Exception("Couldn't check for matching volunteer %s error %s" % (str(volunteer), str(e)))
+            raise Exception(
+                "Couldn't check for matching volunteer %s error %s"
+                % (str(volunteer), str(e))
+            )
 
     def get_matching_volunteer(self, volunteer: Volunteer, default=missing_data):
         ## matches everything except id
-        volunteer_id = self.get_id_of_matching_volunteer(volunteer, default=missing_data)
+        volunteer_id = self.get_id_of_matching_volunteer(
+            volunteer, default=missing_data
+        )
         if volunteer_id is missing_data:
             return default
 
-        new_volunteer= copy(volunteer)
+        new_volunteer = copy(volunteer)
         new_volunteer.id = volunteer_id
 
         return new_volunteer
-
 
     def get_id_of_matching_volunteer(self, volunteer: Volunteer, default=missing_data):
         ## matches everything except id
@@ -142,7 +164,7 @@ class SqlDataListOfVolunteers(GenericSqlData):
                 VOLUNTEER_ID,
                 VOLUNTEERS_TABLE,
                 VOLUNTEER_FIRST_NAME,
-                VOLUNTEER_SURNAME
+                VOLUNTEER_SURNAME,
             )
             cursor.execute(statement, (volunteer.first_name, volunteer.surname))
             raw_list = cursor.fetchall()
@@ -154,23 +176,27 @@ class SqlDataListOfVolunteers(GenericSqlData):
 
         if len(raw_list) == 0:
             return default
-        elif len(raw_list)>1:
-            raise MultipleMatches("More than one volunteer matches %s in data!" % str(volunteer))
+        elif len(raw_list) > 1:
+            raise MultipleMatches(
+                "More than one volunteer matches %s in data!" % str(volunteer)
+            )
         else:
             return str(raw_list[0][0])
 
-
-    def get_volunteer_from_id(self, volunteer_id: str, default=missing_data) -> Volunteer:
+    def get_volunteer_from_id(
+        self, volunteer_id: str, default=missing_data
+    ) -> Volunteer:
         if self.table_does_not_exist(VOLUNTEERS_TABLE):
             return default
 
         try:
             cursor = self.cursor
             statement = "SELECT %s, %s FROM %s WHERE %s=%d" % (
-                VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME,
+                VOLUNTEER_FIRST_NAME,
+                VOLUNTEER_SURNAME,
                 VOLUNTEERS_TABLE,
                 VOLUNTEER_ID,
-                int(volunteer_id)
+                int(volunteer_id),
             )
             cursor.execute(statement)
             raw_list = cursor.fetchall()
@@ -179,20 +205,25 @@ class SqlDataListOfVolunteers(GenericSqlData):
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
-        elif len(raw_list)>1:
+        elif len(raw_list) > 1:
             raise MultipleMatches("More than one volunteer has id %s" % volunteer_id)
 
         raw_volunteer = raw_list[0]
         volunteer = Volunteer(
-            first_name= str(raw_volunteer[0]),
+            first_name=str(raw_volunteer[0]),
             surname=str(raw_volunteer[1]),
-            id= volunteer_id)
+            id=volunteer_id,
+        )
 
         return volunteer
 
-    def read(self, sort_by: str = arg_not_passed, exclude_volunteer: Volunteer = arg_not_passed) -> ListOfVolunteers:
+    def read(
+        self,
+        sort_by: str = arg_not_passed,
+        exclude_volunteer: Volunteer = arg_not_passed,
+    ) -> ListOfVolunteers:
         if self.table_does_not_exist(VOLUNTEERS_TABLE):
             return ListOfVolunteers.create_empty()
 
@@ -201,9 +232,12 @@ class SqlDataListOfVolunteers(GenericSqlData):
             exclude_clause = get_exclude_clause(exclude_volunteer)
             cursor = self.cursor
             statement = "SELECT %s, %s, %s FROM %s %s %s" % (
-                VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID,
+                VOLUNTEER_FIRST_NAME,
+                VOLUNTEER_SURNAME,
+                VOLUNTEER_ID,
                 VOLUNTEERS_TABLE,
-                sort_clause, exclude_clause
+                sort_clause,
+                exclude_clause,
             )
             cursor.execute(statement)
             raw_list = cursor.fetchall()
@@ -215,9 +249,10 @@ class SqlDataListOfVolunteers(GenericSqlData):
         new_list = []
         for raw_volunteer in raw_list:
             volunteer = Volunteer(
-                first_name= str(raw_volunteer[0]),
+                first_name=str(raw_volunteer[0]),
                 surname=str(raw_volunteer[1]),
-                id= str(raw_volunteer[2]))
+                id=str(raw_volunteer[2]),
+            )
 
             new_list.append(volunteer)
 
@@ -247,24 +282,32 @@ class SqlDataListOfVolunteers(GenericSqlData):
         id = int(volunteer.id)
         insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)" % (
             VOLUNTEERS_TABLE,
-        VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
+            VOLUNTEER_FIRST_NAME,
+            VOLUNTEER_SURNAME,
+            VOLUNTEER_ID,
+        )
 
-        self.cursor.execute(insertion, (
-            first_name, surname, id))
-
+        self.cursor.execute(insertion, (first_name, surname, id))
 
     def create_table(self):
-
         table_creation_query = """
             CREATE TABLE %s (
                 %s STR, 
                 %s STR,
                 %s INTEGER
             );
-        """ % (VOLUNTEERS_TABLE,
-               VOLUNTEER_FIRST_NAME, VOLUNTEER_SURNAME, VOLUNTEER_ID)
+        """ % (
+            VOLUNTEERS_TABLE,
+            VOLUNTEER_FIRST_NAME,
+            VOLUNTEER_SURNAME,
+            VOLUNTEER_ID,
+        )
 
-        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (INDEX_VOLUNTEERS_TABLE, VOLUNTEERS_TABLE, VOLUNTEER_ID)
+        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
+            INDEX_VOLUNTEERS_TABLE,
+            VOLUNTEERS_TABLE,
+            VOLUNTEER_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -276,7 +319,6 @@ class SqlDataListOfVolunteers(GenericSqlData):
             self.close()
 
 
-
 def get_sort_clause(sort_by: str):
     if sort_by == SORT_BY_SURNAME:
         return "ORDER BY %s" % VOLUNTEER_SURNAME
@@ -285,9 +327,9 @@ def get_sort_clause(sort_by: str):
     else:
         return ""
 
+
 def get_exclude_clause(exclude_volunteer: Volunteer = arg_not_passed):
     if exclude_volunteer is arg_not_passed:
         return ""
     else:
         return "WHERE %s IS NOT '%d'" % (VOLUNTEER_ID, int(exclude_volunteer.id))
-

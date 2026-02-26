@@ -4,9 +4,18 @@ from enum import EnumMeta
 
 import pandas as pd
 
-from app.objects.utilities.transform_data import clean_up_dict_with_nans, clean_up_dict_with_weird_floats_for_id, \
-    dict_from_str, dict_as_str, transform_date_into_str, transform_datetime_into_str, \
-    transform_str_or_datetime_into_date, transform_str_into_datetime, from_bool_to_str, from_str_to_bool
+from app.objects.utilities.transform_data import (
+    clean_up_dict_with_nans,
+    clean_up_dict_with_weird_floats_for_id,
+    dict_from_str,
+    dict_as_str,
+    transform_date_into_str,
+    transform_datetime_into_str,
+    transform_str_or_datetime_into_date,
+    transform_str_into_datetime,
+    from_bool_to_str,
+    from_str_to_bool,
+)
 
 KEYS = "Keys"
 VALUES = "Values"
@@ -38,7 +47,6 @@ class GenericSkipperManObject:
         as_str_dict = self.as_str_dict()
         return pd.DataFrame({KEYS: as_str_dict.keys(), VALUES: as_str_dict.values()})
 
-
     def as_str_dict(self) -> dict:
         as_dict = self.as_dict()
         transform_class_dict_into_str_dict(self, as_dict)
@@ -47,7 +55,6 @@ class GenericSkipperManObject:
 
     def as_dict(self) -> dict:
         return data_object_as_dict(self)
-
 
     ######
     # THIS METHOD USED WHEN READING .CSV FROM DISK
@@ -61,14 +68,11 @@ class GenericSkipperManObject:
 
         return self.from_dict_of_str(as_dict)
 
-
     @classmethod
     def from_dict_of_str(cls, dict_with_str):
         class_instance = get_class_instance_from_str_dict(cls, dict_with_str)
 
         return class_instance
-
-
 
 
 def transform_class_instance_into_string(class_instance):
@@ -118,8 +122,6 @@ def transform_string_into_class_instance(object_class, string):
 
     ## this will work for non strings eg floats
     return object_class(string)
-
-
 
 
 def data_object_as_dict(some_object) -> dict:

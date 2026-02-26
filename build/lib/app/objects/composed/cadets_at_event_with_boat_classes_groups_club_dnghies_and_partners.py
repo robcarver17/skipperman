@@ -20,6 +20,7 @@ from app.objects.partners import (
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.day_selectors import Day
 
+
 @dataclass
 class CadetWithDinghySailNumberBoatClassAndPartner:
     cadet: Cadet

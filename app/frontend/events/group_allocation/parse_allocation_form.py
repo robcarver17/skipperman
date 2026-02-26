@@ -14,7 +14,6 @@ from app.frontend.events.group_allocation.store_state import (
     get_day_from_state_or_none,
 )
 from app.frontend.shared.check_security import is_admin_or_skipper
-from app.objects.boat_classes import no_boat_class
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 
 from app.objects.day_selectors import Day
@@ -25,7 +24,8 @@ from app.frontend.events.group_allocation.input_fields import (
     CLUB_BOAT,
     PARTNER,
     BOAT_CLASS,
-    SAIL_NUMBER, ATTENDANCE
+    SAIL_NUMBER,
+    ATTENDANCE,
 )
 from app.frontend.events.group_allocation.buttons import (
     get_cadet_from_cadet_available_buttons,
@@ -37,10 +37,12 @@ from app.frontend.forms.form_utils import (
     input_name_from_column_name_and_cadet_id,
     get_availablity_from_form,
 )
-from app.backend.boat_classes.update_boat_information import \
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event
-from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import \
-    CadetWithDinghySailNumberBoatClassAndPartner
+from app.backend.boat_classes.update_boat_information import (
+    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
+)
+from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
+    CadetWithDinghySailNumberBoatClassAndPartner,
+)
 from app.objects.partners import NOT_ALLOCATED_STR
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
@@ -58,7 +60,9 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 def guess_boat_classes_in_allocation_form(interface: abstractInterface):
     event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=interface.object_store, event=event
+    )
     list_of_cadets = dict_of_all_event_data.list_of_cadets
     day_from_state = get_day_from_state_or_none(interface)
 
@@ -90,13 +94,17 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
         for cadet in list_of_cadets:
             already_has_boat = dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
                 cadet
-            ).has_boat_class_on_day(day)
+            ).has_boat_class_on_day(
+                day
+            )
             if already_has_boat:
                 continue
             boat_class_name = guess_name_of_boat_class_on_day_from_other_information(
                 dict_of_all_event_data=dict_of_all_event_data, day=day, cadet=cadet
             )
-            update = get_update_for_cadet(interface, cadet) ## should be fine but ensures we don't lose any updates made
+            update = get_update_for_cadet(
+                interface, cadet
+            )  ## should be fine but ensures we don't lose any updates made
             update.boat_class_name = boat_class_name
             list_of_updates.append(update)
 
@@ -112,10 +120,10 @@ def update_data_given_allocation_form(interface: abstractInterface):
             update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
 
         get_cadet_notes_for_row_in_form_and_alter_registration_data(
-                interface=interface,
-                event=event,
-                cadet=cadet,
-            )
+            interface=interface,
+            event=event,
+            cadet=cadet,
+        )
 
     ## has to be done in one go because of swaps
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
@@ -279,14 +287,12 @@ def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_
     list_of_updates: List[CadetWithDinghySailNumberBoatClassAndPartner],
     list_of_days: List[Day],
 ):
-
     for day in list_of_days:
-        messages=update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
+        messages = update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
             interface=interface,
             event=event,
             list_of_updates=list_of_updates,
             day=day,
-
         )
 
         for message in messages:
@@ -307,9 +313,7 @@ def make_cadet_available_on_current_day(
     )
     event = get_event_from_state(interface)
 
-    make_cadet_available_on_day(
-        interface=interface, event=event, cadet=cadet, day=day
-    )
+    make_cadet_available_on_day(interface=interface, event=event, cadet=cadet, day=day)
 
 
 def remove_partnership_for_cadet_from_group_allocation_button(

@@ -103,13 +103,15 @@ def action_when_event_button_clicked(interface: abstractInterface) -> NewForm:
         value_of_button_pressed=interface.last_button_pressed(),
         object_store=interface.object_store,
     )
-    
+
     clean_sensitive_data_for_event(interface=interface, event=event)
     interface.clear()
 
     interface.log_error("Cleaned sensitive data for event %s" % str(event))
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_event_cleaning)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_for_event_cleaning
+    )
 
 
 def display_list_of_events_with_buttons_ignoring_future_events(

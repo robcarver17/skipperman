@@ -1,26 +1,44 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
-from app.objects.composed.ticks_in_dicts import QualificationsAndTickItemsAsDict, TickSubStagesAsDict
+from app.objects.composed.ticks_in_dicts import (
+    QualificationsAndTickItemsAsDict,
+    TickSubStagesAsDict,
+)
 from app.objects.qualifications import Qualification, ListOfQualifications
-from app.objects.substages import ListOfTickSheetItems, TickSheetItem, ListOfTickSubStages
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
+from app.objects.substages import (
+    ListOfTickSheetItems,
+    TickSheetItem,
+    ListOfTickSubStages,
+)
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    MissingData,
+    MultipleMatches,
+    missing_data,
+)
 
 TICK_SHEET_ITEM_TABLE = "tick_sheet_items"
 INDEX_TICK_SHEET_ITEM_TABLE = "index_tick_sheet_items"
 
+
 class SqlDataListOfTickSheetItems(GenericSqlData):
     def add_new_ticklistitem_to_qualification(
         self,
-    substage_id: str,
-    new_tick_list_name: str,
+        substage_id: str,
+        new_tick_list_name: str,
     ):
-        if self.does_ticksheet_item_with_name_exist(tick_list_name=new_tick_list_name, substage_id=substage_id):
-            raise Exception("Can't add %s as name already exists in the same substage" % (new_tick_list_name))
+        if self.does_ticksheet_item_with_name_exist(
+            tick_list_name=new_tick_list_name, substage_id=substage_id
+        ):
+            raise Exception(
+                "Can't add %s as name already exists in the same substage"
+                % (new_tick_list_name)
+            )
 
         new_tick = TickSheetItem(
             substage_id=substage_id,
             name=new_tick_list_name,
-            id=str(self.next_available_id())
+            id=str(self.next_available_id()),
         )
         try:
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
@@ -34,19 +52,23 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         finally:
             self.close()
 
-
-    def does_ticksheet_item_with_name_exist(self, tick_list_name: str,  substage_id: str):
+    def does_ticksheet_item_with_name_exist(
+        self, tick_list_name: str, substage_id: str
+    ):
         try:
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 return False
             cursor = self.cursor
-            cursor.execute('''SELECT * FROM %s WHERE %s='%s' AND %s=%d ''' % (
-                TICK_SHEET_ITEM_TABLE,
-                TICK_SHEET_ITEM_NAME,
-                tick_list_name,
-                TICK_SUBSTAGE_ID,
-                int(substage_id)
-            ))
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s='%s' AND %s=%d """
+                % (
+                    TICK_SHEET_ITEM_TABLE,
+                    TICK_SHEET_ITEM_NAME,
+                    tick_list_name,
+                    TICK_SUBSTAGE_ID,
+                    int(substage_id),
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -54,12 +76,12 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         finally:
             self.close()
 
-        return len(raw_list)>0
+        return len(raw_list) > 0
 
-    def next_available_id(self) ->int:
-        return self.last_used_id()+1
+    def next_available_id(self) -> int:
+        return self.last_used_id() + 1
 
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
                 self.create_table()
@@ -67,7 +89,7 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             cursor = self.cursor
             statement = "SELECT MAX(%s) FROM %s" % (
                 TICK_SHEET_ITEM_ID,
-                TICK_SHEET_ITEM_TABLE
+                TICK_SHEET_ITEM_TABLE,
             )
             cursor.execute(statement)
             raw_list = cursor.fetchall()
@@ -81,24 +103,34 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-
     def modify_ticksheet_item_name(
-            self, existing_tick_item_id: str, new_item_name: str
+        self, existing_tick_item_id: str, new_item_name: str
     ):
-        existing_item = self.get_tick_item_with_id(existing_tick_item_id, default=missing_data)
+        existing_item = self.get_tick_item_with_id(
+            existing_tick_item_id, default=missing_data
+        )
         if existing_item is missing_data:
-            raise Exception("Can't modify non existent item with id %s" % existing_tick_item_id)
+            raise Exception(
+                "Can't modify non existent item with id %s" % existing_tick_item_id
+            )
 
         if existing_item.name == new_item_name:
             return
 
-        if self.does_ticksheet_item_with_name_exist(new_item_name, substage_id=existing_item.substage_id):
-            raise Exception("Cannot change name from %s to %s as an item with that name already exists for this substage" % (existing_item.name, new_item_name))
+        if self.does_ticksheet_item_with_name_exist(
+            new_item_name, substage_id=existing_item.substage_id
+        ):
+            raise Exception(
+                "Cannot change name from %s to %s as an item with that name already exists for this substage"
+                % (existing_item.name, new_item_name)
+            )
 
-        self._modify_ticksheet_item_name_without_checks(existing_tick_item_id=existing_tick_item_id, new_item_name=new_item_name)
+        self._modify_ticksheet_item_name_without_checks(
+            existing_tick_item_id=existing_tick_item_id, new_item_name=new_item_name
+        )
 
     def _modify_ticksheet_item_name_without_checks(
-            self, existing_tick_item_id: str, new_item_name: str
+        self, existing_tick_item_id: str, new_item_name: str
     ):
         try:
             if self.table_does_not_exist(TICK_SHEET_ITEM_TABLE):
@@ -109,7 +141,8 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
                 TICK_SHEET_ITEM_NAME,
                 new_item_name,
                 TICK_SHEET_ITEM_ID,
-                int(existing_tick_item_id))
+                int(existing_tick_item_id),
+            )
 
             self.cursor.execute(insertion)
 
@@ -118,7 +151,6 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             raise Exception("Error %s when writing tick items" % str(e1))
         finally:
             self.close()
-
 
     def get_tick_item_with_id(self, tick_item_id: str, default=arg_not_passed):
         try:
@@ -129,14 +161,16 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
                     return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
-
-                TICK_SHEET_ITEM_NAME,
-                TICK_SUBSTAGE_ID,
-                TICK_SHEET_ITEM_TABLE,
-                TICK_SHEET_ITEM_ID,
-                int(tick_item_id),
-            ))
+            cursor.execute(
+                """SELECT %s, %s FROM %s WHERE %s=%d """
+                % (
+                    TICK_SHEET_ITEM_NAME,
+                    TICK_SUBSTAGE_ID,
+                    TICK_SHEET_ITEM_TABLE,
+                    TICK_SHEET_ITEM_ID,
+                    int(tick_item_id),
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -144,63 +178,79 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             if default is arg_not_passed:
                 raise MissingData("%s not found" % tick_item_id)
             else:
                 return default
-        elif len(raw_list)>1:
+        elif len(raw_list) > 1:
             raise MultipleMatches("More than one %s matches" % tick_item_id)
 
         raw_item = raw_list[0]
 
-        return TickSheetItem(name=str(raw_item[0]),
-                          substage_id=str(raw_item[1]),
-                          id=tick_item_id)
-
-
-    def get_qualifications_and_tick_items_as_dict(self)->QualificationsAndTickItemsAsDict:
-        raw_list = self.read()
-        return QualificationsAndTickItemsAsDict(dict(
-            [
-                (qualification, self.get_substages_as_dict_for_qualification(qualification, raw_list=raw_list))
-                for qualification in self.list_of_qualifications
-            ])
+        return TickSheetItem(
+            name=str(raw_item[0]), substage_id=str(raw_item[1]), id=tick_item_id
         )
 
-    def get_substages_as_dict_for_qualification(self, qualification: Qualification, raw_list: ListOfTickSheetItems) \
-            -> TickSubStagesAsDict:
-        new_dict = dict([(substage, ListOfTickSheetItems([])) for substage in self.list_of_substages if substage.stage_id == qualification.id])
+    def get_qualifications_and_tick_items_as_dict(
+        self,
+    ) -> QualificationsAndTickItemsAsDict:
+        raw_list = self.read()
+        return QualificationsAndTickItemsAsDict(
+            dict(
+                [
+                    (
+                        qualification,
+                        self.get_substages_as_dict_for_qualification(
+                            qualification, raw_list=raw_list
+                        ),
+                    )
+                    for qualification in self.list_of_qualifications
+                ]
+            )
+        )
+
+    def get_substages_as_dict_for_qualification(
+        self, qualification: Qualification, raw_list: ListOfTickSheetItems
+    ) -> TickSubStagesAsDict:
+        new_dict = dict(
+            [
+                (substage, ListOfTickSheetItems([]))
+                for substage in self.list_of_substages
+                if substage.stage_id == qualification.id
+            ]
+        )
         for raw_item in raw_list:
             substage_id = raw_item.substage_id
             substage = self.list_of_substages.substage_given_id(substage_id)
             qualification_id = substage.stage_id
-            if not qualification_id==qualification.id:
+            if not qualification_id == qualification.id:
                 continue
 
             tick_name = raw_item.name
             tick_id = raw_item.id
-            list_this_substage = new_dict.get(substage) ## prefilled
-            list_this_substage.append(TickSheetItem(name=tick_name,
-                                   substage_id=substage_id,
-                                                    id=tick_id))
+            list_this_substage = new_dict.get(substage)  ## prefilled
+            list_this_substage.append(
+                TickSheetItem(name=tick_name, substage_id=substage_id, id=tick_id)
+            )
 
-            new_dict[substage]= list_this_substage
+            new_dict[substage] = list_this_substage
 
         return TickSubStagesAsDict(new_dict)
 
     @property
     def list_of_substages(self) -> ListOfTickSubStages:
         list_of_substages = self.object_store.get(
-        self.object_store.data_api.data_list_of_tick_sub_stages.read
-    )
+            self.object_store.data_api.data_list_of_tick_sub_stages.read
+        )
 
         return list_of_substages
 
-
     @property
-    def list_of_qualifications(self) ->ListOfQualifications:
-        list_of_qualifications = self.object_store.get(self.object_store.data_api.data_list_of_qualifications.read)
+    def list_of_qualifications(self) -> ListOfQualifications:
+        list_of_qualifications = self.object_store.get(
+            self.object_store.data_api.data_list_of_qualifications.read
+        )
 
         return list_of_qualifications
 
@@ -210,13 +260,15 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
                 return ListOfTickSheetItems.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s''' % (
-
-                TICK_SHEET_ITEM_NAME,
-                TICK_SUBSTAGE_ID,
-                TICK_SHEET_ITEM_ID,
-                TICK_SHEET_ITEM_TABLE,
-            ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s"""
+                % (
+                    TICK_SHEET_ITEM_NAME,
+                    TICK_SUBSTAGE_ID,
+                    TICK_SHEET_ITEM_ID,
+                    TICK_SHEET_ITEM_TABLE,
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -225,11 +277,11 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             self.close()
 
         new_list = [
-            TickSheetItem(name=str(raw_item[0]),
-                          substage_id=str(raw_item[1]),
-                          id=str(raw_item[2]))
-
-            for raw_item in raw_list]
+            TickSheetItem(
+                name=str(raw_item[0]), substage_id=str(raw_item[1]), id=str(raw_item[2])
+            )
+            for raw_item in raw_list
+        ]
 
         return ListOfTickSheetItems(new_list)
 
@@ -258,14 +310,14 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             TICK_SHEET_ITEM_TABLE,
             TICK_SHEET_ITEM_NAME,
             TICK_SUBSTAGE_ID,
-            TICK_SHEET_ITEM_ID)
+            TICK_SHEET_ITEM_ID,
+        )
 
-        self.cursor.execute(insertion, (
-            name, substage_id, item_id))
+        self.cursor.execute(insertion, (name, substage_id, item_id))
 
     def create_table(self):
         try:
-            self.cursor.execute("DROP TABLE %s"  % TICK_SHEET_ITEM_TABLE)
+            self.cursor.execute("DROP TABLE %s" % TICK_SHEET_ITEM_TABLE)
             self.conn.commit()
         except:
             pass
@@ -276,15 +328,18 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
                             %s INTEGER,
                             %s INTEGER
                         );
-                    """ % (TICK_SHEET_ITEM_TABLE,
-                           TICK_SHEET_ITEM_NAME,
-                           TICK_SUBSTAGE_ID,
-                           TICK_SHEET_ITEM_ID
-                           )
+                    """ % (
+            TICK_SHEET_ITEM_TABLE,
+            TICK_SHEET_ITEM_NAME,
+            TICK_SUBSTAGE_ID,
+            TICK_SHEET_ITEM_ID,
+        )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
-            INDEX_TICK_SHEET_ITEM_TABLE, TICK_SHEET_ITEM_TABLE,
-            TICK_SHEET_ITEM_ID)
+            INDEX_TICK_SHEET_ITEM_TABLE,
+            TICK_SHEET_ITEM_TABLE,
+            TICK_SHEET_ITEM_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -294,5 +349,3 @@ class SqlDataListOfTickSheetItems(GenericSqlData):
             raise Exception("Error %s when creating substage table" % str(e1))
         finally:
             self.close()
-
-

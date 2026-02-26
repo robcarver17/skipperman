@@ -5,12 +5,23 @@ from app.frontend.administration.admin_function_mapping import admin_function_ma
 from app.frontend.cadets.cadet_function_mapping import cadet_function_mapping
 from app.frontend.configuration.config_function_mapping import config_function_mapping
 from app.frontend.events.events_function_mapping import event_function_mapping
-from app.frontend.instructors.instructor_function_mapping import instructor_function_mapping
+from app.frontend.instructors.instructor_function_mapping import (
+    instructor_function_mapping,
+)
 from app.frontend.reporting.reporting_function_mapping import reporting_function_mapping
 from app.frontend.utilities.utilities_function_mapping import utilities_function_mapping
-from app.frontend.volunteers.volunteer_function_mapping import volunteer_function_mapping
-from app.objects.abstract_objects.form_function_mapping import DisplayAndPostFormFunctionMaps
-from app.objects.users_and_security import ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP,RACE_OFFICER_GROUP
+from app.frontend.volunteers.volunteer_function_mapping import (
+    volunteer_function_mapping,
+)
+from app.objects.abstract_objects.form_function_mapping import (
+    DisplayAndPostFormFunctionMaps,
+)
+from app.objects.users_and_security import (
+    ADMIN_GROUP,
+    SKIPPER_GROUP,
+    INSTRUCTOR_GROUP,
+    RACE_OFFICER_GROUP,
+)
 from app.objects.utilities.exceptions import MissingMethod
 
 menu_definition = {

@@ -30,12 +30,15 @@ class flaskInterface(abstractInterface):
         return is_website_post()
 
     def value_from_form(
-        self, key: str, default=arg_not_passed,  value_is_date: bool = False
+        self, key: str, default=arg_not_passed, value_is_date: bool = False
     ):
         try:
             value = get_value_from_form(key)
         except:
-            print("%s missing from form, only have keys %s" % (key, str(all_keys_in_form())))
+            print(
+                "%s missing from form, only have keys %s"
+                % (key, str(all_keys_in_form()))
+            )
             if default is arg_not_passed:
                 raise Exception("Value %s not found in form" % key)
             else:
@@ -62,7 +65,6 @@ class flaskInterface(abstractInterface):
     def last_button_pressed(self) -> str:
         return get_last_button_pressed()
 
-
     def uploaded_file(self, input_name: str = "file"):
         return uploaded_file(input_name)
 
@@ -81,8 +83,10 @@ def is_website_post() -> bool:
 def get_value_from_form(key: str):
     return request.form[key]
 
+
 def all_keys_in_form():
     return list(request.form.keys())
+
 
 def get_list_from_form(key: str):
     return request.form.getlist(key)
@@ -105,10 +109,6 @@ def uploaded_file(input_name: str = "file"):
 
 
 def from_multidict_to_dict(some_multi_dict: MultiDict):
-    new_dict = dict(
-        [
-            (key, some_multi_dict.get(key)) for key in some_multi_dict.keys()
-        ]
-    )
+    new_dict = dict([(key, some_multi_dict.get(key)) for key in some_multi_dict.keys()])
 
     return new_dict

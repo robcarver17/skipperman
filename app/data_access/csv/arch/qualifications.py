@@ -29,9 +29,7 @@ class CsvDataListOfQualifications(GenericCsvData):
         )
 
 
-class CsvListOfCadetsWithQualifications(
-    GenericCsvData
-):
+class CsvListOfCadetsWithQualifications(GenericCsvData):
     def read(self) -> ListOfCadetsWithIdsAndQualifications:
         list_of_cadets_with_qualifications = self.read_and_return_object_of_type(
             ListOfCadetsWithIdsAndQualifications,
@@ -77,12 +75,8 @@ class CsvDataListOfTickSheetItems(GenericCsvData):
         )
 
 
-class CsvDataListOfCadetsWithTickListItems(
-    GenericCsvData
-):
-    def read(
-        self, cadet_id: str
-    ) -> ListOfTickListItemsAndTicksForSpecificCadet:
+class CsvDataListOfCadetsWithTickListItems(GenericCsvData):
+    def read(self, cadet_id: str) -> ListOfTickListItemsAndTicksForSpecificCadet:
         list_of_items_this_cadet = self.read_and_return_object_of_type(
             ListOfTickListItemsAndTicksForSpecificCadet,
             file_identifier=LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET,

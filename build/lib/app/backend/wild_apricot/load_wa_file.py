@@ -68,5 +68,3 @@ def check_local_file_is_valid_wa_file(new_filename: str):
         get_event_id_from_wa_df(wa_df)
     except Exception as e:
         raise FileError("File is not a valid WA event file, error %s" % str(e))
-
-

@@ -1,7 +1,8 @@
 from typing import Union, List
 
 from app.backend.club_boats.club_boat_limits import (
-    clear_and_set_generic_limit, get_list_of_boats_and_generic_limits,
+    clear_and_set_generic_limit,
+    get_list_of_boats_and_generic_limits,
 )
 from app.data_access.store.object_store import ObjectStore
 
@@ -32,7 +33,11 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
 from app.objects.abstract_objects.abstract_tables import RowInTable
-from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies, ClubDinghyAndGenericLimit
+from app.objects.club_dinghies import (
+    ClubDinghy,
+    ListOfClubDinghies,
+    ClubDinghyAndGenericLimit,
+)
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
 header_text = "List of club dinghies: add, edit or re-order. Re-ordering will cancel any other changes made since saving."
@@ -53,6 +58,7 @@ def get_list_of_boats_and_limits(
     object_store: ObjectStore,
 ) -> List[ClubDinghyAndGenericLimit]:
     return get_list_of_boats_and_generic_limits(object_store)
+
 
 def get_row_for_existing_entry(
     entry: ClubDinghyAndGenericLimit, **ignored_kwargs
@@ -115,7 +121,6 @@ def post_form_config_club_dinghies_page(
         object_store=interface.object_store
     )
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats_and_limits,
         interface=interface,
@@ -149,10 +154,12 @@ def get_modified_dinghy_and_limit_from_form(
         name_of_text_box_for_boat(existing_dinghy_and_limit), default=MISSING_FROM_FORM
     )
 
-    new_limit = int(interface.value_from_form(
-        get_cell_name_for_boat_limits(existing_dinghy_and_limit),
-        default=MISSING_FROM_FORM,
-    ))
+    new_limit = int(
+        interface.value_from_form(
+            get_cell_name_for_boat_limits(existing_dinghy_and_limit),
+            default=MISSING_FROM_FORM,
+        )
+    )
 
     new_hidden = is_radio_yes_or_no(
         interface=interface,
@@ -172,12 +179,11 @@ def get_modified_dinghy_and_limit_from_form(
 
 
 def modify_club_dinghy_and_limit(
-        interface: abstractInterface,
-        existing_object: ClubDinghyAndGenericLimit,
+    interface: abstractInterface,
+    existing_object: ClubDinghyAndGenericLimit,
     new_object: ClubDinghyAndGenericLimit,
 ):
-
-    if existing_object.club_dinghy==new_object.club_dinghy:
+    if existing_object.club_dinghy == new_object.club_dinghy:
         pass
     else:
         modify_club_dinghy(

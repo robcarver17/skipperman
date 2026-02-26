@@ -4,7 +4,6 @@ from typing import List
 from app.objects.utilities.exceptions import missing_data
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-
     get_unique_object_with_multiple_attr_in_list,
     get_idx_of_unique_object_with_multiple_attr_in_list,
 )
@@ -12,7 +11,7 @@ from app.objects.utilities.generic_list_of_objects import (
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 PERMANENT_SKIP_VOLUNTEER_ID = str(-999901)  ## DO not change
-SKIP_FOR_NOW_VOLUNTEER_ID =   str(-999702)  ## do not change
+SKIP_FOR_NOW_VOLUNTEER_ID = str(-999702)  ## do not change
 
 ## FIXME remove once data transfer done
 OLD_PERMANENT_SKIP_VOLUNTEER_ID = "NO_volunteer_allocated"  ## DO not change
@@ -98,8 +97,6 @@ class ListOfIdentifiedVolunteersAtEvent(GenericListOfObjects):
             if item.not_skipped
         ]
         return ListOfIdentifiedVolunteersAtEvent(items)
-
-
 
     def is_temporary_skip(self, row_id: str, volunteer_index: int):
         item = get_unique_object_with_multiple_attr_in_list(

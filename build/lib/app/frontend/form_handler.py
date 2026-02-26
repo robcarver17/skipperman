@@ -7,7 +7,8 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 from app.objects.abstract_objects.abstract_form import (
     NewForm,
-    Form, NewFormWithRedirectInfo,
+    Form,
+    NewFormWithRedirectInfo,
 )
 from app.objects.abstract_objects.form_function_mapping import (
     MissingFormName,
@@ -21,7 +22,6 @@ from app.objects.utilities.exceptions import NoButtonPressed, arg_not_passed
 class FormHandler:
     interface: abstractInterface
 
-
     def get_form(self) -> Union[Form, NewFormWithRedirectInfo]:
         form = self.get_form_from_form_name()
 
@@ -30,8 +30,7 @@ class FormHandler:
 
         return form
 
-
-    def get_form_from_form_name(self)  -> Union[Form, NewForm]:
+    def get_form_from_form_name(self) -> Union[Form, NewForm]:
         form_name = self.form_name
 
         print("Getting form named %s" % form_name)
@@ -75,20 +74,18 @@ class FormHandler:
 
         return self.interface.map_new_form_to_redirect_info(form)
 
-
     @property
     def form_name(self) -> str:
         form_name = getattr(self, "_form_name", None)
         if form_name is None:
             form_name = self.interface.form_name
-            self._form_name =form_name
+            self._form_name = form_name
 
         return form_name
 
     @form_name.setter
-    def form_name(self,form_name:str):
+    def form_name(self, form_name: str):
         self._form_name = form_name
-
 
     @property
     def display_and_post_form_function_maps(self) -> DisplayAndPostFormFunctionMaps:

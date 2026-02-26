@@ -29,10 +29,11 @@ from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_patrol_boats_at_event,
+    get_sorted_list_of_patrol_boats_at_event,
     get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
+
 
 def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: Event):
     warn_on_volunteer_qualifications(interface=interface, event=event)
@@ -40,10 +41,12 @@ def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: E
     warn_on_double_booking(interface=interface, event=event)
 
 
-def warn_on_double_booking(interface: abstractInterface,  event: Event):
+def warn_on_double_booking(interface: abstractInterface, event: Event):
     list_of_warnings = []
     for day in event.days_in_event():
-        list_of_warnings += warn_on_double_booking_on_day(interface.object_store, event, day)
+        list_of_warnings += warn_on_double_booking_on_day(
+            interface.object_store, event, day
+        )
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
 
@@ -59,8 +62,10 @@ def warn_on_double_booking(interface: abstractInterface,  event: Event):
 def warn_on_double_booking_on_day(
     object_store: ObjectStore, event: Event, day: Day
 ) -> List[str]:
-    dict_of_people_with_club_dinghies = get_dict_of_volunteers_and_club_dinghies_at_event(
-        object_store=object_store, event=event
+    dict_of_people_with_club_dinghies = (
+        get_dict_of_volunteers_and_club_dinghies_at_event(
+            object_store=object_store, event=event
+        )
     )
     dict_of_voluteers_at_event_with_patrol_boats = (
         get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
@@ -86,9 +91,9 @@ def warn_on_double_booking_on_day(
     return warnings
 
 
-def warn_on_pb2_drivers(interface: abstractInterface,  event: Event):
-    object_store=interface.object_store
-    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
+def warn_on_pb2_drivers(interface: abstractInterface, event: Event):
+    object_store = interface.object_store
+    list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
         object_store=object_store, event=event
     )
     list_of_warnings = []

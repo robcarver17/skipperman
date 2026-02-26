@@ -11,7 +11,6 @@ from app.frontend.utilities.files.state import (
     retrieve_directory_and_filename,
     clear_directory_and_filename,
 )
-import os
 
 from werkzeug.exceptions import RequestEntityTooLarge
 
@@ -91,11 +90,11 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
     try:
         file = get_file_from_interface(FILE_FIELD, interface=interface)
         new_file_filename = PathAndFilename.from_filename_without_path(file.filename)
-        extension_of_new_file= new_file_filename.extension
+        extension_of_new_file = new_file_filename.extension
 
         delete_existing_public_files(original_path_and_filename)
-        new_filename_on_disk_with_suffix = get_public_filename_with_suffix_given_local_file(
-            original_path_and_filename
+        new_filename_on_disk_with_suffix = (
+            get_public_filename_with_suffix_given_local_file(original_path_and_filename)
         )
         new_filename_on_disk_with_suffix.add_or_replace_extension(extension_of_new_file)
 
@@ -109,5 +108,6 @@ def post_form_to_replace_selected_files(interface: abstractInterface):
 
     interface.log_error("Uploaded replacement file %s" % (web_path))
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_to_replace_selected_files)
-
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_to_replace_selected_files
+    )

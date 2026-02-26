@@ -14,8 +14,10 @@ from app.frontend.events.add_event import (
     display_form_view_for_add_event,
     post_form_view_for_add_event,
 )
-from app.frontend.events.import_data.background_processses import display_call_to_update_background_data_during_import, \
-    post_call_to_update_background_data_during_import
+from app.frontend.events.import_data.background_processses import (
+    display_call_to_update_background_data_during_import,
+    post_call_to_update_background_data_during_import,
+)
 from app.frontend.events.view_individual_events import (
     display_form_view_individual_event,
     post_form_view_individual_event,
@@ -51,12 +53,14 @@ from app.frontend.events.mapping.download_field_mapping import (
 
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
     start_cadet_id_process,
-    post_form_add_cadet_ids_during_import, not_used_start_cadet_id_process_post,
+    post_form_add_cadet_ids_during_import,
+    not_used_start_cadet_id_process_post,
     display_form_identify_cadets_during_import,
 )
 from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_at_event import (
     start_process_of_interactively_update_cadets_at_event,
-    post_form_interactively_update_cadets_at_event, post_process_of_interactively_update_cadets_at_event,
+    post_form_interactively_update_cadets_at_event,
+    post_process_of_interactively_update_cadets_at_event,
     display_form_interactively_update_cadets_at_event,
 )
 
@@ -84,7 +88,9 @@ from app.frontend.events.registration_details.add_unregistered_cadet import (
 )
 from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification import (
     begin_volunteer_identification_process,
-    post_form_volunteer_identification, post_volunteer_identification_process, display_form_volunteer_identification,
+    post_form_volunteer_identification,
+    post_volunteer_identification_process,
+    display_form_volunteer_identification,
 )
 from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
     post_add_volunteers_to_event,
@@ -183,22 +189,28 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                         start_cadet_id_process,
                                         not_used_start_cadet_id_process_post,
                                     ): {
-                                        (display_form_identify_cadets_during_import,
-                                         post_form_add_cadet_ids_during_import): 0
+                                        (
+                                            display_form_identify_cadets_during_import,
+                                            post_form_add_cadet_ids_during_import,
+                                        ): 0
                                     },
                                     (
                                         start_process_of_interactively_update_cadets_at_event,
                                         post_process_of_interactively_update_cadets_at_event,
                                     ): {
-                                        (display_form_interactively_update_cadets_at_event,
-                                         post_form_interactively_update_cadets_at_event):0
+                                        (
+                                            display_form_interactively_update_cadets_at_event,
+                                            post_form_interactively_update_cadets_at_event,
+                                        ): 0
                                     },
                                     (
                                         begin_volunteer_identification_process,
                                         post_volunteer_identification_process,
                                     ): {
-                                        (display_form_volunteer_identification,
-                                         post_form_volunteer_identification):0
+                                        (
+                                            display_form_volunteer_identification,
+                                            post_form_volunteer_identification,
+                                        ): 0
                                     },
                                     (
                                         display_add_volunteers_to_event,
@@ -212,10 +224,10 @@ event_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                                         display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
                                         post_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
                                     ): 0,
-                                    (display_call_to_update_background_data_during_import,
-post_call_to_update_background_data_during_import,
-
-                                    ):0,
+                                    (
+                                        display_call_to_update_background_data_during_import,
+                                        post_call_to_update_background_data_during_import,
+                                    ): 0,
                                 },
                             },
                             (

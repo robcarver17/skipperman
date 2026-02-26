@@ -215,7 +215,7 @@ def post_skills_editing_form_when_mismatch(interface: abstractInterface):
         return return_to_calling_function(interface)
     else:
         volunteer = get_volunteer_from_state(interface)
-        
+
         get_and_save_volunteer_skills_from_form(
             interface=interface, volunteer=volunteer
         )

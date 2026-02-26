@@ -66,24 +66,24 @@ def get_list_of_unique_volunteer_ids_identified_in_registration_data(
 def mark_volunteer_as_skipped_permanently(
     interface: abstractInterface, event: Event, row_id: str, volunteer_index: int
 ):
-    #PERMANENT_SKIP_VOLUNTEER_ID
+    # PERMANENT_SKIP_VOLUNTEER_ID
     interface.update(
         interface.object_store.data_api.data_list_of_identified_volunteers_at_event.mark_volunteer_as_skipped_permanently,
         event_id=event.id,
         row_id=row_id,
-        volunteer_index=volunteer_index
+        volunteer_index=volunteer_index,
     )
 
 
 def mark_volunteer_as_skipped_for_now(
     interface: abstractInterface, event: Event, row_id: str, volunteer_index: int
 ):
-    #SKIP_FOR_NOW_VOLUNTEER_ID
+    # SKIP_FOR_NOW_VOLUNTEER_ID
     interface.update(
         interface.object_store.data_api.data_list_of_identified_volunteers_at_event.mark_volunteer_as_skipped_for_now,
         event_id=event.id,
         row_id=row_id,
-        volunteer_index=volunteer_index
+        volunteer_index=volunteer_index,
     )
 
 
@@ -99,8 +99,9 @@ def add_identified_volunteer(
         event_id=event.id,
         volunteer_id=volunteer.id,
         row_id=row_id,
-        volunteer_index=volunteer_index
+        volunteer_index=volunteer_index,
     )
+
 
 def delete_volunteer_from_identified_data(
     interface: abstractInterface, event: Event, volunteer: Volunteer
@@ -108,7 +109,7 @@ def delete_volunteer_from_identified_data(
     interface.update(
         interface.object_store.data_api.data_list_of_identified_volunteers_at_event.delete_volunteer_from_identified_data,
         event_id=event.id,
-        volunteer_id=volunteer.id
+        volunteer_id=volunteer.id,
     )
 
 
@@ -124,7 +125,7 @@ def delete_volunteer_from_identified_data_and_return_rows_deleted(
     rows = list_of_identified_volunteers.list_of_identified_volunteers_with_volunteer_id_excluding_skipped(
         volunteer.id
     )
-    row_count  =len(rows)
+    row_count = len(rows)
     delete_volunteer_from_identified_data(interface, event, volunteer)
 
     return row_count
@@ -170,9 +171,5 @@ def get_list_of_identified_volunteers_at_event(
 ) -> ListOfIdentifiedVolunteersAtEvent:
     return object_store.get(
         object_store.data_api.data_list_of_identified_volunteers_at_event.read,
-        event_id=event.id
+        event_id=event.id,
     )
-
-
-
-

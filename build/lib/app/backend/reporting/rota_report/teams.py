@@ -162,7 +162,7 @@ def combine_and_drop_initial_duplicates(
 
 
 def rows_match(some_row: pd.Series, other_row: pd.Series):
-    return all(some_row == other_row)
+    return all(some_row == other_row)  ## ignore warning
 
 
 def sort_df_by_power_boat(
@@ -172,7 +172,7 @@ def sort_df_by_power_boat(
 ) -> pd.DataFrame:
     all_boats_in_order = (
         volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.list_of_unique_boats_at_event_including_unallocated()
-    )  ## FIXME PERHAPS REMOVE UNALLOCATED?
+    )
     new_df = pd.DataFrame()
     for boat in all_boats_in_order:
         subset_df = df_for_reporting_volunteers_for_day[
@@ -194,9 +194,7 @@ def sort_df_by_role(
     volunteer_event_data: DictOfAllEventDataForVolunteers,
     include_no_role: bool = True,
 ) -> pd.DataFrame:
-    all_roles_in_order = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_roles_with_skills
-    )
+    all_roles_in_order = volunteer_event_data.list_of_roles_with_skills
     new_df = pd.DataFrame()
     for role in all_roles_in_order:
         subset_df = df_for_reporting_volunteers_for_day[
@@ -218,9 +216,7 @@ def sort_df_by_group(
     volunteer_event_data: DictOfAllEventDataForVolunteers,
     include_no_group: bool = True,
 ) -> pd.DataFrame:
-    all_groups = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.list_of_groups
-    )
+    all_groups = volunteer_event_data.list_of_groups
     new_df = pd.DataFrame()
     for group in all_groups:
         subset_df = df_for_reporting_volunteers_for_day[

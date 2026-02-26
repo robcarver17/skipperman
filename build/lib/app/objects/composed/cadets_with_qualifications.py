@@ -7,7 +7,9 @@ from app.objects.utilities.generic_list_of_objects import GenericListOfObjects
 
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.qualifications import (
-    Qualification, ListOfQualifications, NoQualifications,
+    Qualification,
+    ListOfQualifications,
+    NoQualifications,
 )
 
 
@@ -21,10 +23,15 @@ class QualificationAndDate:
     def name(self):
         return self.qualification.name
 
-from app.objects.utilities.generic_list_of_objects import get_unique_object_with_attr_in_list
+
+from app.objects.utilities.generic_list_of_objects import (
+    get_unique_object_with_attr_in_list,
+)
+
+
 class QualificationsForCadet(List[QualificationAndDate]):
     def highest_qualification_if_ordered(self):
-        if len(self)==0:
+        if len(self) == 0:
             return NoQualifications
         return self[-1].qualification
 
@@ -32,13 +39,18 @@ class QualificationsForCadet(List[QualificationAndDate]):
         return [item.qualification.name for item in self]
 
     def order_by(self, list_of_all_qualifications: ListOfQualifications):
-        idx_list = [self.idx_of_qualification_or_none(qualification) for qualification in list_of_all_qualifications]
+        idx_list = [
+            self.idx_of_qualification_or_none(qualification)
+            for qualification in list_of_all_qualifications
+        ]
         idx_list = [idx for idx in idx_list if idx is not None]
 
         return QualificationsForCadet([self[idx] for idx in idx_list])
 
     def idx_of_qualification_or_none(self, qualification: Qualification):
-        return get_unique_object_with_attr_in_list(self, attr_name='qualification', attr_value=qualification, default=None)
+        return get_unique_object_with_attr_in_list(
+            self, attr_name="qualification", attr_value=qualification, default=None
+        )
 
     def is_cadet_qualified(self, qualification: Qualification):
         return qualification in self.list_of_qualifications()
@@ -69,13 +81,9 @@ class DictOfQualificationsForCadets(Dict[Cadet, QualificationsForCadet]):
     def qualifications_for_cadet(self, cadet: Cadet) -> QualificationsForCadet:
         return self.get(cadet, QualificationsForCadet([]))
 
-
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
-
-
 
 
 ### USED FOR WRITE TO CSV ONLY

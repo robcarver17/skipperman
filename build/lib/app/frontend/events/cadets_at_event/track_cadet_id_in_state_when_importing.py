@@ -25,7 +25,6 @@ def get_and_save_next_cadet_in_event_data(interface: abstractInterface) -> Cadet
     return get_cadet_from_id(object_store=interface.object_store, cadet_id=next_id)
 
 
-
 def get_and_save_next_cadet_id_in_event_data(interface: abstractInterface) -> str:
     current_id = get_current_cadet_id_at_event(interface)
     if current_id is missing_data:

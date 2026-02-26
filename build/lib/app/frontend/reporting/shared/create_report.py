@@ -1,4 +1,3 @@
-import os
 
 from app.data_access.file_access import generate_qr_code_for_file_in_public_path
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions

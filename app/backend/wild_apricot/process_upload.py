@@ -14,7 +14,7 @@ from app.objects.events import Event
 
 
 def process_uploaded_wa_event_file(
-        interface: abstractInterface, filename: str, event: Event
+    interface: abstractInterface, filename: str, event: Event
 ):
     object_store = interface.object_store
     ## add WA mapping

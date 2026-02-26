@@ -156,13 +156,14 @@ def delete_cadet_from_identified_data_and_return_rows_deleted(
 
     return row_count
 
+
 def delete_cadet_from_identified_data(
     interface: abstractInterface, event: Event, cadet: Cadet
 ):
     interface.update(
         interface.object_store.data_api.data_identified_cadets_at_event.delete_cadet_from_identified_data,
         event_id=event.id,
-        cadet_id=cadet.id
+        cadet_id=cadet.id,
     )
 
 
@@ -172,7 +173,7 @@ def mark_row_as_permanently_skip_cadet(
     interface.update(
         interface.object_store.data_api.data_identified_cadets_at_event.mark_row_as_permanently_skip_cadet,
         event_id=event.id,
-        row_id=row_id
+        row_id=row_id,
     )
 
 
@@ -182,7 +183,7 @@ def mark_row_as_temporarily_skip_cadet(
     interface.update(
         interface.object_store.data_api.data_identified_cadets_at_event.mark_row_as_temporarily_skip_cadet,
         event_id=event.id,
-        row_id=row_id
+        row_id=row_id,
     )
 
 
@@ -193,7 +194,7 @@ def add_identified_cadet_and_row(
         interface.object_store.data_api.data_identified_cadets_at_event.update_or_add_identified_cadet_and_row,
         event_id=event.id,
         row_id=row_id,
-        cadet_id=cadet.id
+        cadet_id=cadet.id,
     )
 
 
@@ -231,7 +232,3 @@ def get_list_of_identified_cadets_at_event(
     return object_store.get(
         object_store.data_api.data_identified_cadets_at_event.read, event_id=event.id
     )
-
-
-
-

@@ -16,8 +16,11 @@ from app.objects.registration_status import (
     empty_status,
     manual_status,
 )
-from app.objects.utilities.transform_data import clean_up_dict_with_nans, transform_df_from_dates_to_str, \
-    transform_df_from_str_to_dates
+from app.objects.utilities.transform_data import (
+    clean_up_dict_with_nans,
+    transform_df_from_dates_to_str,
+    transform_df_from_str_to_dates,
+)
 
 from app.data_access.configuration.field_list import (
     VOLUNTEER_STATUS,
@@ -25,7 +28,10 @@ from app.data_access.configuration.field_list import (
     _REGISTRATION_STATUS,
     _SPECIAL_FIELDS,
     REGISTRATION_DATE,
-    CADET_DATE_OF_BIRTH, CADET_FIRST_NAME, CADET_SURNAME, CADET_DOUBLE_HANDED_PARTNER,
+    CADET_DATE_OF_BIRTH,
+    CADET_FIRST_NAME,
+    CADET_SURNAME,
+    CADET_DOUBLE_HANDED_PARTNER,
 )
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
 from app.objects.cadets import default_cadet, Cadet
@@ -247,15 +253,6 @@ class RegistrationDataForEvent(GenericListOfObjects):
         return cls([])
 
 
-def summarise_status(mapped_event: RegistrationDataForEvent) -> dict:
-    all_status = {}
-    for row in mapped_event:
-        status = row.registration_status
-        current_count = all_status.get(status.name, 0)
-        current_count += 1
-        all_status[status.name] = current_count
-
-    return all_status
 
 
 def get_volunteer_status_from_row(row: RowInRegistrationData):

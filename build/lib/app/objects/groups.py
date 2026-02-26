@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
-from app.objects.utilities.exceptions import arg_not_passed, missing_data
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-    get_idx_of_unique_object_with_attr_in_list,
+
 )
 
 UNALLOCATED_GROUP_STR = "No group set"
@@ -78,7 +78,7 @@ class Group(GenericSkipperManObjectWithIds):
             protected=True,
             id=UNALLOCATED_GROUP_ID,  ## DO NOT CHANGE
             hidden=False,
-            streamer = ""
+            streamer="",
         )
 
     @classmethod
@@ -89,7 +89,7 @@ class Group(GenericSkipperManObjectWithIds):
             protected=True,
             id="-9asmissing",  ## DO NOT CHANGE
             hidden=False,
-            streamer=""
+            streamer="",
         )
 
     @property
@@ -119,10 +119,7 @@ class ListOfGroups(GenericListOfObjectsWithIds):
             return unallocated_group
 
         return get_unique_object_with_attr_in_list(
-            self,
-            attr_name='name',
-            attr_value=group_name,
-            default=default
+            self, attr_name="name", attr_value=group_name, default=default
         )
 
     def group_with_id(self, group_id: str, default=arg_not_passed):
@@ -130,7 +127,6 @@ class ListOfGroups(GenericListOfObjectsWithIds):
             return unallocated_group
 
         return self.object_with_id(group_id, default=default)
-
 
     def has_lake_group(self):
         return self.contains_specific_location(lake_training_group_location)

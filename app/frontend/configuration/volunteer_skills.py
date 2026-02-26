@@ -59,7 +59,6 @@ def post_form_config_volunteer_skills(
 ) -> Union[Form, NewForm]:
     list_of_skills = get_list_of_skills(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_skills,
         interface=interface,
@@ -81,7 +80,7 @@ def post_form_config_volunteer_skills(
     return interface.get_new_form_given_function(display_form_config_volunteer_skills)
 
 
-def save_from_ordinary_list_of_skills( interface: abstractInterface, new_list: List[Skill]):
-    update_list_of_skills(
-        interface=interface, list_of_skills=ListOfSkills(new_list)
-    )
+def save_from_ordinary_list_of_skills(
+    interface: abstractInterface, new_list: List[Skill]
+):
+    update_list_of_skills(interface=interface, list_of_skills=ListOfSkills(new_list))

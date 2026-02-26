@@ -11,7 +11,7 @@ def get_stored_arrangement_and_group_order(
 ) -> ArrangementOptionsAndGroupOrder:
     return object_store.get(
         object_store.data_api.data_arrangement_and_group_order_options.read,
-        report_name=report_type
+        report_name=report_type,
     )
 
 
@@ -23,12 +23,12 @@ def update_arrangement_and_group_order(
     interface.update(
         interface.object_store.data_api.data_arrangement_and_group_order_options.write,
         report_name=report_type,
-        arrange_options = arrangement_and_group_options
+        arrange_options=arrangement_and_group_options,
     )
 
 
 def reset_arrangement_report_options(
-        interface: abstractInterface, report_generator: ReportGenerator
+    interface: abstractInterface, report_generator: ReportGenerator
 ):
     update_arrangement_and_group_order(
         interface=interface,

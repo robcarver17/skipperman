@@ -39,10 +39,9 @@ def post_deleting_volunteers_process(interface: abstractInterface):
     button_pressed = interface.last_button_pressed()
     print("pressed %s" % button_pressed)
     if yes_button.pressed(button_pressed):
-        
         volunteer_to_delete = get_volunteer_to_delete_from_state(interface)
         delete_volunteer_in_data_and_return_warnings(
-            interface.object_store, volunteer_to_delete=volunteer_to_delete
+            interface, volunteer_to_delete=volunteer_to_delete
         )
         interface.clear()  ## saves
         message = "Deletion done"
@@ -53,14 +52,16 @@ def post_deleting_volunteers_process(interface: abstractInterface):
 
     interface.log_error(message)
 
-    return interface.get_new_display_form_for_parent_of_function(display_deleting_volunteer_process)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_deleting_volunteer_process
+    )
 
 
 def delete_volunteer_in_data_but_do_not_save_cache_and_return_warnings(
     interface: abstractInterface, volunteer_to_delete: Volunteer
 ) -> ListOfLines:
     warnings = delete_volunteer_in_data_and_return_warnings(
-        interface.object_store, volunteer_to_delete=volunteer_to_delete
+        interface, volunteer_to_delete=volunteer_to_delete
     )
 
     return ListOfLines(warnings).add_Lines()

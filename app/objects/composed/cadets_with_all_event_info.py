@@ -1,6 +1,5 @@
-from copy import copy
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict
 
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
@@ -8,15 +7,11 @@ from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_
 )
 from app.objects.composed.cadets_with_all_event_info_functions import (
     cadets_not_allocated_to_group_on_at_least_one_day_attending,
-    update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets,
-    RequiredDictForAllocation,
 )
-from app.objects.day_selectors import DaySelector, Day
-from app.objects.registration_data import RowInRegistrationData
+from app.objects.day_selectors import  Day
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
 from app.objects.groups import Group, unallocated_group
 
-from app.objects.registration_status import RegistrationStatus
 
 from app.objects.events import Event
 
@@ -24,12 +19,12 @@ from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfDaysBoatClassAndPartners,
-     DictOfCadetsAndBoatClassAndPartners,
+    DictOfCadetsAndBoatClassAndPartners,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfDaysAndClubDinghiesAtEventForPerson,
-     DictOfPeopleAndClubDinghiesAtEvent,
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
@@ -38,14 +33,9 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DaysAndGroups,
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent,
+    DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
-
-from app.objects.composed.clothing_at_event import (
-    DEPRECATE_DictOfCadetsWithClothingAtEvent, DictOfCadetsWithClothingAtEvent,
-)
-from app.objects.clothing import ClothingAtEvent, no_clothing_requirements
 
 
 @dataclass
@@ -58,8 +48,6 @@ class AllEventInfoForCadet:
     def is_active_registration(self):
         return self.registration_data.status.is_active
 
-    def update_notes(self, new_notes: str):
-        self.registration_data.update_notes(new_notes)
 
 
 class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
@@ -85,108 +73,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
         self._event = event
-
-    def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
-        messages = []
-        messages += self.dict_of_cadets_with_days_and_groups.delete_cadet_from_event_and_return_messages(
-            cadet
-        )
-        messages += self.dict_of_cadets_and_boat_class_and_partners.delete_cadet_from_event_and_return_messages(
-            cadet
-        )
-        #messages += self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
-        #    cadet
-        #)
-        messages += self.dict_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event(
-            cadet
-        )
-        messages += (
-            self.dict_of_cadets_and_club_dinghies_at_event.remove_person_from_event(
-                cadet
-            )
-        )
-
-        messages += self.dict_of_cadets_with_registration_data.delete_cadet_from_event_and_return_messages(
-            cadet
-        )  ## do last or may get errors
-
-        if len(messages) > 0:
-            messages.insert(0, "Will remove cadet from event %s" % str(self.event))
-
-        return messages
-
-    def update_data_row_for_existing_cadet_at_event(
-        self, cadet: Cadet, column_name: str, new_value_for_column
-    ):
-        registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_row_in_registration_data_for_existing_cadet_at_event(
-            cadet=cadet,
-            column_name=column_name,
-            new_value_for_column=new_value_for_column,
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-    def update_health_for_existing_cadet_at_event(self, cadet: Cadet, new_health: str):
-        event_data = self.event_data_for_cadet(cadet)
-        current_health = event_data.registration_data.health
-        if current_health == new_health:
-            return
-
-        registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_health_for_existing_cadet_at_event(
-            cadet=cadet, new_health=new_health
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-    def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
-        ## my level
-        event_data = self.event_data_for_cadet(cadet)
-        current_notes = event_data.registration_data.notes
-        if current_notes == notes:
-            return
-
-        ## propogate down
-        registration_data = self.dict_of_cadets_with_registration_data
-        registration_data.update_notes_for_existing_cadet_at_event(
-            cadet=cadet, notes=notes
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-    def update_boat_info_for_updated_cadet_at_event(
-        self,
-        cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-    ):
-        availability_dict = (
-            self.dict_of_cadets_with_registration_data.availability_dict()
-        )
-        required_dict_for_allocation = RequiredDictForAllocation(
-            dict_of_cadets_and_boat_class_and_partners=self.dict_of_cadets_and_boat_class_and_partners,
-            dict_of_cadets_and_club_dinghies_at_event=self.dict_of_cadets_and_club_dinghies_at_event,
-            dict_of_cadets_with_days_and_groups=self.dict_of_cadets_with_days_and_groups,
-            availability_dict=availability_dict,
-        )
-
-        required_dict_for_allocation = update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
-            cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
-            required_dict_for_allocation=required_dict_for_allocation,
-        )
-
-        self._dict_of_cadets_and_boat_class_and_partners = (
-            required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners
-        )
-        self._dict_of_cadets_and_club_dinghies_at_event = (
-            required_dict_for_allocation.dict_of_cadets_and_club_dinghies_at_event
-        )
-        self._dict_of_cadets_with_days_and_groups = (
-            required_dict_for_allocation.dict_of_cadets_with_days_and_groups
-        )
-
-        affected_cadets = required_dict_for_allocation.affected_cadets
-
-        self.propagate_changes_to_list_of_cadets_in_underlying_data(affected_cadets)
 
     def list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         self, day: Day
@@ -225,12 +111,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(new_list)
 
-    def dict_of_cadets_with_groups_for_all_cadets_in_data(
-        self,
-    ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
-        return self.dict_of_cadets_with_days_and_groups.subset_for_list_of_cadets(
-            self.list_of_cadets
-        )
 
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         if group is unallocated_group:
@@ -267,135 +147,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         group = event_data_for_cadet.days_and_groups.most_common()
         return group.name
 
-    def update_availability_of_existing_cadet_at_event_and_return_messages(
-        self,
-        cadet: Cadet,
-        new_availabilty: DaySelector,
-    ) -> List[str]:
-        existing_availablity = copy(
-            self.dict_of_cadets_with_registration_data.registration_data_for_cadet(
-                cadet
-            ).availability
-        )
-
-        messages = []
-        for day in self.event.days_in_event():
-            if existing_availablity.available_on_day(
-                day
-            ) == new_availabilty.available_on_day(day):
-                continue
-
-            if new_availabilty.available_on_day(day):
-                self.make_cadet_available_on_day(day=day, cadet=cadet)
-            else:
-                message_for_day = self.remove_availability_of_existing_cadet_on_day_and_return_messages(
-                    cadet=cadet, day=day
-                )
-
-                messages += message_for_day
-
-        return messages
-
-    def make_cadet_available_on_day(self, cadet: Cadet, day: Day):
-        self.dict_of_cadets_with_registration_data.make_cadet_available_on_day(
-            cadet=cadet, day=day
-        )
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-    def remove_availability_of_existing_cadet_on_day_and_return_messages(
-        self, cadet: Cadet, day: Day
-    ) -> List[str]:
-        self.dict_of_cadets_with_registration_data.make_cadet_unavailable_on_day(
-            cadet=cadet, day=day
-        )
-
-        self.dict_of_cadets_and_club_dinghies_at_event.remove_persons_club_boat_allocation_on_day(
-            person=cadet, day=day
-        )
-
-        self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event_on_day(
-            cadet=cadet, day=day
-        )
-
-        message = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_on_day_and_return_message(
-            cadet=cadet, day=day
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-        return [message]
-
-
-    def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
-        self,
-        cadet: Cadet,
-        new_status: RegistrationStatus,
-    ):
-        self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
-            cadet=cadet, new_status=new_status
-        )
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-    def update_status_of_existing_cadet_in_event_info_to_cancelled_or_deleted_and_return_messages(
-        self, cadet: Cadet, new_status: RegistrationStatus
-    ) -> List[str]:
-        assert new_status.is_cancelled_or_deleted
-        self.dict_of_cadets_with_registration_data.update_status_of_existing_cadet_in_event_info(
-            cadet=cadet, new_status=new_status
-        )
-
-        self.dict_of_cadets_and_club_dinghies_at_event.remove_person_from_event(
-            person=cadet
-        )
-
-        self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event(cadet=cadet)
-
-        self.dict_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event(
-            cadet=cadet
-        )
-
-        #self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
-        #    cadet=cadet
-        #)
-
-        messages = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_and_return_messages(
-            cadet=cadet
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-        return messages
-
-    def propagate_changes_to_list_of_cadets_in_underlying_data(
-        self, list_of_cadets: ListOfCadets
-    ):
-        [
-            self.propagate_changes_to_cadet_in_underlying_data(cadet)
-            for cadet in list_of_cadets
-        ]
-
-    def propagate_changes_to_cadet_in_underlying_data(self, cadet: Cadet):
-        event_data_for_cadet = AllEventInfoForCadet(
-            registration_data=self.dict_of_cadets_with_registration_data[cadet],
-            days_and_boat_class=self.dict_of_cadets_and_boat_class_and_partners.get(
-                cadet, DictOfDaysBoatClassAndPartners()
-            ),
-            days_and_groups=self.dict_of_cadets_with_days_and_groups.get(
-                cadet, DaysAndGroups()
-            ),
-            days_and_club_dinghies=self.dict_of_cadets_and_club_dinghies_at_event.get(
-                cadet, DictOfDaysAndClubDinghiesAtEventForPerson()
-            ),
-            clothing=self.dict_of_cadets_with_clothing_at_event.get(
-                cadet, no_clothing_requirements
-            ),
-        )
-        self.update_event_data_for_cadet(cadet, event_data=event_data_for_cadet)
-
-    def update_event_data_for_cadet(
-        self, cadet: Cadet, event_data: AllEventInfoForCadet
-    ):
-        self[cadet] = event_data
 
     def event_data_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
@@ -421,10 +172,8 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def dict_of_cadets_with_days_and_groups(
         self,
-    ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
+    ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
         return self._dict_of_cadets_with_days_and_groups
-
-
 
     @property
     def event(self):
@@ -433,5 +182,3 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
-

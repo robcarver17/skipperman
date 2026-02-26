@@ -3,7 +3,6 @@ from typing import List, Dict, Union
 
 from app.objects.utilities.utils import flatten, most_common
 
-from app.objects.events import ListOfEvents, Event
 
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.club_dinghies import ClubDinghy, ListOfClubDinghies, no_club_dinghy
@@ -109,11 +108,6 @@ class DictOfDaysAndClubDinghiesAtEventForPerson(Dict[Day, ClubDinghy]):
     def list_of_dinghies(self) -> ListOfClubDinghies:
         return ListOfClubDinghies(list(self.values()))
 
-    def remove_club_boat_for_person_from_event_on_day(self, day):
-        try:
-            self.pop(day)
-        except:
-            pass
 
 
 class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerson]):
@@ -184,15 +178,23 @@ class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerso
 class DictOfPeopleAndClubDinghiesAtEvent(
     Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
 ):
-    def list_of_volunteers_on_day_currently_allocated_to_any_club_dinghy(self, day: Day):
+    def list_of_volunteers_on_day_currently_allocated_to_any_club_dinghy(
+        self, day: Day
+    ):
         list_of_volunteers = [
-            volunteer for volunteer, dict_of_days in self.items() if dict_of_days.has_any_dinghy_on_specific_day(day)
+            volunteer
+            for volunteer, dict_of_days in self.items()
+            if dict_of_days.has_any_dinghy_on_specific_day(day)
         ]
         return ListOfVolunteers(list_of_volunteers)
 
-    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(self, day: Day, club_boat: ClubDinghy):
+    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
+        self, day: Day, club_boat: ClubDinghy
+    ):
         list_of_volunteers = [
-            volunteer for volunteer, dict_of_days in self.items() if dict_of_days.has_specific_dinghy_on_day(day, club_boat)
+            volunteer
+            for volunteer, dict_of_days in self.items()
+            if dict_of_days.has_specific_dinghy_on_day(day, club_boat)
         ]
         return ListOfVolunteers(list_of_volunteers)
 
@@ -203,10 +205,8 @@ class DictOfPeopleAndClubDinghiesAtEvent(
         boats_for_person.allocate_club_boat_on_day(day=day, club_boat=club_boat)
         self[person] = boats_for_person
 
-
     def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
-        self,
-            sorted_list_of_dinghies: ListOfClubDinghies
+        self, sorted_list_of_dinghies: ListOfClubDinghies
     ) -> ListOfClubDinghies:
         dinghies_for_peoeple = [
             dict_of_dinghies.unique_list_of_dinghies()
@@ -239,186 +239,6 @@ class DictOfPeopleAndClubDinghiesAtEvent(
     def list_of_people(self):
         return list(self.keys())
 
-class DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent(
-    Dict[Union[Cadet, Volunteer], DictOfDaysAndClubDinghiesAtEventForPerson]
-):
-    def __init__(
-        self,
-        raw_dict,
-        event: Event,
-        list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
-        list_of_club_dinghies: ListOfClubDinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
-    ):
-        super().__init__(raw_dict)
-
-        self._list_of_cadets_at_event_with_id_and_club_dinghy = (
-            list_of_cadets_at_event_with_id_and_club_dinghy
-        )
-        self._list_of_club_dinghies = list_of_club_dinghies
-        self._event = event
-        self._list_of_volunteers_with_ids_and_club_dinghies_at_event = (
-            list_of_volunteers_with_ids_and_club_dinghies_at_event
-        )
-
-    def copy_club_dinghy_for_instructor_across_all_days(
-        self, days_available: List[Day], volunteer: Volunteer, club_dinghy: ClubDinghy
-    ):
-        for day in days_available:
-            self.allocate_club_boat_on_day(volunteer, day, club_dinghy)
-
-    def list_of_volunteers_on_day_currently_allocated_to_club_dinghy(
-        self, day: Day, club_dinghy: ClubDinghy
-    ) -> ListOfVolunteers:
-        list_of_volunteers = self.list_of_volunteers
-        list_of_volunteers = [
-            volunteer
-            for volunteer in list_of_volunteers
-            if self.club_dinghys_for_person(volunteer).has_specific_dinghy_on_day(
-                day=day, dinghy=club_dinghy
-            )
-        ]
-
-        return ListOfVolunteers(list_of_volunteers)
-
-    def allocate_club_boat_on_day(
-        self, person: Union[Cadet, Volunteer], day: Day, club_boat: ClubDinghy
-    ):
-        boats_for_person = self.club_dinghys_for_person(person)
-        boats_for_person.allocate_club_boat_on_day(day=day, club_boat=club_boat)
-        self[person] = boats_for_person
-
-        if type(person) is Cadet:
-            self.list_of_cadets_at_event_with_id_and_club_dinghy.update_allocation_for_cadet_on_day(
-                cadet_id=person.id, day=day, club_dinghy_id=club_boat.id
-            )
-        elif type(person) is Volunteer:
-            self.list_of_volunteers_with_ids_and_club_dinghies_at_event.update_allocation_for_volunteer_on_day(
-                volunteer_id=person.id, day=day, club_dinghy_id=club_boat.id
-            )
-        else:
-            raise "Unknown type %s" % type(person)
-
-    def unique_sorted_list_of_allocated_club_dinghys_allocated_at_event(
-        self,
-    ) -> ListOfClubDinghies:
-        dinghies_for_peoeple = [
-            dict_of_dinghies.unique_list_of_dinghies()
-            for dict_of_dinghies in self.values()
-        ]
-        all_dinghies_as_single_list = flatten(dinghies_for_peoeple)
-        sorted_list = [
-            dinghy
-            for dinghy in self.list_of_club_dinghies
-            if dinghy in all_dinghies_as_single_list
-        ]
-
-        return ListOfClubDinghies(sorted_list)
-
-    def remove_person_from_event(self, person: Union[Cadet, Volunteer]):
-        current_allocation = self.club_dinghys_for_person(person)
-        if len(current_allocation) == 0:
-            return []
-        for day in self.event.days_in_event():
-            self.remove_persons_club_boat_allocation_on_day(person=person, day=day)
-
-        try:
-            self.pop(person)
-        except:
-            return []
-
-        return [" - removed club boat allocation %s" % str(current_allocation)]
-
-    def remove_persons_club_boat_allocation_on_day(
-        self, person: Union[Cadet, Volunteer], day: Day
-    ):
-        current_allocation = self.club_dinghys_for_person(person)
-        current_allocation.remove_club_boat_for_person_from_event_on_day(day)
-        self[person] = current_allocation
-
-        if type(person) is Cadet:
-            self.list_of_cadets_at_event_with_id_and_club_dinghy.delete_allocation_for_cadet_on_day(
-                cadet_id=person.id, day=day
-            )
-        elif type(person) is Volunteer:
-            self._list_of_volunteers_with_ids_and_club_dinghies_at_event.delete_allocation_for_volunteer_on_day(
-                volunteer_id=person.id, day=day
-            )
-        else:
-            raise "Unknown type %s" % type(person)
-
-    def club_dinghys_for_person(
-        self,
-        person: Union[Cadet, Volunteer],
-    ) -> DictOfDaysAndClubDinghiesAtEventForPerson:
-        return self.get(person, DictOfDaysAndClubDinghiesAtEventForPerson())
-
-    @property
-    def list_of_club_dinghies(self) -> ListOfClubDinghies:
-        return self._list_of_club_dinghies
-
-    @property
-    def list_of_cadets_at_event_with_id_and_club_dinghy(
-        self,
-    ) -> ListOfCadetAtEventWithIdAndClubDinghies:
-        return self._list_of_cadets_at_event_with_id_and_club_dinghy
-
-    @property
-    def event(self) -> Event:
-        return self._event
-
-    @property
-    def list_of_cadets(self) -> ListOfCadets:
-        list_of_people = [
-            person for person in list(self.keys()) if type(person) is Cadet
-        ]
-        return ListOfCadets(list_of_people)
-
-    @property
-    def list_of_volunteers(self) -> ListOfVolunteers:
-        list_of_people = [
-            person for person in list(self.keys()) if type(person) is Volunteer
-        ]
-        return ListOfVolunteers(list_of_people)
-
-    @property
-    def list_of_volunteers_with_ids_and_club_dinghies_at_event(
-        self,
-    ) -> ListOfVolunteerAtEventWithIdAndClubDinghies:
-        return self._list_of_volunteers_with_ids_and_club_dinghies_at_event
-
-
-def compose_dict_of_people_and_club_dinghies_at_event(
-    event_id: str,
-    list_of_events: ListOfEvents,
-    list_of_cadets: ListOfCadets,
-    list_of_club_dinghies: ListOfClubDinghies,
-    list_of_cadets_at_event_with_id_and_club_dinghy: ListOfCadetAtEventWithIdAndClubDinghies,
-    list_of_volunteers_with_ids_and_club_dinghies_at_event: ListOfVolunteerAtEventWithIdAndClubDinghies,
-    list_of_volunteers: ListOfVolunteers,
-) -> DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent:
-    event = list_of_events.event_with_id(event_id)
-    raw_dict_cadets = compose_raw_dict_of_cadets_and_club_dinghies_at_event(
-        list_of_cadets=list_of_cadets,
-        list_of_club_dinghies=list_of_club_dinghies,
-        list_of_cadets_at_event_with_id_and_club_dinghy=list_of_cadets_at_event_with_id_and_club_dinghy,
-    )
-    raw_dict_volunteers = compose_raw_dict_of_volunteers_and_club_dinghies_at_event(
-        list_of_volunteers=list_of_volunteers,
-        list_of_club_dinghies=list_of_club_dinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event,
-    )
-    raw_dict = {}
-    raw_dict.update(raw_dict_cadets)
-    raw_dict.update(raw_dict_volunteers)
-
-    return DEPRECATE_DictOfPeopleAndClubDinghiesAtEvent(
-        raw_dict=raw_dict,
-        event=event,
-        list_of_cadets_at_event_with_id_and_club_dinghy=list_of_cadets_at_event_with_id_and_club_dinghy,
-        list_of_club_dinghies=list_of_club_dinghies,
-        list_of_volunteers_with_ids_and_club_dinghies_at_event=list_of_volunteers_with_ids_and_club_dinghies_at_event,
-    )
 
 
 def compose_raw_dict_of_cadets_and_club_dinghies_at_event(

@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 import pandas as pd
 
 from app.objects.cadets import Cadet, ListOfCadets
-from app.objects.day_selectors import DaySelector, Day, all_possible_days
+from app.objects.day_selectors import DaySelector, Day
 from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 

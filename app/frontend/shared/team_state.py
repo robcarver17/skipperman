@@ -31,8 +31,10 @@ def get_team_from_state(interface: abstractInterface) -> Team:
 
     return team
 
+
 def clear_team_id_in_state(interface: abstractInterface):
     interface.clear_persistent_value(TEAM)
+
 
 def get_team_id_selected_from_state(interface: abstractInterface) -> str:
     return str(interface.get_persistent_value(TEAM))

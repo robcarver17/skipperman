@@ -1,4 +1,3 @@
-from typing import List
 
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
@@ -19,12 +18,6 @@ from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import (
-    ListOfLines,
-    _______________,
-    Line,
-)
-from app.objects.day_selectors import no_days_selected_from_available_days
 from app.objects.events import Event
 
 
@@ -75,7 +68,6 @@ def update_volunteer_availability_at_event_from_rota_with_form_contents(
         interface.log_error("Availability not in form for %s" % volunteer)
         return
 
-    
     update_volunteer_availability_at_event(
         interface=interface,
         event=event,

@@ -21,7 +21,6 @@ class DictOfTickSheetItemsAndTicksForCadet(Dict[TickSheetItem, Tick]):
 
         return 100.0 * (sum(full_ticks) + sum(half_ticks)) / total_Ticks
 
-
     @property
     def list_of_ticks(self) -> List[Tick]:
         return list(self.values())
@@ -48,7 +47,9 @@ class TicksForQualification(Dict[TickSubStage, DictOfTickSheetItemsAndTicksForCa
         self._qualification = qualification
 
     @property
-    def dict_of_substages_and_ticksheet_items(self) -> Dict[TickSubStage, ListOfTickSheetItems]:
+    def dict_of_substages_and_ticksheet_items(
+        self,
+    ) -> Dict[TickSubStage, ListOfTickSheetItems]:
         return dict(
             [
                 (substage, ticks_for_cadets.list_of_tick_sheet_items)
@@ -72,7 +73,6 @@ class TicksForQualification(Dict[TickSubStage, DictOfTickSheetItemsAndTicksForCa
             starting_dict.update(dict_of_items_and_ticks)
 
         return DictOfTickSheetItemsAndTicksForCadet(starting_dict)
-
 
     @property
     def substages(self):

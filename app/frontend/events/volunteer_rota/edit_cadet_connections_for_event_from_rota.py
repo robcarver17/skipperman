@@ -9,7 +9,9 @@ from app.backend.volunteers.connected_cadets import (
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.events import Event
 
-from app.backend.registration_data.cadet_registration_data import get_list_of_active_cadets_at_event
+from app.backend.registration_data.cadet_registration_data import (
+    get_list_of_active_cadets_at_event,
+)
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -100,7 +102,6 @@ def post_form_edit_cadet_connections_from_rota(
     if back_menu_button.pressed(last_button=button):
         return previous_form(interface)
 
-    
     if add_connection_button.pressed(button):
         add_cadet_connection_from_form(interface)
 
@@ -147,9 +148,7 @@ def delete_event_connection_given_form(interface: abstractInterface):
     cadet = get_cadet_from_button_pressed(interface)
     volunteer = get_volunteer_from_state(interface)
 
-    delete_cadet_connection(
-        interface=interface, cadet=cadet, volunteer=volunteer
-    )
+    delete_cadet_connection(interface=interface, cadet=cadet, volunteer=volunteer)
 
 
 def add_cadet_connection_from_form(interface: abstractInterface):

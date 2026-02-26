@@ -22,6 +22,3 @@ def get_dict_of_volunteers_with_food_requirements_at_event(
         object_store.data_api.data_list_of_volunteers_with_food_requirement_at_event.get_dict_of_volunteers_with_food_requirements_at_event,
         event_id=event.id,
     )
-
-
-

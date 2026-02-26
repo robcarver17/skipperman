@@ -6,7 +6,9 @@ from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-    RoleAndGroup, DictOfDaysRolesAndGroups, DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    RoleAndGroup,
+    DictOfDaysRolesAndGroups,
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 
@@ -21,7 +23,7 @@ from app.objects.volunteers import Volunteer
 
 ALL_EVENTS = 999999999999
 
-## FIXME
+
 def get_all_roles_across_recent_events_for_volunteer_as_dict_latest_first(
     object_store: ObjectStore,
     volunteer: Volunteer,
@@ -89,40 +91,41 @@ def get_all_roles_for_list_of_events_for_volunteer_as_dict(
 def get_role_and_group_on_day_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event, day: Day
 ) -> RoleAndGroup:
-    roles_and_groups_for_volunteer = get_role_and_groups_for_event_and_volunteer(object_store=object_store,event=event, volunteer=volunteer)
+    roles_and_groups_for_volunteer = get_role_and_groups_for_event_and_volunteer(
+        object_store=object_store, event=event, volunteer=volunteer
+    )
 
     return roles_and_groups_for_volunteer.role_and_group_on_day(day)
-
 
 
 def get_most_common_role_and_group_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
 ) -> RoleAndGroup:
-
     roles_and_groups_for_volunteer = get_role_and_groups_for_event_and_volunteer(
         object_store=object_store, event=event, volunteer=volunteer
     )
-    most_common_role_and_group  = roles_and_groups_for_volunteer.most_common()
+    most_common_role_and_group = roles_and_groups_for_volunteer.most_common()
 
     return most_common_role_and_group
 
 
-
 def get_role_and_groups_for_event_and_volunteer(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
-) ->  DictOfDaysRolesAndGroups:
-    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_role_and_groups_for_event_and_volunteer,
-                            event_id=event.id,
-                            volunteer_id=volunteer.id)
-
-
-
+) -> DictOfDaysRolesAndGroups:
+    return object_store.get(
+        object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_role_and_groups_for_event_and_volunteer,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+    )
 
 
 def get_dict_of_volunteers_with_roles_and_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups:
-    return object_store.get(object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_dict_of_volunteers_with_roles_and_groups_at_event, event_id=event.id)
+    return object_store.get(
+        object_store.data_api.data_list_of_volunteers_in_roles_at_event.get_dict_of_volunteers_with_roles_and_groups_at_event,
+        event_id=event.id,
+    )
 
 
 def update_dict_of_volunteers_with_roles_and_groups_at_event(
@@ -135,8 +138,7 @@ def update_dict_of_volunteers_with_roles_and_groups_at_event(
 def is_volunteer_senior_instructor_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ):
-    roles_and_groups_for_volunteer = get_role_and_groups_for_event_and_volunteer(object_store=object_store, event=event,
-                                                                                 volunteer=volunteer)
+    roles_and_groups_for_volunteer = get_role_and_groups_for_event_and_volunteer(
+        object_store=object_store, event=event, volunteer=volunteer
+    )
     return roles_and_groups_for_volunteer.contains_si()
-
-

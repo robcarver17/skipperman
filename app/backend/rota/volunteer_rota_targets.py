@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import \
-    get_dict_of_volunteers_with_roles_and_groups_at_event
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_dict_of_volunteers_with_roles_and_groups_at_event,
+)
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
-  DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -28,11 +29,14 @@ class RowInTableWithActualAndTargetsForRole:
     worst_shortfall: int
 
 
-
 def get_list_of_actual_and_targets_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[RowInTableWithActualAndTargetsForRole]:
-    volunteers_in_roles_at_event = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store=object_store, event=event)
+    volunteers_in_roles_at_event = (
+        get_dict_of_volunteers_with_roles_and_groups_at_event(
+            object_store=object_store, event=event
+        )
+    )
 
     targets_at_event = get_volunteer_targets_at_event(
         object_store=object_store, event=event
@@ -59,7 +63,7 @@ def get_volunteer_targets_at_event(
 ) -> DictOfTargetsForRolesAtEvent:
     return object_store.get(
         object_store.data_api.data_list_of_targets_for_role_at_event.read,
-        event_id=event.id
+        event_id=event.id,
     )
 
 
@@ -92,10 +96,9 @@ def get_row_in_table_with_actual_and_targets_for_roles_at_event(
 def update_volunteer_target(
     interface: abstractInterface, event: Event, role: RoleWithSkills, target: int
 ):
-
     interface.update(
         interface.object_store.data_api.data_list_of_targets_for_role_at_event.update_volunteer_target,
         event_id=event.id,
-        role_id = role.id,
-        target = target
+        role_id=role.id,
+        target=target,
     )

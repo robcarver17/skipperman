@@ -24,12 +24,12 @@ from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfDaysBoatClassAndPartners,
-     DictOfCadetsAndBoatClassAndPartners,
+    DictOfCadetsAndBoatClassAndPartners,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfDaysAndClubDinghiesAtEventForPerson,
-     DictOfPeopleAndClubDinghiesAtEvent,
+    DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
@@ -38,12 +38,14 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
 )
 from app.objects.composed.cadets_at_event_with_groups import (
     DaysAndGroups,
-    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent, DictOfCadetsWithDaysAndGroupsAtEvent,
+    DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent,
+    DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 
 
 from app.objects.composed.clothing_at_event import (
-    DEPRECATE_DictOfCadetsWithClothingAtEvent, DictOfCadetsWithClothingAtEvent,
+    DEPRECATE_DictOfCadetsWithClothingAtEvent,
+    DictOfCadetsWithClothingAtEvent,
 )
 from app.objects.clothing import ClothingAtEvent, no_clothing_requirements
 
@@ -94,9 +96,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         messages += self.dict_of_cadets_and_boat_class_and_partners.delete_cadet_from_event_and_return_messages(
             cadet
         )
-        #messages += self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
+        # messages += self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
         #    cadet
-        #)
+        # )
         messages += self.dict_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event(
             cadet
         )
@@ -302,29 +304,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         )
         self.propagate_changes_to_cadet_in_underlying_data(cadet)
 
-    def remove_availability_of_existing_cadet_on_day_and_return_messages(
-        self, cadet: Cadet, day: Day
-    ) -> List[str]:
-        self.dict_of_cadets_with_registration_data.make_cadet_unavailable_on_day(
-            cadet=cadet, day=day
-        )
-
-        self.dict_of_cadets_and_club_dinghies_at_event.remove_persons_club_boat_allocation_on_day(
-            person=cadet, day=day
-        )
-
-        self.dict_of_cadets_with_days_and_groups.remove_cadet_from_event_on_day(
-            cadet=cadet, day=day
-        )
-
-        message = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_on_day_and_return_message(
-            cadet=cadet, day=day
-        )
-
-        self.propagate_changes_to_cadet_in_underlying_data(cadet)
-
-        return [message]
-
 
     def update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
         self,
@@ -354,9 +333,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             cadet=cadet
         )
 
-        #self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
+        # self.dict_of_cadets_with_food_required_at_event.remove_food_requirements_for_cadet_at_event(
         #    cadet=cadet
-        #)
+        # )
 
         messages = self.dict_of_cadets_and_boat_class_and_partners.remove_cadet_from_event_and_return_messages(
             cadet=cadet
@@ -424,8 +403,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     ) -> DEPRECATE_DictOfCadetsWithDaysAndGroupsAtEvent:
         return self._dict_of_cadets_with_days_and_groups
 
-
-
     @property
     def event(self):
         return self._event
@@ -433,5 +410,3 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
-

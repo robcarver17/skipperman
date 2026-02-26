@@ -1,5 +1,5 @@
 import os
-from typing import List, Tuple, Union
+from typing import Tuple, Union
 
 from app.data_access.configuration.configuration import (
     HOMEPAGE,

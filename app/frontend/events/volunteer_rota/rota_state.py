@@ -1,14 +1,21 @@
 from dataclasses import dataclass
 from typing import Union, Dict
 
-from app.backend.rota.sorting_and_filtering import RotaSortsAndFilters, FILTER_ALL, from_str_to_dict_of_filter_options, \
-    from_dict_of_filter_options_to_single_str
+from app.backend.rota.sorting_and_filtering import (
+    RotaSortsAndFilters,
+    FILTER_ALL,
+    from_str_to_dict_of_filter_options,
+    from_dict_of_filter_options_to_single_str,
+)
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.day_selectors import Day
 from app.objects.composed.volunteers_with_skills import SkillsDict
-from app.objects.utilities.transform_data import dict_as_str, dict_from_str, str_from_list, list_from_str
+from app.objects.utilities.transform_data import (
+    str_from_list,
+    list_from_str,
+)
 from app.objects.volunteer_skills import ListOfSkills
 
 SORT_BY_VOLUNTEER_NAME = "Sort_volunteer_name"
@@ -31,7 +38,12 @@ def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
         skills_dict = SkillsDict()  ##
     else:
         held_skills_as_list_of_id = list_from_str(skill_as_list, type_to_use=str)
-        held_skills = ListOfSkills([all_skills.skill_with_id(skill_id) for skill_id in held_skills_as_list_of_id])
+        held_skills = ListOfSkills(
+            [
+                all_skills.skill_with_id(skill_id)
+                for skill_id in held_skills_as_list_of_id
+            ]
+        )
         skills_dict = SkillsDict.from_list_of_skills(held_skills)
 
     skills_dict.pad_with_missing_skills(all_skills=all_skills)
@@ -50,9 +62,11 @@ def save_skills_filter_to_state(
 
 
 def save_availablity_filter_to_state(
-    interface: abstractInterface, availability_filter_dict: Dict[str,str]
+    interface: abstractInterface, availability_filter_dict: Dict[str, str]
 ):
-    availability_filter_as_str = from_dict_of_filter_options_to_single_str(availability_filter_dict)
+    availability_filter_as_str = from_dict_of_filter_options_to_single_str(
+        availability_filter_dict
+    )
 
     interface.set_persistent_value(AVAILABILTY_FILTER, availability_filter_as_str)
 
@@ -82,10 +96,12 @@ def save_sorts_to_state(interface: abstractInterface, sort_parameters: SortParam
     else:
         interface.clear_persistent_value(SORT_BY_CADET_LOCATION)
 
+
 def clear_all_sorts(interface: abstractInterface):
     interface.clear_persistent_value(SORT_BY_CADET_LOCATION)
     interface.clear_persistent_value(SORT_BY_DAY)
     interface.clear_persistent_value(SORT_BY_VOLUNTEER_NAME)
+
 
 def get_sorts_and_filters_from_state(
     interface: abstractInterface,
@@ -115,13 +131,12 @@ def get_availability_filter_from_state(interface: abstractInterface) -> Dict[str
     if availability_filter_as_str is missing_data:
         return default_availability_filter(interface)
 
-    availability_filter= from_str_to_dict_of_filter_options(availability_filter_as_str)
+    availability_filter = from_str_to_dict_of_filter_options(availability_filter_as_str)
 
     return availability_filter
 
 
-
-def default_availability_filter(interface: abstractInterface) -> Dict[str,str]:
+def default_availability_filter(interface: abstractInterface) -> Dict[str, str]:
     event = get_event_from_state(interface=interface)
     return dict([(day.name, FILTER_ALL) for day in event.days_in_event()])
 

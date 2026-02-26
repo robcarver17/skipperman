@@ -114,7 +114,10 @@ def similar_cadet(
         cadet_in_data.date_of_birth, other_cadet.date_of_birth
     )
 
-    if cadet_in_data.first_name.lower().strip() == cadet_in_data.surname.lower().strip():
+    if (
+        cadet_in_data.first_name.lower().strip()
+        == cadet_in_data.surname.lower().strip()
+    ):
         return True
 
     if name_match > name_threshold:

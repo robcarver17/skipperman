@@ -20,7 +20,6 @@ from app.frontend.reporting.shared.create_report import create_generic_report
 from app.frontend.shared.buttons import get_button_value_for_sort_order
 from app.frontend.shared.warnings_table import (
     display_warnings_tables,
-    save_warnings_button,
     save_warnings_from_table,
     is_save_warnings_button_pressed,
 )
@@ -89,7 +88,6 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 
 
 def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLines:
-
     warnings = (
         refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
             interface=interface, event=event
@@ -216,8 +214,7 @@ clear_sort_button = Button(label="Sort by registration order", nav_button=True)
 def create_quick_spotters_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rollcall_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     interface.log_error(
@@ -228,5 +225,5 @@ def create_quick_spotters_report(interface: abstractInterface) -> File:
         interface=interface,
         override_print_options={"publish_to_public": False},
         ignore_stored_print_option_values_and_use_default=True,
-        override_additional_options=dict(include_unallocated_cadets=True)
+        override_additional_options=dict(include_unallocated_cadets=True),
     )

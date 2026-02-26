@@ -1,11 +1,16 @@
-
-from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.transform_data import bool2int, int2bool
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import arg_not_passed, MultipleMatches, missing_data
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    MultipleMatches,
+    missing_data,
+)
 
 PATROL_BOATS_TABLE = "patrol_boats"
 INDEX_PATROL_BOATS_TABLE = "index_patrol_boats_table"
+
 
 class SqlDataListOfPatrolBoats(GenericSqlData):
     def add_new_patrol_boat(self, new_boat: PatrolBoat):
@@ -15,14 +20,13 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
 
         self._add_new_patrol_boat_without_checks(new_boat)
 
-    def _add_new_patrol_boat_without_checks(self,  new_boat: PatrolBoat):
-
+    def _add_new_patrol_boat_without_checks(self, new_boat: PatrolBoat):
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
 
             idx = self.next_available_order()
-            new_boat.id =  str(self.next_available_id())
+            new_boat.id = str(self.next_available_id())
             self._write_boat_without_commit_or_checks(
                 boat=new_boat,
                 idx=idx,
@@ -34,7 +38,7 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             self.close()
 
     def modify_patrol_boat(
-            self, existing_patrol_boat_id: str, new_patrol_boat: PatrolBoat
+        self, existing_patrol_boat_id: str, new_patrol_boat: PatrolBoat
     ):
         existing_boat = self.patrol_boat_with_id(existing_patrol_boat_id, default=None)
         if existing_boat is None:
@@ -43,17 +47,19 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             pass
         else:
             if self.does_patrol_boat_with_name_exist(new_patrol_boat.name):
-                raise Exception("Can't change name from %s to %s as boat called %s already exists" %
-                                (existing_boat.name, new_patrol_boat.name, new_patrol_boat.name))
+                raise Exception(
+                    "Can't change name from %s to %s as boat called %s already exists"
+                    % (existing_boat.name, new_patrol_boat.name, new_patrol_boat.name)
+                )
 
         self._modify_patrol_boat_without_checks(
-            existing_patrol_boat_id=existing_patrol_boat_id, new_patrol_boat=new_patrol_boat
+            existing_patrol_boat_id=existing_patrol_boat_id,
+            new_patrol_boat=new_patrol_boat,
         )
 
     def _modify_patrol_boat_without_checks(
-                self, existing_patrol_boat_id: str, new_patrol_boat: PatrolBoat
-        ):
-
+        self, existing_patrol_boat_id: str, new_patrol_boat: PatrolBoat
+    ):
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
@@ -65,7 +71,8 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
                 HIDDEN,
                 bool2int(new_patrol_boat.hidden),
                 PATROL_BOAT_ID,
-                int(existing_patrol_boat_id))
+                int(existing_patrol_boat_id),
+            )
 
             self.cursor.execute(insertion)
 
@@ -75,7 +82,6 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
         finally:
             self.close()
 
-
     def does_patrol_boat_with_name_exist(self, patrol_boat_name: str):
         boat = self.patrol_boat_with_name(patrol_boat_name, default=missing_data)
         if boat is missing_data:
@@ -83,72 +89,88 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
         else:
             return True
 
-    def patrol_boat_with_name(self, patrol_boat_name: str, default=missing_data) -> PatrolBoat:
+    def patrol_boat_with_name(
+        self, patrol_boat_name: str, default=missing_data
+    ) -> PatrolBoat:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s='%s' ''' % (
-                 HIDDEN, PATROL_BOAT_ID, PATROL_BOATS_TABLE, PATROL_BOAT_NAME, str(patrol_boat_name)
-             ))
+            cursor.execute(
+                """SELECT %s, %s FROM %s WHERE %s='%s' """
+                % (
+                    HIDDEN,
+                    PATROL_BOAT_ID,
+                    PATROL_BOATS_TABLE,
+                    PATROL_BOAT_NAME,
+                    str(patrol_boat_name),
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading patrol boats" % str(e1))
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
-        elif len(raw_list)>1:
-            raise MultipleMatches("More than one patrol boat with name %s" % patrol_boat_name)
+        elif len(raw_list) > 1:
+            raise MultipleMatches(
+                "More than one patrol boat with name %s" % patrol_boat_name
+            )
 
         raw_boat = raw_list[0]
-        return PatrolBoat(name=patrol_boat_name,
-                             hidden=int2bool(raw_boat[0]),
-                             id=str(raw_boat[1]))
+        return PatrolBoat(
+            name=patrol_boat_name, hidden=int2bool(raw_boat[0]), id=str(raw_boat[1])
+        )
 
-    def patrol_boat_with_id(self, patrol_boat_id: str, default=missing_data) -> PatrolBoat:
+    def patrol_boat_with_id(
+        self, patrol_boat_id: str, default=missing_data
+    ) -> PatrolBoat:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
-                 HIDDEN, PATROL_BOAT_NAME, PATROL_BOATS_TABLE, PATROL_BOAT_ID, int(patrol_boat_id)
-             ))
+            cursor.execute(
+                """SELECT %s, %s FROM %s WHERE %s=%d """
+                % (
+                    HIDDEN,
+                    PATROL_BOAT_NAME,
+                    PATROL_BOATS_TABLE,
+                    PATROL_BOAT_ID,
+                    int(patrol_boat_id),
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading patrol boats" % str(e1))
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
-        elif len(raw_list)>1:
-            raise MultipleMatches("More than one patrol boat with id %s" % patrol_boat_id)
+        elif len(raw_list) > 1:
+            raise MultipleMatches(
+                "More than one patrol boat with id %s" % patrol_boat_id
+            )
 
         raw_boat = raw_list[0]
-        return PatrolBoat(name=raw_boat[1],
-                             hidden=int2bool(raw_boat[0]),
-                             id=patrol_boat_id)
+        return PatrolBoat(
+            name=raw_boat[1], hidden=int2bool(raw_boat[0]), id=patrol_boat_id
+        )
 
+    def next_available_id(self) -> int:
+        return self.last_used_id() + 1
 
-
-    def next_available_id(self) ->int:
-        return self.last_used_id()+1
-
-
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
 
             cursor = self.cursor
-            statement = "SELECT MAX(%s) FROM %s" % (
-                PATROL_BOAT_ID,
-                PATROL_BOATS_TABLE
-            )
+            statement = "SELECT MAX(%s) FROM %s" % (PATROL_BOAT_ID, PATROL_BOATS_TABLE)
             cursor.execute(statement)
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -161,10 +183,10 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-    def next_available_order(self) ->int:
-        return self.last_used_order()+1
+    def next_available_order(self) -> int:
+        return self.last_used_order() + 1
 
-    def last_used_order(self)-> int:
+    def last_used_order(self) -> int:
         try:
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
@@ -172,7 +194,7 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             cursor = self.cursor
             statement = "SELECT MAX(%s) FROM %s" % (
                 PATROL_BOAT_ORDER,
-                PATROL_BOATS_TABLE
+                PATROL_BOATS_TABLE,
             )
             cursor.execute(statement)
             raw_list = cursor.fetchall()
@@ -192,21 +214,30 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
                 return ListOfPatrolBoats.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s ORDER BY %s''' % (
-                PATROL_BOAT_NAME, HIDDEN, PATROL_BOAT_ID, PATROL_BOATS_TABLE, PATROL_BOAT_ORDER
-             ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s ORDER BY %s"""
+                % (
+                    PATROL_BOAT_NAME,
+                    HIDDEN,
+                    PATROL_BOAT_ID,
+                    PATROL_BOATS_TABLE,
+                    PATROL_BOAT_ORDER,
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading club dinghies" % str(e1))
         finally:
             self.close()
 
-        new_list = [PatrolBoat(name=str(raw_boat[0]),
-                             hidden=int2bool(raw_boat[1]),
-                             id=str(raw_boat[2])) for raw_boat in raw_list]
+        new_list = [
+            PatrolBoat(
+                name=str(raw_boat[0]), hidden=int2bool(raw_boat[1]), id=str(raw_boat[2])
+            )
+            for raw_boat in raw_list
+        ]
 
         return ListOfPatrolBoats(new_list)
-
 
     def write(self, list_of_boats: ListOfPatrolBoats):
         try:
@@ -218,10 +249,7 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             self.cursor.execute("DELETE FROM %s" % (PATROL_BOATS_TABLE))
 
             for idx, boat in enumerate(list_of_boats):
-                self._write_boat_without_commit_or_checks(
-                    boat=boat,
-                    idx=idx
-                )
+                self._write_boat_without_commit_or_checks(boat=boat, idx=idx)
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing patrol boats" % str(e1))
@@ -235,13 +263,15 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
             PATROL_BOATS_TABLE,
-            PATROL_BOAT_NAME, HIDDEN, PATROL_BOAT_ID, PATROL_BOAT_ORDER)
+            PATROL_BOAT_NAME,
+            HIDDEN,
+            PATROL_BOAT_ID,
+            PATROL_BOAT_ORDER,
+        )
 
-        self.cursor.execute(insertion, (
-            name, hidden, id, idx))
+        self.cursor.execute(insertion, (name, hidden, id, idx))
 
     def create_table(self):
-
         # name: str
         # hidden: bool
         # id: str = arg_not_passed
@@ -253,11 +283,19 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
                     %s INTEGER,
                     %s INTEGER
                 );
-            """ % (PATROL_BOATS_TABLE,
-                   PATROL_BOAT_NAME, HIDDEN, PATROL_BOAT_ID, PATROL_BOAT_ORDER)
+            """ % (
+            PATROL_BOATS_TABLE,
+            PATROL_BOAT_NAME,
+            HIDDEN,
+            PATROL_BOAT_ID,
+            PATROL_BOAT_ORDER,
+        )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
-        INDEX_PATROL_BOATS_TABLE, PATROL_BOATS_TABLE, PATROL_BOAT_ID)
+            INDEX_PATROL_BOATS_TABLE,
+            PATROL_BOATS_TABLE,
+            PATROL_BOAT_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)

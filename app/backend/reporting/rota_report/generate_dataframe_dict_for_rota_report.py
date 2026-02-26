@@ -75,7 +75,6 @@ def get_and_transform_df_for_reporting_volunteers_for_day(
 
     df_for_reporting_volunteers_for_day = apply_sorts_and_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day,
-        volunteer_event_data=volunteer_event_data,
     )
 
     return df_for_reporting_volunteers_for_day
@@ -127,7 +126,7 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
     team: Team,
 ) -> Dict[RoleWithSkills, List[VolunteerWithRoleGroupAndTeamAtEvent]]:
     dict_of_volunteers_and_roles_this_team = {}
-    all_roles_in_team = volunteer_event_data.dict_of_volunteers_at_event_with_days_and_roles.roles_for_team(
+    all_roles_in_team = volunteer_event_data.dict_of_teams_and_roles.roles_for_team(
         team
     )
 
@@ -144,7 +143,6 @@ def get_dict_of_volunteers_in_team_on_day_at_event(
 
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,
-    volunteer_event_data: DictOfAllEventDataForVolunteers,
 ):
     df_for_reporting_volunteers_for_day = apply_textual_transforms_to_df(
         df_for_reporting_volunteers_for_day=df_for_reporting_volunteers_for_day

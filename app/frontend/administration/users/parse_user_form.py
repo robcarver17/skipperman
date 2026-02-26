@@ -1,14 +1,19 @@
 from dataclasses import dataclass
 
-from app.backend.security.list_of_users import get_list_of_users, change_password_for_user, modify_user_group, \
-    modify_volunteer_for_user, generate_reset_message
+from app.backend.security.list_of_users import (
+    get_list_of_users,
+    change_password_for_user,
+    modify_user_group,
+    modify_volunteer_for_user,
+    generate_reset_message,
+)
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, missing_data
 
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.list_of_volunteers import (
-
-    get_volunteer_from_id,  get_volunteer_from_name,
+    get_volunteer_from_id,
+    get_volunteer_from_name,
 )
 
 from app.backend.security.list_of_users import (
@@ -51,9 +56,7 @@ def generate_reset_message_for_user_name(
     last_button: str, interface: abstractInterface
 ):
     username = username_from_reset_button(last_button)
-    return generate_reset_message(
-        username=username, interface=interface
-    )
+    return generate_reset_message(username=username, interface=interface)
 
 
 def add_new_user_if_present(interface: abstractInterface):
@@ -109,7 +112,6 @@ def save_changes_to_existing_users(interface: abstractInterface):
             save_change_to_user_from_form(interface=interface, user=user)
     except Exception as e:
         interface.log_error("Error updating users %s" % str(e))
-
 
 
 def save_change_to_user_from_form(interface: abstractInterface, user: SkipperManUser):
@@ -214,14 +216,19 @@ def get_user_values_from_values_in_form(
         volunteer=volunteer,
     )
 
-def get_volunteer_from_form(interface: abstractInterface, user: SkipperManUser,):
+
+def get_volunteer_from_form(
+    interface: abstractInterface,
+    user: SkipperManUser,
+):
     volunteer_name = interface.value_from_form(
         name_for_user_and_input_type(user, VOLUNTEER), default=MISSING_FROM_FORM
     )
 
     volunteer = get_volunteer_from_name(
-        object_store=interface.object_store, volunteer_name=volunteer_name,
-    default=missing_data
+        object_store=interface.object_store,
+        volunteer_name=volunteer_name,
+        default=missing_data,
     )
     if volunteer is missing_data:
         interface.log_error("Weird error can't find %s" % volunteer_name)
@@ -231,6 +238,7 @@ def get_volunteer_from_form(interface: abstractInterface, user: SkipperManUser,)
         )
 
     return volunteer
+
 
 def is_user_valid_text(
     interface: abstractInterface, user_values: SkipperManUserFromForm

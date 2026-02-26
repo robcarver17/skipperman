@@ -2,11 +2,16 @@ from dataclasses import dataclass
 import datetime
 from typing import Tuple
 
-from app.data_access.configuration.fixed import MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS, YEARS_ON_CADET_COMMITTEE, \
-    MAX_AGE_TO_JOIN_COMMITTEE, MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, MIN_AGE_TO_JOIN_COMMITTEE, MONTH_WHEN_EGM_HAPPENS
+from app.data_access.configuration.fixed import (
+    MONTH_WHEN_NEW_COMMITTEE_YEAR_BEGINS,
+    YEARS_ON_CADET_COMMITTEE,
+    MAX_AGE_TO_JOIN_COMMITTEE,
+    MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+    MIN_AGE_TO_JOIN_COMMITTEE,
+    MONTH_WHEN_EGM_HAPPENS,
+)
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 

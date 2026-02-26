@@ -10,7 +10,6 @@ from app.frontend.shared.volunteer_state import (
     get_volunteer_from_state,
 )
 from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.composed.volunteers_with_all_event_data import (
     AllEventDataForVolunteer,
     DictOfAllEventDataForVolunteers,
@@ -65,7 +64,6 @@ def get_volunteer_table(
 
     top_row = get_top_row_for_table(event=event, ready_to_swap=ready_to_swap)
     other_rows = get_body_of_table_at_event(
-        event=event,
         interface=interface,
         ready_to_swap=ready_to_swap,
         dict_of_volunteers_at_event_with_event_data=dict_of_volunteers_at_event_with_event_data,
@@ -97,12 +95,10 @@ def get_top_row_for_table(event: Event, ready_to_swap: bool) -> RowInTable:
 
 
 def get_body_of_table_at_event(
-    event: Event,
     interface: abstractInterface,
     dict_of_volunteers_at_event_with_event_data: DictOfAllEventDataForVolunteers,
     ready_to_swap: bool = False,
 ) -> List[RowInTable]:
-
     other_rows = [
         get_row_for_volunteer_at_event(
             ready_to_swap=ready_to_swap,
@@ -145,7 +141,6 @@ def get_first_part_of_row_for_volunteer_at_event(
     interface: abstractInterface,
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
-
 ) -> list:
     name_button = get_volunteer_name_cell(interface=interface, volunteer=volunteer)
     location = get_location_button(

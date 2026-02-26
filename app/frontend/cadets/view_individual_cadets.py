@@ -73,8 +73,7 @@ def list_of_lines_with_allocations(
     interface: abstractInterface, cadet: Cadet
 ) -> ListOfLines:
     dict_of_allocations = get_dict_of_most_common_group_names_at_event_for_single_cadet(
-        object_store=interface.object_store,
-        cadet=cadet
+        object_store=interface.object_store, cadet=cadet
     )
     return ListOfLines(
         ["Events registered at:", _______________]

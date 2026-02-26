@@ -97,9 +97,9 @@ def post_form_notes(interface: abstractInterface) -> Union[Form, NewForm]:
         return button_error_and_back_to_initial_state_form(interface)
 
 
-def was_sort_button(inteface: abstractInterface):
+def was_sort_button(interface: abstractInterface):
     return check_if_button_in_list_was_pressed(
-        inteface.last_button_pressed(), sort_buttons
+        interface.last_button_pressed(), sort_buttons
     )
 
 

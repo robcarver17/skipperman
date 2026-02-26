@@ -5,8 +5,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.frontend.shared.event_selection import (
     display_given_list_of_events_with_buttons,
 )
-from app.objects.abstract_objects.abstract_buttons import Button
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_lines import Line
 from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.objects.events import SORT_BY_START_DSC, ListOfEvents, Event
 

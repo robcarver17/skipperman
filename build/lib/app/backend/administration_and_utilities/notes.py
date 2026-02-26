@@ -18,18 +18,23 @@ def update_note_with_new_data(
         priority=priority,
         completed=completed,
         text=text,
-        assigned_volunteer=assigned_volunteer
+        assigned_volunteer=assigned_volunteer,
     )
 
 
-def add_quick_note(interface: abstractInterface, text: str, volunteer_author: Volunteer):
-    interface.update(interface.object_store.data_api.data_list_of_notes.add_quick_note,
-                        text=text, volunteer_author=volunteer_author)
-
+def add_quick_note(
+    interface: abstractInterface, text: str, volunteer_author: Volunteer
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_notes.add_quick_note,
+        text=text,
+        volunteer_author=volunteer_author,
+    )
 
 
 def get_list_of_notes_with_volunteers(
     object_store: ObjectStore,
 ) -> ListOfNotesWithVolunteers:
-    return object_store.get(object_store.data_api.data_list_of_notes.read_list_of_volunteers_with_notes)
-
+    return object_store.get(
+        object_store.data_api.data_list_of_notes.read_list_of_volunteers_with_notes
+    )

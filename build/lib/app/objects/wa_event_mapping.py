@@ -52,4 +52,3 @@ class ListOfWAEventMaps(GenericListOfObjects):
         return get_unique_object_with_attr_in_list(
             some_list=self, attr_name="wa_id", attr_value=wa_id, default=default
         )
-

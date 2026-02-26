@@ -14,8 +14,12 @@ from app.frontend.events.cadets_at_event.interactively_update_records_of_cadets_
 from app.frontend.events.cadets_at_event.iteratively_identify_cadets_in_import_stage import (
     start_cadet_id_process,
 )
-from app.frontend.events.import_data.background_processses import display_call_to_update_background_data_during_import
-from app.frontend.events.import_data.upload_event_file import display_form_upload_event_file
+from app.frontend.events.import_data.background_processses import (
+    display_call_to_update_background_data_during_import,
+)
+from app.frontend.events.import_data.upload_event_file import (
+    display_form_upload_event_file,
+)
 from app.frontend.events.volunteer_identification.add_volunteers_to_event import (
     display_add_volunteers_to_event,
 )
@@ -41,7 +45,7 @@ import_stages_in_order = [
     display_add_volunteers_to_event,
     display_call_to_update_cadet_clothing_at_event_during_import,
     display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
-display_call_to_update_background_data_during_import
+    display_call_to_update_background_data_during_import,
 ]
 
 
@@ -52,7 +56,9 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     except NoMoreData:
         interface.log_error("Finished importing WA data")
         clear_index_of_last_import_done_in_state(interface)
-        return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
+        return interface.get_new_display_form_for_parent_of_function(
+            display_form_upload_event_file
+        )
 
     print("Next import %s" % str(next_import))
 
@@ -95,9 +101,11 @@ def return_and_increment_import_state_index(interface: abstractInterface) -> int
 
 
 def get_index_of_last_import_done_in_state(interface: abstractInterface) -> int:
-    return int(interface.get_persistent_value(
-        LAST_IMPORT_DONE, default=NO_IMPORT_DONE_YET_INDEX
-    ))
+    return int(
+        interface.get_persistent_value(
+            LAST_IMPORT_DONE, default=NO_IMPORT_DONE_YET_INDEX
+        )
+    )
 
 
 def set_index_of_last_import_done_in_state(
@@ -105,7 +113,6 @@ def set_index_of_last_import_done_in_state(
 ):
     interface.set_persistent_value(LAST_IMPORT_DONE, next_import_index)
 
-def clear_index_of_last_import_done_in_state(
-    interface: abstractInterface
-):
+
+def clear_index_of_last_import_done_in_state(interface: abstractInterface):
     interface.clear_persistent_value(LAST_IMPORT_DONE)

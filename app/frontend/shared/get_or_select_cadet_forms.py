@@ -176,7 +176,9 @@ def get_footer_buttons_add_or_select_existing_cadets_form(
     return ListOfLines([main_buttons, extra_buttons, _______________] + cadet_buttons)
 
 
-def get_list_of_main_buttons(parameters: ParametersForGetOrSelectCadetForm, cadet: Cadet) -> Line:
+def get_list_of_main_buttons(
+    parameters: ParametersForGetOrSelectCadetForm, cadet: Cadet
+) -> Line:
     if parameters.default_cadet_passed:
         main_buttons = [check_cadet_for_me_button]
     elif parameters.final_add_button:
@@ -236,8 +238,10 @@ def get_list_of_cadet_buttons(
         + cadet_choice_buttons
     ).add_Lines()
 
+
 def cadet_button(cadet: Cadet):
     return Button(label=str(cadet), value=from_id_to_label(cadet.id))
+
 
 def get_sort_order_buttons(
     parameters: ParametersForGetOrSelectCadetForm,
@@ -311,13 +315,14 @@ def generic_post_response_to_add_or_select_cadet(
         )
     elif add_non_member_cadet.pressed(last_button_pressed):
         try:
-            cadet = add_cadet_from_form_to_data(interface, as_non_member= True)
+            cadet = add_cadet_from_form_to_data(interface, as_non_member=True)
         except Exception as e:
-            interface.log_error("Error %s when adding non member cadet to data" % str(e))
+            interface.log_error(
+                "Error %s when adding non member cadet to data" % str(e)
+            )
             return form_as_result(interface=interface, parameters=parameters)
 
         return ResultFromAddOrSelect(cadet=cadet, cadet_was_added=True)
-
 
     elif add_cadet_button.pressed(last_button_pressed):
         try:
@@ -422,7 +427,6 @@ SKIP_BUTTON_LABEL = "Skip"
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
 
 
-
 add_cadet_button = Button(FINAL_CADET_ADD_BUTTON_LABEL)
 check_cadet_for_me_button = Button(CHECK_CADET_FOR_ME_BUTTON_LABEL)
 check_confirm_allow_to_add_cadet_button = Button(CHECK_CADET_CONFIRM_BUTTON_LABEL)
@@ -433,9 +437,9 @@ skip_button = Button(SKIP_BUTTON_LABEL)
 refresh_button = Button(REFRESH_LIST_BUTTON_LABEL)
 
 
-def from_id_to_label(cadet_id:str):
+def from_id_to_label(cadet_id: str):
     return "cadetid_%s" % cadet_id
 
 
-def from_label_to_id(label:str):
+def from_label_to_id(label: str):
     return label.split("_")[1]

@@ -14,14 +14,15 @@ def get_list_of_event_warnings(
     )
 
 
-
 def add_list_of_event_warnings(
-    interface: abstractInterface, event: Event, new_list_of_warnings: ListOfEventWarnings
+    interface: abstractInterface,
+    event: Event,
+    new_list_of_warnings: ListOfEventWarnings,
 ):
     for warning_log in new_list_of_warnings:
-        add_new_event_warning_checking_for_duplicate(interface=interface,
-                                                                      event=event,
-                                                    warning_log=warning_log)
+        add_new_event_warning_checking_for_duplicate(
+            interface=interface, event=event, warning_log=warning_log
+        )
 
 
 def add_new_event_warning_given_components_checking_for_duplicate(
@@ -36,25 +37,21 @@ def add_new_event_warning_given_components_checking_for_duplicate(
         warning=warning,
         category=category,
         priority=priority,
-        auto_refreshed=auto_refreshed
+        auto_refreshed=auto_refreshed,
     )
-    add_new_event_warning_checking_for_duplicate(interface=interface,
-                                                 warning_log=warning_log,
-                                                 event=event)
+    add_new_event_warning_checking_for_duplicate(
+        interface=interface, warning_log=warning_log, event=event
+    )
 
 
 def add_new_event_warning_checking_for_duplicate(
-    interface: abstractInterface,
-    event: Event,
-    warning_log: EventWarningLog
+    interface: abstractInterface, event: Event, warning_log: EventWarningLog
 ):
     interface.update(
         interface.object_store.data_api.data_event_warnings.add_new_event_warning_checking_for_duplicate,
         event_id=event.id,
-        warning_log=warning_log
+        warning_log=warning_log,
     )
-
-
 
 
 def mark_event_warning_with_id_as_ignore(
@@ -64,8 +61,9 @@ def mark_event_warning_with_id_as_ignore(
         interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
         event_id=event.id,
         warning_id=warning_id,
-        ignore_flag=True
+        ignore_flag=True,
     )
+
 
 def mark_event_warning_with_id_as_unignore(
     interface: abstractInterface, event: Event, warning_id: str
@@ -74,7 +72,7 @@ def mark_event_warning_with_id_as_unignore(
         interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
         event_id=event.id,
         warning_id=warning_id,
-        ignore_flag=False
+        ignore_flag=False,
     )
 
 
@@ -106,7 +104,7 @@ def mark_all_active_event_warnings_with_priority_and_category_as_ignored(
         event_id=event.id,
         category=category,
         priority=priority,
-        set_active_to_ignored=True
+        set_active_to_ignored=True,
     )
 
 
@@ -118,8 +116,9 @@ def mark_all_ignored_event_warnings_with_priority_and_category_as_unignored(
         event_id=event.id,
         category=category,
         priority=priority,
-        set_active_to_ignored=False
+        set_active_to_ignored=False,
     )
+
 
 def process_list_of_warnings_which_auto_clear(
     interface: abstractInterface,
@@ -130,9 +129,8 @@ def process_list_of_warnings_which_auto_clear(
 ):
     interface.update(
         interface.object_store.data_api.data_event_warnings.add_or_update_list_of_autorefreshed_event_warnings_clearing_any_missing,
-            new_list_of_warnings=list_of_warnings,
-            category=category,
-            priority=priority,
-            event_id= event.id
-        )
-
+        new_list_of_warnings=list_of_warnings,
+        category=category,
+        priority=priority,
+        event_id=event.id,
+    )

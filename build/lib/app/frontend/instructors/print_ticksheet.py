@@ -1,5 +1,4 @@
 import os
-from copy import copy
 
 import pandas as pd
 from app.objects.qualifications import Qualification
@@ -82,7 +81,7 @@ def write_ticksheet_to_excel(labelled_ticksheet: LabelledTickSheet, filename: st
 
 
 def align_center(x):
-    return ["text-align: center" for x in x]
+    return ["text-align: center" for __ in x]
 
 
 def temp_file_name(event: Event, group: Group, qualification: Qualification) -> str:

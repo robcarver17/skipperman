@@ -3,7 +3,6 @@ from app.backend.registration_data.raw_mapped_registration_data import (
     get_cadet_data_from_row_of_registration_data_no_checks,
 )
 from app.backend.volunteers.warnings import warn_on_cadets_which_should_have_volunteers
-from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import cadet_seems_too_young
 from app.objects.events import Event
@@ -62,7 +61,7 @@ def refresh_registration_data_warnings(interface: abstractInterface, event: Even
 
 
 def refresh_unknown_date_of_birth_warnings(interface: abstractInterface, event: Event):
-    object_store=interface.object_store
+    object_store = interface.object_store
     registered_cadets = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -85,7 +84,7 @@ def refresh_unknown_date_of_birth_warnings(interface: abstractInterface, event: 
 
 
 def refresh_too_young_warnings(interface: abstractInterface, event: Event):
-    object_store=interface.object_store
+    object_store = interface.object_store
     registered_cadets = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -105,7 +104,7 @@ def refresh_too_young_warnings(interface: abstractInterface, event: Event):
 
 
 def refresh_manually_added_cadet_warnings(interface: abstractInterface, event: Event):
-    object_store=interface.object_store
+    object_store = interface.object_store
     dict_of_registrations = get_dict_of_cadets_with_registration_data(
         object_store=object_store, event=event
     )
@@ -131,8 +130,10 @@ from app.backend.registration_data.identified_cadets_at_event import (
 )
 
 
-def refresh_temporarily_skipped_cadet_warnings(interface: abstractInterface, event: Event):
-    object_store=interface.object_store
+def refresh_temporarily_skipped_cadet_warnings(
+    interface: abstractInterface, event: Event
+):
+    object_store = interface.object_store
     identified_cadets = get_list_of_identified_cadets_at_event(
         object_store=object_store, event=event
     )

@@ -9,7 +9,6 @@ from app.backend.cadets.import_membership_list import (
     create_temp_file_with_list_of_cadets,
     DESCRIBE_ALL_FIELDS_IN_CADET_MEMBERSHIP_LIST_FILE,
     DOB_FORMAT,
-    temp_list_of_cadets_file_name,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, fileInput
 from app.objects.abstract_objects.abstract_buttons import (

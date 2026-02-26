@@ -84,5 +84,5 @@ def simplify_and_display(some_list, linker=", "):
 def all_spaces_or_commas(x: str):
     xx = x.replace(",", "")
     xx = xx.replace(" ", "")
-    if len(xx)==0:
+    if len(xx) == 0:
         return True

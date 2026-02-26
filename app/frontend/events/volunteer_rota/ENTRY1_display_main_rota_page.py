@@ -1,7 +1,8 @@
 from typing import Union
 
-from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import \
-    update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data
+from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import (
+    update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data,
+)
 from app.frontend.events.volunteer_rota.copy_menu import (
     display_form_volunteer_copy_menu,
 )
@@ -42,7 +43,8 @@ from app.frontend.events.volunteer_rota.button_values import *
 from app.frontend.events.volunteer_rota.rota_state import (
     save_sorts_to_state,
     get_sorts_and_filters_from_state,
-    clear_all_filters, clear_all_sorts,
+    clear_all_filters,
+    clear_all_sorts,
 )
 from app.frontend.forms.swaps import clear_swap_state
 from app.frontend.reporting.rota.report_rota import rota_report_generator
@@ -193,7 +195,7 @@ def post_form_view_for_volunteer_rota_if_data_changed(
     interface: abstractInterface, last_button_pressed: str
 ) -> Union[Form, NewForm, File]:
     print("Changing underlying data")
-    
+
     if last_button_pressed_was_make_available_button(last_button_pressed):
         update_if_make_available_button_pressed(
             available_button=last_button_pressed, interface=interface
@@ -219,8 +221,9 @@ def post_form_view_for_volunteer_rota_if_data_changed(
             interface=interface, swap_button=last_button_pressed
         )
     elif update_most_common_role_button.pressed(last_button_pressed):
-        update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(interface)
-
+        update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(
+            interface
+        )
 
     ## SAVES
 
@@ -245,10 +248,8 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
 
 def save_all_information_across_forms(interface: abstractInterface):
-    
     save_all_information_in_rota_page(interface)
-    interface.log_error("Not saving volunteer targets")
-    #save_volunteer_targets(interface)
+    save_volunteer_targets(interface)
     save_group_notes_from_form(interface)
     save_warnings_from_table(interface)
 
@@ -274,8 +275,7 @@ def previous_form(interface: abstractInterface):
 def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rota_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     interface.log_error(

@@ -15,13 +15,12 @@ from app.objects.utilities.utils import flatten
 from app.objects.utilities.exceptions import MissingData, arg_not_passed, missing_data
 
 from app.objects.cadet_with_id_at_event import (
-    CadetWithIdAtEvent,
-    ListOfCadetsWithIDAtEvent,
+    CadetWithIdAtEvent
 )
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets
-from app.objects.day_selectors import DaySelector, Day, empty_day_selector
-from app.objects.events import Event, ListOfEvents
+from app.objects.day_selectors import DaySelector, empty_day_selector
+from app.objects.events import Event
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import RegistrationStatus, empty_status
 
@@ -33,7 +32,6 @@ class CadetRegistrationData:
     data_in_row: RowInRegistrationData
     notes: str = ""
     health: str = ""
-
 
     def availability_empty_if_inactive(self):
         if self.status.is_active:
@@ -47,8 +45,8 @@ class CadetRegistrationData:
             availability=empty_day_selector,
             status=empty_status,
             data_in_row=RowInRegistrationData.create_empty(),
-            notes='',
-            health=''
+            notes="",
+            health="",
         )
 
     def update_column_in_data(self, column_name: str, new_value_for_column):
@@ -110,104 +108,19 @@ class CadetRegistrationData:
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
 
 
-    def delete_cadet_from_event_and_return_messages(self, cadet: Cadet) -> List[str]:
-        try:
-            self.pop(cadet)
-            self.list_of_cadets_with_id_at_event.delete_cadet_with_id(cadet.id)
-            return ["- Remove cadet from registration data"]
-        except Exception as e:
-            print("%s" % str(e))
-            return []
-
-    def update_health_for_existing_cadet_at_event(self, cadet: Cadet, new_health: str):
-        reg_data_for_cadet = self.registration_data_for_cadet(cadet)
-        reg_data_for_cadet.update_health(new_health)
-        self[cadet] = reg_data_for_cadet
-
-        self.list_of_cadets_with_id_at_event.update_health_for_existing_cadet_at_event(
-            cadet_id=cadet.id, new_health=new_health
-        )
-
-    def update_row_in_registration_data_for_existing_cadet_at_event(
-        self, cadet: Cadet, column_name: str, new_value_for_column
-    ):
-        reg_data_for_cadet = self.registration_data_for_cadet(cadet)
-        existing_value = reg_data_for_cadet.data_in_row[column_name]
-        if existing_value == new_value_for_column:
-            return
-
-        reg_data_for_cadet.update_column_in_data(
-            column_name=column_name, new_value_for_column=new_value_for_column
-        )
-        self[cadet] = reg_data_for_cadet
-
-        self.list_of_cadets_with_id_at_event.update_data_row_for_existing_cadet_at_event(
-            cadet_id=cadet.id,
-            column_name=column_name,
-            new_value_for_column=new_value_for_column,
-        )
-
-    def update_notes_for_existing_cadet_at_event(self, cadet: Cadet, notes: str):
-        reg_data_for_cadet = self.registration_data_for_cadet(cadet)
-        reg_data_for_cadet.update_notes(notes)
-        self[cadet] = reg_data_for_cadet
-
-        ## propogate down
-        self.list_of_cadets_with_id_at_event.update_notes_for_existing_cadet_at_event(
-            cadet_id=cadet.id, new_notes=notes
-        )
-
     def availability_dict(self) -> Dict[Cadet, DaySelector]:
         return dict(
             [
-                (cadet, self.registration_data_for_cadet(cadet).availability_empty_if_inactive())
+                (
+                    cadet,
+                    self.registration_data_for_cadet(
+                        cadet
+                    ).availability_empty_if_inactive(),
+                )
                 for cadet in self.list_of_cadets()
             ]
         )
 
-    def clear_user_data(self):
-        for reg_data_for_cadet in self.values():
-            reg_data_for_cadet.clean_data()
-
-        self.list_of_cadets_with_id_at_event.clear_private_data()
-
-    def make_cadet_available_on_day(self, cadet: Cadet, day: Day):
-        registration_data = self.registration_data_for_cadet(cadet)
-        registration_data.availability.make_available_on_day(day)
-        self[cadet] = registration_data
-
-        cadet_at_event_data = (
-            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
-                cadet_id=cadet.id
-            )
-        )
-        cadet_at_event_data.availability.make_available_on_day(day)
-
-    def make_cadet_unavailable_on_day(self, cadet: Cadet, day: Day):
-        registration_data = self.registration_data_for_cadet(cadet)
-        registration_data.availability.make_unavailable_on_day(day)
-        self[cadet] = registration_data
-
-        cadet_at_event_data = (
-            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
-                cadet_id=cadet.id
-            )
-        )
-        cadet_at_event_data.availability.make_unavailable_on_day(day)
-
-    def update_status_of_existing_cadet_in_event_info(
-        self, cadet: Cadet, new_status: RegistrationStatus
-    ):
-        existing_registration = self.registration_data_for_cadet(cadet)
-        existing_registration.status = new_status
-        self[cadet] = existing_registration
-
-        cadet_at_event_with_id = (
-            self.list_of_cadets_with_id_at_event.cadet_with_id_and_data_at_event(
-                cadet_id=cadet.id
-            )
-        )
-        cadet_at_event_with_id.status = new_status
 
     def list_of_registration_fields(self):
         all_fields = [reg_data.data_fields for reg_data in list(self.values())]
@@ -275,7 +188,6 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
         return DictOfCadetsWithRegistrationData(
             dict([(cadet, self[cadet]) for cadet in sorted_list_of_cadets])
         )
-
 
 
 def get_ordered_list_of_columns_excluding_special_fields(

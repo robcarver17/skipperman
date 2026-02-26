@@ -11,7 +11,7 @@ from app.data_access.configuration.configuration import (
 from app.data_access.store.object_store import ObjectStore
 from app.objects.events import Event
 from app.objects.composed.clothing_at_event import (
-     DictOfCadetsWithClothingAtEvent,
+    DictOfCadetsWithClothingAtEvent,
 )
 from app.objects.clothing import ClothingAtEvent, ListOfCadetsWithClothingAndIdsAtEvent
 
@@ -21,19 +21,17 @@ def get_dict_of_cadets_with_clothing_at_event(
 ) -> DictOfCadetsWithClothingAtEvent:
     return object_store.get(
         object_store.data_api.data_list_of_cadets_with_clothing_at_event.get_dict_of_cadets_with_clothing_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
+
 
 def get_list_of_cadets_with_clothing_ids_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadetsWithClothingAndIdsAtEvent:
     return object_store.get(
         object_store.data_api.data_list_of_cadets_with_clothing_at_event.read,
-        event_id=event.id
+        event_id=event.id,
     )
-
-
-
 
 
 def change_clothing_size_for_cadet(
@@ -42,30 +40,32 @@ def change_clothing_size_for_cadet(
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.change_clothing_size_for_cadet,
         cadet_id=cadet.id,
-        event_id = event.id,
-        size=size
+        event_id=event.id,
+        size=size,
     )
-
-
 
 
 def change_colour_group_for_cadet(
     interface: abstractInterface, event: Event, cadet: Cadet, colour: str
 ):
-    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.change_colour_group_for_cadet,
-                     cadet_id=cadet.id,
-                     event_id=event.id,
-                     colour=colour
-                     )
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.change_colour_group_for_cadet,
+        cadet_id=cadet.id,
+        event_id=event.id,
+        colour=colour,
+    )
+
 
 def clear_colour_group_for_cadet(
-        interface: abstractInterface,
+    interface: abstractInterface,
     event: Event,
     cadet: Cadet,
 ):
-    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.clear_colour_group_for_cadet,
-                     cadet_id=cadet.id,
-                     event_id=event.id)
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.clear_colour_group_for_cadet,
+        cadet_id=cadet.id,
+        event_id=event.id,
+    )
 
 
 def remove_requirements_for_clothing_for_cadet_at_event(
@@ -73,9 +73,12 @@ def remove_requirements_for_clothing_for_cadet_at_event(
     event: Event,
     cadet: Cadet,
 ):
-    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event,
-                     cadet_id=cadet.id,
-                     event_id=event.id)
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.remove_clothing_requirements_for_cadet_at_event,
+        cadet_id=cadet.id,
+        event_id=event.id,
+    )
+
 
 class NotEnoughColours(Exception):
     pass
@@ -109,10 +112,9 @@ def distribute_colour_groups_at_event(interface: abstractInterface, event: Event
         )
 
 
-
 def allocate_best_colour_group_for_cadet(
-        interface: abstractInterface,
-        event: Event,
+    interface: abstractInterface,
+    event: Event,
     sorted_dict_of_cadets_with_clothing: DictOfCadetsWithClothingAtEvent,
     cadet: Cadet,
     clothing: ClothingAtEvent,
@@ -145,16 +147,14 @@ def allocate_best_colour_group_for_cadet(
     )
 
     ## The above doesn't change to SQL just the in memory version
-    change_colour_group_for_cadet(interface=interface,
-                                  event=event,
-                                  cadet=cadet,
-                                  colour=current_colour
-                                  )
+    change_colour_group_for_cadet(
+        interface=interface, event=event, cadet=cadet, colour=current_colour
+    )
 
 
 def probably_has_family_with_colour(
     cadet: Cadet,
-    dict_of_cadets_with_clothing:DictOfCadetsWithClothingAtEvent,
+    dict_of_cadets_with_clothing: DictOfCadetsWithClothingAtEvent,
     colour: str,
 ) -> bool:
     dict_of_cadets_with_clothing_and_same_surname = (
@@ -168,7 +168,7 @@ def probably_has_family_with_colour(
 
 
 def least_popular_colours(
-    dict_of_cadets_with_clothing:DictOfCadetsWithClothingAtEvent,
+    dict_of_cadets_with_clothing: DictOfCadetsWithClothingAtEvent,
 ) -> List[str]:
     colours = dict_of_cadets_with_clothing.colours()
     counter = Counter(colours).most_common()
@@ -183,19 +183,22 @@ def least_popular_colours(
 def is_cadet_already_at_event_with_clothing(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> bool:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_clothing_at_event.does_cadet_have_clothing_record_at_event,
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_clothing_at_event.does_cadet_have_clothing_record_at_event,
         event_id=event.id,
-    cadet_id=cadet.id
+        cadet_id=cadet.id,
     )
 
+
 def add_new_cadet_with_clothing_to_event(
-   interface: abstractInterface,
+    interface: abstractInterface,
     event: Event,
     cadet: Cadet,
     size: str,
 ):
-    interface.update(interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.add_new_cadet_with_clothing_to_event,
-                     event_id=event.id,
-                     cadet_id=cadet.id,
-                     size=size,
-                     )
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.add_new_cadet_with_clothing_to_event,
+        event_id=event.id,
+        cadet_id=cadet.id,
+        size=size,
+    )

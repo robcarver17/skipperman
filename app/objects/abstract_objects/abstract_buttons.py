@@ -17,7 +17,6 @@ _DO_NOT_USE_USE_CANCEL_INSTEAD = "Back (Cancel changes)"
 BACK_BUTTON_LABEL = "Back"
 
 
-
 MAIN_MENU = "main_menu"  ## Not actual index page
 
 

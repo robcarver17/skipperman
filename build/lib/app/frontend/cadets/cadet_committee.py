@@ -5,7 +5,10 @@ from app.frontend.shared.buttons import (
     cadet_from_button_pressed,
     is_button_cadet_selection,
 )
-from app.frontend.shared.get_or_select_cadet_forms import from_id_to_label, from_label_to_id
+from app.frontend.shared.get_or_select_cadet_forms import (
+    from_id_to_label,
+    from_label_to_id,
+)
 from app.objects.cadets import Cadet
 
 from app.backend.cadets.list_of_cadets import (
@@ -18,8 +21,11 @@ from app.backend.cadets.cadet_committee import (
     add_new_cadet_to_committee,
     toggle_selection_for_cadet_committee_member,
 )
-from app.objects.committee import start_and_end_date_on_cadet_commmittee, get_next_year_for_cadet_committee_after_EGM, \
-    month_name_when_cadet_committee_age_bracket_begins
+from app.objects.committee import (
+    start_and_end_date_on_cadet_commmittee,
+    get_next_year_for_cadet_committee_after_EGM,
+    month_name_when_cadet_committee_age_bracket_begins,
+)
 
 from app.objects.composed.committee import CadetOnCommittee
 from app.objects.abstract_objects.abstract_form import (
@@ -220,14 +226,11 @@ def post_form_cadet_committee(
     if cancel_menu_button.pressed(button_pressed):
         return previous_form(interface)
 
-    
     if add_button.pressed(button_pressed):
         add_new_cadet_to_committee_from_form(interface)
 
     elif is_button_cadet_selection(button_pressed):
-        select_or_deselect_cadet_from_committee(
-            interface=interface, button_name=button_pressed
-        )
+        select_or_deselect_cadet_from_committee(interface=interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -260,9 +263,7 @@ def add_new_cadet_to_committee_from_form(interface: abstractInterface):
 
     cadet_id = from_label_to_id(cadet_id_label)
 
-    cadet = get_cadet_from_id(
-        object_store=interface.object_store, cadet_id=cadet_id
-    )
+    cadet = get_cadet_from_id(object_store=interface.object_store, cadet_id=cadet_id)
 
     add_new_cadet_to_committee(
         interface=interface,
@@ -273,21 +274,12 @@ def add_new_cadet_to_committee_from_form(interface: abstractInterface):
 
 
 ## Selection/Deselection
-def select_or_deselect_cadet_from_committee(
-    interface: abstractInterface, button_name: str
-):
-    cadet = cadet_from_select_or_deselect_button_name(
-        interface=interface, button_name=button_name
-    )
-    toggle_selection_for_cadet_committee_member(
-        interface=interface,
-     cadet=cadet
-    )
+def select_or_deselect_cadet_from_committee(interface: abstractInterface):
+    cadet = cadet_from_select_or_deselect_button_name(interface=interface)
+    toggle_selection_for_cadet_committee_member(interface=interface, cadet=cadet)
 
 
-def cadet_from_select_or_deselect_button_name(
-    interface: abstractInterface, button_name: str
-) -> Cadet:
+def cadet_from_select_or_deselect_button_name(interface: abstractInterface) -> Cadet:
     cadet = cadet_from_button_pressed(
         object_store=interface.object_store,
         value_of_button_pressed=interface.last_button_pressed(),

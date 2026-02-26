@@ -12,7 +12,7 @@ from app.data_access.csv.arch.resolve_paths_and_filenames import (
 from app.objects.groups import ListOfGroups
 
 
-class csvDataListOfGroups( GenericCsvData):
+class csvDataListOfGroups(GenericCsvData):
     def read(self) -> ListOfGroups:
         return self.read_and_return_object_of_type(
             ListOfGroups, file_identifier=GROUPS_FILE_ID
@@ -39,9 +39,7 @@ class csvDataListOfPrintOptions(GenericCsvData):
         )
 
 
-class csvDataListOfArrangementOptions(
-     GenericCsvData
-):
+class csvDataListOfArrangementOptions(GenericCsvData):
     def read(self, report_name: str) -> ArrangementOptionsAndGroupOrder:
         arrange_options = self.read_and_return_object_of_type(
             ArrangementOptionsAndGroupOrder,
@@ -50,9 +48,7 @@ class csvDataListOfArrangementOptions(
         )
         return arrange_options
 
-    def write(
-        self, arrange_options: ArrangementOptionsAndGroupOrder, report_name: str
-    ):
+    def write(self, arrange_options: ArrangementOptionsAndGroupOrder, report_name: str):
         self.write_object(
             arrange_options,
             file_identifier=ARRANGEMENT_OPTIONS_FILE_ID,

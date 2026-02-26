@@ -69,16 +69,20 @@ class ListOfCadetsWithIdsAndQualifications(GenericListOfObjectsWithIds):
             sorted(self, key=lambda object: object.date, reverse=True)
         )
 
-    def cadet_has_qualification(self, cadet_id:str, qualification_id: str):
+    def cadet_has_qualification(self, cadet_id: str, qualification_id: str):
         existing_item = get_unique_object_with_multiple_attr_in_list(
-            self, dict_of_attributes=dict(cadet_id=cadet_id, qualification_id=qualification_id),
-            default=missing_data
+            self,
+            dict_of_attributes=dict(
+                cadet_id=cadet_id, qualification_id=qualification_id
+            ),
+            default=missing_data,
         )
 
         if existing_item is missing_data:
             return False
 
         return True
+
 
 class NoQualifications:
     def name(self):

@@ -1,4 +1,3 @@
-
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.volunteers import Volunteer

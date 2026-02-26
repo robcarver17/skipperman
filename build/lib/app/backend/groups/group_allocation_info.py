@@ -62,5 +62,3 @@ def get_value_for_cadet_at_event(
     event_data_for_cadet: AllEventInfoForCadet, field_key: str
 ) -> str:
     return event_data_for_cadet.registration_data.data_in_row.get(field_key, "")
-
-

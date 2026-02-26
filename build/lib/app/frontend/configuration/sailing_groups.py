@@ -7,9 +7,12 @@ from app.objects.abstract_objects.abstract_lines import Line
 
 from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 
-from app.objects.groups import Group, ListOfGroups, all_locations_for_input, GroupLocation
-
-from app.data_access.store.object_store import ObjectStore
+from app.objects.groups import (
+    Group,
+    ListOfGroups,
+    all_locations_for_input,
+    GroupLocation,
+)
 
 from app.backend.groups.list_of_groups import (
     get_list_of_groups,
@@ -58,7 +61,6 @@ def post_form_config_sailing_groups(
 ) -> Union[Form, NewForm]:
     list_of_groups = get_list_of_groups(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_groups,
         interface=interface,
@@ -108,11 +110,15 @@ def text_box_for_group_name(entry: Group) -> textInput:
 
 def text_box_for_streamer(entry: Group) -> textInput:
     return textInput(
-        value=str(entry.streamer), input_label="Edit streamer colour", input_name=streamer_box_name(entry)
+        value=str(entry.streamer),
+        input_label="Edit streamer colour",
+        input_name=streamer_box_name(entry),
     )
+
 
 def streamer_box_name(entry: Group):
     return "streamer_%s" % entry.id
+
 
 def location_box_name(entry: Group = arg_not_passed) -> str:
     return LOCATION_FIELD_NAME + "_" + entry.name
@@ -146,19 +152,26 @@ def get_group_from_form(
         input_name=hidden_box_name(existing_object),
         default=MISSING_FROM_FORM,
     )
-    new_streamer = interface.value_from_form(streamer_box_name(existing_object), default=MISSING_FROM_FORM)
+    new_streamer = interface.value_from_form(
+        streamer_box_name(existing_object), default=MISSING_FROM_FORM
+    )
     if MISSING_FROM_FORM in [new_location, new_group_name, is_hidden, new_streamer]:
         interface.log_error("Can't update %s" % str(existing_object))
         return existing_object
 
     new_group = Group(
-        name=new_group_name, location=GroupLocation[new_location], protected=False, hidden=is_hidden,
-        streamer=new_streamer
+        name=new_group_name,
+        location=GroupLocation[new_location],
+        protected=False,
+        hidden=is_hidden,
+        streamer=new_streamer,
     )
     return new_group
 
 
-def save_from_ordinary_list_of_groups( interface: abstractInterface, new_list: List[Group]):
+def save_from_ordinary_list_of_groups(
+    interface: abstractInterface, new_list: List[Group]
+):
     update_list_of_groups(
         interface=interface, updated_list_of_groups=ListOfGroups(new_list)
     )

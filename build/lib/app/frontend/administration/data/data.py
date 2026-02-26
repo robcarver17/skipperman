@@ -1,9 +1,9 @@
 from typing import Union
 
-from app.data_access.sql.transfer import transfer_from_sql_to_csv, transfer_from_csv_to_sql
-from app.objects.abstract_objects.abstract_text import Heading
-
-from app.data_access.backups.find_and_restore_backups import delete_all_master_data
+from app.data_access.sql.transfer import (
+    transfer_from_sql_to_csv,
+    transfer_from_csv_to_sql,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -31,12 +31,16 @@ edit_event = Button("Edit / Delete event", tile=True)
 sql_to_csv = Button("Write SQL data as CSV", tile=True)
 csv_to_sql = Button("Write CSV data as SQL", tile=True)
 
-option_buttons = Line([edit_event, merge_cadet_option, merge_volunteer_option, sql_to_csv, csv_to_sql])
+option_buttons = Line(
+    [edit_event, merge_cadet_option, merge_volunteer_option, sql_to_csv, csv_to_sql]
+)
 
 nav_buttons = ButtonBar([back_menu_button])
 
 
-def display_form_data(interface: abstractInterface) -> Union[Form, NewForm]:
+def display_form_data(
+    interface: abstractInterface,
+) -> Union[Form, NewForm]:  ##ignore warning
     lines_inside_form = ListOfLines([nav_buttons, option_buttons])
 
     return Form(lines_inside_form)

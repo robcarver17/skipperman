@@ -16,24 +16,35 @@ from app.objects.cadets import (
 
 def add_new_verified_cadet(interface: abstractInterface, cadet: Cadet) -> Cadet:
     try:
-        interface.update(interface.object_store.data_api.data_list_of_cadets.add_cadet, new_cadet=cadet)
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets.add_cadet,
+            new_cadet=cadet,
+        )
     except Exception as e:
-        interface.log_error("Error adding cadet %s: %s" % (str(cadet),str(e)))
+        interface.log_error("Error adding cadet %s: %s" % (str(cadet), str(e)))
         raise Exception(str(e))
 
     return cadet
 
 
 def modify_cadet(interface: abstractInterface, existing_cadet: Cadet, new_cadet: Cadet):
-    interface.update(interface.object_store.data_api.data_list_of_cadets.modify_cadet, existing_cadet=existing_cadet, new_cadet=new_cadet)
+    interface.update(
+        interface.object_store.data_api.data_list_of_cadets.modify_cadet,
+        existing_cadet=existing_cadet,
+        new_cadet=new_cadet,
+    )
 
 
 def modify_cadet_date_of_birth(
-    interface: abstractInterface, existing_cadet: Cadet, new_date_of_birth: datetime.date
+    interface: abstractInterface,
+    existing_cadet: Cadet,
+    new_date_of_birth: datetime.date,
 ):
     new_cadet = copy(existing_cadet)
     new_cadet.date_of_birth = new_date_of_birth
-    modify_cadet(interface=interface, existing_cadet=existing_cadet, new_cadet=new_cadet)
+    modify_cadet(
+        interface=interface, existing_cadet=existing_cadet, new_cadet=new_cadet
+    )
 
 
 def verify_cadet_and_return_warnings(object_store: ObjectStore, cadet: Cadet) -> str:

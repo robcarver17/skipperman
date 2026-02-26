@@ -42,7 +42,10 @@ def get_list_of_volunteers_except_those_already_at_event(
 
 
 def add_volunteer_to_event_with_availability(
-    interface: abstractInterface, volunteer: Volunteer, event: Event, no_availability: bool
+    interface: abstractInterface,
+    volunteer: Volunteer,
+    event: Event,
+    no_availability: bool,
 ):
     if no_availability:
         availability = DaySelector.create_empty()

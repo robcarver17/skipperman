@@ -71,8 +71,6 @@ def swap_boats_for_volunteers_in_allocation_using_swapdata(
     )
 
 
-
-
 def swap_patrol_boats_for_volunteers_in_allocation(
     interface: abstractInterface,
     event: Event,
@@ -81,48 +79,48 @@ def swap_patrol_boats_for_volunteers_in_allocation(
     day_to_swap_with: Day,
     volunteer_to_swap_with: Volunteer,
 ):
-    original_volunteer_boat = copy(interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
-        event_id=event.id,
-        volunteer_id=original_volunteer.id,
-        day=original_day
-    ))
-    volunteer_to_swap_with_boat = copy(interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
-        event_id=event.id,
-        volunteer_id=volunteer_to_swap_with.id,
-        day=day_to_swap_with
-    ))
+    original_volunteer_boat = copy(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
+            event_id=event.id, volunteer_id=original_volunteer.id, day=original_day
+        )
+    )
+    volunteer_to_swap_with_boat = copy(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.existing_boat_id_for_volunteer_on_day(
+            event_id=event.id,
+            volunteer_id=volunteer_to_swap_with.id,
+            day=day_to_swap_with,
+        )
+    )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
         event_id=event.id,
         volunteer_id=original_volunteer.id,
-        day=original_day
+        day=original_day,
     )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
         event_id=event.id,
         volunteer_id=volunteer_to_swap_with.id,
-        day=day_to_swap_with
+        day=day_to_swap_with,
     )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
         event_id=event.id,
         volunteer_id=original_volunteer.id,
         day=day_to_swap_with,
-        patrol_boat_id = volunteer_to_swap_with_boat
-
+        patrol_boat_id=volunteer_to_swap_with_boat,
     )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
         event_id=event.id,
         volunteer_id=volunteer_to_swap_with.id,
         day=original_day,
-        patrol_boat_id=original_volunteer_boat
-
+        patrol_boat_id=original_volunteer_boat,
     )
 
 
 def swap_roles_for_volunteers_in_allocation_using_swapdata(
-        interface: abstractInterface, swap_data: SwapData
+    interface: abstractInterface, swap_data: SwapData
 ):
     swap_roles_and_groups_for_volunteers_in_allocation(
         interface=interface,
@@ -135,19 +133,18 @@ def swap_roles_for_volunteers_in_allocation_using_swapdata(
 
 
 def move_volunteer_into_empty_boat_using_swapdata(
-        interface: abstractInterface, swap_data: SwapData
+    interface: abstractInterface, swap_data: SwapData
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
-        event_id = swap_data.event.id,
-        volunteer_id = swap_data.original_volunteer.id,
-        day = swap_data.original_day
+        event_id=swap_data.event.id,
+        volunteer_id=swap_data.original_volunteer.id,
+        day=swap_data.original_day,
     )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
-        event_id = swap_data.event.id,
-        volunteer_id =swap_data.original_volunteer.id,
-        day = swap_data.day_to_swap_with,
-        patrol_boat_id = swap_data.empty_boat_to_swap_into.id
-
+        event_id=swap_data.event.id,
+        volunteer_id=swap_data.original_volunteer.id,
+        day=swap_data.day_to_swap_with,
+        patrol_boat_id=swap_data.empty_boat_to_swap_into.id,
     )

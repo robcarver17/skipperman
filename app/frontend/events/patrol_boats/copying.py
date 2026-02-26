@@ -1,5 +1,7 @@
-from app.backend.patrol_boats.copying import copy_across_earliest_allocation_of_boats_at_event, \
-    copy_across_boats_at_event
+from app.backend.patrol_boats.copying import (
+    copy_across_earliest_allocation_of_boats_at_event,
+    copy_across_boats_at_event,
+)
 from app.backend.patrol_boats.labels import copy_patrol_boat_labels_across_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
@@ -33,7 +35,8 @@ def copy_and_overwrite_labels(interface: abstractInterface):
 
 def copy_labels(interface: abstractInterface):
     copy_patrol_boat_labels_across_event(
-        interface=interface,        event=get_event_from_state(interface),
+        interface=interface,
+        event=get_event_from_state(interface),
         overwrite=False,
     )
 

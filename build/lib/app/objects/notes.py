@@ -40,7 +40,6 @@ class Note(GenericSkipperManObjectWithIds):
         )
 
 
-
 class ListOfNotes(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):

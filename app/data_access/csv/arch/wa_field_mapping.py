@@ -10,7 +10,6 @@ from app.data_access.csv.arch.resolve_paths_and_filenames import (
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
 
-
 class CsvDataWAFieldMapping(GenericCsvData):
     def read(self, event_id: str) -> ListOfWAFieldMappings:
         field_mapping = self.read_and_return_object_of_type(
@@ -28,10 +27,7 @@ class CsvDataWAFieldMapping(GenericCsvData):
         )
 
 
-
-
 class CsvDataWAFieldMappingTemplates(GenericCsvData):
-
     def read(self, template_name: str) -> ListOfWAFieldMappings:
         mapping_template = self.read_and_return_object_of_type(
             ListOfWAFieldMappings,
@@ -41,14 +37,13 @@ class CsvDataWAFieldMappingTemplates(GenericCsvData):
 
         return mapping_template
 
-    def write(
-        self, wa_field_mapping: ListOfWAFieldMappings, template_name: str
-    ):
+    def write(self, wa_field_mapping: ListOfWAFieldMappings, template_name: str):
         self.write_object(
             wa_field_mapping,
             file_identifier=TEMPLATES_FIELD_MAPPING_FILE_ID,
             additional_file_identifiers=template_name,
         )
+
 
 class CsvDataWAFieldMappingListOfTemplates(GenericCsvData):
     def read(self) -> List[str]:

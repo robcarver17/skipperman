@@ -1,5 +1,6 @@
-
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import get_role_and_groups_for_event_and_volunteer
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_role_and_groups_for_event_and_volunteer,
+)
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.events import Event
 
@@ -11,7 +12,7 @@ from app.backend.volunteers.roles_and_teams import (
     get_dict_of_teams_and_roles,
 )
 from app.backend.groups.list_of_groups import get_list_of_groups
-from app.objects.composed.volunteer_roles import no_role_set,  ListOfRolesWithSkills
+from app.objects.composed.volunteer_roles import no_role_set, ListOfRolesWithSkills
 from app.objects.volunteers import Volunteer
 
 MAKE_UNAVAILABLE = "* UNAVAILABLE *"
@@ -35,6 +36,7 @@ def get_dict_of_groups_for_dropdown(object_store: ObjectStore):
 
     # return dict_of_groups
     return dict_of_groups
+
 
 def all_roles_and_groups_match_across_event(
     volunteer_data_at_event: AllEventDataForVolunteer,
@@ -104,7 +106,9 @@ def volunteer_has_at_least_one_day_in_role_and_all_roles_and_groups_match(
 def get_list_of_groups_volunteer_is_instructor_for(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> ListOfGroups:
-    volunteer_days_and_roles = get_role_and_groups_for_event_and_volunteer(object_store=object_store, event=event, volunteer=volunteer)
+    volunteer_days_and_roles = get_role_and_groups_for_event_and_volunteer(
+        object_store=object_store, event=event, volunteer=volunteer
+    )
 
     roles_in_instructor_team = get_instructor_team_roles(object_store)
 

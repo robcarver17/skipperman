@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import List, Dict
 
-from app.objects.day_selectors import Day
 from app.objects.utilities.exceptions import arg_not_passed
 
 
-class GroupAnnotations(Dict[str, Dict[str,str]]):
+class GroupAnnotations(Dict[str, Dict[str, str]]):
     pass
+
 
 @dataclass
 class SpecificParametersForTypeOfReport:

@@ -3,7 +3,12 @@ from dataclasses import dataclass
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.utilities.transform_data import dict_as_single_str, from_single_str_to_dict, TRUE, FALSE
+from app.objects.utilities.transform_data import (
+    dict_as_single_str,
+    from_single_str_to_dict,
+    TRUE,
+    FALSE,
+)
 
 
 @dataclass
@@ -53,6 +58,7 @@ def store_swap_state(interface: abstractInterface, swap_state: SwapButtonState):
         interface.set_persistent_value(SWAP_STATE_KEY, swap_state_str)
     else:
         clear_swap_state(interface)
+
 
 def clear_swap_state(interface: abstractInterface):
     interface.clear_persistent_value(SWAP_STATE_KEY)

@@ -16,7 +16,12 @@ from app.data_access.file_access import (
 from app.data_access.init_directories import (
     public_reporting_directory,
 )
-from app.objects.abstract_objects.abstract_form import textInput, fileInput, Form, NewForm
+from app.objects.abstract_objects.abstract_form import (
+    textInput,
+    fileInput,
+    Form,
+    NewForm,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     CANCEL_BUTTON_LABEL,
     Button,
@@ -30,7 +35,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.data_access.file_access import (
     web_pathname_of_public_version_of_local_file_without_extension,
 )
-from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM
+from app.objects.utilities.exceptions import  MISSING_FROM_FORM
 
 empty_name = ""
 FILE_NAME = "filename"
@@ -79,7 +84,9 @@ def post_form_for_upload_public_file(interface: abstractInterface):
     return get_filename_and_save_new_file(interface)
 
 
-def get_filename_and_save_new_file(interface: abstractInterface) -> Union[NewForm, Form]:
+def get_filename_and_save_new_file(
+    interface: abstractInterface,
+) -> Union[NewForm, Form]:
     file_object = get_file_from_interface(FILE_FIELD, interface=interface)
 
     try:
@@ -114,7 +121,9 @@ def get_filename_and_save_new_file(interface: abstractInterface) -> Union[NewFor
 
     interface.log_error("Uploaded new file %s" % (web_path))
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_for_upload_public_file)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_for_upload_public_file
+    )
 
 
 def get_extension_and_filename_from_form(

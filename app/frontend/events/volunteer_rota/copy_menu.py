@@ -17,7 +17,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    Line,
+
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import Heading
@@ -52,7 +52,6 @@ help_button = HelpButton("copy_menu_rota_help")
 def post_form_volunteer_copy_menu(interface: abstractInterface) -> Union[Form, NewForm]:
     button_pressed = interface.last_button_pressed()
 
-    
     if back_menu_button.pressed(button_pressed):
         pass
     elif copy_all_roles_from_first_role_button.pressed(button_pressed):

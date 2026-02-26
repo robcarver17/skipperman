@@ -55,22 +55,22 @@ class ArrangementOfRows(GenericArrangement):
         return ArrangementOfColumns.from_matrix(self.as_matrix().transpose())
 
     def top_row(self, row_index: int, column_index: int):
-        return row_index==0
+        return row_index == 0
 
     def bottom_row(self, row_index: int, column_index: int):
-        index_from_one = row_index+1
-        return index_from_one==self.number_of_rows_this_column(column_index)
+        index_from_one = row_index + 1
+        return index_from_one == self.number_of_rows_this_column(column_index)
 
     def left_column(self, row_index: int, column_index: int):
-        return column_index==0
+        return column_index == 0
 
     def right_column(self, row_index: int, column_index: int):
-        index_from_one = column_index+1
-        return index_from_one==self.number_of_columns()
+        index_from_one = column_index + 1
+        return index_from_one == self.number_of_columns()
 
     def number_of_rows_this_column(self, column_index: int):
         column = self.get_column(column_index)
-        empty = [element==EMPTY for element in column]
+        empty = [element == EMPTY for element in column]
         not_empty = [not element for element in empty]
 
         return sum(not_empty)
@@ -82,7 +82,7 @@ class ArrangementOfRows(GenericArrangement):
         return len(self[0])
 
     def single_column(self):
-        return len(self)==0
+        return len(self) == 0
 
 
 @dataclass
@@ -184,7 +184,9 @@ class ArrangementOfColumns(GenericArrangement):
         current_index = self.position_of_value(value)
         if current_index.row == 0:
             self.swap_two_values_in_column(
-                current_index.column, current_index.row, self.max_row_index(current_index.column)
+                current_index.column,
+                current_index.row,
+                self.max_row_index(current_index.column),
             )
         else:
             self.swap_two_values_in_column(
@@ -195,7 +197,9 @@ class ArrangementOfColumns(GenericArrangement):
         current_index = self.position_of_value(value)
         if current_index.row == self.max_row_index(current_index.column):
             self.swap_two_values_in_column(
-                current_index.column, current_index.row, self.max_row_index(current_index.column)
+                current_index.column,
+                current_index.row,
+                self.max_row_index(current_index.column),
             )
         else:
             self.swap_two_values_in_column(

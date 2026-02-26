@@ -13,15 +13,21 @@ from app.data_access.store.object_store import ObjectStore
 
 def clear_wa_event_id_mapping(interface: abstractInterface, event: Event):
     interface.update(
-        interface.object_store.data_api.data_wa_event_mapping.clear_wa_event_id_mapping, event_id=event.id)
+        interface.object_store.data_api.data_wa_event_mapping.clear_wa_event_id_mapping,
+        event_id=event.id,
+    )
 
 
 def is_event_mapped_with_wa_id(object_store: ObjectStore, event: Event) -> bool:
-    return object_store.data_api.data_wa_event_mapping.is_event_mapped_with_wa_id(event_id=event.id)
+    return object_store.data_api.data_wa_event_mapping.is_event_mapped_with_wa_id(
+        event_id=event.id
+    )
 
 
 def is_wa_id_in_mapping_list(object_store: ObjectStore, wa_id: str) -> bool:
-    return object_store.data_api.data_wa_event_mapping.is_wa_id_in_mapping_list(wa_id=wa_id)
+    return object_store.data_api.data_wa_event_mapping.is_wa_id_in_mapping_list(
+        wa_id=wa_id
+    )
 
 
 def get_wa_id_for_event(object_store: ObjectStore, event: Event) -> str:
@@ -114,13 +120,15 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
 def add_wa_to_event_mapping(interface: abstractInterface, event: Event, wa_id: str):
     try:
         interface.update(
-        interface.object_store.data_api.data_wa_event_mapping.add_event, event_id=event.id, wa_id=wa_id)
+            interface.object_store.data_api.data_wa_event_mapping.add_event,
+            event_id=event.id,
+            wa_id=wa_id,
+        )
     except Exception as e:
-        interface.log_error("Error: %s whilst updating event mapping for %s" % (str(e), event))
+        interface.log_error(
+            "Error: %s whilst updating event mapping for %s" % (str(e), event)
+        )
 
 
 def get_event_id_mapping_for_wa_files(object_store: ObjectStore) -> ListOfWAEventMaps:
-    return object_store.get(
-        object_store.data_api.data_wa_event_mapping.read
-    )
-
+    return object_store.get(object_store.data_api.data_wa_event_mapping.read)

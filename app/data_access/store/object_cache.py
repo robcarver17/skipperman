@@ -1,16 +1,14 @@
-
-
-from app.data_access.store.object_store_elements import  CachedDataItem
+from app.data_access.store.object_store_elements import CachedDataItem
 
 NOT_IN_STORE = object()
 
-class SimpleObjectCache():
+
+class SimpleObjectCache:
     def __init__(self):
         self._cache = {}
 
-    def get(self, key, default = NOT_IN_STORE) -> CachedDataItem:
+    def get(self, key, default=NOT_IN_STORE) -> CachedDataItem:
         return self.cache.get(key, default)
-
 
     def update(self, new_object: CachedDataItem):
         self.cache[new_object.key] = new_object
@@ -21,8 +19,6 @@ class SimpleObjectCache():
     def clear(self):
         self._cache = {}
 
-
     @property
     def cache(self) -> dict:
         return self._cache
-

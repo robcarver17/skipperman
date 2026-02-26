@@ -57,7 +57,6 @@ def previous_form(interface: abstractInterface) -> NewForm:
 def process_form_when_cadet_verified(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    
     try:
         cadet = add_cadet_from_form_to_data(interface)
     except Exception as e:
@@ -69,4 +68,3 @@ def process_form_when_cadet_verified(
     interface.clear()
 
     return interface.get_new_display_form_for_parent_of_function(display_form_add_cadet)
-

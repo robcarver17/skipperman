@@ -4,7 +4,6 @@ from app.frontend.reporting.sailors.achieved_qualifications import (
 from app.backend.groups.cadet_event_history import (
     write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename,
 )
-from app.objects.abstract_objects.abstract_buttons import HelpButton
 from app.objects.abstract_objects.abstract_lines import Line
 from app.frontend.reporting.sailors.qualification_status import *
 

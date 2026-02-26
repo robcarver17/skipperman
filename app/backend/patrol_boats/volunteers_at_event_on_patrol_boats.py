@@ -15,18 +15,14 @@ from app.objects.events import Event
 from app.data_access.store.object_store import ObjectStore
 
 
-
-
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-    object_store: ObjectStore, event: Event,
-        ignore_empty: bool = False
+    object_store: ObjectStore, event: Event, ignore_empty: bool = False
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
         event_id=event.id,
-        ignore_empty=ignore_empty
+        ignore_empty=ignore_empty,
     )
-
 
 
 def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
@@ -42,20 +38,13 @@ def get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day(
     )
 
 
-def get_list_of_patrol_boats_at_event(
+def get_sorted_list_of_patrol_boats_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfPatrolBoats:
-    patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store, event=event
+    return object_store.get(
+        object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_sorted_list_of_patrol_boats_at_event,
+        event_id=event.id
     )
-    list_of_boats_at_event = (
-        patrol_boat_data.list_of_unique_boats_at_event_including_unallocated()
-    )
-    all_patrol_boats = patrol_boat_data.list_of_all_patrol_boats
-
-    sorted_list = all_patrol_boats.sort_from_other_list_of_boats(list_of_boats_at_event)
-
-    return sorted_list
 
 
 def get_name_of_boat_allocated_to_volunteer_on_day_at_event(
@@ -92,13 +81,8 @@ def get_boat_allocated_to_volunteer_on_day_at_event(
 def get_list_of_visible_boat_names_excluding_boats_already_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[str]:
-    patrol_boat_data = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_boats_at_event = (
-        patrol_boat_data.list_of_unique_boats_at_event_including_unallocated()
-    )
-    names_of_boats_at_event = list_of_boats_at_event.list_of_names()
+    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(object_store=object_store, event=event)
+    names_of_boats_at_event = sorted_list_of_boats_at_event.list_of_names()
 
     all_boats = get_list_of_patrol_boats(object_store)
 
@@ -127,9 +111,6 @@ def get_volunteer_ids_allocated_to_any_patrol_boat_at_event_on_day(
 def is_boat_empty_on_day(
     object_store: ObjectStore, event: Event, day: Day, patrol_boat: PatrolBoat
 ):
-    return \
-        object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_empty_on_day(
-        event_id=event.id,
-        day=day,
-        patrol_boat_id = patrol_boat.id
+    return object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_empty_on_day(
+        event_id=event.id, day=day, patrol_boat_id=patrol_boat.id
     )

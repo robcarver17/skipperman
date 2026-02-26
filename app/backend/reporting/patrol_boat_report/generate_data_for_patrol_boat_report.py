@@ -263,7 +263,7 @@ def boats_in_location_and_designation(
     designation: str,
 ) -> ListOfPatrolBoats:
     get_label_function = (
-        volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.label_for_boat_at_event_on_day
+        volunteer_event_data.dict_of_patrol_boat_labels_for_event.label_for_boat_at_event_on_day
     )
     dict_of_boats_and_locations = (
         volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_with_locations()
@@ -272,7 +272,8 @@ def boats_in_location_and_designation(
         boat
         for boat, location_of_boat in dict_of_boats_and_locations.items()
         if location_of_boat == location
-        and get_label_function(patrol_boat=boat, day=day) == designation
+        and get_label_function(patrol_boat=boat, day=day)
+        == designation  ## ignore warning
     ]
 
     return ListOfPatrolBoats(list_of_boats)
@@ -281,7 +282,7 @@ def boats_in_location_and_designation(
 def unique_list_of_boat_designations_for_event_on_day(
     volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day
 ):
-    return volunteer_event_data.dict_of_volunteers_at_event_with_patrol_boats.unique_set_of_labels_at_event(
+    return volunteer_event_data.dict_of_patrol_boat_labels_for_event.unique_set_of_labels_at_event(
         day=day
     )
 

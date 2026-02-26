@@ -2,7 +2,9 @@ from typing import Dict, List
 
 import pandas as pd
 
-from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_cadets_at_event
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_cadets_at_event,
+)
 from app.objects.cadets import Cadet
 from app.objects.composed.food_at_event import DictOfCadetsWithFoodRequirementsAtEvent
 from app.objects.volunteers import Volunteer

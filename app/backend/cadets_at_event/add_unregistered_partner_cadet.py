@@ -1,11 +1,11 @@
 from typing import List
 
 from app.backend.groups.cadets_with_groups_at_event import (
-    add_cadet_to_group_on_day, get_days_and_groups_for_cadet_at_event,
+    add_cadet_to_group_on_day,
+    get_days_and_groups_for_cadet_at_event,
 )
 from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
     add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet,
-
 )
 from app.backend.registration_data.cadet_registration_data import (
     add_new_cadet_to_event_from_row_in_registration_data,
@@ -15,7 +15,7 @@ from app.backend.registration_data.identified_cadets_at_event import (
     get_row_in_registration_data_for_cadet_both_cancelled_and_active,
 )
 from app.backend.registration_data.raw_mapped_registration_data import (
-   add_row_to_raw_mapped_registration_data,
+    add_row_to_raw_mapped_registration_data,
 )
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -24,23 +24,26 @@ from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.utilities.exceptions import NoMoreData
-from app.objects.registration_data import RowInRegistrationData, modify_row_to_clone_for_new_cadet_partner
-from app.backend.registration_data.cadet_registration_data import get_registration_data_for_single_cadet_at_event
-
-
+from app.objects.registration_data import (
+    RowInRegistrationData,
+    modify_row_to_clone_for_new_cadet_partner,
+)
+from app.backend.registration_data.cadet_registration_data import (
+    get_registration_data_for_single_cadet_at_event,
+)
 
 
 def get_registered_two_handed_partner_name_for_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
-    cadet_at_event = get_registration_data_for_single_cadet_at_event(object_store=object_store,
-                                                                     event=event,
-                                                                     cadet=cadet)
+    cadet_at_event = get_registration_data_for_single_cadet_at_event(
+        object_store=object_store, event=event, cadet=cadet
+    )
     return cadet_at_event.two_handed_partner(default="")
 
 
 def add_unregistered_partner_cadet(
-        interface: abstractInterface,
+    interface: abstractInterface,
     original_cadet: Cadet,
     new_cadet: Cadet,
     event: Event,
@@ -88,8 +91,10 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
 ) -> RowInRegistrationData:
     try:
         existing_row = get_row_in_registration_data_for_cadet_both_cancelled_and_active(
-            object_store=interface.object_store, cadet=original_cadet, event=event,
-            raise_error_on_duplicate=False
+            object_store=interface.object_store,
+            cadet=original_cadet,
+            event=event,
+            raise_error_on_duplicate=False,
         )
     except NoMoreData:
         print(
@@ -101,13 +106,15 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
     new_row = modify_row_to_clone_for_new_cadet_partner(
         original_cadet=original_cadet, new_cadet=new_cadet, existing_row=existing_row
     )
-    add_row_to_raw_mapped_registration_data(interface=interface,event=event, row_in_registration_data=new_row)
+    add_row_to_raw_mapped_registration_data(
+        interface=interface, event=event, row_in_registration_data=new_row
+    )
 
     return new_row
 
 
 def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
-        interface: abstractInterface,
+    interface: abstractInterface,
     event: Event,
     original_cadet: Cadet,
     new_cadet: Cadet,
@@ -134,9 +141,7 @@ def get_list_of_days_given_original_cadet(
     original_cadet: Cadet,
 ) -> List[Day]:
     registration_data = get_registration_data_for_single_cadet_at_event(
-        object_store=object_store,
-        event=event,
-        cadet=original_cadet
+        object_store=object_store, event=event, cadet=original_cadet
     )
     list_of_days = registration_data.availability.days_available()
 
@@ -155,8 +160,7 @@ def add_new_cadet_to_groups(
         original_cadet=original_cadet,
     )
     original_cadet_groups = get_days_and_groups_for_cadet_at_event(
-        object_store=interface.object_store, event=event,
-        cadet=original_cadet
+        object_store=interface.object_store, event=event, cadet=original_cadet
     )
 
     for day in list_of_days:
@@ -179,9 +183,5 @@ def add_new_cadet_to_same_group_as_original_cadet_on_day(
     group = original_cadet_groups.group_on_day(day)
 
     add_cadet_to_group_on_day(
-interface=interface,
-        event=event,
-        cadet=new_cadet,
-        group=group,
-        day=day
+        interface=interface, event=event, cadet=new_cadet, group=group, day=day
     )

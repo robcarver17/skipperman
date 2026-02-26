@@ -28,22 +28,37 @@ DEFAULT_SORT_ORDER = [
     SORT_SECOND_NAME,
 ]
 
-dict_of_id_and_sort= {1: CADET, 2: SORT_FIRST_NAME, 3: SORT_SECOND_NAME, 4: SORT_GROUP, 5: SORT_CLUBBOAT, 6: SORT_CLASS, 7: SORT_PARTNER}
-reverse_id_and_sort_dict = dict([(value,key) for key,value in dict_of_id_and_sort.items()])
+dict_of_id_and_sort = {
+    1: CADET,
+    2: SORT_FIRST_NAME,
+    3: SORT_SECOND_NAME,
+    4: SORT_GROUP,
+    5: SORT_CLUBBOAT,
+    6: SORT_CLASS,
+    7: SORT_PARTNER,
+}
+reverse_id_and_sort_dict = dict(
+    [(value, key) for key, value in dict_of_id_and_sort.items()]
+)
+
 
 def from_id_to_sort_name(id: int):
     return dict_of_id_and_sort[id]
 
-def from_sort_to_id(sort_name:str):
+
+def from_sort_to_id(sort_name: str):
     return reverse_id_and_sort_dict[sort_name]
+
 
 def from_sort_list_to_string(sort_list: List[str]):
     as_int = [str(from_sort_to_id(sort_name)) for sort_name in sort_list]
 
     return "".join(as_int)
 
+
 def from_string_to_sort_list(sort_list_as_str: str):
     return [from_id_to_sort_name(int(id)) for id in sort_list_as_str]
+
 
 def sorted_active_cadets(
     object_store: ObjectStore,

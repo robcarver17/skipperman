@@ -55,10 +55,7 @@ class FoodRequirements(GenericSkipperManObject):
         return True
 
     def as_dict_except_other_field(self):
-        return dict([
-            (key, getattr(self, key))
-            for key in food_keys
-        ])
+        return dict([(key, getattr(self, key)) for key in food_keys])
 
     @classmethod
     def create_empty(cls):
@@ -66,8 +63,8 @@ class FoodRequirements(GenericSkipperManObject):
 
     def is_empty(self):
         self.clear_other_field_if_empty()
-        no_flags_set =all([not getattr(self, key) for key in food_keys])
-        no_free_text = len(self.other)==0
+        no_flags_set = all([not getattr(self, key) for key in food_keys])
+        no_free_text = len(self.other) == 0
 
         return no_flags_set and no_free_text
 
@@ -90,39 +87,57 @@ class FoodRequirements(GenericSkipperManObject):
 no_food_requirements = FoodRequirements.create_empty()
 
 
-def guess_food_requirements_from_food_field(raw_food_field_str: str) -> FoodRequirements:
+def guess_food_requirements_from_food_field(
+    raw_food_field_str: str,
+) -> FoodRequirements:
     food_field_str = copy(raw_food_field_str)
     food_field_str_lower = food_field_str.lower()
     for null_fields in ["just tasty food", "none", "n/a", "no allergies", "-"]:
-        food_field_str_lower = food_field_str_lower.replace(null_fields,'')
+        food_field_str_lower = food_field_str_lower.replace(null_fields, "")
 
-    food_required = FoodRequirements(
-        other=food_field_str_lower)
+    food_required = FoodRequirements(other=food_field_str_lower)
 
-    convert_food_required_from_str_to_bool(food_required, ["vegetarian", "veggie"], 'vegetarian', True)
-    convert_food_required_from_str_to_bool(food_required, ["vegan"], 'vegan', True)
-    convert_food_required_from_str_to_bool(food_required, ["pescatarian"], 'pescatarian', True)
-    convert_food_required_from_str_to_bool(food_required, ["kohser", "kosher"], 'kosher', True)
-    convert_food_required_from_str_to_bool(food_required, ["halal"], 'halal', True)
+    convert_food_required_from_str_to_bool(
+        food_required, ["vegetarian", "veggie"], "vegetarian", True
+    )
+    convert_food_required_from_str_to_bool(food_required, ["vegan"], "vegan", True)
+    convert_food_required_from_str_to_bool(
+        food_required, ["pescatarian"], "pescatarian", True
+    )
+    convert_food_required_from_str_to_bool(
+        food_required, ["kohser", "kosher"], "kosher", True
+    )
+    convert_food_required_from_str_to_bool(food_required, ["halal"], "halal", True)
 
-    convert_food_required_from_str_to_bool(food_required, ["lactose"], 'lactose', False)
-    convert_food_required_from_str_to_bool(food_required, ["gluten", "coeliac", "gluten free"], 'gluten', False)
-    convert_food_required_from_str_to_bool(food_required, ["nut"], 'nut_allergy',drop_from_text=False )
+    convert_food_required_from_str_to_bool(food_required, ["lactose"], "lactose", False)
+    convert_food_required_from_str_to_bool(
+        food_required, ["gluten", "coeliac", "gluten free"], "gluten", False
+    )
+    convert_food_required_from_str_to_bool(
+        food_required, ["nut"], "nut_allergy", drop_from_text=False
+    )
 
     food_required.clear_other_field_if_empty()
 
     return food_required
 
 
-def convert_food_required_from_str_to_bool(food_requirements: FoodRequirements, list_of_str_to_check_for: List[str],
-                                           attribute_to_modify: str, drop_from_text: bool = False):
+def convert_food_required_from_str_to_bool(
+    food_requirements: FoodRequirements,
+    list_of_str_to_check_for: List[str],
+    attribute_to_modify: str,
+    drop_from_text: bool = False,
+):
     for str_to_check in list_of_str_to_check_for:
         if str_to_check in food_requirements.other:
             setattr(food_requirements, attribute_to_modify, True)
             if drop_from_text:
-                food_requirements.other = food_requirements.other.replace(str_to_check, '')
+                food_requirements.other = food_requirements.other.replace(
+                    str_to_check, ""
+                )
 
     return food_requirements
+
 
 CADET_ID = "cadet_id"
 
@@ -151,14 +166,6 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
     def _object_class_contained(self):
         return CadetWithFoodRequirementsAtEvent
 
-    def remove_food_requirements_for_cadet_at_event(self, cadet_id: str):
-        cadet_with_food = self.cadet_with_food_with_cadet_id(
-            cadet_id, default=missing_data
-        )
-        if cadet_with_food is missing_data:
-            return
-        self.remove(cadet_with_food)
-
     def subset_matches_food_required_description(
         self, food_requirements: FoodRequirements
     ) -> "ListOfCadetsWithFoodRequirementsAtEvent":
@@ -166,34 +173,6 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
             [object for object in self if object.food_requirements == food_requirements]
         )
 
-    def change_food_requirements_for_cadet(
-        self, cadet_id: str, food_requirements: FoodRequirements
-    ):
-        cadet_in_data = self.cadet_with_food_with_cadet_id(
-            cadet_id, default=missing_data
-        )
-        if cadet_in_data is missing_data:
-            self.add_new_cadet_with_food_to_event(
-                cadet_id=cadet_id, food_requirements=food_requirements
-            )
-        else:
-            cadet_in_data.food_requirements = food_requirements
-
-    def add_new_cadet_with_food_to_event(
-        self,
-        cadet_id: str,
-        food_requirements: FoodRequirements,
-    ):
-        try:
-            assert cadet_id not in self.list_of_cadet_ids()
-        except:
-            raise ("Cadet already has food requirements")
-
-        self.append(
-            CadetWithFoodRequirementsAtEvent(
-                cadet_id=cadet_id, food_requirements=food_requirements
-            )
-        )
 
     def list_of_cadet_ids(self) -> List[str]:
         return [cadet_with_food.cadet_id for cadet_with_food in self]
@@ -249,41 +228,11 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
             [object for object in self if object.food_requirements == food_requirements]
         )
 
-    def change_food_requirements_for_volunteer(
-        self, volunteer_id: str, food_requirements: FoodRequirements
-    ):
-        if self.volunteer_has_food_already(volunteer_id):
-            volunteer_in_data = self.volunteer_with_food_with_volunteer_id(volunteer_id)
-            volunteer_in_data.food_requirements = food_requirements
-        else:
-            self.add_new_volunteer_with_food_to_event(
-                volunteer_id=volunteer_id, food_requirements=food_requirements
-            )
 
-    def add_new_volunteer_with_food_to_event(
-        self,
-        volunteer_id: str,
-        food_requirements: FoodRequirements,
-    ):
-        if self.volunteer_has_food_already(volunteer_id):
-            raise ("Volunteer already has food requirements")
-
-        self.append(
-            VolunteerWithFoodRequirementsAtEvent(
-                volunteer_id=volunteer_id, food_requirements=food_requirements
-            )
-        )
 
     def list_of_volunteer_ids(self) -> List[str]:
         return [object.volunteer_id for object in self]
 
-    def drop_volunteer(self, volunteer_id: str):
-        object_with_id = self.volunteer_with_food_with_volunteer_id(
-            volunteer_id, default=missing_data
-        )
-        if object_with_id is missing_data:
-            return
-        self.remove(object_with_id)
 
     def volunteer_has_food_already(self, volunteer_id):
         volunteer_with_food = self.volunteer_with_food_with_volunteer_id(

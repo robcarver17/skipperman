@@ -25,7 +25,9 @@ nav_buttons = ButtonBar([main_menu_button])
 config_option_buttons = Line([user_button, data_button])
 
 
-def display_form_main_admin_page(interface: abstractInterface) -> Form:
+def display_form_main_admin_page(
+    interface: abstractInterface,
+) -> Form:  ##ignore warning
     lines_inside_form = ListOfLines([nav_buttons, config_option_buttons])
 
     return Form(lines_inside_form)

@@ -1,15 +1,24 @@
-from app.data_access.sql.generic_sql_data import GenericSqlData, bool2int, int2bool
+from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.transform_data import bool2int, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.objects.club_dinghies import ListOfClubDinghies, ClubDinghy
-from app.objects.utilities.exceptions import arg_not_passed, missing_data, MultipleMatches
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    missing_data,
+    MultipleMatches,
+)
 
 CLUB_DINGHIES_TABLE = "club_dinghies"
 INDEX_CLUB_DINGHIES_TABLE = "index_club_dinghies_table"
 
+
 class SqlDataListOfClubDinghies(GenericSqlData):
     def add_new_club_dinghy_with_name(self, dinghy_name: str):
         if self.does_club_dinghy_with_name_exist(dinghy_name):
-            raise Exception("Can't add dinghy with name to %s as that name already exists" % dinghy_name)
+            raise Exception(
+                "Can't add dinghy with name to %s as that name already exists"
+                % dinghy_name
+            )
 
         try:
             if self.table_does_not_exist(CLUB_DINGHIES_TABLE):
@@ -21,13 +30,15 @@ class SqlDataListOfClubDinghies(GenericSqlData):
 
             insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
                 CLUB_DINGHIES_TABLE,
-                DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
+                DINGHY_NAME,
+                HIDDEN,
+                DINGHY_ID,
+                DINGHY_ORDER,
+            )
 
-            self.cursor.execute(insertion, (
-                dinghy_name,
-            hidden_as_int,
-            dinghy_id,
-            dinghy_order))
+            self.cursor.execute(
+                insertion, (dinghy_name, hidden_as_int, dinghy_id, dinghy_order)
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -35,10 +46,10 @@ class SqlDataListOfClubDinghies(GenericSqlData):
         finally:
             self.close()
 
-    def next_available_id(self) ->int:
-        return self.last_used_id()+1
+    def next_available_id(self) -> int:
+        return self.last_used_id() + 1
 
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(CLUB_DINGHIES_TABLE):
                 self.create_table()
@@ -60,10 +71,10 @@ class SqlDataListOfClubDinghies(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-    def next_available_order(self) ->int:
-        return self.last_used_order()+1
+    def next_available_order(self) -> int:
+        return self.last_used_order() + 1
 
-    def last_used_order(self)-> int:
+    def last_used_order(self) -> int:
         try:
             if self.table_does_not_exist(CLUB_DINGHIES_TABLE):
                 self.create_table()
@@ -85,13 +96,12 @@ class SqlDataListOfClubDinghies(GenericSqlData):
         else:
             return int(raw_list[0][0])
 
-
-    def modify_club_dinghy(self,
-                           existing_club_dinghy_id: str,
-                           new_club_dinghy: ClubDinghy
-                           ):
-
-        existing_club_dinghy = self.get_club_dinghy_from_id(existing_club_dinghy_id, missing_data)
+    def modify_club_dinghy(
+        self, existing_club_dinghy_id: str, new_club_dinghy: ClubDinghy
+    ):
+        existing_club_dinghy = self.get_club_dinghy_from_id(
+            existing_club_dinghy_id, missing_data
+        )
         if existing_club_dinghy is missing_data:
             raise Exception("Dinghy doesn't exist")
 
@@ -101,32 +111,38 @@ class SqlDataListOfClubDinghies(GenericSqlData):
             pass
         else:
             if self.does_club_dinghy_with_name_exist(new_club_dinghy.name):
-                raise Exception("Can't change dinghy name to %s as that name already exists" % new_club_dinghy.name)
+                raise Exception(
+                    "Can't change dinghy name to %s as that name already exists"
+                    % new_club_dinghy.name
+                )
 
         self._modify_club_dinghy_without_checks(
             existing_club_dinghy_id=existing_club_dinghy_id,
-            new_club_dinghy=new_club_dinghy
+            new_club_dinghy=new_club_dinghy,
         )
 
-    def _modify_club_dinghy_without_checks(self,
-                           existing_club_dinghy_id: str,
-                           new_club_dinghy: ClubDinghy
-                           ):
-
+    def _modify_club_dinghy_without_checks(
+        self, existing_club_dinghy_id: str, new_club_dinghy: ClubDinghy
+    ):
         try:
             insertion = "UPDATE %s SET %s='%s', %s='%s' WHERE %s=%d " % (
-                    CLUB_DINGHIES_TABLE,
-                    DINGHY_NAME, new_club_dinghy.name,
-                    HIDDEN, bool2int(new_club_dinghy.hidden),
-                    DINGHY_ID, int(existing_club_dinghy_id)
-
+                CLUB_DINGHIES_TABLE,
+                DINGHY_NAME,
+                new_club_dinghy.name,
+                HIDDEN,
+                bool2int(new_club_dinghy.hidden),
+                DINGHY_ID,
+                int(existing_club_dinghy_id),
             )
 
             self.cursor.execute(insertion)
 
             self.conn.commit()
         except Exception as e1:
-            raise Exception("Error %s when modifying club dinghy to %s" % (str(e1), str(new_club_dinghy)))
+            raise Exception(
+                "Error %s when modifying club dinghy to %s"
+                % (str(e1), str(new_club_dinghy))
+            )
         finally:
             self.close()
 
@@ -136,87 +152,104 @@ class SqlDataListOfClubDinghies(GenericSqlData):
                 return missing_data
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s=%d ''' % (
-                DINGHY_NAME, HIDDEN, CLUB_DINGHIES_TABLE,
-                 DINGHY_ID, int(club_dinghy_id)
-             ))
+            cursor.execute(
+                """SELECT %s, %s FROM %s WHERE %s=%d """
+                % (
+                    DINGHY_NAME,
+                    HIDDEN,
+                    CLUB_DINGHIES_TABLE,
+                    DINGHY_ID,
+                    int(club_dinghy_id),
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading club dinghies" % str(e1))
         finally:
             self.close()
 
-        if len(raw_list)>1:
+        if len(raw_list) > 1:
             raise MultipleMatches("More than one dinghy with ID %s" % club_dinghy_id)
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
 
         raw_boat = raw_list[0]
 
-        return ClubDinghy(name=str(raw_boat[0]),
-                             hidden=int2bool(raw_boat[1]),
-                             id=club_dinghy_id)
+        return ClubDinghy(
+            name=str(raw_boat[0]), hidden=int2bool(raw_boat[1]), id=club_dinghy_id
+        )
 
-
-    def does_club_dinghy_with_name_exist(self,  dinghy_name:str):
+    def does_club_dinghy_with_name_exist(self, dinghy_name: str):
         club_dinghy = self.get_club_dinghy_with_name(dinghy_name, default=missing_data)
         if club_dinghy is missing_data:
             return False
 
         return True
 
-    def get_club_dinghy_with_name(self, dinghy_name:str, default=missing_data):
+    def get_club_dinghy_with_name(self, dinghy_name: str, default=missing_data):
         try:
             if self.table_does_not_exist(CLUB_DINGHIES_TABLE):
                 return default
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s FROM %s WHERE %s='%s' ''' % (
-                HIDDEN, DINGHY_ID, CLUB_DINGHIES_TABLE,
-                DINGHY_NAME, str(dinghy_name)
-             ))
+            cursor.execute(
+                """SELECT %s, %s FROM %s WHERE %s='%s' """
+                % (
+                    HIDDEN,
+                    DINGHY_ID,
+                    CLUB_DINGHIES_TABLE,
+                    DINGHY_NAME,
+                    str(dinghy_name),
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading club dinghies" % str(e1))
         finally:
             self.close()
 
-        if len(raw_list)>1:
+        if len(raw_list) > 1:
             raise MultipleMatches("More than one dinghy called %s" % dinghy_name)
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
 
         raw_boat = raw_list[0]
 
-        return ClubDinghy(name=dinghy_name,
-                             hidden=int2bool(raw_boat[0]),
-                             id=str(raw_boat[1]))
-
-
+        return ClubDinghy(
+            name=dinghy_name, hidden=int2bool(raw_boat[0]), id=str(raw_boat[1])
+        )
 
     def get_list_of_visible_club_dinghies(self) -> ListOfClubDinghies:
         try:
             if self.table_does_not_exist(CLUB_DINGHIES_TABLE):
                 return ListOfClubDinghies.create_empty()
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s WHERE %s=%d ORDER BY %s''' % (
-                DINGHY_NAME, HIDDEN, DINGHY_ID, CLUB_DINGHIES_TABLE,
-                HIDDEN,
-                bool2int(False),
-                DINGHY_ORDER
-             ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s WHERE %s=%d ORDER BY %s"""
+                % (
+                    DINGHY_NAME,
+                    HIDDEN,
+                    DINGHY_ID,
+                    CLUB_DINGHIES_TABLE,
+                    HIDDEN,
+                    bool2int(False),
+                    DINGHY_ORDER,
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading club dinghies" % str(e1))
         finally:
             self.close()
 
-        new_list = [ClubDinghy(name=str(raw_boat[0]),
-                             hidden=int2bool(raw_boat[1]),
-                             id=str(raw_boat[2])) for raw_boat in raw_list]
+        new_list = [
+            ClubDinghy(
+                name=str(raw_boat[0]), hidden=int2bool(raw_boat[1]), id=str(raw_boat[2])
+            )
+            for raw_boat in raw_list
+        ]
 
         return ListOfClubDinghies(new_list)
-
 
     def read(self) -> ListOfClubDinghies:
         try:
@@ -224,21 +257,24 @@ class SqlDataListOfClubDinghies(GenericSqlData):
                 return ListOfClubDinghies.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s ORDER BY %s''' % (
-                DINGHY_NAME, HIDDEN, DINGHY_ID, CLUB_DINGHIES_TABLE, DINGHY_ORDER
-             ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s ORDER BY %s"""
+                % (DINGHY_NAME, HIDDEN, DINGHY_ID, CLUB_DINGHIES_TABLE, DINGHY_ORDER)
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading club dinghies" % str(e1))
         finally:
             self.close()
 
-        new_list = [ClubDinghy(name=str(raw_boat[0]),
-                             hidden=int2bool(raw_boat[1]),
-                             id=str(raw_boat[2])) for raw_boat in raw_list]
+        new_list = [
+            ClubDinghy(
+                name=str(raw_boat[0]), hidden=int2bool(raw_boat[1]), id=str(raw_boat[2])
+            )
+            for raw_boat in raw_list
+        ]
 
         return ListOfClubDinghies(new_list)
-
 
     def write(self, list_of_boats: ListOfClubDinghies):
         try:
@@ -265,13 +301,15 @@ class SqlDataListOfClubDinghies(GenericSqlData):
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
             CLUB_DINGHIES_TABLE,
-            DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
+            DINGHY_NAME,
+            HIDDEN,
+            DINGHY_ID,
+            DINGHY_ORDER,
+        )
 
-        self.cursor.execute(insertion, (
-            name, hidden, id, idx))
+        self.cursor.execute(insertion, (name, hidden, id, idx))
 
     def create_table(self):
-
         # name: str
         # hidden: bool
         # id: str = arg_not_passed
@@ -283,11 +321,19 @@ class SqlDataListOfClubDinghies(GenericSqlData):
                     %s INTEGER,
                     %s INTEGER
                 );
-            """ % (CLUB_DINGHIES_TABLE,
-                   DINGHY_NAME, HIDDEN, DINGHY_ID, DINGHY_ORDER)
+            """ % (
+            CLUB_DINGHIES_TABLE,
+            DINGHY_NAME,
+            HIDDEN,
+            DINGHY_ID,
+            DINGHY_ORDER,
+        )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
-        INDEX_CLUB_DINGHIES_TABLE, CLUB_DINGHIES_TABLE, DINGHY_ID)
+            INDEX_CLUB_DINGHIES_TABLE,
+            CLUB_DINGHIES_TABLE,
+            DINGHY_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)

@@ -10,23 +10,24 @@ NO_PARTNERSHIP_LIST_OF_STR = [NOT_ALLOCATED_STR, NO_PARTNER_REQUIRED_STR]
 FAKE_ID_FOR_SINGLEHANDERS = -999
 FAKE_ID_FOR_NOT_ALLOCATED = -777
 
+
 def from_partner_id_to_int(partnerid: str) -> int:
-    if partnerid==NO_PARTNER_REQUIRED_STR:
+    if partnerid == NO_PARTNER_REQUIRED_STR:
         return FAKE_ID_FOR_SINGLEHANDERS
-    elif partnerid==NOT_ALLOCATED_STR:
+    elif partnerid == NOT_ALLOCATED_STR:
         return FAKE_ID_FOR_NOT_ALLOCATED
     else:
         return int(partnerid)
 
 
-
 def from_int_to_partner_id(partner_id: int) -> str:
-    if partner_id==FAKE_ID_FOR_SINGLEHANDERS:
+    if partner_id == FAKE_ID_FOR_SINGLEHANDERS:
         return NO_PARTNER_REQUIRED_STR
-    elif partner_id==FAKE_ID_FOR_NOT_ALLOCATED:
+    elif partner_id == FAKE_ID_FOR_NOT_ALLOCATED:
         return NOT_ALLOCATED_STR
     else:
         return str(partner_id)
+
 
 def no_partnership_given_partner_id_or_str(partnership_str: str):
     return partnership_str in NO_PARTNERSHIP_LIST_OF_STR

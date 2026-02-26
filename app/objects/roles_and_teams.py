@@ -7,7 +7,7 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
-    get_idx_of_unique_object_with_attr_in_list,
+
 )
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObjectWithIds,
@@ -37,8 +37,6 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
     id: str = arg_not_passed
     associate_sailing_group: bool = False
     protected: bool = False
-
-
 
     @classmethod
     def from_dict_of_str(cls, dict_with_str: dict):
@@ -85,7 +83,6 @@ class RolesWithSkillIds(GenericSkipperManObjectWithIds):
             protected=True,
         )
 
-
     def is_si(self):
         return self.name == SI_ROLE_NAME
 
@@ -99,16 +96,6 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return RolesWithSkillIds
 
-    def replace_at_index(self, index: int, new_role_with_skill_ids: RolesWithSkillIds):
-        existing_role_as_skill_id = self[index]
-        new_role_with_skill_ids.id = existing_role_as_skill_id.id
-        self[index] = new_role_with_skill_ids
-
-    def add_returning_id(self, new_role_with_skill_ids: RolesWithSkillIds):
-        new_role_with_skill_ids.id = self.next_id()
-        self.append(new_role_with_skill_ids)
-
-        return new_role_with_skill_ids.id
 
     def matches_name(self, role_name: str, default=arg_not_passed):
         if role_name == no_role_allocated.name:
@@ -167,33 +154,7 @@ class ListOfTeams(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Team
 
-    def add(self, new_team_name: str):
-        try:
-            assert new_team_name not in self.list_of_names()
-        except:
-            raise Exception(
-                "Can't add duplicate team name %s already exists" % new_team_name
-            )
-        team = Team(name=new_team_name)
-        team.id = self.next_id()
 
-        self.append(team)
-
-    def replace(self, existing_team: Team, new_team: Team):
-        try:
-            existing_team_idx = self.index_of_existing_team(existing_team)
-        except:
-            return
-        new_team.id = existing_team.id
-        self[existing_team_idx] = new_team
-
-    def index_of_existing_team(self, existing_team: Team, default=arg_not_passed):
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name="name",
-            attr_value=existing_team.name,
-            default=default,
-        )
 
     def instructor_team_from_list(self):
         return self.matching_team_name(INSTRUCTOR_TEAM)
@@ -236,22 +197,16 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
         return TeamsAndRolesWithIds
 
     @classmethod
-    def create_new_list_for_team_from_ordered_role_ids(cls, team_id: str, list_of_role_ids: List[str]):
+    def create_new_list_for_team_from_ordered_role_ids(
+        cls, team_id: str, list_of_role_ids: List[str]
+    ):
         return ListOfTeamsAndRolesWithIds(
             [
-                TeamsAndRolesWithIds(
-                    team_id=team_id,
-                    role_id=role_id,
-                    order_idx=idx
-                ) for idx, role_id in enumerate(list_of_role_ids)
+                TeamsAndRolesWithIds(team_id=team_id, role_id=role_id, order_idx=idx)
+                for idx, role_id in enumerate(list_of_role_ids)
             ]
         )
 
-    def remove_roles_for_team_id(self, team_id: str):
-        new_list = [
-            role_and_team for role_and_team in self if role_and_team.team_id != team_id
-        ]
-        return ListOfTeamsAndRolesWithIds(new_list)
 
     def ordered_role_ids_for_team_id(self, team_id: str):
         raw_list = [

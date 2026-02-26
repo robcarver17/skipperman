@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from app.objects.volunteers import Volunteer
+
 
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
     day_selector_to_text_in_stored_format,
-    Day,
+
 )
 from app.objects.utilities.exceptions import (
     missing_data,
@@ -96,26 +96,7 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         for volunteer_at_event in self:
             volunteer_at_event.clear_user_data()
 
-    def update_notes(self, volunteer: Volunteer, new_notes: str):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
-        volunteer_at_event.notes = new_notes
 
-    def make_volunteer_available_on_day(self, volunteer: Volunteer, day: Day):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
-        volunteer_at_event.availablity.make_available_on_day(day)
-
-    def make_volunteer_unavailable_on_day(self, volunteer: Volunteer, day: Day):
-        volunteer_at_event = self.volunteer_at_event_with_id(volunteer.id)
-        volunteer_at_event.availablity.make_unavailable_on_day(day)
-
-    def remove_volunteer_with_id(self, volunteer_id: str):
-        idx_of_volunteer_at_event = self.index_of_volunteer_at_event_with_id(
-            volunteer_id, default=missing_data
-        )
-        if idx_of_volunteer_at_event is missing_data:
-            raise Exception("Can't drop non existent volunteer")
-        else:
-            del self[idx_of_volunteer_at_event]
 
     def volunteer_at_event_with_id(
         self, volunteer_id: str, default=arg_not_passed
@@ -137,14 +118,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
             default=default,
         )
 
-    def add_new_volunteer(self, volunteer_at_event: VolunteerAtEventWithId):
-        if self.volunteer_already_exist(volunteer_at_event):
-            raise Exception(
-                "Can't add volunteer with id %s to event again"
-                % volunteer_at_event.volunteer_id
-            )
-
-        self.append(volunteer_at_event)
 
     def volunteer_already_exist(self, volunteer_at_event: VolunteerAtEventWithId):
         volunteer = self.volunteer_at_event_with_id(

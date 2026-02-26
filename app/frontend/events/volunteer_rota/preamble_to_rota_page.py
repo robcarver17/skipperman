@@ -1,4 +1,3 @@
-from typing import Union
 
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_roles_and_groups_for_event,
@@ -150,7 +149,7 @@ def get_volunteer_warning_table(
     interface: abstractInterface,
 ) -> ListOfLines:
     event = get_event_from_state(interface)
-    
+
     process_all_warnings_for_rota(interface=interface, event=event)
     interface.clear()
 

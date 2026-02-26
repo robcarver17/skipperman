@@ -1,4 +1,3 @@
-import os
 from typing import List
 
 from app.backend.events.list_of_events import get_sorted_list_of_events
@@ -11,12 +10,12 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC
 from app.objects.wa_field_mapping import ListOfWAFieldMappings
 
+
 def get_field_mapping_for_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfWAFieldMappings:
     return object_store.get(
-        object_store.data_api.data_wa_field_mapping.read,
-        event_id=event.id
+        object_store.data_api.data_wa_field_mapping.read, event_id=event.id
     )
 
 
@@ -27,13 +26,18 @@ def does_event_already_have_mapping(object_store: ObjectStore, event: Event):
 
 
 def get_list_of_field_mapping_template_names(object_store: ObjectStore) -> List[str]:
-    return object_store.get(object_store.data_api.data_wa_field_mapping_templates.list_of_template_names)
+    return object_store.get(
+        object_store.data_api.data_wa_field_mapping_templates.list_of_template_names
+    )
 
 
 def get_field_mapping_template(
     object_store: ObjectStore, template_name: str
 ) -> ListOfWAFieldMappings:
-    return object_store.get(object_store.data_api.data_wa_field_mapping_templates.read, template_name=template_name)
+    return object_store.get(
+        object_store.data_api.data_wa_field_mapping_templates.read,
+        template_name=template_name,
+    )
 
 
 def save_field_mapping_for_event(
@@ -42,7 +46,7 @@ def save_field_mapping_for_event(
     interface.update(
         interface.object_store.data_api.data_wa_field_mapping.write,
         event_id=event.id,
-        wa_field_mapping=mapping
+        wa_field_mapping=mapping,
     )
 
 
@@ -52,7 +56,7 @@ def delete_mapping_given_skipperman_field(
     interface.update(
         interface.object_store.data_api.data_wa_field_mapping.delete_mapping_given_skipperman_field,
         event_id=event.id,
-        skipperman_field=skipperman_field
+        skipperman_field=skipperman_field,
     )
 
 
@@ -63,7 +67,7 @@ def save_new_mapping_pairing(
         interface.object_store.data_api.data_wa_field_mapping.save_new_mapping_pairing,
         event_id=event.id,
         skipperman_field=skipperman_field,
-        wa_field=wa_field
+        wa_field=wa_field,
     )
 
 
@@ -73,9 +77,8 @@ def save_field_mapping_template(
     interface.update(
         interface.object_store.data_api.data_wa_field_mapping_templates.write,
         template_name=template_name,
-        wa_field_mapping=template
+        wa_field_mapping=template,
     )
-
 
 
 def get_list_of_events_with_field_mapping(
@@ -87,9 +90,7 @@ def get_list_of_events_with_field_mapping(
     list_of_events = [
         event
         for event in list_of_events
-        if does_event_already_have_mapping(
-            object_store=object_store, event=event
-        )
+        if does_event_already_have_mapping(object_store=object_store, event=event)
     ]
     list_of_events = [
         event for event in list_of_events if not event.id == exclude_event.id
@@ -107,4 +108,3 @@ def write_mapping_to_temp_csv_file_and_return_filename(
     df.to_csv(filename, index=False)
 
     return filename
-

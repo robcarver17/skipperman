@@ -8,7 +8,10 @@ from app.objects.volunteers import ListOfVolunteers, Volunteer
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_list_of_volunteers_allocated_to_patrol_boat_at_event_on_any_day,
 )
-from app.backend.patrol_boats.labels import get_patrol_boat_label_at_event_on_day, get_list_of_unique_labels
+from app.backend.patrol_boats.labels import (
+    get_patrol_boat_label_at_event_on_day,
+    get_list_of_unique_labels,
+)
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_sorted_volunteers_allocated_to_patrol_boat_at_event_on_days_sorted_by_role,
 )
@@ -185,7 +188,7 @@ def get_volunteer_skill_checkbox_name(volunteer_id: str) -> str:
 
 
 def is_volunteer_skill_checkbox_ticked(
-    interface: abstractInterface, volunteer_id: str, default= MISSING_FROM_FORM
+    interface: abstractInterface, volunteer_id: str, default=MISSING_FROM_FORM
 ) -> Union[bool, object]:
     checkbox_name = get_volunteer_skill_checkbox_name(volunteer_id=volunteer_id)
     boxes_ticked = interface.value_of_multiple_options_from_form(
@@ -222,10 +225,7 @@ def update_and_get_warnings_on_all_volunteers_in_patrol_boats(
     if is_ready_to_swap(interface):
         return ListOfLines([""])
 
-    
-    process_all_warnings_for_patrol_boats(
-        interface=interface, event=event
-    )
+    process_all_warnings_for_patrol_boats(interface=interface, event=event)
     interface.clear()
     all_warnings = get_all_saved_warnings_for_patrol_boats(
         object_store=interface.object_store, event=event
@@ -336,7 +336,7 @@ def get_boat_label_entry(
         return Line([existing_label])
     input_name = get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day)
     list_of_options = get_list_of_unique_labels(
-        object_store=interface.object_store, event=event
+        object_store=interface.object_store
     )
 
     return Line(

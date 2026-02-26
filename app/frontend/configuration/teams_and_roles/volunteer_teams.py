@@ -16,7 +16,6 @@ from app.frontend.configuration.teams_and_roles.edit_individual_team import (
     display_form_edit_individual_team_page,
 )
 
-from app.data_access.store.object_store import ObjectStore
 
 from app.backend.volunteers.roles_and_teams import (
     get_list_of_teams,
@@ -68,7 +67,6 @@ def post_form_config_teams_page(
 ) -> Union[Form, NewForm]:
     list_of_teams = get_list_of_teams(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_teams,
         interface=interface,
@@ -174,5 +172,7 @@ def get_team_from_form(
     return new_team
 
 
-def save_from_ordinary_list_of_teams( interface: abstractInterface, new_list: List[Team]):
-    update_list_of_teams(object_store=interface.object_store, list_of_teams=ListOfTeams(new_list))
+def save_from_ordinary_list_of_teams(
+    interface: abstractInterface, new_list: List[Team]
+):
+    update_list_of_teams(interface=interface, list_of_teams=ListOfTeams(new_list))

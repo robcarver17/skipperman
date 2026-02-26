@@ -70,7 +70,9 @@ def file_from_generic(generic_name_of_file_required):
 
 PATROL_BOAT_LABELS = "patrol_boat_labels"
 ATTENDANCE_FILE_FOR_SPECIFIC_CADET = "attendance_cadets"
-GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY = "group_names_across_events_for_cadets"
+GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY = (
+    "group_names_across_events_for_cadets"
+)
 IDENTIFIED_CADETS_AT_EVENT_ID = "identified_cadets_at_event"
 CADETS_AT_EVENT_ID = "cadets_at_event"
 LIST_OF_CADETS_ON_COMMITTEE = "cadets_on_committee"
@@ -119,7 +121,9 @@ LIST_OF_TICK_SHEET_ITEMS = "list_of_tick_sheet_items"
 LIST_OF_CADETS_WITH_TICK_LIST_ITEMS_FOR_EACH_CADET = (
     "list_of_cadets_with_tick_list_items_for_cadet"
 )
-LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS = "list_of_volunteers_most_common_role_at_event"
+LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS = (
+    "list_of_volunteers_most_common_role_at_event"
+)
 LIST_OF_CADETS_WITH_CLOTHING_AT_EVENT = "list_of_cadets_with_clothing_at_event"
 LIST_OF_CADETS_WITH_FOOD_AT_EVENT = "list_of_cadets_with_food_at_event"
 LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT = "list_of_volunteers_with_food_at_event"
@@ -140,7 +144,10 @@ USERLIST_FILE_ID = "userlist"
 _dict_of_filenames_and_paths = {
     LIST_OF_CADETS_FILE_ID: ("lists", "list_of_cadets.csv"),
     LIST_OF_CADETS_ON_COMMITTEE: ("lists", "list_of_cadets_on_committee.csv"),
-    GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY: ("lists", "group_names_across_cadet_events_for_speed_up.csv"),
+    GROUP_NAMES_ACROSS_EVENTS_FOR_CADETS_PERSISTENT_READ_ONLY: (
+        "lists",
+        "group_names_across_cadet_events_for_speed_up.csv",
+    ),
     EVENT_FILE_IDENTIFIER: ("lists", "list_of_events.csv"),
     LIST_OF_SKILLS_FILE_ID: ("lists", "skills.csv"),
     EVENT_MAPPING_FILE_ID: ("mapped_events", "wa_event_mapping.csv"),
@@ -234,7 +241,7 @@ _dict_of_filenames_and_paths = {
     ),
     LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS: (
         "lists",
-        "list_of_volunteers_with_most_common_role_across_events"
+        "list_of_volunteers_with_most_common_role_across_events",
     ),
     CLUB_BOAT_LIMIT: ("lists", "club_boat_limit.parquet"),
     CLUB_BOAT_LIMIT_CSV: ("lists", "club_boat_limit.csv"),

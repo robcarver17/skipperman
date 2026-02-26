@@ -2,8 +2,10 @@ from typing import Union
 
 from app.backend.mapping.list_of_field_mappings import does_event_already_have_mapping
 
-from app.frontend.events.import_data.import_controller import import_controller, \
-    clear_index_of_last_import_done_in_state
+from app.frontend.events.import_data.import_controller import (
+    import_controller,
+    clear_index_of_last_import_done_in_state,
+)
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.form_handler import initial_state_form
@@ -51,10 +53,7 @@ def process_wa_staged_file_already_uploaded(interface: abstractInterface) -> New
     filename = get_staged_file_raw_event_filename(event)
     print("Working on %s " % filename)
 
-    
-    process_uploaded_wa_event_file(
-        filename=filename, event=event, interface=interface
-    )
+    process_uploaded_wa_event_file(filename=filename, event=event, interface=interface)
     interface.clear()
 
     return import_controller_form(interface)

@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.groups.cadets_with_groups_at_event import get_list_of_all_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_list_of_all_groups_at_event,
+)
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
 from app.frontend.reporting.sailors.qualification_status import (
@@ -35,7 +37,10 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
 )
 
-from app.frontend.shared.events_state import get_event_from_state, clear_event_id_stored_in_state
+from app.frontend.shared.events_state import (
+    get_event_from_state,
+    clear_event_id_stored_in_state,
+)
 
 from app.objects.abstract_objects.abstract_form import (
     Form,

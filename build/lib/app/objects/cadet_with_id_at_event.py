@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List
 
 from app.objects.cadets import Cadet
 
@@ -8,7 +8,7 @@ from app.data_access.configuration.field_list import (
     ALL_DAYS_ATTENDING_INPUT,
     CADET_HEALTH,
 )
-from app.objects.utilities.exceptions import missing_data, arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
@@ -19,7 +19,6 @@ from app.objects.events import Event
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
-    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import (
     transform_class_instance_into_string,
@@ -109,11 +108,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
-    def delete_cadet_with_id(self, cadet_id: str):
-        idx = self.idx_of_items_with_cadet_id(cadet_id, default=missing_data)
-        if idx is missing_data:
-            return
-        self.pop(idx)
 
     def clear_private_data(self):
         for cadet_with_id_at_event in self:
@@ -126,78 +120,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
             some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
         )
 
-    def add(self, cadet_at_event: CadetWithIdAtEvent):
-        if self.is_cadet_id_in_event(cadet_at_event.cadet_id):
-            raise Exception("Cadet already exists!")
-        self.append(cadet_at_event)
-
-    def replace_existing_cadet_at_event(self, new_cadet_at_event: CadetWithIdAtEvent):
-        existing_cadet_idx = self.idx_of_items_with_cadet_id(
-            new_cadet_at_event.cadet_id, default=missing_data
-        )
-        if existing_cadet_idx is missing_data:
-            raise Exception(
-                "Can't replace cadet id %s not in data" % new_cadet_at_event.cadet_id
-            )
-
-        self[existing_cadet_idx] = new_cadet_at_event
-
-    def update_status_of_existing_cadet_at_event(
-        self, cadet_id: str, new_status: RegistrationStatus
-    ):
-        self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id, new_item=new_status, attribute="status"
-        )
-
-    def update_notes_for_existing_cadet_at_event(self, cadet_id: str, new_notes: str):
-        self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id, new_item=new_notes, attribute="notes"
-        )
-
-    def update_health_for_existing_cadet_at_event(self, cadet_id: str, new_health: str):
-        self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id, new_item=new_health, attribute="health"
-        )
-
-    def update_all_data_in_row_for_existing_cadet_at_event(
-        self, cadet_id: str, data_row: dict
-    ):
-        for key, value in data_row.items():
-            self.update_data_row_for_existing_cadet_at_event(
-                cadet_id=cadet_id, column_name=key, new_value_for_column=value
-            )
-
-    def update_data_row_for_existing_cadet_at_event(
-        self, cadet_id: str, column_name: str, new_value_for_column
-    ):
-        existing_data_in_row = self.cadet_with_id_and_data_at_event(
-            cadet_id
-        ).data_in_row
-        existing_data_in_row[column_name] = new_value_for_column
-
-        self._update_item_for_existing_cadet_at_event(
-            cadet_id=cadet_id, new_item=existing_data_in_row, attribute="data_in_row"
-        )
-
-    def _update_item_for_existing_cadet_at_event(
-        self,
-        cadet_id: str,
-        attribute: str,
-        new_item: Union[RowInRegistrationData, str, RegistrationStatus],
-    ):
-        existing_cadet_idx = self.idx_of_items_with_cadet_id(
-            cadet_id, default=missing_data
-        )
-        if existing_cadet_idx is missing_data:
-            raise Exception("Can't replace cadet id %s not in data" % cadet_id)
-        existing_cadet_at_event = self[existing_cadet_idx]
-        setattr(existing_cadet_at_event, attribute, new_item)
-        self[existing_cadet_idx] = existing_cadet_at_event
-
-    def idx_of_items_with_cadet_id(self, cadet_id: str, default=arg_not_passed):
-        return get_idx_of_unique_object_with_attr_in_list(
-            some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
-        )
 
     def is_cadet_id_in_event(self, cadet_id: str):
         return cadet_id in self.list_of_cadet_ids()

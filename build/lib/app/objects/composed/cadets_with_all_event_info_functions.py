@@ -14,7 +14,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_groups import (
-     DictOfCadetsWithDaysAndGroupsAtEvent,
+    DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
@@ -162,15 +162,15 @@ class RequiredDictForAllocation:
         return messages
 
     def get_messages_or_none_and_clear(self) -> Union[str, None]:
-        msgs=copy(self.messages)
-        if len(msgs)==0:
+        msgs = copy(self.messages)
+        if len(msgs) == 0:
             return None
 
         self._messages = []
 
         return ", ".join(msgs)
 
-    def add_message(self, message:str):
+    def add_message(self, message: str):
         messages = self.messages
         messages.append(message)
         self._messages = messages
@@ -198,8 +198,6 @@ class RequiredDictForAllocation:
 def update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-
-
 ) -> RequiredDictForAllocation:
     if availability_is_bad_for_sailor_or_partner(
         required_dict_for_allocation=required_dict_for_allocation,
@@ -210,13 +208,11 @@ def update_boat_info_for_updated_cadet_at_event_and_return_affected_cadets(
     required_dict_for_allocation = update_cadets_own_info_excluding_partner(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
-
     )
 
     required_dict_for_allocation = update_partnership_info_for_updated_cadet_at_event(
         required_dict_for_allocation=required_dict_for_allocation,
         cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day,
-
     )
 
     return required_dict_for_allocation
@@ -248,7 +244,6 @@ def availability_is_bad_for_sailor_or_partner(
 def update_partnership_info_for_updated_cadet_at_event(
     required_dict_for_allocation: RequiredDictForAllocation,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
-
 ) -> RequiredDictForAllocation:
     how_changed = how_has_partnership_changed(
         dict_of_cadets_and_boat_class_and_partners=required_dict_for_allocation.dict_of_cadets_and_boat_class_and_partners,
@@ -290,7 +285,7 @@ def update_partnership_info_for_updated_cadet_at_event(
 
 
 def how_has_partnership_changed(
-    dict_of_cadets_and_boat_class_and_partners:DictOfCadetsAndBoatClassAndPartners,
+    dict_of_cadets_and_boat_class_and_partners: DictOfCadetsAndBoatClassAndPartners,
     cadet_boat_class_group_club_dinghy_and_partner_on_day: CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
 ) -> PartnershipChange:
     cadet = cadet_boat_class_group_club_dinghy_and_partner_on_day.cadet

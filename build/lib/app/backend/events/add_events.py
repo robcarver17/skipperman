@@ -14,7 +14,7 @@ def verify_event_and_warn(object_store: ObjectStore, event: Event) -> str:
     if contains_2_more_digits(event.event_name):
         warn_text += "Looks like event name contains a year - don't do that! Fine if it is an event number."
 
-    if len(event.event_name)==0:
+    if len(event.event_name) == 0:
         warn_text += "Events must have a name. "
     elif len(event.event_name) < 5:
         warn_text += "Event name seems a bit short. "

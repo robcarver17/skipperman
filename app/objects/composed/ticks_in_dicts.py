@@ -30,7 +30,6 @@ class TickSubStagesAsDict(Dict[TickSubStage, ListOfTickSheetItems]):
 
 
 class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict]):
-
     def list_of_substage_names(self):
         list_of_substage_names = []
         for tick_substages_dict in self.values():
@@ -38,4 +37,3 @@ class QualificationsAndTickItemsAsDict(Dict[Qualification, TickSubStagesAsDict])
             list_of_substage_names += substage_names
 
         return list(set(list_of_substage_names))
-

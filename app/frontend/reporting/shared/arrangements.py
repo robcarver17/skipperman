@@ -15,7 +15,6 @@ from app.backend.reporting.process_stages.create_list_of_columns_from_groups imp
 from app.backend.reporting.process_stages.create_list_of_groups_from_df import (
     create_list_of_pages_from_dict_of_df,
 )
-from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.reporting.arrangement.get_and_update_arrangement_options import (
     get_stored_arrangement_and_group_order,
@@ -79,8 +78,7 @@ def create_arrangement_from_order_and_algo(
     reporting_options: ReportingOptions,
 ) -> ArrangementOptionsAndGroupOrder:
     list_of_pages = create_list_of_pages_from_dict_of_df(
-        dict_of_df=reporting_options.dict_of_df,
-        reporting_options=reporting_options
+        dict_of_df=reporting_options.dict_of_df, reporting_options=reporting_options
     )
 
     arrangement_options_and_group_order = (
@@ -110,6 +108,7 @@ def modify_arrangement_options_and_group_order_to_reflect_arrangement_method_nam
 
     return arrangement_options_and_group_order
 
+
 def modify_arrangement_given_change_in_group_order(
     interface: abstractInterface,
     report_type: str,
@@ -130,6 +129,7 @@ def modify_arrangement_given_change_in_group_order(
         interface=interface,
         report_type=report_type,
     )
+
 
 def remove_empty_groups_from_group_order_and_arrangement(
     interface: abstractInterface,

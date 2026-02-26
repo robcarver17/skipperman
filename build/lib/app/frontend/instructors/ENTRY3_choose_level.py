@@ -33,7 +33,8 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.shared.qualification_and_tick_state_storage import (
     get_group_from_state,
-    update_state_for_qualification_name, clear_group_id_in_state,
+    update_state_for_qualification_name,
+    clear_group_id_in_state,
 )
 from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_list_of_qualifications,
@@ -110,6 +111,7 @@ def get_level_buttons(interface: abstractInterface):
 
 
 mark_attendance_button = Button("Mark attendance and view health", tile=True)
+
 
 def post_form_choose_level_for_group_at_event(
     interface: abstractInterface,

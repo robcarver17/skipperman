@@ -1,4 +1,8 @@
-from app.web.end_points.read_only import is_read_only, is_local_read_only, is_global_read_only
+from app.web.end_points.read_only import (
+    is_read_only,
+    is_local_read_only,
+    is_global_read_only,
+)
 
 from app.web.html.url_define import (
     LOGIN_URL,

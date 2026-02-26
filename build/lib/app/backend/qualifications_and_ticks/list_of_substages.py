@@ -37,7 +37,7 @@ def get_suggestions_for_autocorrect(
 
 
 def get_suggested_list_of_all_substage_names_excluding_existing_in_qualification(
-        object_store: ObjectStore,
+    object_store: ObjectStore,
     qualifications_and_tick_items_as_dict: QualificationsAndTickItemsAsDict,
     qualification: Qualification,
 ):
@@ -60,6 +60,4 @@ def get_substage_given_id(
 
 
 def get_list_of_tick_substages(object_store: ObjectStore) -> ListOfTickSubStages:
-    return object_store.get(
-        object_store.data_api.data_list_of_tick_sub_stages.read
-    )
+    return object_store.get(object_store.data_api.data_list_of_tick_sub_stages.read)

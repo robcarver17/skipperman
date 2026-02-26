@@ -24,7 +24,8 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.qualification_and_tick_state_storage import (
-    get_qualification_from_state, clear_qualification_id_in_state,
+    get_qualification_from_state,
+    clear_qualification_id_in_state,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -55,7 +56,6 @@ def post_form_edit_qualification_details(
             display_form_edit_qualification_details
         )
 
-    
     if button_for_new_substage.pressed(last_button_pressed):
         add_new_substage_to_qualification_from_form(interface)
 

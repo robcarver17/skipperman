@@ -4,7 +4,6 @@ from typing import Dict, List
 import pandas as pd
 
 from app.backend.events.list_of_events import (
-    get_list_of_events,
     get_sorted_list_of_events,
 )
 from app.data_access.store.object_store import ObjectStore
@@ -14,7 +13,6 @@ from app.objects.composed.volunteers_with_skills import SkillsDict
 from app.objects.events import Event, ListOfEvents, SORT_BY_START_DSC
 
 from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
-    get_all_roles_across_recent_events_for_volunteer_as_dict_with_sort_order,
     get_all_roles_for_list_of_events_for_volunteer_as_dict,
 )
 from app.objects.volunteer_skills import Skill

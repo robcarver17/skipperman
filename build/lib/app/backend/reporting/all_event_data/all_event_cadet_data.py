@@ -14,7 +14,7 @@ from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
     get_dict_of_cadets_and_boat_classes_and_partners_at_events,
 )
 from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-     get_dict_of_cadets_and_club_dinghies_at_event,
+    get_dict_of_cadets_and_club_dinghies_at_event,
 )
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,

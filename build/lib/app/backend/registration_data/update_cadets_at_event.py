@@ -1,4 +1,3 @@
-
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.objects.cadets import Cadet
@@ -103,7 +102,7 @@ def replace_existing_cadet_at_event_where_original_cadet_was_inactive(
     interface.update(
         interface.object_store.data_api.data_cadets_at_event.replace_existing_cadet_at_event_where_original_cadet_was_inactive,
         event_id=event.id,
-        new_cadet_at_event=new_cadet_at_event
+        new_cadet_at_event=new_cadet_at_event,
     )
 
 
@@ -114,19 +113,20 @@ def update_notes_for_existing_cadet_at_event(
         interface.object_store.data_api.data_cadets_at_event.update_notes_for_existing_cadet_at_event,
         event_id=event.id,
         cadet_id=cadet.id,
-        new_notes=new_notes
+        new_notes=new_notes,
     )
 
 
 def update_health_for_existing_cadet_at_event(
-        interface: abstractInterface, event: Event, cadet: Cadet, new_health: str
+    interface: abstractInterface, event: Event, cadet: Cadet, new_health: str
 ):
     interface.update(
         interface.object_store.data_api.data_cadets_at_event.update_health_for_existing_cadet_at_event,
         event_id=event.id,
         cadet_id=cadet.id,
-        new_health=new_health
+        new_health=new_health,
     )
+
 
 def update_data_row_for_existing_cadet_at_event(
     interface: abstractInterface,
@@ -140,6 +140,5 @@ def update_data_row_for_existing_cadet_at_event(
         event_id=event.id,
         cadet_id=cadet.id,
         column_name=column_name,
-        new_value_for_colum=new_value_for_column
+        new_value_for_colum=new_value_for_column,
     )
-

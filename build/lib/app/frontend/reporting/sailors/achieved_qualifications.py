@@ -1,4 +1,3 @@
-import app.frontend.utilities.notes.render_notes
 from app.data_access.store.object_store import ObjectStore
 
 from app.data_access.init_directories import temp_file_name_in_download_directory

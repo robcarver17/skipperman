@@ -1,7 +1,5 @@
 from typing import Union, List
 
-from app.data_access.store.object_store import ObjectStore
-
 from app.backend.patrol_boats.list_of_patrol_boats import (
     get_list_of_patrol_boats,
     update_list_of_patrol_boats,
@@ -38,7 +36,6 @@ def post_form_config_patrol_boats_page(
 ) -> Union[Form, NewForm]:
     list_of_boats = get_list_of_patrol_boats(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
         interface=interface,
@@ -61,7 +58,7 @@ def post_form_config_patrol_boats_page(
 
 
 def save_from_ordinary_list_of_patrol_boats(
-        interface: abstractInterface, new_list: List[PatrolBoat]
+    interface: abstractInterface, new_list: List[PatrolBoat]
 ):
     update_list_of_patrol_boats(
         interface=interface,

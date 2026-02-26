@@ -1,82 +1,119 @@
 import shutil
 
 from app.data_access.backups.make_backup import make_backup
-from app.data_access.composed.dict_of_all_event_data_for_volunteers import ComposedDataAllEventInfoForVolunteers
-from app.data_access.composed.dict_of_all_event_info_for_cadets import ComposedDataAllEventInfoForCadets
+from app.data_access.composed.dict_of_all_event_data_for_volunteers import (
+    ComposedDataAllEventInfoForVolunteers,
+)
+from app.data_access.composed.dict_of_all_event_info_for_cadets import (
+    ComposedDataAllEventInfoForCadets,
+)
 from app.data_access.global_read_only import (
     is_global_read_only,
     set_global_read_only,
 )
 
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
-from app.data_access.sql.cadet_attendance import SqlDataAttendanceAtEventsForSpecificCadet
+from app.data_access.sql.cadet_attendance import (
+    SqlDataAttendanceAtEventsForSpecificCadet,
+)
 
 from app.data_access.sql.cadet_clothing import SqlDataListOfCadetsWithClothingAtEvent
 from app.data_access.sql.cadet_committee import SqlDataListOfCadetsOnCommitte
-from app.data_access.sql.cadet_food import SqlDataListOfCadetsWithFoodRequirementsAtEvent
+from app.data_access.sql.cadet_food import (
+    SqlDataListOfCadetsWithFoodRequirementsAtEvent,
+)
 from app.data_access.sql.cadets_at_event import SqlDataListOfCadetsAtEvent
 from app.data_access.sql.cadets_with_ticks import SqlDataListOfCadetsWithTickListItems
 from app.data_access.sql.club_dinghies import SqlDataListOfClubDinghies
-from app.data_access.sql.club_dinghies_with_cadets_at_event import SqlDataListOfCadetAtEventWithClubDinghies
-from app.data_access.sql.club_dinghies_with_volunteers_at_event import    SqlDataListOfVolunteersAtEventWithClubDinghies
+from app.data_access.sql.club_dinghies_with_cadets_at_event import (
+    SqlDataListOfCadetAtEventWithClubDinghies,
+)
+from app.data_access.sql.club_dinghies_with_volunteers_at_event import (
+    SqlDataListOfVolunteersAtEventWithClubDinghies,
+)
 from app.data_access.sql.club_dinghy_limits import SqlDataListOfClubDinghyLimits
 from app.data_access.sql.connections import SqlDataListOfCadetVolunteerAssociations
 from app.data_access.sql.dinghies_at_event import SqlDataListOfCadetAtEventWithDinghies
 from app.data_access.sql.boat_classes import SqlDataListOfDinghies
 from app.data_access.sql.event_warnings import SqlDataListOfEventWarnings
 from app.data_access.sql.events import SqlDataListOfEvents
-from app.data_access.sql.field_mapping import SqlDataWAFieldMapping, SqlDataWAFieldMappingTemplates
+from app.data_access.sql.field_mapping import (
+    SqlDataWAFieldMapping,
+    SqlDataWAFieldMappingTemplates,
+)
 from app.data_access.sql.generic_sql_data import DBConnection
 from app.data_access.sql.group_notes import SqlDataListOfGroupNotesAtEvent
 
 from app.data_access.sql.groups import SqlDataListOfGroups
 from app.data_access.sql.cadets import SqlDataListOfCadets
 from app.data_access.sql.groups_at_event import SqlDataListOfCadetsWithGroups
-from app.data_access.sql.identified_cadets_at_event import SqlDataListOfIdentifiedCadetsAtEvent
-from app.data_access.sql.identified_volunteers_at_event import SqlDataListOfIdentifiedVolunteersAtEvent
-from app.data_access.sql.last_roles_across_events_for_volunteers import SqlDataListOfLastRolesAcrossEventsForVolunteers
-from app.data_access.sql.list_of_roles_and_teams import SqlDataListOfTeamsAndRolesWithIds
+from app.data_access.sql.identified_cadets_at_event import (
+    SqlDataListOfIdentifiedCadetsAtEvent,
+)
+from app.data_access.sql.identified_volunteers_at_event import (
+    SqlDataListOfIdentifiedVolunteersAtEvent,
+)
+from app.data_access.sql.last_roles_across_events_for_volunteers import (
+    SqlDataListOfLastRolesAcrossEventsForVolunteers,
+)
+from app.data_access.sql.list_of_roles_and_teams import (
+    SqlDataListOfTeamsAndRolesWithIds,
+)
 from app.data_access.sql.mapped_registration_data import SqlDataMappedRegistrationData
 from app.data_access.sql.notes import SqlDataListOfNotes
 from app.data_access.sql.patrol_boat_labels import SqlDataListOfPatrolBoatLabelsAtEvent
 from app.data_access.sql.patrol_boats import SqlDataListOfPatrolBoats
-from app.data_access.sql.patrol_boats_with_volunteers_at_event import SqlDataListOfVolunteersAtEventWithPatrolBoats
-from app.data_access.sql.persistent_groups_at_events import SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion
-from app.data_access.sql.print_options import sqlDataListOfPrintOptions, SqlDataListOfArrangementOptions
+from app.data_access.sql.patrol_boats_with_volunteers_at_event import (
+    SqlDataListOfVolunteersAtEventWithPatrolBoats,
+)
+from app.data_access.sql.persistent_groups_at_events import (
+    SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion,
+)
+from app.data_access.sql.print_options import (
+    sqlDataListOfPrintOptions,
+    SqlDataListOfArrangementOptions,
+)
 from app.data_access.sql.qualifications import SqlDataListOfQualifications
-from app.data_access.sql.cadets_with_qualifications import SqlListOfCadetsWithQualifications
+from app.data_access.sql.cadets_with_qualifications import (
+    SqlListOfCadetsWithQualifications,
+)
 from app.data_access.sql.roles import SqlDataListOfRoles
 from app.data_access.sql.skills import SqlDataListOfSkills
 from app.data_access.sql.target_roles_at_event import SqlDataListOfTargetForRoleAtEvent
 from app.data_access.sql.teams import SqlDataListOfTeams
 from app.data_access.sql.tick_sheet_items import SqlDataListOfTickSheetItems
 from app.data_access.sql.tick_sheet_sub_stages import SqlDataListOfTickSubStages
-from app.data_access.sql.volunteer_food import SqlDataListOfVolunteersWithFoodRequirementsAtEvent
+from app.data_access.sql.volunteer_food import (
+    SqlDataListOfVolunteersWithFoodRequirementsAtEvent,
+)
 from app.data_access.sql.volunteers import SqlDataListOfVolunteers
 from app.data_access.sql.volunteers_at_event import SqlDataListOfVolunteersAtEvent
-from app.data_access.sql.volunteers_in_roles_at_event import SqlDataListOfVolunteersInRolesAtEvent
+from app.data_access.sql.volunteers_in_roles_at_event import (
+    SqlDataListOfVolunteersInRolesAtEvent,
+)
 from app.data_access.sql.volunteers_with_skills import SqlDataListOfVolunteerSkills
 from app.data_access.sql.wa_event_mapping import SqlDataWAEventMapping
 
 
-
 class MixedSqlAndCsvDataApi(object):
     def __init__(
-        self, master_data_path: str, user_data_path: str, backup_data_path: str,
-
+        self,
+        master_data_path: str,
+        user_data_path: str,
+        backup_data_path: str,
     ):
         self._master_data_path = master_data_path
         self._user_data_path = user_data_path
         self._backup_data_path = backup_data_path
 
-        db_connection =DBConnection(master_data_path)
+        db_connection = DBConnection(master_data_path)
         self._db_connection = db_connection
 
     def add_object_store(self, object_store):
         self._object_store = object_store
 
     @property
-    def object_store(self) -> 'ObjectStore':
+    def object_store(self) -> "ObjectStore":
         object_store = getattr(self, "_object_store", None)
         if object_store is None:
             raise Exception("Need to run add_object_store before calling")
@@ -103,43 +140,47 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def dict_of_all_event_data_for_volunteers(self) -> ComposedDataAllEventInfoForVolunteers:
+    def dict_of_all_event_data_for_volunteers(
+        self,
+    ) -> ComposedDataAllEventInfoForVolunteers:
         return ComposedDataAllEventInfoForVolunteers(object_store=self.object_store)
 
     @property
     def dict_of_all_event_data_for_cadets(self) -> ComposedDataAllEventInfoForCadets:
         return ComposedDataAllEventInfoForCadets(object_store=self.object_store)
 
-
     @property
     def data_list_of_cadets(self):
         return SqlDataListOfCadets(
-            db_connection=self.db_connection,
-            object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_cadets_on_committee(self) -> SqlDataListOfCadetsOnCommitte:
         return SqlDataListOfCadetsOnCommitte(
-            db_connection=self.db_connection, object_store=self.object_store,
+            db_connection=self.db_connection,
+            object_store=self.object_store,
         )
 
     @property
     def data_list_of_events(self):
         return SqlDataListOfEvents(
-            db_connection=self.db_connection, object_store=self.object_store,
+            db_connection=self.db_connection,
+            object_store=self.object_store,
         )
 
     @property
     def data_list_of_skills(self) -> SqlDataListOfSkills:
         return SqlDataListOfSkills(
-            db_connection=self.db_connection, object_store=self.object_store,
+            db_connection=self.db_connection,
+            object_store=self.object_store,
         )
 
     @property
     def data_list_of_roles(self) -> SqlDataListOfRoles:
         return SqlDataListOfRoles(
-            db_connection=self.db_connection, object_store=self.object_store,
+            db_connection=self.db_connection,
+            object_store=self.object_store,
         )
 
     @property
@@ -179,7 +220,6 @@ class MixedSqlAndCsvDataApi(object):
         return SqlDataWAFieldMappingTemplates(
             db_connection=self.db_connection, object_store=self.object_store
         )
-
 
     @property
     def data_registration_data(self) -> SqlDataMappedRegistrationData:
@@ -254,13 +294,13 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_volunteers_at_event(self) -> SqlDataListOfVolunteersAtEvent:
         return SqlDataListOfVolunteersAtEvent(
-        db_connection=self.db_connection, object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
     def data_list_of_identified_volunteers_at_event(
         self,
-    ) ->SqlDataListOfIdentifiedVolunteersAtEvent:
+    ) -> SqlDataListOfIdentifiedVolunteersAtEvent:
         return SqlDataListOfIdentifiedVolunteersAtEvent(
             db_connection=self.db_connection, object_store=self.object_store
         )
@@ -291,9 +331,10 @@ class MixedSqlAndCsvDataApi(object):
             db_connection=self.db_connection, object_store=self.object_store
         )
 
-
     @property
-    def data_list_of_group_names_for_events_and_cadets_persistent_version(self) -> SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion:
+    def data_list_of_group_names_for_events_and_cadets_persistent_version(
+        self,
+    ) -> SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion:
         return SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(
             db_connection=self.db_connection, object_store=self.object_store
         )
@@ -407,7 +448,7 @@ class MixedSqlAndCsvDataApi(object):
         self,
     ) -> SqlDataListOfCadetsWithClothingAtEvent:
         return SqlDataListOfCadetsWithClothingAtEvent(
-        db_connection=self.db_connection, object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -417,9 +458,9 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_notes(self) ->SqlDataListOfNotes:
+    def data_list_of_notes(self) -> SqlDataListOfNotes:
         return SqlDataListOfNotes(
-        db_connection=self.db_connection, object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     @property
@@ -429,9 +470,11 @@ class MixedSqlAndCsvDataApi(object):
         )
 
     @property
-    def data_list_of_last_roles_across_events_for_volunteers(self) ->SqlDataListOfLastRolesAcrossEventsForVolunteers:
+    def data_list_of_last_roles_across_events_for_volunteers(
+        self,
+    ) -> SqlDataListOfLastRolesAcrossEventsForVolunteers:
         return SqlDataListOfLastRolesAcrossEventsForVolunteers(
-db_connection=self.db_connection, object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     #### USERS

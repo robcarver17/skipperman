@@ -1,6 +1,5 @@
-
 class ComposedBaseData(object):
-    def __init__(self, object_store: 'ObjectStore'):
+    def __init__(self, object_store: "ObjectStore"):
         self._object_store = object_store
 
     @property

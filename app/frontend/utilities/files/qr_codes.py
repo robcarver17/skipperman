@@ -1,5 +1,7 @@
-from app.data_access.file_access import generate_qr_code_for_file_in_public_path, \
-    generate_qr_code_for_file_with_web_path
+from app.data_access.file_access import (
+    generate_qr_code_for_file_in_public_path,
+    generate_qr_code_for_file_with_web_path,
+)
 from app.frontend.shared.buttons import get_attributes_from_button_pressed_of_known_type
 
 from app.frontend.utilities.files.render_files import (
@@ -39,4 +41,6 @@ def generate_adhoc_qr_code(interface: abstractInterface) -> File:
     url = interface.value_from_form(QR_FORM_VALUE, default=MISSING_FROM_FORM)
     if url is MISSING_FROM_FORM:
         raise Exception("URL missing")
-    return generate_qr_code_for_file_with_web_path(url, filename_without_extension='external_url')
+    return generate_qr_code_for_file_with_web_path(
+        url, filename_without_extension="external_url"
+    )

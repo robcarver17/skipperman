@@ -39,7 +39,8 @@ from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 
 from app.frontend.shared.cadet_state import update_state_for_specific_cadet
 from app.backend.cadets.list_of_cadets import (
-    all_sort_types, get_sorted_list_of_cadets,
+    all_sort_types,
+    get_sorted_list_of_cadets,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 

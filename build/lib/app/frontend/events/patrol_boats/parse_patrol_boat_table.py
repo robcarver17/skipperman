@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_patrol_boats_at_event,
+    get_sorted_list_of_patrol_boats_at_event,
 )
 from app.backend.patrol_boats.labels import update_patrol_boat_label_at_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
@@ -32,8 +32,11 @@ from app.backend.patrol_boats.changes import (
     remove_patrol_boat_and_all_associated_volunteers_from_event,
     delete_volunteer_from_patrol_boat_on_day_at_event,
 )
-from app.objects.composed.volunteers_at_event_with_patrol_boats import BoatDayVolunteer, NO_ADDITION_TO_MAKE, \
-    ListOfBoatDayVolunteer
+from app.objects.composed.volunteers_at_event_with_patrol_boats import (
+    BoatDayVolunteer,
+    NO_ADDITION_TO_MAKE,
+    ListOfBoatDayVolunteer,
+)
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_unique_list_of_volunteers_for_skills_checkboxes,
@@ -80,7 +83,6 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
     if is_ready_to_swap(interface):
         return
 
-    
     update_boat_labels(interface)
     update_skills_checkbox(interface)
     update_role_dropdowns(interface)
@@ -94,7 +96,7 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
 
 def update_boat_labels(interface: abstractInterface):
     event = get_event_from_state(interface)
-    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
     for day in event.days_in_event():
@@ -205,8 +207,7 @@ def update_skills_checkbox_for_specific_volunteer(
 
     currently_has_boat_skill = skills.can_drive_safety_boat
     is_ticked = is_volunteer_skill_checkbox_ticked(
-        interface=interface, volunteer_id=volunteer.id,
-        default=MISSING_FROM_FORM
+        interface=interface, volunteer_id=volunteer.id, default=MISSING_FROM_FORM
     )
     if is_ticked is MISSING_FROM_FORM:
         ### fields not available for some reason
@@ -281,7 +282,6 @@ def update_role_dropdown_for_volunteer_on_day(
         day=day,
         new_role=role_selected,
         allow_replacement=True
-
         ## do not pass group
     )
 

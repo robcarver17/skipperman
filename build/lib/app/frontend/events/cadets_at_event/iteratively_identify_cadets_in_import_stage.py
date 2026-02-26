@@ -69,6 +69,7 @@ def start_cadet_id_process(
 def not_used_start_cadet_id_process_post(interface: abstractInterface):
     raise Exception("Shouldn't be reached!")
 
+
 def identify_cadets_on_next_row(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
@@ -88,15 +89,15 @@ def identify_cadets_on_next_row(
     print("On row %s" % str(next_row))
     return process_current_row(row=next_row, interface=interface)
 
+
 """
 row_id = get_and_save_next_row_id_in_raw_registration_data(interface)
 
 """
 
+
 def finished_looping_return_to_controller(interface: abstractInterface) -> NewForm:
-    return interface.get_new_display_form_for_parent_of_function(
-        start_cadet_id_process
-    )
+    return interface.get_new_display_form_for_parent_of_function(start_cadet_id_process)
 
 
 def process_current_row(
@@ -177,7 +178,7 @@ def process_row_when_cadet_matched(interface: abstractInterface, cadet: Cadet) -
         "adding matched row %s with cadet id %s for cadet %s"
         % (row_id, cadet.id, str(cadet))
     )
-    
+
     add_identified_cadet_and_row(
         interface=interface, event=event, row_id=row_id, cadet=cadet
     )
@@ -203,9 +204,7 @@ def process_row_when_cadet_unmatched(
         )
     else:
         print("Completely unmatched going to form")
-        return process_row_when_cadet_completely_unmatched(
-            interface=interface
-        )
+        return process_row_when_cadet_completely_unmatched(interface=interface)
 
 
 def does_a_very_similar_cadet_exist_if_not_return_missing_data(
@@ -246,8 +245,9 @@ def log_when_cadet_matched_with_similar(
 def process_row_when_cadet_completely_unmatched(
     interface: abstractInterface,
 ) -> NewForm:
-
-    return interface.get_new_form_given_function(display_form_identify_cadets_during_import)
+    return interface.get_new_form_given_function(
+        display_form_identify_cadets_during_import
+    )
 
 
 def get_parameters_for_form(interface: abstractInterface):
@@ -256,7 +256,7 @@ def get_parameters_for_form(interface: abstractInterface):
         help_string="identify_cadets_at_event_help",
         extra_buttons=[permanent_skip_button, temporary_skip_button],
         sort_by=SORT_BY_SIMILARITY_BOTH,
-        button_for_non_members=True
+        button_for_non_members=True,
     )
 
     return parameters_to_get_or_select_cadet
@@ -298,6 +298,7 @@ def header_text_for_form(interface: abstractInterface) -> ListOfLines:
 
     return default_header_text
 
+
 def display_form_identify_cadets_during_import(interface: abstractInterface) -> Form:
     row_id = get_current_row_id(interface)
     event = get_event_from_state(interface)
@@ -310,8 +311,6 @@ def display_form_identify_cadets_during_import(interface: abstractInterface) -> 
     return get_add_or_select_existing_cadet_form(
         cadet=cadet, interface=interface, parameters=parameters_to_get_or_select_cadet
     )
-
-
 
 
 def post_form_add_cadet_ids_during_import(
@@ -344,11 +343,7 @@ def process_form_when_skipping_cadet_permanently(interface: abstractInterface) -
     event = get_event_from_state(interface)
     row_id = get_current_row_id(interface)
 
-    
-    mark_row_as_permanently_skip_cadet(
-        interface=interface,
-        event=event, row_id=row_id
-    )
+    mark_row_as_permanently_skip_cadet(interface=interface, event=event, row_id=row_id)
     log_warning_when_skipping_permanently(interface, row_id=row_id, event=event)
     interface.clear()
     ## run recursively until no more data
@@ -382,9 +377,6 @@ def process_form_when_skipping_cadet_temporarily(interface: abstractInterface) -
     row_id = get_current_row_id(interface)
     print("temporary skip of cadet at row id %s" % row_id)
     ## no warning as picked up
-    mark_row_as_temporarily_skip_cadet(
-        interface=interface,
-        event=event, row_id=row_id
-    )
+    mark_row_as_temporarily_skip_cadet(interface=interface, event=event, row_id=row_id)
 
     return identify_cadets_on_next_row(interface)

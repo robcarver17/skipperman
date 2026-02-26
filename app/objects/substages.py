@@ -38,7 +38,7 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
 
     def substages_for_qualification_id(self, qualification_id):
         return ListOfTickSubStages(
-            [item for item in self if item.stage_id==qualification_id]
+            [item for item in self if item.stage_id == qualification_id]
         )
 
     def id_given_name(self, name: str, default=arg_not_passed):
@@ -60,7 +60,6 @@ class ListOfTickSubStages(GenericListOfObjectsWithIds):
         return self.object_with_id(id, default=default)
 
 
-
 @dataclass
 class TickSheetItem(GenericSkipperManObjectWithIds):
     name: str
@@ -74,7 +73,6 @@ class TickSheetItem(GenericSkipperManObjectWithIds):
         return hash("_".join([self.name, self.substage_id]))
 
 
-
 class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
@@ -83,14 +81,8 @@ class ListOfTickSheetItems(GenericListOfObjectsWithIds):
     def tick_sheet_item_with_id(self, item_id: str, default=arg_not_passed):
         return self.object_with_id(item_id, default=default)
 
-
-
     def subset_for_substage_id(self, substage_id: str):
-        new_list = [
-            item
-            for item in self
-            if item.substage_id == substage_id
-        ]
+        new_list = [item for item in self if item.substage_id == substage_id]
 
         return ListOfTickSheetItems(new_list)
 

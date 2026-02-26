@@ -28,7 +28,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
 )
 from app.frontend.form_handler import (
-    initial_state_form,
     button_error_and_back_to_initial_state_form,
 )
 from app.objects.events import Event

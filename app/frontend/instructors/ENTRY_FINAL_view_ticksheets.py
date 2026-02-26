@@ -58,7 +58,9 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     EDIT_CHECKBOX_STATE,
     EDIT_DROPDOWN_STATE,
     NO_EDIT_STATE,
-    not_editing, clear_qualification_id_in_state, clear_edit_state_of_ticksheet,
+    not_editing,
+    clear_qualification_id_in_state,
+    clear_edit_state_of_ticksheet,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -201,7 +203,9 @@ def post_form_view_ticksheets_for_event_and_group_when_back_or_cancel_pressed(
     if cancel_menu_button.pressed(button_pressed):
         ## DOES NOT SAVE
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
-        return interface.get_new_form_given_function(display_form_view_ticksheets_for_event_and_group)
+        return interface.get_new_form_given_function(
+            display_form_view_ticksheets_for_event_and_group
+        )
 
     elif back_menu_button.pressed(button_pressed):
         return previous_form(interface)
@@ -239,8 +243,9 @@ def post_form_view_ticksheets_for_event_modifies_state_only(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    return interface.get_new_form_given_function(display_form_view_ticksheets_for_event_and_group)
-
+    return interface.get_new_form_given_function(
+        display_form_view_ticksheets_for_event_and_group
+    )
 
 
 def post_form_view_ticksheets_for_event_and_saving_ticksheets(
@@ -248,7 +253,6 @@ def post_form_view_ticksheets_for_event_and_saving_ticksheets(
 ) -> Union[Form, NewForm, File]:
     button_pressed = interface.last_button_pressed()
 
-    
     if is_generic_tick_button_pressed(button_pressed):
         action_if_macro_tick_button_pressed(
             interface=interface, button_pressed=button_pressed
@@ -264,7 +268,9 @@ def post_form_view_ticksheets_for_event_and_saving_ticksheets(
 
     interface.clear()
 
-    return interface.get_new_form_given_function(display_form_view_ticksheets_for_event_and_group)
+    return interface.get_new_form_given_function(
+        display_form_view_ticksheets_for_event_and_group
+    )
 
 
 def previous_form(interface: abstractInterface):

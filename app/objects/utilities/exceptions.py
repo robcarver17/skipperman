@@ -2,8 +2,10 @@
 arg_not_passed = "**Arg_not_passed**"
 missing_data = "**missingdata**"
 
+
 class CacheIsLocked(Exception):
     pass
+
 
 class NoFileUploaded(Exception):
     pass

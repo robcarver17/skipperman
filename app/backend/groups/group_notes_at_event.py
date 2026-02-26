@@ -9,10 +9,10 @@ def update_group_notes_at_event_for_group(
     interface: abstractInterface, event: Event, group: Group, notes: str
 ):
     interface.update(
-        interface.object_store.data_api.data_list_of_group_notes_at_event. update_group_notes_at_event_for_group,
+        interface.object_store.data_api.data_list_of_group_notes_at_event.update_group_notes_at_event_for_group,
         event_id=event.id,
         group_id=group.id,
-        notes=notes
+        notes=notes,
     )
 
 
@@ -20,5 +20,6 @@ def get_dict_of_group_notes_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfNotesForGroupsAtEvent:
     return object_store.get(
-        object_store.data_api.data_list_of_group_notes_at_event.get_dict_of_group_notes_at_event, event_id=event.id)
-
+        object_store.data_api.data_list_of_group_notes_at_event.get_dict_of_group_notes_at_event,
+        event_id=event.id,
+    )

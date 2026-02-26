@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Dict, Callable
+from typing import Dict
 
 import pandas as pd
 
@@ -19,7 +19,13 @@ from app.backend.reporting.allocation_report.allocation_report import (
     get_dict_of_df_for_reporting_allocations_with_flags,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.utilities.transform_data import from_bool_to_str, from_str_to_bool, TRUE, FALSE
+from app.objects.utilities.transform_data import (
+    from_bool_to_str,
+    from_str_to_bool,
+    TRUE,
+    FALSE,
+)
+
 
 def get_group_allocation_report_additional_parameters_from_form_and_save(
     interface: abstractInterface, report_generator: ReportGenerator
@@ -69,9 +75,7 @@ def save_club_boat_asterix_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForAllocationReport
 ):
     asterix = from_bool_to_str(parameters.add_asterix_for_club_boats)
-    interface.set_persistent_value(
-        CLUB_BOAT_ASTERIX, asterix
-    )
+    interface.set_persistent_value(CLUB_BOAT_ASTERIX, asterix)
 
 
 def save_unallocated_parameter(
@@ -85,7 +89,8 @@ def save_unallocated_parameter(
     )
     change_to_include_unallocated_cadets = parameters.include_unallocated_cadets
     interface.set_persistent_value(
-        INCLUDE_UNALLOCATED_CADETS, from_bool_to_str(change_to_include_unallocated_cadets)
+        INCLUDE_UNALLOCATED_CADETS,
+        from_bool_to_str(change_to_include_unallocated_cadets),
     )
 
     if currently_includes_unallocated_cadets != change_to_include_unallocated_cadets:

@@ -3,7 +3,9 @@ from typing import Dict
 
 import pandas as pd
 
-from app.backend.groups.cadets_with_groups_at_event import get_dict_of_cadets_with_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_dict_of_cadets_with_groups_at_event,
+)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.utilities.exceptions import missing_data
 from app.objects.events import Event
@@ -20,17 +22,15 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 from app.backend.groups.list_of_groups import get_list_of_groups
 
 from app.backend.club_boats.cadets_with_club_dinghies_at_event import (
-     get_dict_of_cadets_and_club_dinghies_at_event,
+    get_dict_of_cadets_and_club_dinghies_at_event,
 )
 from app.objects.composed.people_at_event_with_club_dinghies import (
-
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 
 
 def get_specific_parameters_for_allocation_report(
-    object_store: ObjectStore,
-        event: Event
+    object_store: ObjectStore, event: Event
 ) -> SpecificParametersForTypeOfReport:
     list_of_groups = get_list_of_groups(object_store)  ## will be ordered
     list_of_groups.add_unallocated()
@@ -40,7 +40,6 @@ def get_specific_parameters_for_allocation_report(
         report_type="Allocation report",
         group_order=list_of_groups.list_of_names(),
         unallocated_group=unallocated_group.name,
-
     )
 
     return specific_parameters_for_allocation_report
@@ -87,8 +86,6 @@ def add_club_boat_asterix_to_cadet_with_group_on_day(
         cadet_with_group.cadet = cadet_with_group.cadet.add_asterix_to_name()
 
 
-
-
 def get_dict_of_df_for_reporting_allocations_with_flags(
     object_store: ObjectStore,
     event: Event,
@@ -96,7 +93,9 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True,
 ) -> Dict[str, pd.DataFrame]:
-    group_allocations_data = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
+    group_allocations_data = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
+    )
     dict_of_df = {}
     for day in event.days_in_event():
         list_of_cadets_with_groups = (

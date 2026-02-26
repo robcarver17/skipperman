@@ -1,7 +1,10 @@
 from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.composed.volunteers_at_event_with_patrol_boats import ListOfBoatDayVolunteer, BoatDayVolunteer
+from app.objects.composed.volunteers_at_event_with_patrol_boats import (
+    ListOfBoatDayVolunteer,
+    BoatDayVolunteer,
+)
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
@@ -32,18 +35,18 @@ def add_list_of_new_boat_day_volunteer_allocations_to_data_reporting_conflicts(
                 )
             )
 
-
     return messages
 
-def add_new_boat_day_volunteer_allocation(interface: abstractInterface,
-                                                   event: Event,
-                                                   boat_day_volunteer: BoatDayVolunteer):
+
+def add_new_boat_day_volunteer_allocation(
+    interface: abstractInterface, event: Event, boat_day_volunteer: BoatDayVolunteer
+):
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
         event_id=event.id,
         patrol_boat_id=boat_day_volunteer.boat.id,
         day=boat_day_volunteer.day,
-        volunteer_id = boat_day_volunteer.volunteer.id,
+        volunteer_id=boat_day_volunteer.volunteer.id,
     )
 
 
@@ -60,20 +63,20 @@ def add_named_boat_to_event_with_no_allocation(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_unallocated_boat,
         event_id=event.id,
         patrol_boat_id=patrol_boat.id,
-        list_of_days = event.days_in_event()
+        list_of_days=event.days_in_event(),
     )
 
 
 def remove_patrol_boat_and_all_associated_volunteers_from_event(
-        interface: abstractInterface, event: Event, patrol_boat_name: str
+    interface: abstractInterface, event: Event, patrol_boat_name: str
 ):
     patrol_boat = from_patrol_boat_name_to_boat(
         object_store=interface.object_store, boat_name=patrol_boat_name
     )
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.remove_patrol_boat_and_all_associated_volunteers_from_event,
-        event_id = event.id,
-        patrol_boat_id=patrol_boat.id
+        event_id=event.id,
+        patrol_boat_id=patrol_boat.id,
     )
 
 
@@ -82,7 +85,7 @@ def delete_volunteer_from_patrol_boat_on_day_at_event(
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_volunteer_from_patrol_boat_on_day_at_event,
-        event_id = event.id,
-        volunteer_id = volunteer.id,
-        day=day
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        day=day,
     )

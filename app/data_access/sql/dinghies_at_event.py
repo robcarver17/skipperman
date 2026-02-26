@@ -1,16 +1,27 @@
-
 from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
-    ListOfCadetAtEventWithBoatClassAndPartnerWithIds, CadetAtEventWithBoatClassAndPartnerWithIds,
+    ListOfCadetAtEventWithBoatClassAndPartnerWithIds,
+    CadetAtEventWithBoatClassAndPartnerWithIds,
 )
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadets import ListOfCadets
 from app.objects.boat_classes import ListOfBoatClasses
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import DictOfCadetsAndBoatClassAndPartners, \
-    compose_raw_dict_of_cadets_and_boat_classes_and_partners
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
+    DictOfCadetsAndBoatClassAndPartners,
+    compose_raw_dict_of_cadets_and_boat_classes_and_partners,
+)
 from app.objects.day_selectors import Day
-from app.objects.partners import from_partner_id_to_int, from_int_to_partner_id, no_partner_allocated
-from app.objects.utilities.exceptions import arg_not_passed, MissingData, MultipleMatches, missing_data
+from app.objects.partners import (
+    from_partner_id_to_int,
+    from_int_to_partner_id,
+    no_partner_allocated,
+)
+from app.objects.utilities.exceptions import (
+    arg_not_passed,
+    MissingData,
+    MultipleMatches,
+    missing_data,
+)
 from app.objects.utilities.transform_data import make_id_as_int_str
 
 """
@@ -21,32 +32,26 @@ CADETS_AND_DINGHIES_TABLE = "cadets_and_dinghies_table"
 INDEX_NAME_CADETS_AND_DINGHIES_TABLE = "cadets_and_dinghies_table_index"
 
 
-
-class SqlDataListOfCadetAtEventWithDinghies(
-    GenericSqlData
-
-
-):
-    def remove_cadet_from_boats_data_on_day_and_breakup_any_partnerships(self,
-                                                                         event_id: str,
-                                                                         cadet_id: str,
-                                                                         day: Day,
-                                                                         ):
-
+class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
+    def remove_cadet_from_boats_data_on_day_and_breakup_any_partnerships(
+        self,
+        event_id: str,
+        cadet_id: str,
+        day: Day,
+    ):
         self._delete_existing_data_for_cadet(
             event_id=event_id, cadet_id=cadet_id, day=day
         )
         self._breakup_partnerships_with_cadet_on_day(
-            event_id=event_id,partner_cadet_id=cadet_id, day=day
+            event_id=event_id, partner_cadet_id=cadet_id, day=day
         )
 
-
-    def _breakup_partnerships_with_cadet_on_day(self,
-                                                event_id: str,
-                                                partner_cadet_id: str,
-                                                day: Day,
-                                                ):
-
+    def _breakup_partnerships_with_cadet_on_day(
+        self,
+        event_id: str,
+        partner_cadet_id: str,
+        day: Day,
+    ):
         partner_id = no_partner_allocated
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
@@ -61,7 +66,8 @@ class SqlDataListOfCadetAtEventWithDinghies(
                 PARTNER_CADET_ID,
                 int(partner_cadet_id),
                 DAY,
-                day.name)
+                day.name,
+            )
 
             self.cursor.execute(insertion)
             self.conn.commit()
@@ -70,23 +76,25 @@ class SqlDataListOfCadetAtEventWithDinghies(
         finally:
             self.close()
 
-    def update_or_add_boat_classes_and_partner_for_cadet(self,
-        event_id:str,
-        cadet_id:str,
+    def update_or_add_boat_classes_and_partner_for_cadet(
+        self,
+        event_id: str,
+        cadet_id: str,
         day: Day,
         boat_class_id: str,
         sail_number: str,
-        partner_id: str
+        partner_id: str,
     ):
-
-        if self.is_cadet_already_in_data_on_day(event_id=event_id, day=day, cadet_id=cadet_id):
+        if self.is_cadet_already_in_data_on_day(
+            event_id=event_id, day=day, cadet_id=cadet_id
+        ):
             self._update_boat_classes_and_partner_for_cadet_without_checks(
                 event_id=event_id,
                 cadet_id=cadet_id,
                 day=day,
                 boat_class_id=boat_class_id,
                 sail_number=sail_number,
-                partner_id=partner_id
+                partner_id=partner_id,
             )
         else:
             self._add_cadet_to_event_on_day_with_class_and_partner_without_checks(
@@ -95,34 +103,40 @@ class SqlDataListOfCadetAtEventWithDinghies(
                 day=day,
                 boat_class_id=boat_class_id,
                 sail_number=sail_number,
-                partner_id=partner_id
+                partner_id=partner_id,
             )
 
-    def _update_boat_classes_and_partner_for_cadet_without_checks(self, event_id:str,
-                                                                  cadet_id:str,
-                                                                  day: Day,
-                                                                  boat_class_id: str,
-                                                                  sail_number:str,
-                                                                  partner_id: str):
-
+    def _update_boat_classes_and_partner_for_cadet_without_checks(
+        self,
+        event_id: str,
+        cadet_id: str,
+        day: Day,
+        boat_class_id: str,
+        sail_number: str,
+        partner_id: str,
+    ):
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 raise MissingData("Can't update partner for non existent ")
 
-            insertion = "UPDATE %s SET %s=%d,%s=%d,%s='%s'  WHERE %s=%d AND %s=%d AND %s='%s'" % (
-                CADETS_AND_DINGHIES_TABLE,
-                PARTNER_CADET_ID,
-                from_partner_id_to_int(partner_id),
-                DINGHY_ID,
-                int(boat_class_id),
-                SAIL_NUMBER,
-                str(sail_number),
-                EVENT_ID,
-                int(event_id),
-                CADET_ID,
-                int(cadet_id),
-                DAY,
-                day.name)
+            insertion = (
+                "UPDATE %s SET %s=%d,%s=%d,%s='%s'  WHERE %s=%d AND %s=%d AND %s='%s'"
+                % (
+                    CADETS_AND_DINGHIES_TABLE,
+                    PARTNER_CADET_ID,
+                    from_partner_id_to_int(partner_id),
+                    DINGHY_ID,
+                    int(boat_class_id),
+                    SAIL_NUMBER,
+                    str(sail_number),
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
+                    DAY,
+                    day.name,
+                )
+            )
 
             self.cursor.execute(insertion)
             self.conn.commit()
@@ -131,86 +145,95 @@ class SqlDataListOfCadetAtEventWithDinghies(
         finally:
             self.close()
 
-
-
-    def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(self,
-        event_id:str,
-        day: Day,
-        original_cadet_id: str,
-        new_cadet_id: str
+    def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(
+        self, event_id: str, day: Day, original_cadet_id: str, new_cadet_id: str
     ):
-        original_cadet_details = self.get_cadet_at_event_with_boat_class_and_partner_with_ids(
-            event_id=event_id,
-            day=day,
-            cadet_id=original_cadet_id,
-        default=None)
+        original_cadet_details = (
+            self.get_cadet_at_event_with_boat_class_and_partner_with_ids(
+                event_id=event_id, day=day, cadet_id=original_cadet_id, default=None
+            )
+        )
 
         if original_cadet_details is None:
             raise Exception("Can't find original cadet details")
 
-        self._replace_or_add_cadet_cloned_from_partner(original_cadet_details=original_cadet_details,
-                                                       event_id=event_id, day=day, cadet_id_to_replace=new_cadet_id)
+        self._replace_or_add_cadet_cloned_from_partner(
+            original_cadet_details=original_cadet_details,
+            event_id=event_id,
+            day=day,
+            cadet_id_to_replace=new_cadet_id,
+        )
 
         ## update existing just parnter
         self._update_existing_cadet_at_event_with_new_partner_without_checks(
             event_id=event_id,
             cadet_id=original_cadet_id,
             partner_cadet_id=new_cadet_id,
-            day=day
+            day=day,
         )
 
-    def _replace_or_add_cadet_cloned_from_partner(self, original_cadet_details: CadetAtEventWithBoatClassAndPartnerWithIds,
-                                                  event_id: str,
-                                                  day: Day,
-                                                  cadet_id_to_replace: str):
-
-        self._delete_existing_data_for_cadet(event_id=event_id, day=day, cadet_id=cadet_id_to_replace)
+    def _replace_or_add_cadet_cloned_from_partner(
+        self,
+        original_cadet_details: CadetAtEventWithBoatClassAndPartnerWithIds,
+        event_id: str,
+        day: Day,
+        cadet_id_to_replace: str,
+    ):
+        self._delete_existing_data_for_cadet(
+            event_id=event_id, day=day, cadet_id=cadet_id_to_replace
+        )
         self._add_cadet_cloned_from_partner_without_checks(
             original_cadet_details=original_cadet_details,
             event_id=event_id,
             day=day,
-            cadet_id_to_replace=cadet_id_to_replace
+            cadet_id_to_replace=cadet_id_to_replace,
         )
 
-    def _add_cadet_cloned_from_partner_without_checks(self, original_cadet_details: CadetAtEventWithBoatClassAndPartnerWithIds,
-                                                                 event_id: str,
-                                                                 day: Day,
-                                                                 cadet_id_to_replace: str):
-
+    def _add_cadet_cloned_from_partner_without_checks(
+        self,
+        original_cadet_details: CadetAtEventWithBoatClassAndPartnerWithIds,
+        event_id: str,
+        day: Day,
+        cadet_id_to_replace: str,
+    ):
         new_cadet_and_boat = CadetAtEventWithBoatClassAndPartnerWithIds(
             cadet_id=cadet_id_to_replace,
             partner_cadet_id=original_cadet_details.cadet_id,
             boat_class_id=original_cadet_details.boat_class_id,
             sail_number=original_cadet_details.sail_number,
-            day=day
+            day=day,
         )
         # try except etc
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 self.create_table()
 
-            self._insert_cadet_and_boat_without_commit(cadet_and_boat=new_cadet_and_boat, event_id=event_id)
+            self._insert_cadet_and_boat_without_commit(
+                cadet_and_boat=new_cadet_and_boat, event_id=event_id
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing dinghies" % str(e1))
         finally:
             self.close()
 
-
-
-    def _delete_existing_data_for_cadet(self, event_id: str,
-                                        day: Day,
-                                        cadet_id: str):
-
+    def _delete_existing_data_for_cadet(self, event_id: str, day: Day, cadet_id: str):
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 return
 
-            self.cursor.execute("DELETE FROM %s WHERE %s='%s' AND %s=%d AND %s=%d " % (CADETS_AND_DINGHIES_TABLE,
-                                                                 EVENT_ID,
-                                                                 int(event_id),
-                                                                CADET_ID, int(cadet_id),
-                                                                                          DAY, day.name))
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s='%s' AND %s=%d AND %s=%d "
+                % (
+                    CADETS_AND_DINGHIES_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
+                    DAY,
+                    day.name,
+                )
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -218,20 +241,28 @@ class SqlDataListOfCadetAtEventWithDinghies(
         finally:
             self.close()
 
-    def update_cadet_at_event_with_new_partner(self, event_id: str, day: Day, cadet_id: str, partner_cadet_id: str):
-        if self.is_cadet_already_in_data_on_day(event_id=event_id, day=day, cadet_id=cadet_id):
+    def update_cadet_at_event_with_new_partner(
+        self, event_id: str, day: Day, cadet_id: str, partner_cadet_id: str
+    ):
+        if self.is_cadet_already_in_data_on_day(
+            event_id=event_id, day=day, cadet_id=cadet_id
+        ):
             pass
         else:
-            self._add_cadet_to_event_on_day_without_checks(event_id=event_id, day=day, cadet_id=cadet_id)
+            self._add_cadet_to_event_on_day_without_checks(
+                event_id=event_id, day=day, cadet_id=cadet_id
+            )
 
         self._update_existing_cadet_at_event_with_new_partner_without_checks(
             event_id=event_id,
             day=day,
             cadet_id=cadet_id,
-            partner_cadet_id=partner_cadet_id
+            partner_cadet_id=partner_cadet_id,
         )
 
-    def _update_existing_cadet_at_event_with_new_partner_without_checks(self, event_id: str, day: Day, cadet_id: str, partner_cadet_id: str):
+    def _update_existing_cadet_at_event_with_new_partner_without_checks(
+        self, event_id: str, day: Day, cadet_id: str, partner_cadet_id: str
+    ):
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 raise MissingData("Can't update partner for non existent cadet")
@@ -245,7 +276,8 @@ class SqlDataListOfCadetAtEventWithDinghies(
                 CADET_ID,
                 int(cadet_id),
                 DAY,
-                day.name)
+                day.name,
+            )
 
             self.cursor.execute(insertion)
             self.conn.commit()
@@ -254,31 +286,39 @@ class SqlDataListOfCadetAtEventWithDinghies(
         finally:
             self.close()
 
-    def _add_cadet_to_event_on_day_with_class_and_partner_without_checks(self, event_id: str, cadet_id: str, day: Day,
-                                                                         boat_class_id: str,
-                                                                         sail_number: str,
-                                                                         partner_id: str):
+    def _add_cadet_to_event_on_day_with_class_and_partner_without_checks(
+        self,
+        event_id: str,
+        cadet_id: str,
+        day: Day,
+        boat_class_id: str,
+        sail_number: str,
+        partner_id: str,
+    ):
         new_cadet_and_boat = CadetAtEventWithBoatClassAndPartnerWithIds(
             cadet_id=cadet_id,
             day=day,
             partner_cadet_id=partner_id,
             sail_number=sail_number,
-            boat_class_id=boat_class_id
+            boat_class_id=boat_class_id,
         )
         # try except etc
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 self.create_table()
 
-            self._insert_cadet_and_boat_without_commit(cadet_and_boat=new_cadet_and_boat, event_id=event_id)
+            self._insert_cadet_and_boat_without_commit(
+                cadet_and_boat=new_cadet_and_boat, event_id=event_id
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing cadets with dinghies" % str(e1))
         finally:
             self.close()
 
-
-    def _add_cadet_to_event_on_day_without_checks(self, event_id: str, cadet_id: str, day: Day):
+    def _add_cadet_to_event_on_day_without_checks(
+        self, event_id: str, cadet_id: str, day: Day
+    ):
         new_cadet_and_boat = CadetAtEventWithBoatClassAndPartnerWithIds(
             cadet_id=cadet_id,
             day=day,
@@ -288,96 +328,104 @@ class SqlDataListOfCadetAtEventWithDinghies(
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 self.create_table()
 
-            self._insert_cadet_and_boat_without_commit(cadet_and_boat=new_cadet_and_boat, event_id=event_id)
+            self._insert_cadet_and_boat_without_commit(
+                cadet_and_boat=new_cadet_and_boat, event_id=event_id
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing cadets with dinghies" % str(e1))
         finally:
             self.close()
 
-    def is_cadet_already_in_data_on_day(self,  event_id: str,
-                                                                day: Day,
-                                                                cadet_id: str):
+    def is_cadet_already_in_data_on_day(self, event_id: str, day: Day, cadet_id: str):
         existing_cadet = self.get_cadet_at_event_with_boat_class_and_partner_with_ids(
-            event_id=event_id,
-            day=day,
-            cadet_id=cadet_id,
-            default=missing_data
+            event_id=event_id, day=day, cadet_id=cadet_id, default=missing_data
         )
         if existing_cadet is missing_data:
             return False
         else:
             return True
 
-    def get_cadet_at_event_with_boat_class_and_partner_with_ids(self,
-                                                                event_id: str,
-                                                                day: Day,
-                                                                cadet_id: str,
-                                                                default =missing_data
-                                                                ) -> CadetAtEventWithBoatClassAndPartnerWithIds:
-
+    def get_cadet_at_event_with_boat_class_and_partner_with_ids(
+        self, event_id: str, day: Day, cadet_id: str, default=missing_data
+    ) -> CadetAtEventWithBoatClassAndPartnerWithIds:
         if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
             return default
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s FROM %s WHERE %s='%s' AND %s=%d AND %s=%d ''' % (
-                SAIL_NUMBER, PARTNER_CADET_ID, DINGHY_ID,
-                CADETS_AND_DINGHIES_TABLE,
-                EVENT_ID, int(event_id),
-                CADET_ID, int(cadet_id),
-                DAY, day.name
-            ))
+            cursor.execute(
+                """SELECT %s, %s, %s FROM %s WHERE %s='%s' AND %s=%d AND %s=%d """
+                % (
+                    SAIL_NUMBER,
+                    PARTNER_CADET_ID,
+                    DINGHY_ID,
+                    CADETS_AND_DINGHIES_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
+                    DAY,
+                    day.name,
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
-            raise Exception("Error %s when reading cadets and dinghies at event" % str(e1))
+            raise Exception(
+                "Error %s when reading cadets and dinghies at event" % str(e1)
+            )
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             if default is arg_not_passed:
                 return default
 
-        if len(raw_list)>1:
-            error="More than one %s %s %s found in cadets and dinghies table" % (event_id, cadet_id, day)
+        if len(raw_list) > 1:
+            error = "More than one %s %s %s found in cadets and dinghies table" % (
+                event_id,
+                cadet_id,
+                day,
+            )
             raise MultipleMatches(error)
 
         raw_cadet_with_id_at_event = raw_list[0]
         cadet_with_id_at_event = CadetAtEventWithBoatClassAndPartnerWithIds(
-                cadet_id=str(cadet_id
-                             ),
-                day=day,
-                sail_number=make_id_as_int_str(raw_cadet_with_id_at_event[0]),
-                partner_cadet_id=from_int_to_partner_id(raw_cadet_with_id_at_event[1]),
-                boat_class_id=str(raw_cadet_with_id_at_event[2])
-            )
+            cadet_id=str(cadet_id),
+            day=day,
+            sail_number=make_id_as_int_str(raw_cadet_with_id_at_event[0]),
+            partner_cadet_id=from_int_to_partner_id(raw_cadet_with_id_at_event[1]),
+            boat_class_id=str(raw_cadet_with_id_at_event[2]),
+        )
 
         return cadet_with_id_at_event
 
-
-
     def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
-            self, event_id: str
+        self, event_id: str
     ) -> DictOfCadetsAndBoatClassAndPartners:
         raw_data = self.read(event_id)
         new_dict = compose_raw_dict_of_cadets_and_boat_classes_and_partners(
             list_of_cadets=self.list_of_cadets,
             list_of_boat_classes=self.list_of_boat_classes,
-            list_of_cadets_at_event_with_boat_class_and_partners_with_ids=raw_data
+            list_of_cadets_at_event_with_boat_class_and_partners_with_ids=raw_data,
         )
 
         return DictOfCadetsAndBoatClassAndPartners(new_dict)
 
     @property
     def list_of_cadets(self) -> ListOfCadets:
-        list_of_cadets = self.object_store.get(self.object_store.data_api.data_list_of_cadets.read)
+        list_of_cadets = self.object_store.get(
+            self.object_store.data_api.data_list_of_cadets.read
+        )
 
         return list_of_cadets
 
     @property
     def list_of_boat_classes(self) -> ListOfBoatClasses:
-        list_of_boat_classes = self.object_store.get(self.object_store.data_api.data_list_of_dinghies.read)
+        list_of_boat_classes = self.object_store.get(
+            self.object_store.data_api.data_list_of_dinghies.read
+        )
 
         return list_of_boat_classes
 
@@ -387,31 +435,44 @@ class SqlDataListOfCadetAtEventWithDinghies(
 
         try:
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s, %s FROM %s WHERE %s=%d  ''' % (
-                CADET_ID, DAY, SAIL_NUMBER, PARTNER_CADET_ID, DINGHY_ID,
-                CADETS_AND_DINGHIES_TABLE,
-                EVENT_ID, int(event_id)))
+            cursor.execute(
+                """SELECT %s, %s, %s, %s, %s FROM %s WHERE %s=%d  """
+                % (
+                    CADET_ID,
+                    DAY,
+                    SAIL_NUMBER,
+                    PARTNER_CADET_ID,
+                    DINGHY_ID,
+                    CADETS_AND_DINGHIES_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                )
+            )
 
             raw_list = cursor.fetchall()
         except Exception as e1:
-            raise Exception("Error %s when reading cadets and dinghies at event" % str(e1))
+            raise Exception(
+                "Error %s when reading cadets and dinghies at event" % str(e1)
+            )
         finally:
             self.close()
 
         new_list = []
         for raw_cadet_with_id_at_event in raw_list:
             cadet_with_id_at_event = CadetAtEventWithBoatClassAndPartnerWithIds(
-                cadet_id=str(raw_cadet_with_id_at_event[0],
-                             ),
+                cadet_id=str(
+                    raw_cadet_with_id_at_event[0],
+                ),
                 day=Day[raw_cadet_with_id_at_event[1]],
                 sail_number=make_id_as_int_str(raw_cadet_with_id_at_event[2]),
                 partner_cadet_id=from_int_to_partner_id(raw_cadet_with_id_at_event[3]),
-                boat_class_id=str(raw_cadet_with_id_at_event[4])
+                boat_class_id=str(raw_cadet_with_id_at_event[4]),
             )
             new_list.append(cadet_with_id_at_event)
 
-        return ListOfCadetAtEventWithBoatClassAndPartnerWithIds(new_list) ## ignore type warning
-
+        return ListOfCadetAtEventWithBoatClassAndPartnerWithIds(
+            new_list
+        )  ## ignore type warning
 
     def write(
         self,
@@ -422,12 +483,15 @@ class SqlDataListOfCadetAtEventWithDinghies(
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 self.create_table()
 
-            self.cursor.execute("DELETE FROM %s WHERE %s=%d " % (CADETS_AND_DINGHIES_TABLE,
-                                                                 EVENT_ID,
-                                                                 int(event_id)))
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d "
+                % (CADETS_AND_DINGHIES_TABLE, EVENT_ID, int(event_id))
+            )
 
             for cadet_and_boat in people_and_boats:
-                self._insert_cadet_and_boat_without_commit(cadet_and_boat=cadet_and_boat, event_id=event_id)
+                self._insert_cadet_and_boat_without_commit(
+                    cadet_and_boat=cadet_and_boat, event_id=event_id
+                )
 
             self.conn.commit()
         except Exception as e1:
@@ -435,7 +499,9 @@ class SqlDataListOfCadetAtEventWithDinghies(
         finally:
             self.close()
 
-    def _insert_cadet_and_boat_without_commit(self, event_id: str, cadet_and_boat: CadetAtEventWithBoatClassAndPartnerWithIds):
+    def _insert_cadet_and_boat_without_commit(
+        self, event_id: str, cadet_and_boat: CadetAtEventWithBoatClassAndPartnerWithIds
+    ):
         cadet_id = cadet_and_boat.cadet_id
         day = cadet_and_boat.day.name
         sail_number = cadet_and_boat.sail_number
@@ -444,10 +510,25 @@ class SqlDataListOfCadetAtEventWithDinghies(
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?, ?, ?)" % (
             CADETS_AND_DINGHIES_TABLE,
-            EVENT_ID, CADET_ID, DAY, SAIL_NUMBER, PARTNER_CADET_ID, DINGHY_ID)
+            EVENT_ID,
+            CADET_ID,
+            DAY,
+            SAIL_NUMBER,
+            PARTNER_CADET_ID,
+            DINGHY_ID,
+        )
 
-        self.cursor.execute(insertion, (
-            int(event_id), int(cadet_id), day, sail_number, int(partner_cadet_id), int(boat_class_id)))
+        self.cursor.execute(
+            insertion,
+            (
+                int(event_id),
+                int(cadet_id),
+                day,
+                sail_number,
+                int(partner_cadet_id),
+                int(boat_class_id),
+            ),
+        )
 
     def delete_table(self):
         self.conn.execute("DROP TABLE %s" % CADETS_AND_DINGHIES_TABLE)
@@ -455,10 +536,9 @@ class SqlDataListOfCadetAtEventWithDinghies(
         self.close()
 
     def create_table(self):
-
-        #name: str
-        #hidden: bool
-        #id: str = arg_not_passed
+        # name: str
+        # hidden: bool
+        # id: str = arg_not_passed
 
         table_creation_query = """
             CREATE TABLE %s (
@@ -469,19 +549,31 @@ class SqlDataListOfCadetAtEventWithDinghies(
                 %s INTEGER,
                 %s INTEGER
             );
-        """ % (CADETS_AND_DINGHIES_TABLE,
-               EVENT_ID, CADET_ID, DAY, SAIL_NUMBER, PARTNER_CADET_ID, DINGHY_ID)
+        """ % (
+            CADETS_AND_DINGHIES_TABLE,
+            EVENT_ID,
+            CADET_ID,
+            DAY,
+            SAIL_NUMBER,
+            PARTNER_CADET_ID,
+            DINGHY_ID,
+        )
 
-        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s, %s, %s)" % (INDEX_NAME_CADETS_AND_DINGHIES_TABLE,
-                                                                      CADETS_AND_DINGHIES_TABLE,
-                                                                      EVENT_ID, CADET_ID, DAY)
+        index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s, %s, %s)" % (
+            INDEX_NAME_CADETS_AND_DINGHIES_TABLE,
+            CADETS_AND_DINGHIES_TABLE,
+            EVENT_ID,
+            CADET_ID,
+            DAY,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
             self.cursor.execute(index_creation_query)
             self.conn.commit()
         except Exception as e1:
-            raise Exception("Error %s when creating dinghies and cadets table" % str(e1))
+            raise Exception(
+                "Error %s when creating dinghies and cadets table" % str(e1)
+            )
         finally:
             self.close()
-

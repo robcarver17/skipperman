@@ -2,25 +2,32 @@ import datetime
 
 import numpy as np
 
-from app.objects.abstract_objects.abstract_form import textInput, textAreaInput, emailInput, passwordInput, dateInput, \
-    intInput, fileInput, radioInput, dropDownInput, listInput, checkboxInput
+from app.objects.abstract_objects.abstract_form import (
+    textInput,
+    textAreaInput,
+    emailInput,
+    passwordInput,
+    dateInput,
+    intInput,
+    fileInput,
+    radioInput,
+    dropDownInput,
+    listInput,
+    checkboxInput,
+)
 from app.web.html.html_components import Html, HtmlWrapper
 from app.objects.utilities.exceptions import arg_not_passed
 
 
 def form_html_wrapper():
     ## we don't use %s to resolve current url here as we need to return with a single %s inside
-    return HtmlWrapper(
-        '<form method="post"  enctype="multipart/form-data" >%s</form>'
-    )
+    return HtmlWrapper('<form method="post"  enctype="multipart/form-data" >%s</form>')
 
 
 ## Buttons
 
 
-def html_form_text_input(
-    element: textInput
-):
+def html_form_text_input(element: textInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name
@@ -38,10 +45,7 @@ def html_form_text_input(
     )
 
 
-def html_form_text_area_input(
-    element: textAreaInput
-
-):
+def html_form_text_area_input(element: textAreaInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name
@@ -62,9 +66,7 @@ def html_form_text_area_input(
     )
 
 
-def html_form_email_input(
-    element: emailInput
-):
+def html_form_email_input(element: emailInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name
@@ -80,10 +82,7 @@ def html_form_email_input(
     )
 
 
-def html_form_password_input(
-    element: passwordInput
-):
-
+def html_form_password_input(element: passwordInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name
@@ -99,9 +98,7 @@ def html_form_password_input(
     )
 
 
-def html_date_input(
-    element: dateInput
-):
+def html_date_input(element: dateInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name
@@ -130,9 +127,7 @@ def html_as_date(some_html: str) -> datetime.date:
 DEFAULT_LABEL = "__!_!__canbeanythingunlikely to be used"
 
 
-def html_list_input(
-    element_in_line: listInput
-):
+def html_list_input(element_in_line: listInput):
     input_label = element_in_line.input_label
     input_name = element_in_line.input_name
     list_of_options = element_in_line.list_of_options
@@ -159,9 +154,7 @@ def html_list_input(
     )
 
 
-def html_dropdown_input(
-    element: dropDownInput
-):
+def html_dropdown_input(element: dropDownInput):
     default_label = element.default_label
     input_label = element.input_label
     input_name = element.input_name
@@ -199,9 +192,7 @@ def html_single_dropdown_option(
     )
 
 
-def html_radio_input(
-    element: radioInput
-):
+def html_radio_input(element: radioInput):
     default_label = element.default_label
     input_label = element.input_label
     input_name = element.input_name
@@ -244,8 +235,7 @@ def html_single_radio_button(
     )
 
 
-def html_checkbox_input(
-    element_in_line: checkboxInput):
+def html_checkbox_input(element_in_line: checkboxInput):
     input_name = element_in_line.input_name
     dict_of_labels = element_in_line.dict_of_labels
     dict_of_checked = element_in_line.dict_of_checked
@@ -299,9 +289,7 @@ def html_single_checkbox_entry(
     )
 
 
-def html_int_input(
-    element: intInput
-):
+def html_int_input(element: intInput):
     value = element.value
     input_label = element.input_label
     input_name = element.input_name

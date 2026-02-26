@@ -6,6 +6,7 @@ import yaml
 import pytz
 from app.objects.skill_import import from_skills_dict_in_import_config_to_import_config
 
+
 def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
     package_name = path_as_list[0]
     paths_or_files = path_as_list[1:]
@@ -22,6 +23,7 @@ def get_relative_pathname_from_list(path_as_list: List[str]) -> str:
     )
 
     return pathname
+
 
 ## IMPORTANT: In the unlikely event we move the config file, this needs changing
 configuration_file = get_relative_pathname_from_list(

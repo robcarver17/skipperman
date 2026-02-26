@@ -39,7 +39,8 @@ from app.objects.utilities.exceptions import arg_not_passed
 
 from app.web.html.abstract_components_to_html import (
     generic_html_button,
-    get_html_for_simple_element_in_line, get_html_image,
+    get_html_for_simple_element_in_line,
+    get_html_image,
 )
 from app.web.html.html_components import (
     Html,
@@ -109,7 +110,7 @@ def get_html_for_detail_list_of_lines(
 ) -> Html:
     list_of_html_for_each_lines = [
         get_html_for_element_in_form(line, urls_of_interest=urls_of_interest)
-        for line in list_of_lines.list_of_lines ##ignore pycharm warning
+        for line in list_of_lines.list_of_lines  ##ignore pycharm warning
     ]
     all_html = " ".join(list_of_html_for_each_lines)
     detail_wrapper = get_detail_wrapper(
@@ -229,8 +230,6 @@ def get_html_for_detail_table(detail_table: DetailTable) -> Html:
     return detail_wrapper.wrap_around(table_html)
 
 
-
-
 def get_html_for_button(button: Button) -> Html:
     return generic_html_button(
         button_text=get_html_button_text(button.label),
@@ -240,6 +239,7 @@ def get_html_for_button(button: Button) -> Html:
         nav_button=button.nav_button,
         shortcut=button.shortcut,
     )
+
 
 def get_html_button_text(
     button_text, urls_of_interest: UrlsOfInterest = arg_not_passed

@@ -95,5 +95,6 @@ def process_form_when_volunteer_verified(
         )
         return initial_state_form
 
-
-    return interface.get_new_display_form_for_parent_of_function(display_form_add_volunteer)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_add_volunteer
+    )

@@ -5,10 +5,7 @@ from app.objects.utilities.exceptions import missing_data
 
 
 class CsvDataListOfSkipperManUsers(GenericCsvData):
-    def change_password_for_user(self,
-        username: str,
-        new_password_hash: str
-    ):
+    def change_password_for_user(self, username: str, new_password_hash: str):
         list_of_users = self.read()
         user = list_of_users.get_user_given_username(username, default=missing_data)
         if user is missing_data:
@@ -47,10 +44,7 @@ class CsvDataListOfSkipperManUsers(GenericCsvData):
 
         self.write(list_of_users)
 
-
-    def modify_volunteer_for_user(
-            self, username: str, volunteer_id: str
-    ):
+    def modify_volunteer_for_user(self, username: str, volunteer_id: str):
         list_of_users = self.read()
         user = list_of_users.get_user_given_username(username, default=missing_data)
         if user is missing_data:

@@ -5,14 +5,9 @@ from app.backend.reporting.arrangement.arrange_options import (
     ArrangementOptionsAndGroupOrder,
 )
 
-from app.backend.reporting.process_stages.optimise_column_layout import (
-    _generate_list_of_all_possible_indices,
-    _find_best_list_of_indices,
-)
 from app.backend.reporting.process_stages.strings_columns_groups import (
     create_list_of_pages_with_columns_from_list_of_pages_and_arrangement_options,
     ListOfPages,
-    Page,
     ListOfPagesWithColumns,
 )
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
@@ -137,22 +132,3 @@ def _potentially_truncated_list(
     truncated_list = [x for x in full_list if x < group_count]
 
     return truncated_list
-
-
-def get_optimal_size_indices(
-    print_options: PrintOptions,
-    page: Page,
-) -> ArrangementOfColumns:
-    ## want to get ratio as close as possible to h/w ratio which will come from paper size
-    ## generate all possible combinations and test
-    print("optimisting....")
-    group_count = len(page)
-    series_of_possible_indices = _generate_list_of_all_possible_indices(group_count)
-    print("Consider %d options" % len(series_of_possible_indices))
-    best_list_of_indices = _find_best_list_of_indices(
-        series_of_possible_indices=series_of_possible_indices,
-        page=page,
-        print_options=print_options,
-    )
-
-    return ArrangementOfColumns(best_list_of_indices)

@@ -8,31 +8,30 @@ def add_new_patrol_boat(interface: abstractInterface, name_of_entry_to_add: str)
     new_boat = PatrolBoat(name_of_entry_to_add)
     try:
         interface.update(
-        interface.object_store.data_api.data_list_of_patrol_boats.add_new_patrol_boat,
-        new_boat=new_boat
-    )
+            interface.object_store.data_api.data_list_of_patrol_boats.add_new_patrol_boat,
+            new_boat=new_boat,
+        )
     except Exception as e:
-        interface.log_error("Error: %s when adding boat %s" % (str(e), name_of_entry_to_add))
-
+        interface.log_error(
+            "Error: %s when adding boat %s" % (str(e), name_of_entry_to_add)
+        )
 
 
 def modify_patrol_boat(
-        interface: abstractInterface, existing_object: PatrolBoat, new_object: PatrolBoat
+    interface: abstractInterface, existing_object: PatrolBoat, new_object: PatrolBoat
 ):
     try:
         interface.update(
-        interface.object_store.data_api.data_list_of_patrol_boats.modify_patrol_boat,
-        existing_patrol_boat_id = existing_object.id,
-        new_patrol_boat=new_object
-    )
+            interface.object_store.data_api.data_list_of_patrol_boats.modify_patrol_boat,
+            existing_patrol_boat_id=existing_object.id,
+            new_patrol_boat=new_object,
+        )
     except Exception as e:
         interface.log_error("Error: %s when updating boat %s" % (str(e), new_object))
 
 
 def get_list_of_patrol_boats(object_store: ObjectStore) -> ListOfPatrolBoats:
-    return object_store.get(
-        object_store.data_api.data_list_of_patrol_boats.read
-    )
+    return object_store.get(object_store.data_api.data_list_of_patrol_boats.read)
 
 
 def update_list_of_patrol_boats(
@@ -40,7 +39,7 @@ def update_list_of_patrol_boats(
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_patrol_boats.write,
-        list_of_boats = updated_list_of_patrol_boats
+        list_of_boats=updated_list_of_patrol_boats,
     )
 
 

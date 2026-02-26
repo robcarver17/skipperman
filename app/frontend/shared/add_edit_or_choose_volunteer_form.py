@@ -48,7 +48,7 @@ def get_volunteer_from_form(interface: abstractInterface) -> Volunteer:
 
 def add_volunteer_from_form_to_data(interface: abstractInterface) -> Volunteer:
     volunteer = get_volunteer_from_form(interface)
-    
+
     add_new_verified_volunteer(volunteer=volunteer, interface=interface)
     interface.clear()
 

@@ -663,7 +663,6 @@ app/objects/composed/dict_of_previous_cadet_groups.py
 app/objects/composed/dict_of_volunteer_role_targets.py
 app/objects/composed/food_at_event.py
 app/objects/composed/labelled_tick_sheet.py
-app/objects/composed/notes_for_groups.py
 app/objects/composed/notes_with_volunteers.py
 app/objects/composed/people_at_event_with_club_dinghies.py
 app/objects/composed/roles_and_teams.py

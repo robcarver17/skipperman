@@ -3,7 +3,7 @@ from typing import Dict
 from flask_login import UserMixin, current_user
 
 from app.backend.security.list_of_users import get_list_of_users
-from app.data_access.init_data import  object_store
+from app.data_access.init_data import object_store
 from app.objects.users_and_security import (
     SkipperManUser,
     ListOfSkipperManUsers,
@@ -19,7 +19,6 @@ def get_access_group_for_current_user() -> UserGroup:
 
 def get_username():
     return current_user.username
-
 
 
 def authenticated_user():
@@ -70,7 +69,6 @@ def get_all_flask_users():
     return all_flask_users
 
 
-
 def skipperman_user_from_flask_user(flask_user: FlaskUser) -> SkipperManUser:
     return SkipperManUser(
         username=flask_user.username,
@@ -88,4 +86,3 @@ def allow_user_to_make_snapshots():
     access_group = get_access_group_for_current_user()
 
     return access_group in CAN_DO_BACKUPS
-

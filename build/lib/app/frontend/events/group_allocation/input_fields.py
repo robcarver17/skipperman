@@ -31,7 +31,6 @@ from app.objects.partners import NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.utilities.transform_data import make_id_as_int_str
 
 
-
 def get_notes_field(cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets):
     registration_for_cadet_at_event = dict_of_all_event_data.event_data_for_cadet(
         cadet
@@ -71,28 +70,32 @@ def get_input_fields_for_cadet(
     if no_day_set_in_state(interface=interface):
         return get_input_fields_for_cadet_across_days(
             interface=interface,
-            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+            cadet=cadet,
+            dict_of_all_event_data=dict_of_all_event_data,
         )
     day = get_day_from_state_or_none(interface)
 
     return get_input_fields_for_cadet_on_day(
         interface=interface,
-        cadet=cadet, day=day, dict_of_all_event_data=dict_of_all_event_data
+        cadet=cadet,
+        day=day,
+        dict_of_all_event_data=dict_of_all_event_data,
     )
 
 
 def get_input_fields_for_cadet_across_days(
     interface: abstractInterface,
-    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    cadet: Cadet,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> list:
     group_allocation_field = get_dropdown_input_for_group_allocation_across_days(
-        interface=interface,
-        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
     dropdown_input_for_club_boat_allocation = (
         get_dropdown_input_for_club_boat_allocation_across_days(
             interface=interface,
-            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+            cadet=cadet,
+            dict_of_all_event_data=dict_of_all_event_data,
         )
     )
     dropdown_input_for_boat_class_allocation = (
@@ -104,8 +107,7 @@ def get_input_fields_for_cadet_across_days(
         cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
     input_for_partner_allocation = get_input_for_partner_allocation_across_days(
-        interface=interface,
-        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
+        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data
     )
 
     input_fields = [
@@ -121,20 +123,29 @@ def get_input_fields_for_cadet_across_days(
 
 def get_input_fields_for_cadet_on_day(
     interface: abstractInterface,
-    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    cadet: Cadet,
+    day: Day,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> list:
     availability = cadet_availability_at_event_from_dict_of_all_event_data(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
     if not availability.available_on_day(day):
-        return get_input_fields_for_cadet_on_day_when_unavailable(interface=interface, cadet=cadet)
+        return get_input_fields_for_cadet_on_day_when_unavailable(
+            interface=interface, cadet=cadet
+        )
     else:
-        return get_input_fields_for_cadet_on_day_when_available(interface=interface,
-            cadet=cadet, day=day, dict_of_all_event_data=dict_of_all_event_data
+        return get_input_fields_for_cadet_on_day_when_available(
+            interface=interface,
+            cadet=cadet,
+            day=day,
+            dict_of_all_event_data=dict_of_all_event_data,
         )
 
 
-def get_input_fields_for_cadet_on_day_when_unavailable(cadet: Cadet, interface: abstractInterface) -> list:
+def get_input_fields_for_cadet_on_day_when_unavailable(
+    cadet: Cadet, interface: abstractInterface
+) -> list:
     padding = [""] * 4
     if is_admin_or_skipper(interface):
         return [get_make_available_button(cadet)] + padding
@@ -143,17 +154,23 @@ def get_input_fields_for_cadet_on_day_when_unavailable(cadet: Cadet, interface: 
 
 
 def get_input_fields_for_cadet_on_day_when_available(
-        interface: abstractInterface,
-    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    interface: abstractInterface,
+    cadet: Cadet,
+    day: Day,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> list:
     group_allocation_field = get_dropdown_input_for_group_allocation_on_day(
         interface=interface,
-        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
+        cadet=cadet,
+        dict_of_all_event_data=dict_of_all_event_data,
+        day=day,
     )
     dropdown_input_for_club_boat_allocation = (
         get_dropdown_input_for_club_boat_allocation_on_day(
             interface=interface,
-            cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
+            cadet=cadet,
+            dict_of_all_event_data=dict_of_all_event_data,
+            day=day,
         )
     )
     dropdown_input_for_boat_class_allocation = (
@@ -165,7 +182,10 @@ def get_input_fields_for_cadet_on_day_when_available(
         cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
     )
     input_for_partner_allocation = get_input_for_partner_allocation_on_day(
-        interface=interface,        cadet=cadet, dict_of_all_event_data=dict_of_all_event_data, day=day
+        interface=interface,
+        cadet=cadet,
+        dict_of_all_event_data=dict_of_all_event_data,
+        day=day,
     )
 
     input_fields = [
@@ -204,7 +224,9 @@ def get_dropdown_input_for_group_allocation_across_days(
 
 def get_dropdown_input_for_group_allocation_on_day(
     interface: abstractInterface,
-    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    cadet: Cadet,
+    day: Day,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> Union[dropDownInput, str]:
     current_group = get_current_group_name_for_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
@@ -255,7 +277,7 @@ def get_dict_of_all_possible_groups_for_dropdown_input(
 
 
 def get_dropdown_input_for_club_boat_allocation_across_days(
-        interface: abstractInterface,
+    interface: abstractInterface,
     cadet: Cadet,
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> Union[dropDownInput, str]:
@@ -282,7 +304,9 @@ def get_dropdown_input_for_club_boat_allocation_across_days(
 
 def get_dropdown_input_for_club_boat_allocation_on_day(
     interface: abstractInterface,
-    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    cadet: Cadet,
+    day: Day,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> Union[dropDownInput, str]:
     current_club_boat_name = get_current_club_boat_name_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day
@@ -290,13 +314,12 @@ def get_dropdown_input_for_club_boat_allocation_on_day(
 
     if is_admin_or_skipper(interface):
         return get_dropdown_input_field_for_club_dinghies(
-        dict_of_all_event_data=dict_of_all_event_data,
-        cadet=cadet,
-        current_club_boat_name=current_club_boat_name,
-    )
+            dict_of_all_event_data=dict_of_all_event_data,
+            cadet=cadet,
+            current_club_boat_name=current_club_boat_name,
+        )
     else:
         return current_club_boat_name
-
 
 
 def get_dict_of_club_dinghies_for_dropdown(
@@ -430,8 +453,9 @@ def get_sail_number_field(cadet: Cadet, current_number: str) -> textInput:
 
 
 def get_input_for_partner_allocation_across_days(
-        interface: abstractInterface,
-    cadet: Cadet, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    interface: abstractInterface,
+    cadet: Cadet,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> ListOfLines:
     current_partner_name = get_two_handed_partner_as_str_for_dropdown_cadet_across_days(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
@@ -443,7 +467,8 @@ def get_input_for_partner_allocation_across_days(
 
     if is_admin_or_skipper(interface):
         return get_input_for_partner_allocation_across_days_when_consistent(
-            dict_of_all_event_data=dict_of_all_event_data, cadet=cadet,
+            dict_of_all_event_data=dict_of_all_event_data,
+            cadet=cadet,
         )
     else:
         return ListOfLines([current_partner_name])
@@ -476,8 +501,10 @@ def get_input_for_partner_allocation_across_days_when_consistent(
 
 
 def get_input_for_partner_allocation_on_day(
-        interface: abstractInterface,
-    cadet: Cadet, day: Day, dict_of_all_event_data: DictOfAllEventInfoForCadets
+    interface: abstractInterface,
+    cadet: Cadet,
+    day: Day,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
 ) -> ListOfLines:
     current_partner_name = get_two_handed_partner_as_str_for_dropdown_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day

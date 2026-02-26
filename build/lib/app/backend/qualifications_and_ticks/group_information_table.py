@@ -3,7 +3,9 @@ from typing import List, Dict
 
 import pandas as pd
 
-from app.backend.groups.cadets_with_groups_at_event import get_group_allocations_for_event_active_cadets_only
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_group_allocations_for_event_active_cadets_only,
+)
 from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
     name_of_highest_qualification_for_cadet,
 )
@@ -19,17 +21,19 @@ from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.partners import no_partnership_given_partner_cadet
 
+
 def get_group_info_table(
     object_store: ObjectStore, event: Event, group: Group
 ) -> pd.DataFrame:
-
     all_group_allocations_at_event = get_group_allocations_for_event_active_cadets_only(
         object_store=object_store, event=event
     )
     cadets_in_group = all_group_allocations_at_event.cadets_in_group_during_event(group)
     cadets_in_group = cadets_in_group.sort_by_firstname()
 
-    all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
 
     club_boats = get_boat_ownership_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
@@ -106,7 +110,7 @@ def get_boat_ownership_column_for_list_of_cadets(
     group: Group,
     list_of_cadets: ListOfCadets,
 ):
-    #dict_of_club_dinghies = get_dict_of_cadets_and_club_dinghies_at_event(object_store)
+    # dict_of_club_dinghies = get_dict_of_cadets_and_club_dinghies_at_event(object_store)
     return get_generic_column_for_list_of_cadets(
         all_event_info_for_cadets=all_event_info_for_cadets,
         group=group,
@@ -132,7 +136,6 @@ def get_generic_column_for_list_of_cadets(
     ]
 
 
-
 def get_generic_column_for_cadet(
     all_event_info_for_cadets: DictOfAllEventInfoForCadets,
     group: Group,
@@ -150,7 +153,6 @@ def get_generic_column_for_cadet(
     )
 
     return annotate_item(as_dict)
-
 
 
 def get_generic_column_for_cadet_as_dict(
@@ -172,7 +174,6 @@ def get_generic_column_for_cadet_as_dict(
             for day in days_in_group
         ]
     )
-
 
 
 def get_boat_ownership_column_for_cadet_on_day(

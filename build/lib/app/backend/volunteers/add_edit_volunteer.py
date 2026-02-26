@@ -20,20 +20,30 @@ def modify_volunteer(
     updated_volunteer: Volunteer,
 ):
     try:
-        interface.update(interface.object_store.data_api.data_list_of_volunteers.modify_volunteer,
-                         existing_volunteer=existing_volunteer, updated_volunteer=updated_volunteer)
+        interface.update(
+            interface.object_store.data_api.data_list_of_volunteers.modify_volunteer,
+            existing_volunteer=existing_volunteer,
+            updated_volunteer=updated_volunteer,
+        )
     except Exception as e:
-        interface.log_error("Error when modifying %s to %s: %s" % (str(existing_volunteer), str(updated_volunteer), str(e)))
+        interface.log_error(
+            "Error when modifying %s to %s: %s"
+            % (str(existing_volunteer), str(updated_volunteer), str(e))
+        )
 
 
 def add_new_verified_volunteer(interface: abstractInterface, volunteer: Volunteer):
     try:
-        interface.update(interface.object_store.data_api.data_list_of_volunteers.add_new_volunteer, volunteer=volunteer)
+        interface.update(
+            interface.object_store.data_api.data_list_of_volunteers.add_new_volunteer,
+            volunteer=volunteer,
+        )
         interface.log_error("Added volunteer %s" % str(volunteer))
 
     except Exception as e:
-        interface.log_error("Trying to add %s got error: %s " % (str(volunteer), str(e)))
-
+        interface.log_error(
+            "Trying to add %s got error: %s " % (str(volunteer), str(e))
+        )
 
 
 def warning_str_for_similar_volunteers(

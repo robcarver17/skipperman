@@ -1,20 +1,27 @@
 from typing import List
 
 from app.backend.boat_classes.list_of_boat_classes import get_boat_class_from_name
-from app.backend.cadets.list_of_cadets import get_cadet_from_list_of_cadets_given_name_of_cadet
+from app.backend.cadets.list_of_cadets import (
+    get_cadet_from_list_of_cadets_given_name_of_cadet,
+)
 from app.backend.club_boats.list_of_club_dinghies import get_club_dinghy_with_name
 from app.backend.groups.list_of_groups import get_group_with_name
 from app.data_access.store.object_store import ObjectStore
 from app.objects.boat_classes import BoatClass, no_boat_class
 from app.objects.cadets import Cadet
 from app.objects.club_dinghies import ClubDinghy, no_club_dinghy
-from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import \
-    CadetWithDinghySailNumberBoatClassAndPartner, ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay, \
-    CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay
+from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
+    CadetWithDinghySailNumberBoatClassAndPartner,
+    ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+    CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
+)
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
 from app.objects.groups import Group, unallocated_group
-from app.objects.partners import no_partnership_given_partner_cadet_as_str, no_partnership_object_given_str
+from app.objects.partners import (
+    no_partnership_given_partner_cadet_as_str,
+    no_partnership_object_given_str,
+)
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
@@ -76,7 +83,7 @@ def convert_single_input_to_cadet_with_class_and_partner_at_event(
         day=day,
     )
 
-    new_update= CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
+    new_update = CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
         cadet=cadet,
         boat_class=boat_class,
         partner_cadet=two_handed_partner,

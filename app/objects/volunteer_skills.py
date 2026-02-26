@@ -42,23 +42,6 @@ class ListOfSkills(GenericListOfObjectsWithIds):
     def SI_skill(self):
         return self[self.idx_of_skill_with_name(SI_SKILL_NAME)]
 
-    def add(self, new_skill_name: str):
-        try:
-            assert new_skill_name not in self.list_of_names()
-        except:
-            raise Exception(
-                "Can't add duplicate skill name %s already exists" % new_skill_name
-            )
-        skill = Skill(new_skill_name)
-        skill.id = self.next_id()
-
-        self.append(skill)
-
-    def modify(self, existing_skill: Skill, new_skill: Skill):
-        existing_skill_idx = self.idx_of_skill_with_name(existing_skill.name)
-        existing_skill = self[existing_skill_idx]
-        new_skill.id = existing_skill.id
-        self[existing_skill_idx] = new_skill
 
     def skill_with_id(self, skill_id: str, default=arg_not_passed):
         return self.object_with_id(skill_id, default=default)

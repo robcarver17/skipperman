@@ -17,7 +17,6 @@ from app.frontend.shared.buttons import (
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    textInput,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
@@ -160,7 +159,9 @@ def launch_merge_volunteer_process(
     )
     interface.log_error("Merge not implemented")
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_merge_delete_individual_volunteer)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_merge_delete_individual_volunteer
+    )
 
 
 def launch_delete_volunteer_process(interface: abstractInterface):

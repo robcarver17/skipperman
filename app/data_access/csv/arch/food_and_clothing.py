@@ -6,12 +6,13 @@ from app.data_access.csv.arch.resolve_paths_and_filenames import (
     LIST_OF_VOLUNTEERS_WITH_FOOD_AT_EVENT,
 )
 from app.objects.clothing import ListOfCadetsWithClothingAndIdsAtEvent
-from app.objects.food import ListOfCadetsWithFoodRequirementsAtEvent, ListOfVolunteersWithFoodRequirementsAtEvent
+from app.objects.food import (
+    ListOfCadetsWithFoodRequirementsAtEvent,
+    ListOfVolunteersWithFoodRequirementsAtEvent,
+)
 
 
-class CsvDataListOfCadetsWithClothingAtEvent(
-    GenericCsvData
-):
+class CsvDataListOfCadetsWithClothingAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfCadetsWithClothingAndIdsAtEvent:
         return self.read_and_return_object_of_type(
             ListOfCadetsWithClothingAndIdsAtEvent,
@@ -31,9 +32,7 @@ class CsvDataListOfCadetsWithClothingAtEvent(
         )
 
 
-class CsvDataListOfCadetsWithFoodRequirementsAtEvent(
-    GenericCsvData
-):
+class CsvDataListOfCadetsWithFoodRequirementsAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfCadetsWithFoodRequirementsAtEvent:
         return self.read_and_return_object_of_type(
             ListOfCadetsWithFoodRequirementsAtEvent,
@@ -53,9 +52,7 @@ class CsvDataListOfCadetsWithFoodRequirementsAtEvent(
         )
 
 
-class CsvDataListOfVolunteersWithFoodRequirementsAtEvent(
-    GenericCsvData
-):
+class CsvDataListOfVolunteersWithFoodRequirementsAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfVolunteersWithFoodRequirementsAtEvent:
         return self.read_and_return_object_of_type(
             ListOfVolunteersWithFoodRequirementsAtEvent,

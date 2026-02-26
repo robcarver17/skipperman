@@ -30,7 +30,6 @@ from app.frontend.shared.get_or_select_cadet_forms import (
     generic_post_response_to_add_or_select_cadet,
     skip_button,
 )
-from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
@@ -52,9 +51,7 @@ from app.objects.utilities.utils import percentage_of_x_in_y
 def begin_iteration_over_rows_in_temp_cadet_file(
     interface: abstractInterface,
 ) -> Union[Form, NewForm]:
-    set_all_current_members_to_temporary_unconfirmed(
-        interface
-    )
+    set_all_current_members_to_temporary_unconfirmed(interface)
     first_cadet = reset_temp_cadet_file_counter_to_first_value(interface)
 
     return process_current_cadet_in_temp_file(
@@ -121,9 +118,9 @@ def mark_existing_cadet_as_member_and_log(interface: abstractInterface, cadet: C
             % (cadet.name, describe_status(cadet.membership_status))
         )
 
-    
     confirm_cadet_is_member(interface, cadet=cadet)
     interface.clear()
+
 
 def next_iteration_over_rows_in_temp_cadet_file(
     interface: abstractInterface,
@@ -146,7 +143,10 @@ def process_when_cadet_is_in_membership_list_and_not_in_system(
 ) -> Form:
     if is_cadet_age_surprising(cadet):
         ## ignoring, probably not a cadet
-        interface.log_error("Ignoring the import of %s as too old or young to be a cadet - add manually if required" % str(cadet))
+        interface.log_error(
+            "Ignoring the import of %s as too old or young to be a cadet - add manually if required"
+            % str(cadet)
+        )
         return next_iteration_over_rows_in_temp_cadet_file(interface)
 
     return process_when_cadet_to_be_added_from_membership_list(
@@ -157,7 +157,6 @@ def process_when_cadet_is_in_membership_list_and_not_in_system(
 def process_when_cadet_to_be_added_from_membership_list(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
-    
     add_new_verified_cadet(interface=interface, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)
@@ -250,7 +249,6 @@ def post_verify_adding_cadet_from_list_form(
 def confirm_selected_cadet_is_member(
     interface: abstractInterface, existing_cadet: Cadet
 ):
-
     cadet_in_file = get_cadet_from_temp_file_and_state(interface)
     change_or_warn_on_discrepancy(
         interface=interface, cadet_in_file=cadet_in_file, existing_cadet=existing_cadet
@@ -277,7 +275,7 @@ def change_or_warn_on_discrepancy(
                 % (existing_cadet.name, new_date_of_birth)
             )
             modify_cadet_date_of_birth(
-interface=interface,
+                interface=interface,
                 existing_cadet=existing_cadet,
                 new_date_of_birth=new_date_of_birth,
             )
@@ -376,7 +374,6 @@ def finishing_processing_file(interface: abstractInterface) -> NewForm:
 
 
 def set_all_unconfirmed_members_to_lapsed_and_log(interface: abstractInterface):
-    
     lapsed_members = set_all_temporary_unconfirmed_members_to_lapsed_and_return_list(
         interface=interface
     )

@@ -68,13 +68,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
     def list_of_days(self):
         return list(self.keys())
 
-    def delete_boat_class_and_partner_on_day_and_return_deleted_item(self, day: Day):
-        original_item = self.boat_class_and_partner_on_day(day, default=missing_data)
-        if original_item is missing_data:
-            return missing_data
-        self.pop(day)
-
-        return original_item
 
     def allocate_partner_for_cadet_on_day(
         self, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
@@ -164,12 +157,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
             default = no_boat_class_partner_or_sail_number
         return self.get(day, default)
 
-    def remove_boat_and_partner_on_day(self, day: Day):
-        try:
-            self.pop(day)
-        except:
-            pass
-
 
 class ListOfCadetBoatClassAndPartnerAtEventOnDay(
     List[CadetBoatClassAndPartnerAtEventOnDay]
@@ -226,17 +213,24 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
             ]
         )
 
-class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
 
+class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
     def create_fresh_two_handed_partnership(
         self, cadet: Cadet, partner_cadet: Cadet, day: Day
     ):
-        print("Partnering original cadet %s and new cadet %s" % (cadet.name, partner_cadet.name))
-        original_cadet_details = self.boat_classes_and_partner_for_cadet(cadet).boat_class_and_partner_on_day(day)
-        self.update_boat_class_and_sail_number_on_day(cadet=partner_cadet,
-                                                      day=day,
-                                                      boat_class=original_cadet_details.boat_class,
-                                                      sail_number=original_cadet_details.sail_number)
+        print(
+            "Partnering original cadet %s and new cadet %s"
+            % (cadet.name, partner_cadet.name)
+        )
+        original_cadet_details = self.boat_classes_and_partner_for_cadet(
+            cadet
+        ).boat_class_and_partner_on_day(day)
+        self.update_boat_class_and_sail_number_on_day(
+            cadet=partner_cadet,
+            day=day,
+            boat_class=original_cadet_details.boat_class,
+            sail_number=original_cadet_details.sail_number,
+        )
 
         self.allocate_partner_for_cadet_on_day(
             cadet=cadet, cadet_partner=partner_cadet, day=day
@@ -249,7 +243,9 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         self.unallocate_partner_for_cadet_on_day(cadet=cadet, day=day)
         self.unallocate_partner_for_cadet_on_day(cadet=partner_cadet, day=day)
 
-    def unique_sorted_list_of_boat_classes_at_event(self, sorted_list_of_boat_classes: ListOfBoatClasses):
+    def unique_sorted_list_of_boat_classes_at_event(
+        self, sorted_list_of_boat_classes: ListOfBoatClasses
+    ):
         boat_classes_for_cadets = [
             dict_of_days_and_boat_classes.unique_list_of_boat_classes()
             for dict_of_days_and_boat_classes in self.values()
@@ -263,7 +259,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         ]
 
         return ListOfBoatClasses(sorted_list)
-
 
     def unallocate_partner_for_cadet_on_day(self, cadet: Cadet, day: Day):
         self.allocate_partner_for_cadet_on_day(
@@ -290,7 +285,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
             day=day, boat_class=boat_class, sail_number=sail_number
         )
         self[cadet] = boat_class_and_partners
-
 
     def boat_classes_and_partner_for_cadet(
         self, cadet: Cadet, default=arg_not_passed

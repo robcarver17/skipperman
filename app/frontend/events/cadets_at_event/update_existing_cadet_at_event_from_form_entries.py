@@ -1,6 +1,9 @@
 from typing import Tuple
 
-from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import ATTENDANCE, ROW_STATUS
+from app.frontend.events.cadets_at_event.update_existing_cadet_at_event_forms import (
+    ATTENDANCE,
+    ROW_STATUS,
+)
 from app.objects.cadets import Cadet
 
 from app.frontend.forms.form_utils import (
@@ -44,7 +47,9 @@ from app.objects.registration_status import (
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
-def update_cadets_at_event_with_form_or_new_data(interface: abstractInterface, use_form_data: bool = False):
+def update_cadets_at_event_with_form_or_new_data(
+    interface: abstractInterface, use_form_data: bool = False
+):
     event = get_event_from_state(interface)
     cadet = get_current_cadet_at_event(interface)
     new_cadet_at_event = get_new_cadet_at_event_from_mapped_event_and_optionally_form(
@@ -56,7 +61,6 @@ def update_cadets_at_event_with_form_or_new_data(interface: abstractInterface, u
         cadet=cadet,
         new_cadet_at_event=new_cadet_at_event,
     )
-
 
 
 def get_new_cadet_at_event_from_mapped_event_and_optionally_form(
@@ -78,10 +82,12 @@ def get_new_cadet_at_event_from_mapped_event_and_optionally_form(
     )
 
     if use_form_data:
-        new_cadet_at_event_from_mapped_event_data = update_cadet_at_event_with_form_data(
-            interface=interface,
-            event=event,
-            new_cadet_at_event=new_cadet_at_event_from_mapped_event_data,
+        new_cadet_at_event_from_mapped_event_data = (
+            update_cadet_at_event_with_form_data(
+                interface=interface,
+                event=event,
+                new_cadet_at_event=new_cadet_at_event_from_mapped_event_data,
+            )
         )
 
     return new_cadet_at_event_from_mapped_event_data
@@ -99,6 +105,7 @@ def update_cadet_at_event_with_form_data(
 
     return new_cadet_at_event
 
+
 def status_and_attendance_from_form_entries(
     interface: abstractInterface, cadet_at_event: CadetWithIdAtEvent, event: Event
 ) -> Tuple[RegistrationStatus, DaySelector]:
@@ -114,11 +121,12 @@ def status_and_attendance_from_form_entries(
     )
 
     if attendance is MISSING_FROM_FORM or status is MISSING_FROM_FORM:
-        error =             "Contact support: Attendance or status update missing from form for cadet#%s"% cadet_at_event.cadet_id
-        print(error)
-        interface.log_error(
-            error
+        error = (
+            "Contact support: Attendance or status update missing from form for cadet#%s"
+            % cadet_at_event.cadet_id
         )
+        print(error)
+        interface.log_error(error)
         status = cadet_at_event.status
         attendance = cadet_at_event.availability
 
@@ -212,7 +220,7 @@ def update_comparing_new_and_existing_cadet_at_event(
                 event=event,
                 cadet=cadet,
                 row_in_registration_data=new_cadet_at_event.data_in_row,
-                new_health = new_cadet_at_event.health
+                new_health=new_cadet_at_event.health,
             )
             interface.log_error(
                 "Cadet %s was manually registered; imported details from registration form and updated health information. "
@@ -229,7 +237,6 @@ def update_comparing_new_and_existing_cadet_at_event(
                 reg_status_change,
             )
         )
-
 
 
 def update_cadet_at_event_when_status_unchanged_and_availability_has_probably_changed(

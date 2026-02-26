@@ -5,23 +5,24 @@ from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.qualifications import ListOfQualifications, Qualification
 
 
-def add_qualification(
-    interface: abstractInterface,  name_of_entry_to_add: str
-):
+def add_qualification(interface: abstractInterface, name_of_entry_to_add: str):
     new_qualification = Qualification(name_of_entry_to_add)
     interface.update(
         interface.object_store.data_api.data_list_of_qualifications.add_qualification,
-        new_qualification=new_qualification)
+        new_qualification=new_qualification,
+    )
 
 
 def modify_qualification(
-   interface: abstractInterface, existing_object: Qualification, new_object: Qualification
+    interface: abstractInterface,
+    existing_object: Qualification,
+    new_object: Qualification,
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_qualifications.modify_qualification,
-        existing_qualification_id = existing_object.id,
-        updated_qualification = new_object)
-
+        existing_qualification_id=existing_object.id,
+        updated_qualification=new_object,
+    )
 
 
 def get_qualification_given_id(
@@ -45,5 +46,5 @@ def update_list_of_qualifications(
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_qualifications.write,
-        list_of_qualifications=updated_list_of_qualifications
+        list_of_qualifications=updated_list_of_qualifications,
     )

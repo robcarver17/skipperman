@@ -1,6 +1,10 @@
 from typing import List
 
-from app.web.html.url_define import MAIN_HELP_PAGE, get_urls_of_interest, get_action_first_page_url
+from app.web.html.url_define import (
+    MAIN_HELP_PAGE,
+    get_urls_of_interest,
+    get_action_first_page_url,
+)
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
@@ -103,5 +107,3 @@ def can_action_be_seen(action_name: str) -> bool:
 
     group = get_access_group_for_current_user()
     return group in list_of_allowed_groups
-
-

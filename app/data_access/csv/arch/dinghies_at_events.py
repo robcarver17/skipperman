@@ -11,8 +11,6 @@ from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
 
 
 class CsvDataListOfDinghies(GenericCsvData):
-
-
     def read(self) -> ListOfBoatClasses:
         list_of_boats = self.read_and_return_object_of_type(
             ListOfBoatClasses, file_identifier=LIST_OF_DINGHIES_FILE_ID
@@ -24,9 +22,7 @@ class CsvDataListOfDinghies(GenericCsvData):
         self.write_object(list_of_boats, file_identifier=LIST_OF_DINGHIES_FILE_ID)
 
 
-class CsvDataListOfCadetAtEventWithDinghies(
-    GenericCsvData
-):
+class CsvDataListOfCadetAtEventWithDinghies(GenericCsvData):
     def read(self, event_id: str) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         people_and_boats = self.read_and_return_object_of_type(
             ListOfCadetAtEventWithBoatClassAndPartnerWithIds,

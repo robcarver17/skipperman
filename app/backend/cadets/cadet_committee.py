@@ -2,11 +2,13 @@ import datetime
 from typing import List
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.committee import earliest_and_latest_date_to_join_committee, \
-    get_next_year_for_cadet_committee_after_EGM
+from app.objects.committee import (
+    earliest_and_latest_date_to_join_committee,
+    get_next_year_for_cadet_committee_after_EGM,
+)
 from app.objects.membership_status import current_member
 
-from app.backend.cadets.list_of_cadets import  get_sorted_list_of_cadets
+from app.backend.cadets.list_of_cadets import get_sorted_list_of_cadets
 from app.objects.composed.committee import ListOfCadetsOnCommittee
 
 from app.objects.cadets import Cadet, ListOfCadets
@@ -108,17 +110,20 @@ def add_new_cadet_to_committee(
     cadet: Cadet,
     date_term_starts: datetime.date,
     date_term_ends: datetime.date,
-    deselected: bool = False
+    deselected: bool = False,
 ):
     try:
-        interface.update(interface.object_store.data_api.data_list_of_cadets_on_committee.add_new_cadet_to_committee,
-                         cadet_id=cadet.id,
-                         date_term_starts=date_term_starts,
-                         date_term_ends=date_term_ends,
-                         deselected=deselected
-                         )
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_on_committee.add_new_cadet_to_committee,
+            cadet_id=cadet.id,
+            date_term_starts=date_term_starts,
+            date_term_ends=date_term_ends,
+            deselected=deselected,
+        )
     except Exception as e:
-        interface.log_error("Error %s when adding %s to committee" % (str(e), str(cadet)))
+        interface.log_error(
+            "Error %s when adding %s to committee" % (str(e), str(cadet))
+        )
 
 
 def toggle_selection_for_cadet_committee_member(
@@ -127,11 +132,12 @@ def toggle_selection_for_cadet_committee_member(
     try:
         interface.update(
             interface.object_store.data_api.data_list_of_cadets_on_committee.toggle_selection_for_cadet_committee_member,
-            cadet_id=cadet.id
+            cadet_id=cadet.id,
         )
     except Exception as e:
-        interface.log_error("Error %s when modifying cadet committee member %s" % (str(e), str(cadet)))
-
+        interface.log_error(
+            "Error %s when modifying cadet committee member %s" % (str(e), str(cadet))
+        )
 
 
 def delete_cadet_from_committee_data(
@@ -143,15 +149,17 @@ def delete_cadet_from_committee_data(
     try:
         interface.update(
             interface.object_store.data_api.data_list_of_cadets_on_committee.delete_cadet_from_committee_data,
-            cadet_id=cadet.id
+            cadet_id=cadet.id,
         )
         cadet_was_on_commmittee = True
     except MissingData:
         cadet_was_on_commmittee = False
 
     except Exception as e:
-        interface.log_error("Error %s when deleting cadet committee member %s" % (str(e), str(cadet)))
-        return  False
+        interface.log_error(
+            "Error %s when deleting cadet committee member %s" % (str(e), str(cadet))
+        )
+        return False
 
     return cadet_was_on_commmittee
 
@@ -166,9 +174,6 @@ def get_list_of_cadets_currently_serving(object_store: ObjectStore) -> ListOfCad
 def get_list_of_cadets_on_committee(
     object_store: ObjectStore,
 ) -> ListOfCadetsOnCommittee:
-    return object_store.get(object_store.data_api.data_list_of_cadets_on_committee.get_list_of_cadets_on_committee)
-
-
-
-
-
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_on_committee.get_list_of_cadets_on_committee
+    )

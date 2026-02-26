@@ -200,7 +200,6 @@ def get_event_buttons(interface: abstractInterface) -> ButtonBar:
         )
 
 
-
 IMPORT_REGISTRATION_DATA_BUTTON_LABEL = "Import registration data"
 ALLOCATE_CADETS_BUTTON_LABEL = "Sailors, groups and boats"
 EDIT_CADET_REGISTRATION_DATA_IN_EVENT_BUTTON = "Edit sailors registration data"

@@ -76,8 +76,7 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
         day=day,
         new_role=new_role,
         new_group=new_group,
-        allow_replacement=True
-
+        allow_replacement=True,
     )
 
 

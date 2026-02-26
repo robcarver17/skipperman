@@ -33,7 +33,6 @@ class PrintOptions(GenericSkipperManObject):
     drop_group_from_columns: bool = False
     font_size: int = AUTO_FONT_SIZE
 
-
     @property
     def filename(self) -> str:
         return getattr(self, "_filename", "")

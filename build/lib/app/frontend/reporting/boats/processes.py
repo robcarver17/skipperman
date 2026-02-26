@@ -1,4 +1,4 @@
-from typing import Dict, Callable
+from typing import Dict
 
 import pandas as pd
 
@@ -16,7 +16,12 @@ from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.utilities.transform_data import from_bool_to_str, TRUE, FALSE, from_str_to_bool
+from app.objects.utilities.transform_data import (
+    from_bool_to_str,
+    TRUE,
+    FALSE,
+    from_str_to_bool,
+)
 
 DISPLAY_FULL_NAMES = "display_full_names"
 EXCLUDE_LAKE = "exclude_lake"
@@ -68,14 +73,17 @@ def save_additional_parameters_for_boat_report(
 def save_show_full_names_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForBoatReport
 ):
-
-    interface.set_persistent_value(DISPLAY_FULL_NAMES, from_bool_to_str(parameters.display_full_names))
+    interface.set_persistent_value(
+        DISPLAY_FULL_NAMES, from_bool_to_str(parameters.display_full_names)
+    )
 
 
 def save_include_in_out_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForBoatReport
 ):
-    interface.set_persistent_value(INCLUDE_IN_OUT, from_bool_to_str(parameters.in_out_columns))
+    interface.set_persistent_value(
+        INCLUDE_IN_OUT, from_bool_to_str(parameters.in_out_columns)
+    )
 
 
 def save_group_exclusion_parameters(
@@ -90,10 +98,12 @@ def save_group_exclusion_parameters(
     interface.set_persistent_value(
         EXCLUDE_UNALLOCATED, from_bool_to_str(parameters.exclude_unallocated_groups)
     )
-    interface.set_persistent_value(EXCLUDE_LAKE, from_bool_to_str(parameters.exclude_lake_groups))
     interface.set_persistent_value(
-        EXCLUDE_RIVER_TRAIN, from_bool_to_str(parameters.exclude_river_training_groups
-    ))
+        EXCLUDE_LAKE, from_bool_to_str(parameters.exclude_lake_groups)
+    )
+    interface.set_persistent_value(
+        EXCLUDE_RIVER_TRAIN, from_bool_to_str(parameters.exclude_river_training_groups)
+    )
 
     if exclusion_parameters_changed:
         interface.log_error(

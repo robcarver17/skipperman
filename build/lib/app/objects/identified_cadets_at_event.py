@@ -8,7 +8,7 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_idx_of_unique_object_with_attr_in_list,
     index_not_found,
-    get_idx_of_multiple_object_with_multiple_attr_in_list,
+
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.utilities.exceptions import arg_not_passed
@@ -67,18 +67,7 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         count_of_identified_row = self.count_of_rows_identified_as_cadets()
         return count_of_identified_row - count_of_cadet_ids
 
-    def delete_cadet_from_identified_data(self, cadet_id: str):
-        while True:
-            list_of_idx = get_idx_of_multiple_object_with_multiple_attr_in_list(
-                self, dict_of_attributes={"cadet_id": cadet_id}
-            )
-            if len(list_of_idx) == 0:
-                break
-            self.pop(list_of_idx[0])
 
-    def delete_row_from_identified_data(self, row_id: str):
-        item = self.item_given_row_id(row_id)
-        self.remove(item)
 
     def row_does_not_have_identified_cadet_including_skip_cadets(self, row_id: str):
         in_rows = row_id in self.list_of_all_row_ids()
@@ -98,61 +87,7 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
     def list_of_all_row_ids(self):
         return [item.row_id for item in self]
 
-    def add_cadet_and_row_association(self, cadet_id: str, row_id: str):
-        if self.row_id_is_temporary_skip(row_id):
-            return self.replace_temporary_row(cadet_id=cadet_id, row_id=row_id)
 
-        try:
-            assert self.row_does_not_have_identified_cadet_including_skip_cadets(row_id)
-        except:
-            ## will also raise if perma skip
-            raise Exception(
-                "Row ID %s is already mapped to an identified cadet" % row_id
-            )
-
-        self.add_cadet_and_row_association_without_checking(
-            cadet_id=cadet_id, row_id=row_id
-        )
-
-    def add_cadet_and_row_association_without_checking(
-        self, cadet_id: str, row_id: str
-    ):
-        self.append(IdentifiedCadetAtEvent(row_id=row_id, cadet_id=cadet_id))
-
-    def add_row_with_permanent_skip_cadet(self, row_id: str):
-        if self.row_id_is_temporary_skip(row_id):
-            return self.replace_temporary_row(
-                cadet_id=permanent_skip_cadet_id, row_id=row_id
-            )
-
-        try:
-            assert self.row_does_not_have_identified_cadet_including_skip_cadets(row_id)
-        except:
-            ## will raise if temporary or permanent
-            raise Exception("Row ID can't appear more than once")
-
-        self.append(
-            IdentifiedCadetAtEvent.create_row_for_permanent_skip_cadet(row_id=row_id)
-        )
-
-    def add_row_with_temporary_skip_cadet(self, row_id: str):
-        if self.row_id_is_temporary_skip(row_id):
-            return
-
-        try:
-            assert self.row_does_not_have_identified_cadet_including_skip_cadets(row_id)
-        except:
-            raise Exception("Row ID can't appear more than once")
-
-        self.append(
-            IdentifiedCadetAtEvent.create_row_for_temporary_skip_cadet(row_id=row_id)
-        )
-
-    def replace_temporary_row(self, row_id: str, cadet_id: str):
-        self.delete_row_from_identified_data(row_id)
-        self.add_cadet_and_row_association_without_checking(
-            cadet_id=cadet_id, row_id=row_id
-        )
 
     def row_id_is_temporary_skip(self, row_id: str):
         item = self.item_given_row_id(row_id, default_when_missing=missing_data)

@@ -1,9 +1,14 @@
 from typing import Union
 
-from app.data_access.init_data import  object_store
+from app.data_access.init_data import object_store
 from app.frontend.form_handler import FormHandler
 from app.frontend.menu_define import get_functions_mapping_for_action_name
-from app.objects.abstract_objects.abstract_form import File, Form, form_with_message, NewFormWithRedirectInfo
+from app.objects.abstract_objects.abstract_form import (
+    File,
+    Form,
+    form_with_message,
+    NewFormWithRedirectInfo,
+)
 from app.objects.utilities.exceptions import MissingMethod
 from app.web.flask.flask_interface import flaskInterface
 from app.web.flask.security import get_access_group_for_current_user
@@ -18,16 +23,14 @@ from app.web.html.url_define import ACTION_PREFIX, get_urls_of_interest
 from flask import send_file, Response, redirect, url_for
 
 
-def generate_action_page_html(action_name: str,
-                              form_name: str,
-                              args_passed: dict) -> Union[Html, Response]:
-
+def generate_action_page_html(
+    action_name: str, form_name: str, args_passed: dict
+) -> Union[Html, Response]:
     print("getting html for %s %s %s" % (action_name, form_name, str(args_passed)))
 
-
-    abstract_form_for_action = get_abstract_form_for_specific_action(action_name=action_name,
-                                                                     form_name=form_name,
-                                                                     args_passed=args_passed)
+    abstract_form_for_action = get_abstract_form_for_specific_action(
+        action_name=action_name, form_name=form_name, args_passed=args_passed
+    )
 
     if type(abstract_form_for_action) is File:
         print("Generating file %s" % abstract_form_for_action.path_and_filename)
@@ -37,7 +40,9 @@ def generate_action_page_html(action_name: str,
         return redirect_from_info(abstract_form_for_action)
     elif type(abstract_form_for_action) is Form:
         print("Form")
-        return generate_action_page_html_from_abstract_form(abstract_form_for_action, action_name=action_name)
+        return generate_action_page_html_from_abstract_form(
+            abstract_form_for_action, action_name=action_name
+        )
     else:
         raise Exception("type %s not recognised" % type(abstract_form_for_action))
 
@@ -53,15 +58,13 @@ def from_abstract_to_laid_out_html(
     return html_code_for_action
 
 
-def get_abstract_form_for_specific_action(action_name: str,
-                                          form_name: str,
-                              args_passed:dict
-                                          ) -> Union[File, Form, NewFormWithRedirectInfo]:
-
+def get_abstract_form_for_specific_action(
+    action_name: str, form_name: str, args_passed: dict
+) -> Union[File, Form, NewFormWithRedirectInfo]:
     try:
-        form_handler = get_form_handler_for_specific_action(action_name=action_name,
-                                                            form_name=form_name,
-                                                            args_passed=args_passed)
+        form_handler = get_form_handler_for_specific_action(
+            action_name=action_name, form_name=form_name, args_passed=args_passed
+        )
     except MissingMethod:
         ## missing action
         return form_with_message(
@@ -74,9 +77,9 @@ def get_abstract_form_for_specific_action(action_name: str,
     return abstract_form_for_action
 
 
-
-def get_form_handler_for_specific_action(action_name: str, form_name: str,
-                              args_passed:dict) -> FormHandler:
+def get_form_handler_for_specific_action(
+    action_name: str, form_name: str, args_passed: dict
+) -> FormHandler:
     form_mapping = get_functions_mapping_for_action_name(action_name)
     group = get_access_group_for_current_user()
     interface = flaskInterface(
@@ -90,12 +93,21 @@ def get_form_handler_for_specific_action(action_name: str, form_name: str,
 
     return FormHandler(interface)
 
-def redirect_from_info(redirect_info: NewFormWithRedirectInfo) -> Response:
-    return redirect(url_for(ACTION_PREFIX,action_option=redirect_info.action_name,
-                                                    form_name=redirect_info.new_form_name,
-                            **redirect_info.args_passed))
 
-def generate_action_page_html_from_abstract_form(abstract_form_for_action: Form, action_name:str) -> Html:
+def redirect_from_info(redirect_info: NewFormWithRedirectInfo) -> Response:
+    return redirect(
+        url_for(
+            ACTION_PREFIX,
+            action_option=redirect_info.action_name,
+            form_name=redirect_info.new_form_name,
+            **redirect_info.args_passed,
+        )
+    )
+
+
+def generate_action_page_html_from_abstract_form(
+    abstract_form_for_action: Form, action_name: str
+) -> Html:
     html_code_for_action = from_abstract_to_laid_out_html(
         abstract_form_for_action=abstract_form_for_action, action_name=action_name
     )

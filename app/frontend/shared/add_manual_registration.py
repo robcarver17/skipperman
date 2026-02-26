@@ -77,10 +77,7 @@ def add_cadet_to_event_and_return_form(
 ) -> NewForm:
     event = get_event_from_state(interface)
 
-    
-    add_new_cadet_manually_to_event(
-        interface=interface, event=event, new_cadet=cadet
-    )
+    add_new_cadet_manually_to_event(interface=interface, event=event, new_cadet=cadet)
 
     interface.clear()
 

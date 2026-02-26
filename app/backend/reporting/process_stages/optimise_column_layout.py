@@ -1,12 +1,6 @@
-from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.backend.reporting.arrangement.arrangement_order import ArrangementOfColumns
 from dataclasses import dataclass
 from typing import List
-
-from app.backend.reporting.process_stages.strings_columns_groups import (
-    Page,
-    create_columns_from_page,
-)
 
 
 @dataclass()
@@ -83,47 +77,3 @@ def generate_indices_given_passed_list(
 
 def remaining_from_passed_list_given_group(passed_list: list, group: list):
     return list(set(passed_list).difference(group))
-
-
-def _find_best_list_of_indices(
-    series_of_possible_indices: List[ArrangementOfColumns],
-    page: Page,
-    print_options: PrintOptions,
-) -> ArrangementOfColumns:
-    tracking_errors = [
-        _tracking_error_for_list_of_indices(
-            page=page,
-            order_list_of_indices=order_list_of_indices,
-            print_options=print_options,
-        )
-        for order_list_of_indices in series_of_possible_indices
-    ]
-
-    min_tracking_error = min(tracking_errors)
-    index_min_tracking_error = tracking_errors.index(min_tracking_error)
-
-    return series_of_possible_indices[index_min_tracking_error]
-
-
-def _tracking_error_for_list_of_indices(
-    order_list_of_indices: ArrangementOfColumns,
-    page: Page,
-    print_options: PrintOptions,
-) -> float:
-    list_of_columns = create_columns_from_page(
-        page=page,
-        arrangement_of_columns=order_list_of_indices,
-    )
-
-    equalise_columns = print_options.equalise_column_width
-    height_of_title_in_characters = print_options.height_of_title_in_characters
-    optimal_ratio = print_options.ratio_of_width_to_height()
-
-    actual_ratio = list_of_columns.ratio_of_required_width_to_height(
-        equalise_columns=equalise_columns,
-        height_of_title_in_characters=height_of_title_in_characters,
-    )
-
-    tracking = abs(optimal_ratio - actual_ratio)
-    print(tracking)
-    return tracking

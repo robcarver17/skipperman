@@ -3,7 +3,9 @@ from typing import List
 from app.backend.groups.group_notes_at_event import (
     update_group_notes_at_event_for_group,
 )
-from app.backend.groups.cadets_with_groups_at_event import get_sorted_list_of_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_sorted_list_of_groups_at_event,
+)
 from app.backend.rota.volunteer_summary_of_instructors import (
     get_summary_table_of_instructors_and_groups_for_event,
     get_group_notes_field_value,
@@ -37,7 +39,6 @@ def get_volunteer_targets_table_and_save_button(
     interface: abstractInterface,
     event: Event,
 ) -> DetailListOfLines:
-    return DetailListOfLines(ListOfLines(["CONTACT ADMIN: Disabled"]), name="Role numbers and targets")
 
     table = get_volunteer_targets_table(event=event, interface=interface)
     elements_to_return = [table, save_targets_button]

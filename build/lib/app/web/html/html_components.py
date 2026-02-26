@@ -101,8 +101,10 @@ def rel_stylesheet_link(url: str):
 empty_html = Html("")
 horizontal_line = Html("<hr />")
 
+
 def html_for_horizontal_line(element_not_used: HorizontalLine):
     return horizontal_line
+
 
 ## Entire document
 def html_doc_wrapper(head_material: Html) -> HtmlWrapper:

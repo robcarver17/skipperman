@@ -73,8 +73,6 @@ def post_form_view_for_food_requirements(
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-
-    
     if save_menu_button.pressed(last_button_pressed):
         save_food_data_in_form(interface)
         interface.clear()
@@ -85,7 +83,9 @@ def post_form_view_for_food_requirements(
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    return interface.get_new_form_given_function(display_form_view_for_food_requirements)
+    return interface.get_new_form_given_function(
+        display_form_view_for_food_requirements
+    )
 
 
 def previous_form(interface: abstractInterface):

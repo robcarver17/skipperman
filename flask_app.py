@@ -157,15 +157,17 @@ def logout():
 
 
 @app.route("/%s/<action_option>/<form_name>" % ACTION_PREFIX, methods=["GET", "POST"])
-def action(action_option:str, form_name: str):
+def action(action_option: str, form_name: str):
     if not authenticated_user():
         print("USER NOT LOGGED IN")
         return generate_menu_page_html()
 
     args_passed = request.args
-    args_passed= from_multidict_to_dict(args_passed)
+    args_passed = from_multidict_to_dict(args_passed)
 
-    return generate_action_page_html(action_name=action_option, form_name=form_name, args_passed=args_passed)
+    return generate_action_page_html(
+        action_name=action_option, form_name=form_name, args_passed=args_passed
+    )
 
 
 @app.route(MAIN_MENU_URL, methods=["GET", "POST"])

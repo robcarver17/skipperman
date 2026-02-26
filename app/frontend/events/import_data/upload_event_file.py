@@ -22,7 +22,7 @@ from app.frontend.form_handler import (
 )
 from app.backend.wild_apricot.load_wa_file import (
     save_staged_file_of_raw_event_upload_with_event_id,
-    check_local_file_is_valid_wa_file
+    check_local_file_is_valid_wa_file,
 )
 from app.backend.file_handling import (
     get_file_from_interface_verify_extension_and_return_file_object,
@@ -82,7 +82,9 @@ def respond_to_uploaded_file(interface: abstractInterface) -> Union[Form, NewFor
 
     interface.log_error("Uploaded file successfully")
 
-    return interface.get_new_display_form_for_parent_of_function(display_form_upload_event_file)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_form_upload_event_file
+    )
 
 
 def verify_uploaded_wa_file_and_save_as_staged_file(interface: abstractInterface):

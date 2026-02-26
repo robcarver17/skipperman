@@ -1,9 +1,10 @@
-from typing import  Tuple
+from typing import Tuple
 
 import pandas as pd
 
-from app.backend.registration_data.volunteer_registration_data import \
-    get_attendance_matrix_for_list_of_volunteers_at_event
+from app.backend.registration_data.volunteer_registration_data import (
+    get_attendance_matrix_for_list_of_volunteers_at_event,
+)
 from app.backend.reporting.boat_report.boat_report_parameters import *
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
@@ -12,10 +13,13 @@ from app.objects.cadet_attendance import DictOfDaySelectors
 from app.objects.cadets import Cadet, ListOfCadets
 
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
-from app.objects.composed.people_at_event_with_club_dinghies import DictOfPeopleAndClubDinghiesAtEvent
+from app.objects.composed.people_at_event_with_club_dinghies import (
+    DictOfPeopleAndClubDinghiesAtEvent,
+)
 from app.objects.composed.volunteer_roles import RoleWithSkills
-from app.objects.composed.volunteer_with_group_and_role_at_event import \
-    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups
+from app.objects.composed.volunteer_with_group_and_role_at_event import (
+    DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+)
 from app.objects.groups import (
     lake_training_group_location,
     river_training_group_location,
@@ -26,18 +30,33 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import Group
 from app.objects.volunteers import ListOfVolunteers, Volunteer
-from app.backend.club_boats.volunteer_with_club_dinghies import get_dict_of_volunteers_and_club_dinghies_at_event
-from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import get_dict_of_volunteers_with_roles_and_groups_at_event
+from app.backend.club_boats.volunteer_with_club_dinghies import (
+    get_dict_of_volunteers_and_club_dinghies_at_event,
+)
+from app.backend.volunteers.volunteers_with_roles_and_groups_at_event import (
+    get_dict_of_volunteers_with_roles_and_groups_at_event,
+)
+
 
 def get_dict_of_df_for_boat_report(
     object_store: ObjectStore,
     event: Event,
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> Dict[str, pd.DataFrame]:
-    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    volunteers_at_event_availability = get_attendance_matrix_for_list_of_volunteers_at_event(object_store=object_store, event=event)
-    volunteers_with_club_boats_at_event = get_dict_of_volunteers_and_club_dinghies_at_event(object_store, event=event)
-    roles_and_groups = get_dict_of_volunteers_with_roles_and_groups_at_event(object_store, event=event)
+    dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
+    volunteers_at_event_availability = (
+        get_attendance_matrix_for_list_of_volunteers_at_event(
+            object_store=object_store, event=event
+        )
+    )
+    volunteers_with_club_boats_at_event = (
+        get_dict_of_volunteers_and_club_dinghies_at_event(object_store, event=event)
+    )
+    roles_and_groups = get_dict_of_volunteers_with_roles_and_groups_at_event(
+        object_store, event=event
+    )
 
     days_in_event = event.days_in_event()
 
@@ -61,9 +80,9 @@ def get_dict_of_df_for_boat_report(
 def get_df_for_day_of_boat_report(
     day: Day,
     dict_of_all_event_info_for_cadets: DictOfAllEventInfoForCadets,
-        volunteers_at_event_availability: DictOfDaySelectors,
+    volunteers_at_event_availability: DictOfDaySelectors,
     volunteers_with_club_boats_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> pd.DataFrame:
     df_cadets = get_df_for_day_of_boat_report_of_cadets(
@@ -113,23 +132,23 @@ def get_df_for_day_of_boat_report_of_cadets(
     if len(df) == 0:
         return pd.DataFrame()
 
-    df = df.sort_values(by=[ SAIL_NUMBER])
+    df = df.sort_values(by=[SAIL_NUMBER])
 
     return df
 
 
 def get_df_for_day_of_boat_report_of_volunteers(
     day: Day,
-        volunteers_at_event_availability: DictOfDaySelectors,
+    volunteers_at_event_availability: DictOfDaySelectors,
     volunteers_with_club_boats_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-        additional_parameters: AdditionalParametersForBoatReport,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    additional_parameters: AdditionalParametersForBoatReport,
 ) -> pd.DataFrame:
     volunteers_at_event_on_day_with_club_boats = (
         list_of_active_volunteers_on_day_with_club_dinghies(
             day=day,
             volunteers_at_event_availability=volunteers_at_event_availability,
-            volunteers_with_club_boats_at_event=volunteers_with_club_boats_at_event
+            volunteers_with_club_boats_at_event=volunteers_with_club_boats_at_event,
         )
     )
     list_of_rows = [
@@ -174,7 +193,7 @@ def list_of_active_cadets_on_day(
 
 def list_of_active_volunteers_on_day_with_club_dinghies(
     day: Day,
-        volunteers_at_event_availability: DictOfDaySelectors,
+    volunteers_at_event_availability: DictOfDaySelectors,
     volunteers_with_club_boats_at_event: DictOfPeopleAndClubDinghiesAtEvent,
 ) -> ListOfVolunteers:
     ## ca'nt check availability, so assume okay
@@ -194,15 +213,17 @@ def list_of_active_volunteers_on_day_with_club_dinghies(
 
 def volunteer_active_and_has_club_boat_on_day(
     day: Day,
-        volunteers_at_event_availability: DictOfDaySelectors,
+    volunteers_at_event_availability: DictOfDaySelectors,
     volunteers_with_club_boats_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     volunteer: Volunteer,
 ):
     return volunteers_with_club_boats_at_event.club_dinghys_for_person(
         volunteer
-    ).has_any_dinghy_on_specific_day(
+    ).has_any_dinghy_on_specific_day(day) and volunteers_at_event_availability[
+        volunteer
+    ].available_on_day(
         day
-    ) and volunteers_at_event_availability[volunteer].available_on_day(day)
+    )
 
 
 def row_of_data_for_cadet(
@@ -260,12 +281,11 @@ def row_of_data_for_cadet(
     return row_for_cadet
 
 
-
 def row_of_data_for_volunteer(
     volunteer: Volunteer,
     day: Day,
     volunteers_with_club_boats_at_event: DictOfPeopleAndClubDinghiesAtEvent,
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> pd.Series:
     group_name = get_group_for_volunteer(
@@ -283,9 +303,7 @@ def row_of_data_for_volunteer(
         ).name
     )
     boat_class = (
-        volunteers_with_club_boats_at_event.club_dinghys_for_person(
-            volunteer
-        )
+        volunteers_with_club_boats_at_event.club_dinghys_for_person(volunteer)
         .dinghy_on_day(day)
         .name
     )
@@ -297,8 +315,6 @@ def row_of_data_for_volunteer(
             GROUP: group_name,
             BOAT_CLASS: boat_class,
             SAIL_NUMBER: sail_number,
-
-
         }
     )
 
@@ -435,12 +451,14 @@ def get_group_for_cadet(
 
 
 def is_volunteer_valid_for_report(
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-        volunteer: Volunteer,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteer: Volunteer,
     day: Day,
     additional_parameters: AdditionalParametersForBoatReport,
 ) -> bool:
-    group = get_group_for_volunteer(roles_and_groups=roles_and_groups, volunteer=volunteer, day=day)
+    group = get_group_for_volunteer(
+        roles_and_groups=roles_and_groups, volunteer=volunteer, day=day
+    )
 
     return is_group_valid_for_report(
         group=group, additional_parameters=additional_parameters
@@ -448,16 +466,24 @@ def is_volunteer_valid_for_report(
 
 
 def get_group_for_volunteer(
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-        volunteer: Volunteer,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteer: Volunteer,
     day: Day,
 ) -> Group:
-    return roles_and_groups.days_and_roles_for_volunteer(volunteer).role_and_group_on_day(day).group
+    return (
+        roles_and_groups.days_and_roles_for_volunteer(volunteer)
+        .role_and_group_on_day(day)
+        .group
+    )
 
 
 def get_role_for_volunteer(
-        roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
-        volunteer: Volunteer,
+    roles_and_groups: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
+    volunteer: Volunteer,
     day: Day,
 ) -> RoleWithSkills:
-    return roles_and_groups.days_and_roles_for_volunteer(volunteer).role_and_group_on_day(day).role
+    return (
+        roles_and_groups.days_and_roles_for_volunteer(volunteer)
+        .role_and_group_on_day(day)
+        .role
+    )

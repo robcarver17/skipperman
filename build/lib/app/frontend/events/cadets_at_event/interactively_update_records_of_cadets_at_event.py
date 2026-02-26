@@ -21,7 +21,8 @@ from app.backend.registration_data.identified_cadets_at_event import (
 
 from app.frontend.events.cadets_at_event.track_cadet_id_in_state_when_importing import (
     get_and_save_next_cadet_in_event_data,
-    clear_cadet_id_at_event, get_current_cadet_at_event,
+    clear_cadet_id_at_event,
+    get_current_cadet_at_event,
 )
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -66,11 +67,11 @@ def start_process_of_interactively_update_cadets_at_event(
 
     return process_next_cadet_at_event(interface)
 
+
 def post_process_of_interactively_update_cadets_at_event(
     interface: abstractInterface,
 ):
     raise Exception("Should not be called")
-
 
 
 def process_next_cadet_at_event(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -196,7 +197,9 @@ def process_update_to_existing_cadet_at_event(
         print("Cadet %s unchanged between existing and registration data" % str(cadet))
         return process_next_cadet_at_event(interface)
     else:
-        return interface.get_new_form_given_function(display_form_interactively_update_cadets_at_event)
+        return interface.get_new_form_given_function(
+            display_form_interactively_update_cadets_at_event
+        )
 
 
 def display_form_interactively_update_cadets_at_event(
@@ -253,8 +256,10 @@ def post_form_interactively_update_cadets_at_event(
 
 
 def process_update_to_cadet_new_to_event(
-    interface: abstractInterface, event: Event, cadet: Cadet,
-raise_error_on_duplicate=True
+    interface: abstractInterface,
+    event: Event,
+    cadet: Cadet,
+    raise_error_on_duplicate=True,
 ) -> Form:
     print("New row in master data for cadet with id %s" % cadet.id)
 
@@ -265,8 +270,9 @@ raise_error_on_duplicate=True
             event=event,
             raise_error_on_duplicate=raise_error_on_duplicate,
         )
-        process_update_to_cadet_new_to_event_with_registration_row(interface=interface, event=event,
-                                                                   cadet=cadet, relevant_row=relevant_row)
+        process_update_to_cadet_new_to_event_with_registration_row(
+            interface=interface, event=event, cadet=cadet, relevant_row=relevant_row
+        )
 
     except DuplicateCadets:
         print("Duplicate cadet %s, trying again with 1st row only" % cadet)
@@ -285,9 +291,8 @@ raise_error_on_duplicate=True
             interface=interface,
             event=event,
             cadet=cadet,
-            raise_error_on_duplicate = False
+            raise_error_on_duplicate=False,
         )
-
 
     except NoMoreData:
         print("Vanished cadet %s" % cadet)
@@ -303,15 +308,15 @@ raise_error_on_duplicate=True
             log_as_warning=True,
         )
 
-
     return process_next_cadet_at_event(interface)
 
 
 def process_update_to_cadet_new_to_event_with_registration_row(
-    interface: abstractInterface, event: Event, cadet: Cadet, relevant_row: RowInRegistrationData
+    interface: abstractInterface,
+    event: Event,
+    cadet: Cadet,
+    relevant_row: RowInRegistrationData,
 ):
-
-    
     add_new_cadet_to_event_from_row_in_registration_data(
         interface=interface,
         event=event,
@@ -321,7 +326,6 @@ def process_update_to_cadet_new_to_event_with_registration_row(
     interface.clear()
 
     print("Added %s with reg row %s" % (cadet, relevant_row))
-
 
 
 def finished_looping_return_to_controller(interface: abstractInterface) -> NewForm:

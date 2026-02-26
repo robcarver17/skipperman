@@ -39,7 +39,6 @@ from app.frontend.shared.club_boats_instructors import (
     handle_club_dinghy_instructor_allocation_button_pressed,
 )
 from app.frontend.shared.warnings_table import (
-    save_warnings_from_table,
     is_save_warnings_button_pressed,
 )
 
@@ -64,11 +63,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
     top_button_bar = get_top_button_bar_for_patrol_boats(interface)
 
     if not is_admin_or_skipper(interface):
-        return Form(
-            ListOfLines(
-                [top_button_bar]
-            )
-        )
+        return Form(ListOfLines([top_button_bar]))
 
     title = Heading(
         "Patrol boat allocation for event %s" % str(event), centred=True, size=4
@@ -112,15 +107,15 @@ def post_form_view_for_patrol_boat_allocation(
         ## ignore
         interface.log_error("User not permitted to change patrol boats")
         return interface.get_new_form_given_function(
-        display_form_view_for_patrol_boat_allocation
-    )
+            display_form_view_for_patrol_boat_allocation
+        )
 
     ## New form
     if access_copy_menu_button.pressed(last_button_pressed):
         return interface.get_new_form_given_function(display_form_patrol_boat_copy_menu)
 
     ## remaining options do something and then return current form
-    
+
     if save_menu_button.pressed(last_button_pressed):
         pass  # already done
 
@@ -172,8 +167,7 @@ def previous_form(interface: abstractInterface):
 def create_quick_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         patrol_boat_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     interface.log_error(

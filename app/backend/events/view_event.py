@@ -1,7 +1,8 @@
 import pandas as pd
 
 from app.backend.registration_data.cadet_registration_data import (
-    get_dict_of_cadets_with_registration_data, get_list_of_active_cadets_at_event
+    get_dict_of_cadets_with_registration_data,
+    get_list_of_active_cadets_at_event,
 )
 from app.backend.registration_data.raw_mapped_registration_data import (
     get_raw_mapped_registration_data,
@@ -15,8 +16,9 @@ from app.data_access.store.object_store import ObjectStore
 
 
 def identify_birthdays(object_store: ObjectStore, event: Event) -> list:
-
-    active_cadets = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
+    active_cadets = get_list_of_active_cadets_at_event(
+        object_store=object_store, event=event
+    )
     dates_in_event = event.dates_in_event()
 
     matching_cadets = []

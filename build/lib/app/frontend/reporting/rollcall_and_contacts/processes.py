@@ -1,6 +1,4 @@
-from typing import Dict, Callable
-
-from app.backend.reporting import report_generator
+from typing import Dict
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     apply_override_additional_options,
 )
@@ -20,7 +18,11 @@ from app.backend.reporting.rollcall_report.configuration import (
     AdditionalParametersForRollcallReport,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.objects.utilities.transform_data import from_bool_to_str, TRUE, from_str_to_bool
+from app.objects.utilities.transform_data import (
+    from_bool_to_str,
+    TRUE,
+    from_str_to_bool,
+)
 
 
 def get_group_rollcall_report_additional_parameters_from_form_and_save(
@@ -69,15 +71,17 @@ def save_additional_parameters_for_rollcall(
 def save_show_full_names_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
 ):
-    interface.set_persistent_value(SHOW_FULL_NAMES, from_bool_to_str(parameters.display_full_names))
+    interface.set_persistent_value(
+        SHOW_FULL_NAMES, from_bool_to_str(parameters.display_full_names)
+    )
 
 
 def save_club_boat_asterix_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
 ):
     interface.set_persistent_value(
-        CLUB_BOAT_ASTERIX, from_bool_to_str(parameters.add_asterix_for_club_boats
-    ))
+        CLUB_BOAT_ASTERIX, from_bool_to_str(parameters.add_asterix_for_club_boats)
+    )
 
 
 def save_unallocated_parameter(
@@ -89,7 +93,8 @@ def save_unallocated_parameter(
         interface=interface, parameters=parameters
     )
     interface.set_persistent_value(
-        INCLUDE_UNALLOCATED_CADETS, from_bool_to_str(parameters.include_unallocated_cadets)
+        INCLUDE_UNALLOCATED_CADETS,
+        from_bool_to_str(parameters.include_unallocated_cadets),
     )
 
     if unallocated_parameter_has_changed:
@@ -115,14 +120,16 @@ def save_emergency_contact_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
 ):
     interface.set_persistent_value(
-        EMERGENCY_CONTACTS, from_bool_to_str(parameters.incude_emergency_contacts
-    ))
+        EMERGENCY_CONTACTS, from_bool_to_str(parameters.incude_emergency_contacts)
+    )
 
 
 def save_include_health_details_parameter(
     interface: abstractInterface, parameters: AdditionalParametersForRollcallReport
 ):
-    interface.set_persistent_value(HEALTH_DATA, from_bool_to_str(parameters.include_health_data))
+    interface.set_persistent_value(
+        HEALTH_DATA, from_bool_to_str(parameters.include_health_data)
+    )
 
 
 def load_additional_parameters_for_rollcall_report(

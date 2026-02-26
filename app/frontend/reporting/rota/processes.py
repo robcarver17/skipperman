@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import Dict, Callable
+from typing import Dict
 
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     apply_override_additional_options,

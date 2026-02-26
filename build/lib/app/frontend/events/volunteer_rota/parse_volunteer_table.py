@@ -25,7 +25,9 @@ from app.frontend.events.volunteer_rota.button_values import (
 
 from app.data_access.init_directories import temp_file_name_in_download_directory
 
-from app.backend.rota.changes import delete_role_and_possibly_powerboat_at_event_for_volunteer_on_day
+from app.backend.rota.changes import (
+    delete_role_and_possibly_powerboat_at_event_for_volunteer_on_day,
+)
 from app.backend.volunteers.volunteers_at_event import (
     make_volunteer_available_on_day,
     make_volunteer_unavailable_on_day,
@@ -62,7 +64,6 @@ from app.frontend.shared.volunteer_state import (
 )
 from app.objects.abstract_objects.abstract_form import NewForm
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, MissingData
-from app.objects.utilities.transform_data import dict_from_str, dict_as_str
 
 
 def save_all_information_in_rota_page(interface: abstractInterface):
@@ -189,9 +190,7 @@ def update_if_make_unavailable_across_days_button_pressed(
         object_store=interface.object_store, button=unavailable_button
     )
     event = get_event_from_state(interface)
-    delete_volunteer_at_event(
-        interface=interface, event=event, volunteer=volunteer
-    )
+    delete_volunteer_at_event(interface=interface, event=event, volunteer=volunteer)
 
 
 def update_if_make_unavailable_on_specific_day_button_pressed(
@@ -286,15 +285,14 @@ def update_volunteer_skills_filter(interface: abstractInterface):
     save_skills_filter_to_state(interface=interface, dict_of_skills=dict_of_skills)
 
 
-
 def update_volunteer_availability_filter(interface: abstractInterface):
     event = get_event_from_state(interface)
     availabilty_filter_dict = dict()
     for day in event.days_in_event():
         try:
-            availabilty_filter_dict[str(day.name)] = update_volunteer_availability_for_day(
-                interface=interface, day=day
-            )
+            availabilty_filter_dict[
+                str(day.name)
+            ] = update_volunteer_availability_for_day(interface=interface, day=day)
         except MissingData:
             interface.log_error(
                 "Issue pulling in availability filter on %s " % day.name

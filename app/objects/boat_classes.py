@@ -48,12 +48,12 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return BoatClass
 
-    def get_boat_with_name(self, boat_class_name: str, default = arg_not_passed):
+    def get_boat_with_name(self, boat_class_name: str, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
             some_list=self,
-            attr_name='name',
+            attr_name="name",
             attr_value=boat_class_name,
-            default=default
+            default=default,
         )
 
     def boat_with_id(self, id: str):
@@ -63,6 +63,7 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
         index = self.index_of_id(id)
 
         return self[index]
+
 
 @dataclass
 class BoatClassAndPartnerAtEventOnDay:

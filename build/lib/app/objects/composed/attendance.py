@@ -35,7 +35,6 @@ class AttendanceOnDay:
     current_attendance: Attendance
     history_of_attendance: HistoryOfAttendanceOnDay
 
-
     @classmethod
     def create_without_history(cls):
         return cls(
@@ -45,11 +44,12 @@ class AttendanceOnDay:
 
     @classmethod
     def create_from_subset_of_list_of_attendance(
-        cls, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet,
-            day: Day
+        cls, list_of_attendance: ListOfRawAttendanceItemsForSpecificCadet, day: Day
     ):
         list_as_tuples = (
-            list_of_attendance.list_of_tuple_of_datetime_marked_and_attendance_on_day(day)
+            list_of_attendance.list_of_tuple_of_datetime_marked_and_attendance_on_day(
+                day
+            )
         )
         list_as_tuples.sort(key=lambda x: x[0])
         final_item = list_as_tuples[-1]
@@ -71,23 +71,24 @@ class AttendanceOnDay:
         self.current_attendance = new_attendance
 
 
-
 class AttendanceAcrossDays(Dict[Day, AttendanceOnDay]):
     def attendance_on_day(self, day):
         return self.get(day, AttendanceOnDay.create_without_history())
 
     def update_attendance_on_day(
-        self, day: Day, new_attendance: Attendance, datetime_marked: datetime.datetime = arg_not_passed
+        self,
+        day: Day,
+        new_attendance: Attendance,
+        datetime_marked: datetime.datetime = arg_not_passed,
     ):
         if datetime_marked is arg_not_passed:
-            datetime_marked = datetime.datetime.now(
-
-            )
+            datetime_marked = datetime.datetime.now()
         attendance_on_day = self.attendance_on_day(day)
         attendance_on_day.update_attendance(
             new_attendance=new_attendance, datetime_marked=datetime_marked
         )
         self[day] = attendance_on_day
+
 
 class AttendanceAtEventAcrossCadets(Dict[Cadet, AttendanceAcrossDays]):
     def attendance_for_cadet(self, cadet: Cadet):
@@ -95,4 +96,3 @@ class AttendanceAtEventAcrossCadets(Dict[Cadet, AttendanceAcrossDays]):
 
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-

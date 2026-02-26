@@ -6,7 +6,10 @@ from app.data_access.configuration.configuration import (
     MIN_CADET_AGE,
     MAX_CADET_AGE,
 )
-from app.data_access.configuration.fixed import MONTH_WHEN_CADET_AGE_BRACKET_BEGINS, DAYS_IN_YEAR
+from app.data_access.configuration.fixed import (
+    MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+    DAYS_IN_YEAR,
+)
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
 )
@@ -23,7 +26,10 @@ from app.objects.membership_status import (
 from app.objects.utilities.utils import (
     in_x_not_in_y,
 )
-from app.objects.utilities.transform_data import transform_date_into_str, transform_str_or_datetime_into_date
+from app.objects.utilities.transform_data import (
+    transform_date_into_str,
+    transform_str_or_datetime_into_date,
+)
 from app.objects.utilities.exceptions import (
     arg_not_passed,
     MissingData,
@@ -52,7 +58,7 @@ class Cadet(GenericSkipperManObjectWithIds):
         membership_status: MembershipStatus,
         dob_status: str = DOB_SURE,
         id: str = arg_not_passed,
-            as_non_member: bool = False
+        as_non_member: bool = False,
     ):
         if as_non_member:
             membership_status = none_member
@@ -216,7 +222,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
     def excluding_cadets_from_other_list(self, list_of_cadets: "ListOfCadets"):
         list_of_ids = in_x_not_in_y(self.list_of_ids, list_of_cadets.list_of_ids)
         return self.subset_from_list_of_ids_retaining_order(list_of_ids)
-
 
     def matching_cadet_with_name(
         self, cadet_name: str, default=arg_not_passed

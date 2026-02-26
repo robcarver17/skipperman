@@ -111,4 +111,3 @@ def process_uploaded_zip_file(interface: abstractInterface, file):
     shutil.copytree(temp_dir, master_data_path, dirs_exist_ok=True)
     shutil.rmtree(temp_dir)
     interface.log_error("Restore backup done")
-

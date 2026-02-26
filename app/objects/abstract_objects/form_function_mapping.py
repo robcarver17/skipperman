@@ -243,5 +243,3 @@ class DisplayAndPostFormFunctionMaps:
             post_mappings=post_mappings,
             parent_child_mapping=parent_child_mapping,
         )
-
-

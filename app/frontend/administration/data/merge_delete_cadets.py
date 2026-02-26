@@ -20,7 +20,6 @@ from app.frontend.shared.buttons import (
 from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
-    textInput,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
@@ -34,9 +33,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
 )
-from app.objects.abstract_objects.abstract_interface import (
-    abstractInterface
-)
+from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SIMILARITY_BOTH
 
 

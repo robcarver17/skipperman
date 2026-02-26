@@ -38,10 +38,9 @@ def post_deleting_cadets_process(interface: abstractInterface):
     button_pressed = interface.last_button_pressed()
     print("pressed %s" % button_pressed)
     if yes_button.pressed(button_pressed):
-        
         cadet_to_delete = get_cadet_to_delete_from_state(interface)
         delete_cadet_in_data_and_return_warnings(
-            interface.object_store, cadet_to_delete=cadet_to_delete
+            interface, cadet_to_delete=cadet_to_delete
         )
         interface.clear()  ## saves
         message = "Deletion done"
@@ -52,14 +51,16 @@ def post_deleting_cadets_process(interface: abstractInterface):
 
     interface.log_error(message)
 
-    return interface.get_new_display_form_for_parent_of_function(display_deleting_cadet_process)
+    return interface.get_new_display_form_for_parent_of_function(
+        display_deleting_cadet_process
+    )
 
 
 def delete_cadet_in_data_but_do_not_save_cache_and_return_warnings(
     interface: abstractInterface, cadet_to_delete: Cadet
 ) -> ListOfLines:
     warnings = delete_cadet_in_data_and_return_warnings(
-        interface.object_store, cadet_to_delete=cadet_to_delete
+        interface, cadet_to_delete=cadet_to_delete
     )
 
     return ListOfLines(warnings).add_Lines()

@@ -16,17 +16,18 @@ from app.backend.food.dict_of_food_for_event import (
     get_dict_of_volunteers_with_food_requirements_at_event,
 )
 
+
 def get_dict_of_active_cadets_with_food_requirements_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithFoodRequirementsAtEvent:
-    active_cadets = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
+    active_cadets = get_list_of_active_cadets_at_event(
+        object_store=object_store, event=event
+    )
     all_food_data = get_dict_of_cadets_with_food_requirements_at_event(
         object_store=object_store, event=event
     )
 
-    all_food_data_active_cadets = all_food_data.filter_for_list_of_cadets(
-        active_cadets
-    )
+    all_food_data_active_cadets = all_food_data.filter_for_list_of_cadets(active_cadets)
     all_food_data_active_cadets.remove_empty_food_required()
 
     return all_food_data_active_cadets
@@ -45,6 +46,5 @@ def get_dict_of_active_volunteers_with_food_requirements_at_event(
         registration_data.list_of_volunteers_at_event()
     )
     all_food_data_active_volunteers.remove_empty_food_required()
-
 
     return all_food_data_active_volunteers

@@ -330,7 +330,6 @@ def add_edits_from_form(
     existing_list: list,
     get_object_from_form_function: Callable = get_object_from_form,
 ):
-
     try:
         add_edits_from_form_without_error_logging(
             interface=interface,

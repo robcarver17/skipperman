@@ -1,7 +1,5 @@
 from typing import Union, List
 
-from app.data_access.store.object_store import ObjectStore
-
 
 from app.objects.abstract_objects.abstract_form import textInput, checkboxInput
 from app.objects.abstract_objects.abstract_tables import RowInTable
@@ -57,7 +55,6 @@ def post_form_config_volunteer_roles(
 ) -> Union[Form, NewForm]:
     list_of_roles = get_list_of_roles_with_skills(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_roles,
         interface=interface,
@@ -220,11 +217,9 @@ def get_modified_role_from_form(
 
 
 def save_from_ordinary_list_of_roles(
-        interface: abstractInterface, new_list: List[RoleWithSkills]
+    interface: abstractInterface, new_list: List[RoleWithSkills]
 ):
     update_list_of_roles_with_skills(
         interface=interface,
-        list_of_roles_with_skills=ListOfRolesWithSkills(
-            new_list
-        ),
+        list_of_roles_with_skills=ListOfRolesWithSkills(new_list),
     )

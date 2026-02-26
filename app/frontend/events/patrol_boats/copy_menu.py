@@ -1,6 +1,5 @@
 from typing import Union
 
-from app.backend.patrol_boats.labels import copy_patrol_boat_labels_across_event
 from app.frontend.events.patrol_boats.copying import (
     copy_across_all_boats,
     copy_across_all_boats_and_roles,
@@ -22,7 +21,6 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    Line,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import Heading, bold

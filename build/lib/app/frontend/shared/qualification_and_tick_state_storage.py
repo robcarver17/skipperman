@@ -23,8 +23,10 @@ def get_group_from_state(interface: abstractInterface) -> Group:
     group = get_group_with_name(object_store=interface.object_store, group_name=name)
     return group
 
+
 def clear_group_id_in_state(interface: abstractInterface):
     interface.clear_persistent_value(GROUP_NAME)
+
 
 def get_group_name_from_state(interface: abstractInterface) -> str:
     return interface.get_persistent_value(GROUP_NAME)
@@ -38,8 +40,10 @@ def get_qualification_from_state(interface: abstractInterface) -> Qualification:
     id = get_qualification_id_from_state(interface)
     return get_qualification_given_id(object_store=interface.object_store, id=id)
 
+
 def clear_qualification_id_in_state(interface: abstractInterface):
     interface.clear_persistent_value(QUALIFICATION_NAME)
+
 
 def get_qualification_id_from_state(interface: abstractInterface) -> str:
     return interface.get_persistent_value(QUALIFICATION_NAME)
@@ -74,8 +78,10 @@ def set_edit_state_of_ticksheet(interface: abstractInterface, state: str):
     assert state in [EDIT_CHECKBOX_STATE, EDIT_DROPDOWN_STATE, NO_EDIT_STATE]
     interface.set_persistent_value(EDIT_STATE, state)
 
+
 def clear_edit_state_of_ticksheet(interface: abstractInterface):
     interface.clear_persistent_value(EDIT_STATE)
+
 
 def return_true_if_a_cadet_id_been_set(interface: abstractInterface):
     try:

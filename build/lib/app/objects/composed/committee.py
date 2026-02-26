@@ -7,7 +7,6 @@ from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.committee import (
     CadetWithIdCommitteeMember,
-
 )
 from app.objects.utilities.generic_list_of_objects import (
     get_unique_object_with_attr_in_list,
@@ -57,7 +56,6 @@ class CadetOnCommittee:
 
 
 class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
-
     def get_cadet_on_committee(self, cadet: Cadet, default=arg_not_passed):
         return get_unique_object_with_attr_in_list(
             some_list=self, attr_name="cadet_id", attr_value=cadet.id, default=default
@@ -88,4 +86,3 @@ class ListOfCadetsOnCommittee(List[CadetOnCommittee]):
                 if cadet_on_committee.currently_serving()
             ]
         )
-

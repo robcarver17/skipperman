@@ -23,7 +23,6 @@ class ListOfWAFieldMappings(GenericListOfObjects):
     def _object_class_contained(self):
         return WAFieldMap
 
-
     def matching_wa_fields(self, list_of_wa_fields: list):
         return in_both_x_and_y(list_of_wa_fields, self.list_of_wa_fields)
 

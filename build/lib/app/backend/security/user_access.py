@@ -15,7 +15,9 @@ from app.objects.groups import Group
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import is_volunteer_qualified_as_SI
-from app.backend.groups.cadets_with_groups_at_event import get_list_of_all_groups_at_event
+from app.backend.groups.cadets_with_groups_at_event import (
+    get_list_of_all_groups_at_event,
+)
 
 from app.backend.security.logged_in_user import (
     get_volunteer_for_logged_in_user_or_superuser,

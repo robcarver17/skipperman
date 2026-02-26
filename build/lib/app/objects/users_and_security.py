@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
-get_idx_of_unique_object_with_attr_in_list
+    get_idx_of_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
@@ -21,7 +21,13 @@ INSTRUCTOR_GROUP = UserGroup.instructor
 PUBLIC_GROUP = UserGroup.public
 RACE_OFFICER_GROUP = UserGroup.RO
 
-ALL_GROUPS = [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP, RACE_OFFICER_GROUP, PUBLIC_GROUP]
+ALL_GROUPS = [
+    ADMIN_GROUP,
+    SKIPPER_GROUP,
+    INSTRUCTOR_GROUP,
+    RACE_OFFICER_GROUP,
+    PUBLIC_GROUP,
+]
 
 
 @dataclass
@@ -67,7 +73,7 @@ class SkipperManUser(GenericSkipperManObject):
 
 NO_VOLUNTEER_ID = "-1"
 DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists at first login or on test machine
-DEFAULT_ADMIN_PASSWORD = "default" ### OK to have in clear text here as only used if no user security file exists
+DEFAULT_ADMIN_PASSWORD = "default"  ### OK to have in clear text here as only used if no user security file exists
 
 default_admin_user_if_none_defined = SkipperManUser(
     username=DEFAULT_ADMIN_USER,
@@ -103,12 +109,9 @@ class ListOfSkipperManUsers(GenericListOfObjects):
 
         self[idx] = user
 
-    def idx_of_user(self, username: str, default = arg_not_passed):
+    def idx_of_user(self, username: str, default=arg_not_passed):
         return get_idx_of_unique_object_with_attr_in_list(
-            self,
-            attr_name='username',
-            attr_value=username,
-            default=default
+            self, attr_name="username", attr_value=username, default=default
         )
 
     def already_in_list(self, username: str) -> bool:
@@ -152,9 +155,7 @@ def list_of_users_or_default_if_empty(
     if len(list_of_users) > 0:
         return list_of_users
     else:
-        return ListOfSkipperManUsers(
-            [default_admin_user_if_none_defined]
-        )
+        return ListOfSkipperManUsers([default_admin_user_if_none_defined])
 
 
 def get_random_string(length: int) -> str:
@@ -165,6 +166,7 @@ def get_random_string(length: int) -> str:
 
 
 CAN_DO_BACKUPS = [ADMIN_GROUP, SKIPPER_GROUP]
+
 
 def group_is_admin_or_skipper(group):
     return group in [ADMIN_GROUP, SKIPPER_GROUP]

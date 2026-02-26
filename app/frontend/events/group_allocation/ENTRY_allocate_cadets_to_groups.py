@@ -1,7 +1,8 @@
 from typing import Union
 
-from app.backend.groups.previous_groups import \
-    update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data
+from app.backend.groups.previous_groups import (
+    update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data,
+)
 from app.frontend.events.group_allocation.change_sort_order import (
     display_change_sort_order,
 )
@@ -9,13 +10,10 @@ from app.frontend.shared.club_dinghies import (
     update_limits_button,
     update_club_boat_limits_for_event_from_form,
 )
-from app.frontend.shared.club_boats_instructors import (
-    is_club_dinghy_instructor_button,
-    handle_club_dinghy_instructor_allocation_button_pressed,
-)
 from app.frontend.events.group_allocation.previous_events import (
     is_event_picker_button,
-    save_event_selection_from_form, clear_prior_event_selection_in_state,
+    save_event_selection_from_form,
+    clear_prior_event_selection_in_state,
 )
 from app.frontend.reporting.allocations.report_group_allocations import (
     allocation_report_generator,
@@ -51,14 +49,16 @@ from app.frontend.events.group_allocation.add_cadet_partner import (
 from app.frontend.events.group_allocation.store_state import (
     set_day_in_state,
     clear_day_in_state,
-    get_current_sort_order, clear_sort_order_in_state,
+    get_current_sort_order,
+    clear_sort_order_in_state,
 )
 from app.frontend.events.group_allocation.render_allocation_form import (
     display_form_allocate_cadets_at_event,
     add_button,
     sort_order_change_button,
     quick_group_report_button,
-    quick_spotters_report_button, update_group_names_button,
+    quick_spotters_report_button,
+    update_group_names_button,
 )
 from app.frontend.events.group_allocation.buttons import (
     reset_day_button,
@@ -141,7 +141,6 @@ def button_clicked_changes_data(last_button: str):
         or was_remove_partner_button(last_button)
         or guess_boat_button.pressed(last_button)
         or update_group_names_button.pressed(last_button)
-
     )
 
 
@@ -194,7 +193,7 @@ def post_form_allocate_cadets_when_changing_data(
     interface: abstractInterface, last_button: str
 ) -> Union[Form, NewForm]:
     ## save existing form changes first, might be overwritten later by button actions
-    
+
     if save_menu_button.pressed(last_button):
         pass  # already saved
 
@@ -215,7 +214,9 @@ def post_form_allocate_cadets_when_changing_data(
     elif guess_boat_button.pressed(last_button):
         guess_boat_classes_in_allocation_form(interface)
     elif update_group_names_button.pressed(last_button):
-        update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(interface)
+        update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data(
+            interface
+        )
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -226,7 +227,6 @@ def post_form_allocate_cadets_when_changing_data(
 
 
 def save_all_information_in_forms_on_page(interface: abstractInterface):
-    
     update_data_given_allocation_form(interface)
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)
@@ -271,8 +271,7 @@ def cadet_button_clicked(interface: abstractInterface):
 def create_quick_group_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         allocation_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     interface.log_error(
@@ -289,8 +288,7 @@ def create_quick_group_report(interface: abstractInterface) -> File:
 def create_quick_spotters_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         boat_report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     interface.log_error(

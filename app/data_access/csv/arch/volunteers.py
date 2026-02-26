@@ -13,9 +13,11 @@ from app.data_access.csv.arch.resolve_paths_and_filenames import (
     VOLUNTEER_TEAMS_FILE_ID,
     VOLUNTEER_ROLE_AND_TEAMS_FILE_ID,
     NOTES_FILE_ID,
-    LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS
+    LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS,
 )
-from app.objects.last_role_for_volunteer import ListOfMostCommonRoleForVolunteersAcrossEventsWithId
+from app.objects.last_role_for_volunteer import (
+    ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
+)
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
 )
@@ -113,9 +115,7 @@ class CsvDataListOfVolunteerSkills(GenericCsvData):
         )
 
 
-class CsvDataListOfCadetVolunteerAssociations(
-    GenericCsvData
-):
+class CsvDataListOfCadetVolunteerAssociations(GenericCsvData):
     def read(self) -> ListOfCadetVolunteerAssociationsWithIds:
         list_of_cadet_volunteer_associations = self.read_and_return_object_of_type(
             ListOfCadetVolunteerAssociationsWithIds,
@@ -154,9 +154,7 @@ class CsvDataListOfVolunteersAtEvent(GenericCsvData):
         )
 
 
-class CsvDataListOfIdentifiedVolunteersAtEvent(
-    GenericCsvData
-):
+class CsvDataListOfIdentifiedVolunteersAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfIdentifiedVolunteersAtEvent:
         return self.read_and_return_object_of_type(
             ListOfIdentifiedVolunteersAtEvent,
@@ -176,9 +174,7 @@ class CsvDataListOfIdentifiedVolunteersAtEvent(
         )
 
 
-class CsvDataListOfVolunteersInRolesAtEvent(
-    GenericCsvData
-):
+class CsvDataListOfVolunteersInRolesAtEvent(GenericCsvData):
     def read(self, event_id: str) -> ListOfVolunteersWithIdInRoleAtEvent:
         list_of_volunteers_in_roles_at_event = self.read_and_return_object_of_type(
             ListOfVolunteersWithIdInRoleAtEvent,
@@ -220,7 +216,7 @@ class CsvDataListOfTargetForRoleAtEvent(GenericCsvData):
         )
 
 
-class CsvDataListOfNotes( GenericCsvData):
+class CsvDataListOfNotes(GenericCsvData):
     def read(self) -> ListOfNotes:
         return self.read_and_return_object_of_type(
             ListOfNotes,
@@ -230,7 +226,8 @@ class CsvDataListOfNotes( GenericCsvData):
     def write(self, list_of_notes: ListOfNotes):
         self.write_object(list_of_notes, file_identifier=NOTES_FILE_ID)
 
-class CsvDataListOfLastRolesAcrossEventsForVolunteers( GenericCsvData):
+
+class CsvDataListOfLastRolesAcrossEventsForVolunteers(GenericCsvData):
     def read(self) -> ListOfMostCommonRoleForVolunteersAcrossEventsWithId:
         return self.read_and_return_object_of_type(
             ListOfMostCommonRoleForVolunteersAcrossEventsWithId,
@@ -238,5 +235,7 @@ class CsvDataListOfLastRolesAcrossEventsForVolunteers( GenericCsvData):
         )
 
     def write(self, list_of_roles: ListOfMostCommonRoleForVolunteersAcrossEventsWithId):
-        self.write_object(list_of_roles, file_identifier=LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS)
-
+        self.write_object(
+            list_of_roles,
+            file_identifier=LIST_OF_VOLUNTEERS_MOST_COMMON_ROLE_ACROSS_EVENTS,
+        )

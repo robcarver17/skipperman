@@ -11,7 +11,7 @@ from app.backend.reporting.options_and_parameters.report_type_specific_parameter
 class GroupOrder(List[str]):
     @classmethod
     def from_str(cls, string: str):
-        if len(string)==0:
+        if len(string) == 0:
             return cls([])
         return cls(string.split(","))
 

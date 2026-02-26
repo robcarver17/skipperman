@@ -18,10 +18,7 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
 
 from app.backend.patrol_boats.swapping import (
     is_possible_to_swap_roles_on_one_day,
-    swap_boats_for_volunteers_in_allocation_using_swapdata,
-    swap_roles_for_volunteers_in_allocation_using_swapdata,
     SwapData,
-    move_volunteer_into_empty_boat_using_swapdata,
     do_swapping_for_volunteers_boats_and_possibly_roles_in_boat_allocation,
 )
 

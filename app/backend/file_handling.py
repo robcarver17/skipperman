@@ -56,5 +56,3 @@ def save_uploaded_file_as_local_temp_file(
         )
 
     return new_filename
-
-

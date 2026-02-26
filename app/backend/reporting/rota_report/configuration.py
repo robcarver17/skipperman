@@ -17,8 +17,7 @@ BOAT = "Boat"
 
 
 def get_specific_parameters_for_rota_report(
-    object_store: ObjectStore,
-        event: Event
+    object_store: ObjectStore, event: Event
 ) -> SpecificParametersForTypeOfReport:
     list_of_teams = get_list_of_teams(object_store)
     list_of_teams.add_unallocated()

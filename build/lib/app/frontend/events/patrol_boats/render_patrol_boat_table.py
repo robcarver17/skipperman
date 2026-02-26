@@ -25,7 +25,6 @@ from app.frontend.events.patrol_boats.patrol_boat_buttons import (
     delete_button_for_boat_value,
     DELETE_BOAT_BUTTON_LABEL,
 )
-from app.frontend.shared.club_dinghies import get_club_dinghies_detail
 from app.frontend.shared.club_boats_instructors import (
     get_club_dinghies_detail_instructors,
 )
@@ -192,7 +191,7 @@ def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[s
 
 
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
-    get_list_of_patrol_boats_at_event,
+    get_sorted_list_of_patrol_boats_at_event,
     is_boat_empty_on_day,
 )
 
@@ -200,7 +199,7 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
 def get_body_of_patrol_boat_table_at_event(
     interface: abstractInterface, event: Event
 ) -> List[RowInTable]:
-    list_of_boats_at_event = get_list_of_patrol_boats_at_event(
+    list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
 

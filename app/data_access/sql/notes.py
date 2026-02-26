@@ -1,25 +1,35 @@
-
-from app.data_access.sql.generic_sql_data import GenericSqlData, date2int, bool2int, int2date, int2bool
+from app.data_access.sql.generic_sql_data import (
+    GenericSqlData,
+)
+from app.objects.utilities.transform_data import bool2int, int2bool, date2int, int2date
 from app.data_access.sql.shared_column_names import *
-from app.objects.composed.notes_with_volunteers import ListOfNotesWithVolunteers, NoteWithVolunteer
+from app.objects.composed.notes_with_volunteers import (
+    ListOfNotesWithVolunteers,
+    NoteWithVolunteer,
+)
 from app.objects.notes import ListOfNotes, Note
 from app.objects.volunteers import Volunteer
 
 NOTES_TABLE = "SM_notes_table"
 INDEX_NOTES_TABLE = "index_SM_notes_table"
 
-class SqlDataListOfNotes( GenericSqlData):
-    def read_list_of_volunteers_with_notes(self)-> ListOfNotesWithVolunteers:
+
+class SqlDataListOfNotes(GenericSqlData):
+    def read_list_of_volunteers_with_notes(self) -> ListOfNotesWithVolunteers:
         volunteers_with_id_and_notes = self.read()
         new_list = [
             NoteWithVolunteer(
-                author_volunteer=self.volunteer_from_id(note_and_volunteer_with_id.author_volunteer_id),
+                author_volunteer=self.volunteer_from_id(
+                    note_and_volunteer_with_id.author_volunteer_id
+                ),
                 completed=note_and_volunteer_with_id.completed,
-                assigned_volunteer=self.volunteer_from_id(note_and_volunteer_with_id.assigned_volunteer_id),
+                assigned_volunteer=self.volunteer_from_id(
+                    note_and_volunteer_with_id.assigned_volunteer_id
+                ),
                 text=note_and_volunteer_with_id.text,
                 priority=note_and_volunteer_with_id.priority,
                 created_datetime=note_and_volunteer_with_id.created_datetime,
-                id=note_and_volunteer_with_id.id
+                id=note_and_volunteer_with_id.id,
             )
             for note_and_volunteer_with_id in volunteers_with_id_and_notes
         ]
@@ -31,17 +41,19 @@ class SqlDataListOfNotes( GenericSqlData):
 
     @property
     def list_of_volunteers(self):
-        list_of_volunteers =self.object_store.get(self.object_store.data_api.data_list_of_volunteers.read)
+        list_of_volunteers = self.object_store.get(
+            self.object_store.data_api.data_list_of_volunteers.read
+        )
 
         return list_of_volunteers
 
     def update_note_with_new_data(
-            self,
-            note_id: str,
-            priority: str,
-            completed: bool,
-            text: str,
-            assigned_volunteer: Volunteer,
+        self,
+        note_id: str,
+        priority: str,
+        completed: bool,
+        text: str,
+        assigned_volunteer: Volunteer,
     ):
         try:
             insertion = "UPDATE %s SET %s=?, %s=?, %s=?, %s=? WHERE %s=?" % (
@@ -50,16 +62,19 @@ class SqlDataListOfNotes( GenericSqlData):
                 NOTE_COMPLETED,
                 NOTE_TEXT,
                 ASSIGNED_VOLUNTEER_ID,
-                NOTE_ID
+                NOTE_ID,
             )
 
-            self.cursor.execute(insertion, (
-                str(priority),
-                bool2int(completed),
-                str(text),
-                int(assigned_volunteer.id),
-                int(note_id)
-            ))
+            self.cursor.execute(
+                insertion,
+                (
+                    str(priority),
+                    bool2int(completed),
+                    str(text),
+                    int(assigned_volunteer.id),
+                    int(note_id),
+                ),
+            )
 
             self.conn.commit()
 
@@ -69,30 +84,28 @@ class SqlDataListOfNotes( GenericSqlData):
         finally:
             self.close()
 
-
     def add_quick_note(self, text: str, volunteer_author: Volunteer):
+        note = Note.new_quick_note(
+            text=text,
+            author_volunteer_id=volunteer_author.id,
+        )
+        note.id = self.next_id()
+        try:
+            if self.table_does_not_exist(NOTES_TABLE):
+                self.create_table()
 
-            note = Note.new_quick_note(
-                text=text,
-                author_volunteer_id=volunteer_author.id,
-            )
-            note.id = self.next_id()
-            try:
-                if self.table_does_not_exist(NOTES_TABLE):
-                    self.create_table()
+            self._insert_note_without_commit_or_checks(note)
 
-                self._insert_note_without_commit_or_checks(note)
-
-                self.conn.commit()
-            except Exception as e1:
-                raise Exception("Error %s when writing  notes" % str(e1))
-            finally:
-                self.close()
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing  notes" % str(e1))
+        finally:
+            self.close()
 
     def next_id(self) -> str:
-        return str(self.last_used_id()+1)
+        return str(self.last_used_id() + 1)
 
-    def last_used_id(self)-> int:
+    def last_used_id(self) -> int:
         try:
             if self.table_does_not_exist(NOTES_TABLE):
                 self.create_table()
@@ -120,35 +133,39 @@ class SqlDataListOfNotes( GenericSqlData):
                 return ListOfNotes.create_empty()
 
             cursor = self.cursor
-            cursor.execute('''SELECT %s, %s, %s, %s, %s, %s, %s FROM %s''' % (
-                NOTE_TEXT,
-                AUTHOR_VOLUNTEER_ID,
-                NOTE_CREATED_DATETIME,
-                ASSIGNED_VOLUNTEER_ID,
-                NOTE_PRIORITY_STR,
-                NOTE_COMPLETED,
-                NOTE_ID,
-                NOTES_TABLE
-             ))
+            cursor.execute(
+                """SELECT %s, %s, %s, %s, %s, %s, %s FROM %s"""
+                % (
+                    NOTE_TEXT,
+                    AUTHOR_VOLUNTEER_ID,
+                    NOTE_CREATED_DATETIME,
+                    ASSIGNED_VOLUNTEER_ID,
+                    NOTE_PRIORITY_STR,
+                    NOTE_COMPLETED,
+                    NOTE_ID,
+                    NOTES_TABLE,
+                )
+            )
             raw_list = cursor.fetchall()
         except Exception as e1:
             raise Exception("Error %s when reading notes" % str(e1))
         finally:
             self.close()
 
-        new_list = [Note(
-            text=str(ans[0]),
-            author_volunteer_id=str(ans[1]),
-            created_datetime=int2date(ans[2]),
-            assigned_volunteer_id=str(ans[3]),
-            priority=str(ans[4]),
-            completed=int2bool(ans[5]),
-            id=str(ans[6])
-        ) for ans in raw_list
-                    ]
+        new_list = [
+            Note(
+                text=str(ans[0]),
+                author_volunteer_id=str(ans[1]),
+                created_datetime=int2date(ans[2]),
+                assigned_volunteer_id=str(ans[3]),
+                priority=str(ans[4]),
+                completed=int2bool(ans[5]),
+                id=str(ans[6]),
+            )
+            for ans in raw_list
+        ]
 
         return ListOfNotes(new_list)
-
 
     def write(self, list_of_notes: ListOfNotes):
         try:
@@ -175,28 +192,34 @@ class SqlDataListOfNotes( GenericSqlData):
         completed = bool2int(note.completed)
         note_id = int(note.id)
 
-        insertion = "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?,?)" % (
-            NOTES_TABLE,
+        insertion = (
+            "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?,?)"
+            % (
+                NOTES_TABLE,
+                NOTE_TEXT,
+                AUTHOR_VOLUNTEER_ID,
+                NOTE_CREATED_DATETIME,
+                ASSIGNED_VOLUNTEER_ID,
+                NOTE_PRIORITY_STR,
+                NOTE_COMPLETED,
+                NOTE_ID,
+            )
+        )
 
-            NOTE_TEXT,
-            AUTHOR_VOLUNTEER_ID,
-            NOTE_CREATED_DATETIME,
-            ASSIGNED_VOLUNTEER_ID,
-            NOTE_PRIORITY_STR,
-            NOTE_COMPLETED,
-            NOTE_ID)
-
-        self.cursor.execute(insertion, (
-            text,
-            author_volunteer_id,
-            created_datetime,
-            assigned_volunteer_id,
-            priority,
-            completed,
-            note_id))
+        self.cursor.execute(
+            insertion,
+            (
+                text,
+                author_volunteer_id,
+                created_datetime,
+                assigned_volunteer_id,
+                priority,
+                completed,
+                note_id,
+            ),
+        )
 
     def create_table(self):
-
         # name: str
         # hidden: bool
         # id: str = arg_not_passed
@@ -211,19 +234,22 @@ class SqlDataListOfNotes( GenericSqlData):
                             %s INTEGER,
                             %s INTEGER
                         );
-                    """ % (NOTES_TABLE,
-
-                        NOTE_TEXT,
-                           AUTHOR_VOLUNTEER_ID,
-                           NOTE_CREATED_DATETIME,
-                           ASSIGNED_VOLUNTEER_ID,
-                           NOTE_PRIORITY_STR,
-                           NOTE_COMPLETED,
-                           NOTE_ID)
+                    """ % (
+            NOTES_TABLE,
+            NOTE_TEXT,
+            AUTHOR_VOLUNTEER_ID,
+            NOTE_CREATED_DATETIME,
+            ASSIGNED_VOLUNTEER_ID,
+            NOTE_PRIORITY_STR,
+            NOTE_COMPLETED,
+            NOTE_ID,
+        )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s)" % (
-            INDEX_NOTES_TABLE, NOTES_TABLE,
-        NOTE_ID)
+            INDEX_NOTES_TABLE,
+            NOTES_TABLE,
+            NOTE_ID,
+        )
 
         try:
             self.cursor.execute(table_creation_query)
@@ -233,4 +259,3 @@ class SqlDataListOfNotes( GenericSqlData):
             raise Exception("Error %s when creating notes table" % str(e1))
         finally:
             self.close()
-

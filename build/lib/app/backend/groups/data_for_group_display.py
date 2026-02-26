@@ -1,7 +1,10 @@
 from enum import Enum
 from typing import Dict, List, Tuple, Union
 
-from app.backend.cadets_at_event.cadet_availability import cadet_availability_at_event_from_dict_of_all_event_data, cadet_is_unavailable_on_day_from_dict_of_event_data
+from app.backend.cadets_at_event.cadet_availability import (
+    cadet_availability_at_event_from_dict_of_all_event_data,
+    cadet_is_unavailable_on_day_from_dict_of_event_data,
+)
 from app.data_access.configuration.field_list import (
     CADET_GROUP_PREFERENCE,
     CADET_BOAT_CLASS,
@@ -347,7 +350,10 @@ def get_sail_number_for_boat_on_day(
     ):
         return NOT_AVAILABLE
     sail_number_from_data = get_sail_number_for_boat_from_data(
-        dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day, default=missing_data
+        dict_of_all_event_data=dict_of_all_event_data,
+        cadet=cadet,
+        day=day,
+        default=missing_data,
     )
     if sail_number_from_data is missing_data:
         sail_number_from_data = get_sail_number_for_boat_from_value_on_form(
@@ -358,7 +364,10 @@ def get_sail_number_for_boat_on_day(
 
 
 def get_sail_number_for_boat_from_data(
-    dict_of_all_event_data: DictOfAllEventInfoForCadets, cadet: Cadet, day: Day, default=missing_data
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
+    cadet: Cadet,
+    day: Day,
+    default=missing_data,
 ) -> str:
     return dict_of_all_event_data.event_data_for_cadet(
         cadet

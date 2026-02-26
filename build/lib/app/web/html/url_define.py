@@ -39,5 +39,5 @@ def get_action_first_page_url(action_name: str):
     return get_action_url_for_form(action_name, HOME_PAGE_OF_ACTION)
 
 
-def get_action_url_for_form(action_name: str, form_name:str):
+def get_action_url_for_form(action_name: str, form_name: str):
     return "/%s/%s/%s" % (ACTION_PREFIX, action_name, form_name)

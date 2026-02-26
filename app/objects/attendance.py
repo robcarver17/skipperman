@@ -35,15 +35,6 @@ returned = Attendance["Returned to parent or club"]
 temporary_absence = Attendance["Temporary absence"]
 
 
-transition_matrix = {
-    not_attending: [not_attending, registration_not_taken, present],
-    registration_not_taken: [present, absent, will_be_late],
-    will_be_late: [present, absent],
-    present: [returned, temporary_absence],
-    temporary_absence: [present, returned],
-    returned: [],
-}
-
 
 @dataclass
 class RawAttendanceItem(GenericSkipperManObject):
@@ -67,8 +58,9 @@ class ListOfRawAttendanceItemsForSpecificCadet(GenericListOfObjects):
         return RawAttendanceItem
 
     def list_of_tuple_of_datetime_marked_and_attendance_on_day(self, day: Day):
-        return [(item.datetime_marked, item.attendance) for item in self if item.day==day]
-
+        return [
+            (item.datetime_marked, item.attendance) for item in self if item.day == day
+        ]
 
     def list_of_days(self):
         return list(set([item.day for item in self]))

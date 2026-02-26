@@ -1,7 +1,9 @@
 from copy import copy
 from typing import List, Callable
 
-from app.backend.registration_data.cadet_registration_data import is_event_first_event_for_cadet
+from app.backend.registration_data.cadet_registration_data import (
+    is_event_first_event_for_cadet,
+)
 from app.backend.registration_data.volunter_relevant_information import (
     get_volunteer_from_relevant_information,
 )
@@ -31,8 +33,12 @@ from app.backend.volunteers.volunteers_at_event import (
 from app.backend.rota.volunteers_and_cadets import (
     list_of_cadet_groups_associated_with_volunteer,
 )
-from app.backend.registration_data.cadet_registration_data import get_list_of_active_cadets_at_event
-from app.backend.cadets_at_event.cadet_availability import  get_attendance_matrix_for_list_of_cadets_at_event
+from app.backend.registration_data.cadet_registration_data import (
+    get_list_of_active_cadets_at_event,
+)
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
+)
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
     get_list_of_volunteers_associated_with_cadet_at_event,
     get_list_of_cadets_associated_with_volunteer_at_event,
@@ -70,8 +76,12 @@ from app.backend.events.event_warnings import (
 
 def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
     warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
-    warn_on_all_volunteers_availability_volunteers_missing(interface=interface, event=event)
-    warn_on_all_volunteers_availability_sailors_missing(interface=interface, event=event)
+    warn_on_all_volunteers_availability_volunteers_missing(
+        interface=interface, event=event
+    )
+    warn_on_all_volunteers_availability_sailors_missing(
+        interface=interface, event=event
+    )
     warn_on_all_volunteers_group(interface=interface, event=event)
     warn_on_all_volunteers_unconnected(interface=interface, event=event)
     warn_on_volunteer_qualifications(interface=interface, event=event)
@@ -106,7 +116,8 @@ def warn_on_all_volunteers_availability_sailors_missing(
     )
 
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_AVAILABILITY,
         priority=MEDIUM_PRIORITY,
@@ -121,7 +132,8 @@ def warn_on_all_volunteers_group(interface: abstractInterface, event: Event):
     )
 
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_GROUP,
         priority=LOW_PRIORITY,
@@ -136,7 +148,8 @@ def warn_on_all_volunteers_unconnected(interface: abstractInterface, event: Even
     )
 
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_UNCONNECTED,
         priority=LOWEST_PRIORITY,
@@ -151,7 +164,8 @@ def warn_on_volunteer_qualifications(interface: abstractInterface, event: Event)
     )
 
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_QUALIFICATION,
         priority=HIGH_PRIORITY,
@@ -471,7 +485,7 @@ def warn_about_single_volunteer_with_no_cadet_at_event(
 
 
 def warn_on_cadets_which_should_have_volunteers(
-        interface: abstractInterface, event: Event
+    interface: abstractInterface, event: Event
 ):
     ## NOT GENERIC!
     active_cadets = get_list_of_active_cadets_at_event(
@@ -486,7 +500,8 @@ def warn_on_cadets_which_should_have_volunteers(
 
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=list_of_warnings,
         priority=HIGH_PRIORITY,
         category=CADET_WITHOUT_ADULT,
@@ -532,8 +547,6 @@ def cadet_has_no_active_volunteer(
     return len(volunteers) == 0
 
 
-
-
 def get_volunteer_status_and_possible_names(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
@@ -564,7 +577,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 
 
 def warn_on_volunteers_with_skipped_registration(
-        interface: abstractInterface, event: Event
+    interface: abstractInterface, event: Event
 ):
     identified_volunteers_at_event = get_list_of_identified_volunteers_at_event(
         object_store=interface.object_store, event=event
@@ -574,13 +587,16 @@ def warn_on_volunteers_with_skipped_registration(
     )
     warnings = [
         warning_for_specific_temporary_skip_volunteer_id_at_event(
-            object_store=interface.object_store, event=event, row_id_and_index=row_id_and_index
+            object_store=interface.object_store,
+            event=event,
+            row_id_and_index=row_id_and_index,
         )
         for row_id_and_index in list_of_temporary_row_ids_and_volunteer_index
     ]
 
     process_list_of_warnings_which_auto_clear(
-        interface=interface,        event=event,
+        interface=interface,
+        event=event,
         list_of_warnings=warnings,
         category=VOLUNTEER_IDENTITY,
         priority=MEDIUM_PRIORITY,

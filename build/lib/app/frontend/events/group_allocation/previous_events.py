@@ -68,7 +68,9 @@ def is_event_picker_button(button_value: str):
 def get_prior_events_to_show(
     interface: abstractInterface, event: Event
 ) -> ListOfEvents:
-    event_id_selection = get_prior_event_selection_in_state(interface, default=missing_data)
+    event_id_selection = get_prior_event_selection_in_state(
+        interface, default=missing_data
+    )
     if event_id_selection is missing_data:
         return default_list_of_prior_events(
             object_store=interface.object_store, event=event
@@ -158,7 +160,6 @@ def save_event_selection_from_form_if_saved_button_pressed(
 PRIOR_EVENT_LIST = "PriorEventList"
 
 
-
 def store_prior_event_selection_in_state(
     interface: abstractInterface, list_of_event_ids: List[str]
 ):
@@ -166,12 +167,15 @@ def store_prior_event_selection_in_state(
     interface.set_persistent_value(PRIOR_EVENT_LIST, as_str)
 
 
-def get_prior_event_selection_in_state(interface: abstractInterface, default=missing_data):
-    as_str =interface.get_persistent_value(PRIOR_EVENT_LIST, missing_data)
+def get_prior_event_selection_in_state(
+    interface: abstractInterface, default=missing_data
+):
+    as_str = interface.get_persistent_value(PRIOR_EVENT_LIST, missing_data)
     if as_str is missing_data:
         return default
 
     return list_from_str(as_str, type_to_use=str)
+
 
 def clear_prior_event_selection_in_state(interface: abstractInterface):
     interface.clear_persistent_value(PRIOR_EVENT_LIST)

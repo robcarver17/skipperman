@@ -188,10 +188,12 @@ def get_event_from_form(interface) -> Event:
     return event
 
 
-def process_form_when_event_verified(interface: abstractInterface) -> Union[ Form, NewForm]:
+def process_form_when_event_verified(
+    interface: abstractInterface,
+) -> Union[Form, NewForm]:
     try:
         event = get_event_from_form(interface)
-        
+
         add_new_verified_event(interface=interface, event=event)
         interface.clear()
     except Exception as e:
@@ -204,7 +206,6 @@ def process_form_when_event_verified(interface: abstractInterface) -> Union[ For
     interface.log_error("Added event %s" % str(event))
 
     return previous_form(interface)
-
 
 
 EVENT_NAME = "event_name"

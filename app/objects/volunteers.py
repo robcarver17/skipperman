@@ -31,9 +31,6 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def __lt__(self, other):
         return self.name < other.name
 
-    def replace_everything_except_id(self, updated_volunteer: "Volunteer"):
-        self.first_name = updated_volunteer.first_name
-        self.surname = updated_volunteer.surname
 
     @classmethod
     def new(cls, first_name: str, surname: str, id: str = arg_not_passed):
@@ -56,29 +53,7 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Volunteer
 
-    def delete_volunteer(self, volunteer: Volunteer):
-        current_volunteer_idx = self.index_of_id(volunteer.id, default=missing_data)
-        if current_volunteer_idx is missing_data:
-            return
 
-        self.pop(current_volunteer_idx)
-
-    def add(self, volunteer: Volunteer):
-        try:
-            assert volunteer.name not in self.list_of_names()
-        except:
-            raise Exception("Can't have duplicate volunteer names")
-        volunteer_id = self.next_id()
-        volunteer.id = volunteer_id
-        self.append(volunteer)
-
-    def update_existing_volunteer(
-        self, existing_volunteer: Volunteer, updated_volunteer: Volunteer
-    ):
-        existing_volunteer = self.volunteer_with_id(existing_volunteer.id)
-        existing_volunteer.replace_everything_except_id(
-            updated_volunteer=updated_volunteer
-        )
 
     def volunteer_with_matching_name(
         self, volunteer_name: str, default=arg_not_passed

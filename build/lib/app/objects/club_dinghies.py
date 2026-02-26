@@ -4,7 +4,8 @@ from app.objects.utilities.exceptions import missing_data, arg_not_passed, Missi
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list,
-    GenericListOfObjects, get_unique_object_with_attr_in_list,
+    GenericListOfObjects,
+    get_unique_object_with_attr_in_list,
 )
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObjectWithIds,
@@ -48,10 +49,7 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
             return no_club_dinghy
 
         return get_unique_object_with_attr_in_list(
-            self,
-            attr_name='name',
-            attr_value=name,
-            default=default
+            self, attr_name="name", attr_value=name, default=default
         )
 
     def club_dinghy_with_id(self, dinghy_id: str, default=arg_not_passed):
@@ -66,6 +64,7 @@ no_club_dinghy_id = no_club_dinghy.id
 OLD_event_id_for_generic_limit = "generic_limit"
 event_id_for_generic_limit = str("-99994")
 
+
 @dataclass
 class ClubDinghyWithLimitAtEvent(GenericSkipperManObject):
     club_dinghy_id: str
@@ -73,13 +72,10 @@ class ClubDinghyWithLimitAtEvent(GenericSkipperManObject):
     event_id: str = event_id_for_generic_limit
 
 
-
-
 class ListOfClubDinghyLimits(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return ClubDinghyWithLimitAtEvent
-
 
 
 @dataclass

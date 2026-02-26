@@ -3,17 +3,16 @@ from typing import List
 from app.backend.groups.list_of_groups import get_list_of_groups
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
-from app.objects.utilities.exceptions import arg_not_passed
 
 from app.objects.cadet_attendance import DictOfDaySelectors
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
-    get_dict_of_all_event_info_for_cadets,
+from app.backend.cadets_at_event.cadet_availability import (
+    get_attendance_matrix_for_list_of_cadets_at_event,
 )
-from app.backend.cadets_at_event.cadet_availability import get_attendance_matrix_for_list_of_cadets_at_event
 from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadets_at_event_with_groups import (
-   DictOfCadetsWithDaysAndGroupsAtEvent, DaysAndGroups,
+    DictOfCadetsWithDaysAndGroupsAtEvent,
+    DaysAndGroups,
 )
 
 from app.objects.events import Event
@@ -24,10 +23,7 @@ from app.objects.groups import Group, ListOfGroups, unallocated_group
 
 
 def get_joint_attendance_matrix_for_cadets_in_group_at_event(
-    object_store: ObjectStore,
-    event: Event,
-    group: Group,
-    list_of_cadets: ListOfCadets
+    object_store: ObjectStore, event: Event, group: Group, list_of_cadets: ListOfCadets
 ) -> DictOfDaySelectors:
     attendance_data = get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event, list_of_cadets=list_of_cadets
@@ -45,54 +41,52 @@ def get_joint_attendance_matrix_for_cadets_in_group_at_event(
 def get_attendance_matrix_for_group_at_event(
     object_store: ObjectStore, event: Event, group: Group
 ) -> DictOfDaySelectors:
-    dict_of_cadets_with_days_and_groups = get_dict_of_cadets_with_groups_at_event(object_store=object_store, event=event)
-    cadets_in_group_during_event = dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(
-        group
+    dict_of_cadets_with_days_and_groups = get_dict_of_cadets_with_groups_at_event(
+        object_store=object_store, event=event
+    )
+    cadets_in_group_during_event = (
+        dict_of_cadets_with_days_and_groups.cadets_in_group_during_event(group)
     )
 
     all_selectors = {}
     for cadet in cadets_in_group_during_event:
-        days_and_groups = dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(
-            cadet
+        days_and_groups = (
+            dict_of_cadets_with_days_and_groups.get_days_and_groups_for_cadet(cadet)
         )
         all_selectors[cadet] = days_and_groups.day_selector_when_cadet_in_group(group)
 
     return DictOfDaySelectors(all_selectors)
 
 
-
 def get_dict_of_cadets_with_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
     return object_store.get(
-            object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_cadets_with_groups_at_event,
+        object_store.data_api.data_list_of_cadets_with_groups.get_dict_of_cadets_with_groups_at_event,
         event_id=event.id,
     )
 
-def get_days_and_groups_for_cadet_at_event(object_store: ObjectStore, event: Event, cadet: Cadet)  -> DaysAndGroups:
+
+def get_days_and_groups_for_cadet_at_event(
+    object_store: ObjectStore, event: Event, cadet: Cadet
+) -> DaysAndGroups:
     return object_store.get(
         object_store.data_api.data_list_of_cadets_with_groups.days_and_group_at_event_for_cadet,
         event_id=event.id,
-        cadet_id=cadet.id
+        cadet_id=cadet.id,
     )
 
+
 def add_cadet_to_group_on_day(
-    interface: abstractInterface,
-    event: Event,
-    cadet: Cadet,
-        day: Day,
-        group: Group
+    interface: abstractInterface, event: Event, cadet: Cadet, day: Day, group: Group
 ):
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_groups.add_cadet_to_group_on_day,
         event_id=event.id,
         cadet_id=cadet.id,
         day=day,
-        group_id=group.id
+        group_id=group.id,
     )
-
-
-
 
 
 def get_list_of_groups_at_event_given_list_of_cadets(
@@ -114,25 +108,35 @@ def get_list_of_groups_at_event_given_list_of_cadets(
 def get_list_of_all_groups_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfGroups:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_list_of_all_groups_at_event, event=event)
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_groups.get_list_of_all_groups_at_event,
+        event_id=event.id,
+    )
 
 
 def get_list_of_cadets_in_group(object_store: ObjectStore, event: Event, group: Group):
     return object_store.get(
         object_store.data_api.data_list_of_cadets_with_groups.get_list_of_active_cadets_in_group,
         group=group,
-        event=event)
+        event_id=event.id,
+    )
+
 
 def get_group_allocations_for_event_active_cadets_only(
     object_store: ObjectStore, event: Event
 ) -> DictOfCadetsWithDaysAndGroupsAtEvent:
-    return object_store.get(object_store.data_api.data_list_of_cadets_with_groups.get_group_allocations_for_event_active_cadets_only, event=event)
+    return object_store.get(
+        object_store.data_api.data_list_of_cadets_with_groups.get_group_allocations_for_event_active_cadets_only,
+        event_id=event.id,
+    )
 
 
 def get_sorted_list_of_groups_at_event(
     object_store: ObjectStore, event: Event, include_unallocated: bool = True
 ):
-    all_groups_at_event = get_list_of_all_groups_at_event(object_store=object_store, event=event)
+    all_groups_at_event = get_list_of_all_groups_at_event(
+        object_store=object_store, event=event
+    )
 
     all_groups = get_list_of_groups(object_store)
     sorted_groups_at_event = all_groups_at_event.sort_to_match_other_group_list_order(

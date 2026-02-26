@@ -10,7 +10,10 @@ from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
     get_dict_of_event_allocations_given_list_of_events_from_persistent_data,
 )
-from app.objects.composed.cadets_at_event_with_groups import DictOfEventAllocations, GroupAllocationInfo
+from app.objects.composed.cadets_at_event_with_groups import (
+    DictOfEventAllocations,
+    GroupAllocationInfo,
+)
 from app.backend.qualifications_and_ticks.progress import (
     get_qualification_status_for_single_cadet_as_list_of_str,
 )
@@ -24,9 +27,6 @@ from app.frontend.events.group_allocation.buttons import (
 )
 from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.club_dinghies import get_club_dinghies_detail
-from app.frontend.shared.club_boats_instructors import (
-    get_club_dinghies_detail_instructors,
-)
 from app.frontend.events.group_allocation.previous_events import (
     get_previous_event_selection_form,
     get_prior_events_to_show,
@@ -131,36 +131,35 @@ update_group_names_button = Button("Update past groups for cadets", nav_button=T
 def get_nav_bar_top(interface: abstractInterface):
     if is_admin_or_skipper(interface):
         return ButtonBar(
-    [
-        cancel_menu_button,
-        save_menu_button,
-        guess_boat_button,
-        add_button,
-        quick_group_report_button,
-        quick_spotters_report_button,
-        update_group_names_button,
-        help_button,
-    ]
-)
+            [
+                cancel_menu_button,
+                save_menu_button,
+                guess_boat_button,
+                add_button,
+                quick_group_report_button,
+                quick_spotters_report_button,
+                update_group_names_button,
+                help_button,
+            ]
+        )
     else:
         return ButtonBar(
-    [
-        cancel_menu_button,
-        save_menu_button,
-        quick_spotters_report_button,
-        help_button,
-    ]
-)
+            [
+                cancel_menu_button,
+                save_menu_button,
+                quick_spotters_report_button,
+                help_button,
+            ]
+        )
+
 
 def get_nav_bar_bottom(interface: abstractInterface):
     if is_admin_or_skipper(interface):
         return ButtonBar(
-    [cancel_menu_button, save_menu_button, add_button, help_button]
-)
-    else:
-        return ButtonBar(
-            [cancel_menu_button, save_menu_button,  help_button]
+            [cancel_menu_button, save_menu_button, add_button, help_button]
         )
+    else:
+        return ButtonBar([cancel_menu_button, save_menu_button, help_button])
 
 
 def get_allocations_and_classes_detail(
@@ -247,7 +246,9 @@ def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: list
 ) -> Table:
     object_store = interface.object_store
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
         object_store=object_store,
@@ -256,10 +257,12 @@ def get_inner_form_for_cadet_allocation(
         day_or_none=day_or_none,
     )
     prior_events = get_prior_events_to_show(interface=interface, event=event)
-    previous_groups_for_cadets = get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
-        object_store=object_store,
-        list_of_cadets=list_of_cadets,
-        list_of_events=prior_events,
+    previous_groups_for_cadets = (
+        get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
+            object_store=object_store,
+            list_of_cadets=list_of_cadets,
+            list_of_events=prior_events,
+        )
     )
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
     top_row = get_top_row(
@@ -306,10 +309,7 @@ def get_top_row(
             + input_field_names_over_days
         )
     else:
-        return RowInTable(
-            [""]  ## cadet name
-            + input_field_names_over_days
-        )
+        return RowInTable([""] + input_field_names_over_days)  ## cadet name
 
 
 def get_daily_input_field_headings(interface: abstractInterface) -> list:
@@ -360,8 +360,9 @@ def get_row_for_cadet(
     cadet: Cadet,
 ) -> RowInTable:
     cell_for_cadet = get_cell_for_cadet(
-        interface=interface, event=dict_of_all_event_data.event, cadet=cadet,
-
+        interface=interface,
+        event=dict_of_all_event_data.event,
+        cadet=cadet,
     )
     previous_groups_as_list = (
         previous_groups_for_cadets.previous_group_names_for_cadet_as_list(cadet)
@@ -391,10 +392,7 @@ def get_row_for_cadet(
             + input_fields
         )
     else:
-        return RowInTable(
-            [str(cadet)]
-            + input_fields
-        )
+        return RowInTable([str(cadet)] + input_fields)
 
 
 MAX_EVENTS_TO_SHOW = 10
@@ -444,7 +442,9 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
 
 def get_list_of_all_cadets_with_event_data(interface: abstractInterface):
     event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=interface.object_store, event=event
+    )
     list_of_cadets = dict_of_all_event_data.list_of_cadets
 
     return list_of_cadets

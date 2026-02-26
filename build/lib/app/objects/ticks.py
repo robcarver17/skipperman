@@ -39,7 +39,6 @@ def tick_from_str(some_str: str) -> Tick:
 
 
 class DictOfTicksWithItem(Dict[str, Tick]):
-
     def as_dict_of_str_aligned_to_list_of_tick_list_items(
         self, list_of_tick_list_items: List[str]
     ):
@@ -49,7 +48,6 @@ class DictOfTicksWithItem(Dict[str, Tick]):
                 for tick_item_id in list_of_tick_list_items
             ]
         )
-
 
     @classmethod
     def from_dict_of_str(cls, dict_of_str):
@@ -121,8 +119,6 @@ class ListOfTickListItemsAndTicksForSpecificCadet(GenericListOfObjects):
 
         return cls(list_of_cadets_with_tick_list_items)
 
-
-
     def list_of_tick_list_item_ids(self) -> List[str]:
         if len(self) == 0:
             return []
@@ -159,4 +155,6 @@ def from_df_to_list_of_cadets_with_tick_list_items(
         )
         list_of_cadets_with_tick_lists.append(cadet_with_tick_list_items)
 
-    return ListOfTickListItemsAndTicksForSpecificCadet(list_of_cadets_with_tick_lists) ## ignore warning
+    return ListOfTickListItemsAndTicksForSpecificCadet(
+        list_of_cadets_with_tick_lists
+    )  ## ignore warning

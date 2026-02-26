@@ -9,9 +9,7 @@ from app.web.html.forms import *
 from app.web.html.grouped_elements_to_html import get_html_for_element_in_form
 
 
-
 def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) -> Html:
-
     ## Called by action endpoints
     if TERSE:
         print("Abstract form %s" % str(form))
@@ -26,7 +24,6 @@ def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) 
 def process_abstract_objects_to_html(
     list_of_abstract_objects, urls_of_interest: UrlsOfInterest
 ) -> Html:
-
     return_html = ""
     for element in list_of_abstract_objects:
         html_this_element = get_html_for_element_in_form(

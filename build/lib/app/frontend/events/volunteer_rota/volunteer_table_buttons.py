@@ -86,7 +86,9 @@ def copy_previous_role_button_or_blank(
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> Union[Button, str]:
     ready_to_swap = is_ready_to_swap(interface)
-    previous_role = volunteer_data_at_event.most_common_role_group_and_team_at_previous_events
+    previous_role = (
+        volunteer_data_at_event.most_common_role_group_and_team_at_previous_events
+    )
     if previous_role is None or previous_role.is_unallocated:
         return ""
 

@@ -7,7 +7,10 @@ from typing import List
 
 import qrcode
 
-from app.data_access.configuration.configuration import HOMEPAGE, PUBLIC_REPORTING_SUBDIRECTORY
+from app.data_access.configuration.configuration import (
+    HOMEPAGE,
+    PUBLIC_REPORTING_SUBDIRECTORY,
+)
 from app.data_access.init_directories import upload_directory, download_directory
 from app.objects.abstract_objects.abstract_form import File
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
@@ -72,8 +75,7 @@ class PathAndFilename:
     @classmethod
     def from_filename_without_path(cls, filename_without_path: str):
         filename, extension = filename_without_path.split(".")
-        return cls(filename_without_extension=filename, extension=extension
-                   )
+        return cls(filename_without_extension=filename, extension=extension)
 
     @property
     def full_path_and_name(self):
@@ -133,7 +135,6 @@ def get_all_files_matching_filename(filename: str, pathname: str):
     return glob.glob(matching)
 
 
-
 def delete_all_files_matching_filename(filename: str, pathname: str):
     list_of_files = get_all_files_matching_filename(
         filename=filename, pathname=pathname
@@ -141,15 +142,17 @@ def delete_all_files_matching_filename(filename: str, pathname: str):
     for filename in list_of_files:
         os.remove(filename)
 
+
 def delete_all_files_in_directory(pathname: str):
     list_of_files = get_all_files_in_path(pathname)
     for filename in list_of_files:
         os.remove(filename)
 
 
-def get_all_files_in_path( pathname: str):
+def get_all_files_in_path(pathname: str):
     matching = "%s/*" % pathname
     return glob.glob(matching)
+
 
 def get_staged_adhoc_filename(adhoc_name: str):
     return os.path.join(upload_directory, "_%s" % adhoc_name)

@@ -10,7 +10,7 @@ from app.objects.utilities.exceptions import (
     missing_data,
     NoFileUploaded,
     arg_not_passed,
-    FileError
+    FileError,
 )
 from app.objects.abstract_objects.abstract_form import (
     YES,
@@ -41,7 +41,9 @@ class abstractInterface:
             self.log_error("Read only mode - not saving changes")
 
         else:
-            return self.object_store.update_without_checking_read_only(data_api_property_and_method, **kwargs)
+            return self.object_store.update_without_checking_read_only(
+                data_api_property_and_method, **kwargs
+            )
 
     def clear(self):
         self.object_store.clear_memory_cache_in_store()
@@ -74,11 +76,11 @@ class abstractInterface:
                 continue
             self.clear_persistent_value(key)
 
-    def  map_new_form_to_redirect_info(self, form: NewForm) -> NewFormWithRedirectInfo:
+    def map_new_form_to_redirect_info(self, form: NewForm) -> NewFormWithRedirectInfo:
         return NewFormWithRedirectInfo(
             action_name=self.action_name,
             new_form_name=form.form_name,
-            args_passed=self.session_data
+            args_passed=self.session_data,
         )
 
     @property
@@ -154,9 +156,6 @@ class abstractInterface:
     @global_read_only.setter
     def global_read_only(self, global_read_only: bool):
         self.object_store.global_read_only = global_read_only
-
-
-
 
 
 @dataclass

@@ -67,7 +67,6 @@ def display_initial_generic_report_form(
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store,
-
         )
     )
 
@@ -132,8 +131,7 @@ def display_form_for_generic_report_all_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=event
+            interface.object_store, event=event
         )
     )
 
@@ -195,8 +193,7 @@ def post_form_for_generic_report_all_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
 
@@ -209,18 +206,26 @@ def post_form_for_generic_report_all_options(
         return qr_code_for_report(interface, report_generator_with_specific_parameters)
 
     elif modify_print_options_button.pressed(last_button_pressed):
-        return interface.get_new_form_given_function(report_generator.print_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.print_options_display_form_function
+        )
 
     elif modify_group_layout_button.pressed(last_button_pressed):
-        return interface.get_new_form_given_function(report_generator.arrangement_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.arrangement_options_display_form_function
+        )
 
     elif modify_additional_options_button.pressed(last_button_pressed):
-        return interface.get_new_form_given_function(report_generator.additional_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.additional_options_display_form_function
+        )
 
     elif reset_all_options_button.pressed(last_button_pressed):
         reset_all_report_options(interface, report_generator_with_specific_parameters)
         interface.clear()
-        return interface.get_new_form_given_function(report_generator.all_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.all_options_display_form_function
+        )
 
     elif back_menu_button.pressed(last_button_pressed):
         # otherwise event/report specific data like filenames is remembered; also group order which could break everything if persisted
@@ -231,6 +236,7 @@ def post_form_for_generic_report_all_options(
     else:
         button_error_and_back_to_initial_state_form(interface)
 
+
 def display_form_for_generic_report_additional_options(
     interface: abstractInterface,
     report_generator: ReportGeneratorWithoutSpecificParameters,
@@ -238,8 +244,7 @@ def display_form_for_generic_report_additional_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=event
+            interface.object_store, event=event
         )
     )
     help_button = HelpButton(report_generator_with_specific_parameters.help_page)
@@ -287,22 +292,21 @@ def post_form_for_generic_report_additional_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
 
     if back_menu_button.pressed(last_button_pressed):
         return previous_form
 
-
     if reset_specific_options_button.pressed(last_button_pressed):
-        
         reset_specific_report_options(
             interface, report_generator_with_specific_parameters
         )
         interface.clear()
-        return interface.get_new_form_given_function(report_generator.additional_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.additional_options_display_form_function
+        )
 
     elif create_report_button.pressed(last_button_pressed):
         report_generator.get_additional_parameters_from_form_and_save(
@@ -315,7 +319,6 @@ def post_form_for_generic_report_additional_options(
             report_generator=report_generator_with_specific_parameters,
         )
     elif save_button.pressed(last_button_pressed):
-        
         report_generator.get_additional_parameters_from_form_and_save(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -333,8 +336,7 @@ def display_form_for_generic_report_print_options(
     event = get_event_from_state(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=event
+            interface.object_store, event=event
         )
     )
     specific_parameters_for_type_of_report = (
@@ -382,8 +384,7 @@ def post_form_for_generic_report_print_options(
     )
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            object_store=interface.object_store,
-            event=get_event_from_state(interface)
+            object_store=interface.object_store, event=get_event_from_state(interface)
         )
     )
 
@@ -391,16 +392,16 @@ def post_form_for_generic_report_print_options(
         return previous_form
 
     elif reset_print_options_button.pressed(last_button_pressed):
-        
         reset_print_report_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
         interface.clear()
-        return interface.get_new_form_given_function(report_generator.print_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.print_options_display_form_function
+        )
 
     elif create_report_button.pressed(last_button_pressed):
-        
         save_print_options_from_form(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -412,7 +413,6 @@ def post_form_for_generic_report_print_options(
         )
 
     elif save_button.pressed(last_button_pressed):
-        
         save_print_options_from_form(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
@@ -431,8 +431,7 @@ def display_form_for_generic_report_arrangement_options(
     dict_of_df = report_generator.get_dict_of_df(interface)
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     specific_parameters_for_type_of_report = (
@@ -487,8 +486,7 @@ def post_form_for_generic_report_arrangement_options(
 
     report_generator_with_specific_parameters = (
         report_generator.add_specific_parameters_for_type_of_report(
-            interface.object_store,
-            event=get_event_from_state(interface)
+            interface.object_store, event=get_event_from_state(interface)
         )
     )
     specific_parameters_for_type_of_report = (
@@ -507,13 +505,14 @@ def post_form_for_generic_report_arrangement_options(
         )
 
     elif reset_layout_options_button.pressed(last_button_pressed):
-        
         reset_arrangement_report_options(
             interface=interface,
             report_generator=report_generator_with_specific_parameters,
         )
         interface.clear()
-        return interface.get_new_form_given_function(report_generator.arrangement_options_display_form_function)
+        return interface.get_new_form_given_function(
+            report_generator.arrangement_options_display_form_function
+        )
 
     else:
         ## Changing arrangement

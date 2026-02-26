@@ -16,9 +16,7 @@ class NoteWithVolunteer:
     id: str
 
 
-
 class ListOfNotesWithVolunteers(List[NoteWithVolunteer]):
-
     def sort_by(self, sort_label: str):
         if sort_label == SORT_BY_DATE:
             return self.sort_by_date()
@@ -47,23 +45,17 @@ class ListOfNotesWithVolunteers(List[NoteWithVolunteer]):
         raw_list = sorted(
             self, key=lambda note: getattr(note, sort_by_attribute), reverse=reverse
         )
-        return ListOfNotesWithVolunteers(
-            raw_list
-        )
+        return ListOfNotesWithVolunteers(raw_list)
 
     def completed_only(self) -> "ListOfNotesWithVolunteers":
         new_list = [note for note in self if note.completed]
-        return ListOfNotesWithVolunteers(
-            new_list
-        )
+        return ListOfNotesWithVolunteers(new_list)
 
     def uncompleted_only(self) -> "ListOfNotesWithVolunteers":
         new_list = [note for note in self if not note.completed]
         return ListOfNotesWithVolunteers(
             new_list,
         )
-
-
 
 
 SORT_BY_AUTHOR = "sort by author"

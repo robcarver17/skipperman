@@ -19,7 +19,6 @@ from app.frontend.events.volunteer_rota.button_values import (
 )
 
 from app.frontend.shared.events_state import get_event_from_state
-from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import *
 
 
@@ -79,8 +78,10 @@ def update_if_copy_previous_role_button_pressed(
         object_store=interface.object_store, previous_role_copy_button_name=copy_button
     )
     event = get_event_from_state(interface)
-    previous_role_and_group = get_most_common_role_and_group_or_none_for_volunteer_at_previous_events(
-        object_store=interface.object_store, volunteer=volunteer
+    previous_role_and_group = (
+        get_most_common_role_and_group_or_none_for_volunteer_at_previous_events(
+            object_store=interface.object_store, volunteer=volunteer
+        )
     )
 
     if previous_role_and_group is None:

@@ -1,4 +1,8 @@
-from app.backend.groups.sorting import DEFAULT_SORT_ORDER, from_string_to_sort_list, from_sort_list_to_string
+from app.backend.groups.sorting import (
+    DEFAULT_SORT_ORDER,
+    from_string_to_sort_list,
+    from_sort_list_to_string,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import Day
 
@@ -37,6 +41,7 @@ def get_current_sort_order(interface: abstractInterface) -> list:
     if sort_list_as_str is None:
         return DEFAULT_SORT_ORDER
     return from_string_to_sort_list(sort_list_as_str)
+
 
 def clear_sort_order_in_state(interface: abstractInterface):
     interface.clear_persistent_value(SORT_ORDER)

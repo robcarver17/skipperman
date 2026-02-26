@@ -5,8 +5,16 @@ from typing import Dict, Union, List
 import pandas as pd
 from dateutil.parser import parse
 
-from app.data_access.configuration.field_list_groups import FIELDS_AS_STR, FIELDS_WITH_DATES, FIELDS_WITH_DATETIMES
-from app.data_access.configuration.fixed import ID_KEY, ID_KEY_SUFFIX, LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING
+from app.data_access.configuration.field_list_groups import (
+    FIELDS_AS_STR,
+    FIELDS_WITH_DATES,
+    FIELDS_WITH_DATETIMES,
+)
+from app.data_access.configuration.fixed import (
+    ID_KEY,
+    ID_KEY_SUFFIX,
+    LIST_OF_ID_KEY_TO_IGNORE_WHEN_CLEANING,
+)
 from app.objects.utilities.utils import in_both_x_and_y
 
 
@@ -48,15 +56,18 @@ KEY_VALUE_SEPERATOR = ":"
 ITEM_SEPERATOR = ","
 LIST_SEPERATOR = "_"
 
-def list_from_str(object_as_str: str, type_to_use = int):
+
+def list_from_str(object_as_str: str, type_to_use=int):
     list_of_values = object_as_str.split(LIST_SEPERATOR)
-    list_of_values= [type_to_use(value) for value in list_of_values]
+    list_of_values = [type_to_use(value) for value in list_of_values]
 
     return list_of_values
+
 
 def str_from_list(some_list: List):
     list_of_str = [str(value) for value in some_list]
     return LIST_SEPERATOR.join(list_of_str)
+
 
 def dict_from_str(object_as_str: str) -> dict:
     as_list_of_str = object_as_str.split(ITEM_SEPERATOR)
@@ -205,3 +216,45 @@ def from_str_to_bool(string: Union[str, bool]) -> bool:
     if type(string) is bool:
         return string
     return string == TRUE
+
+
+def bool2int(some_bool: bool):
+    if some_bool:
+        return 1
+    else:
+        return 0
+
+
+def int2bool(some_int: int):
+    if some_int == 1:
+        return True
+    elif some_int == 0:
+        return False
+    else:
+        raise Exception(
+            "%s not 0 or 1 and of type %s" % (str(some_int), str(type(some_int)))
+        )
+
+
+def date2int(some_datetime: Union[datetime.date, datetime.datetime]) -> int:
+    if type(some_datetime) is datetime.date:
+        some_datetime = datetime.datetime(
+            some_datetime.year,
+            some_datetime.month,
+            some_datetime.day,
+            tzinfo=datetime.timezone.utc,
+        )
+    return int(some_datetime.timestamp())
+
+
+def int2date(some_int: int) -> Union[datetime.date, datetime.datetime]:
+    some_datetime = datetime.datetime.fromtimestamp(
+        float(some_int), datetime.timezone.utc
+    )
+    if some_datetime.minute == 0:
+        if some_datetime.hour == 0:
+            return datetime.date(
+                some_datetime.year, some_datetime.month, some_datetime.day
+            )
+
+    return some_datetime

@@ -1,6 +1,5 @@
 from typing import Union, List
 
-from app.data_access.store.object_store import ObjectStore
 
 from app.backend.qualifications_and_ticks.list_of_qualifications import (
     get_list_of_qualifications,
@@ -47,8 +46,6 @@ def post_form_config_qualifications_page(
 ) -> Union[Form, NewForm]:
     list_of_qualifications = get_list_of_qualifications(interface.object_store)
 
-    
-
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_qualifications,
         interface=interface,
@@ -81,7 +78,7 @@ def post_form_config_qualifications_page(
 
 
 def save_from_ordinary_list_of_qualifications(
-        interface: abstractInterface, new_list: List[Qualification]
+    interface: abstractInterface, new_list: List[Qualification]
 ):
     update_list_of_qualifications(
         interface=interface,

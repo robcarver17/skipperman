@@ -1,7 +1,5 @@
 from typing import Union, List
 
-from app.data_access.store.object_store import ObjectStore
-
 from app.backend.boat_classes.list_of_boat_classes import (
     get_list_of_boat_classes,
     update_list_of_boat_classes,
@@ -37,7 +35,6 @@ def post_form_config_dinghies_page(
 ) -> Union[Form, NewForm]:
     list_of_boats = get_list_of_boat_classes(interface.object_store)
 
-    
     generic_list_output = post_form_edit_generic_list(
         existing_list=list_of_boats,
         interface=interface,

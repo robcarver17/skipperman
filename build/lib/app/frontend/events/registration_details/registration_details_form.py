@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
@@ -27,7 +26,6 @@ from app.objects.day_selectors import DaySelector
 from app.objects.events import Event
 from app.data_access.configuration.field_list_groups import (
     FIELDS_WITH_INTEGERS,
-    FIELDS_VIEW_ONLY_IN_EDIT_VIEW,
     FIELDS_TO_EDIT_IN_EDIT_VIEW,
 )
 from app.objects.utilities.exceptions import arg_not_passed
@@ -44,6 +42,7 @@ DAYS_ATTENDING = "days_attending_field"
 NOTES = "Notes"
 HEALTH = "Health"
 ROW_STATUS = "row status"
+
 
 @dataclass
 class RegistrationDetailsForEvent:
@@ -65,6 +64,7 @@ def get_registration_details_inner_form_for_event(
         row_for_cadet_in_event(
             cadet=cadet,
             registration_details=registration_details,
+            event=event
         )
         for cadet in registration_details.registration_data.list_of_cadets()
     ]
@@ -96,6 +96,7 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 
 
 def row_for_cadet_in_event(
+        event: Event,
     cadet: Cadet, registration_details: RegistrationDetailsForEvent
 ) -> RowInTable:
     registration_details_for_cadet = registration_details.registration_data[cadet]
@@ -105,7 +106,7 @@ def row_for_cadet_in_event(
     days_attending_field = get_days_attending_field(
         registration_details_for_cadet.availability,
         cadet_id=cadet.id,
-        event=registration_details_for_cadet.event,
+        event=event,
     )
     health_field = get_health_field(
         registration_details_for_cadet.health, cadet_id=cadet.id

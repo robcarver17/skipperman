@@ -2,7 +2,6 @@ from typing import Union
 from app.backend.mapping.list_of_field_mappings import (
     get_list_of_field_mapping_template_names,
     get_field_mapping_template,
-    save_field_mapping_template,
     save_field_mapping_for_event,
     does_event_already_have_mapping,
 )
@@ -12,7 +11,6 @@ from app.frontend.events.mapping.upload_template_field_mapping import (
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
-
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -133,15 +131,14 @@ def post_form_when_template_chosen(
 
     event = get_event_from_state(interface)
 
-    save_field_mapping_for_event(
-        interface=interface, event=event, mapping=mapping
-    )
+    save_field_mapping_for_event(interface=interface, event=event, mapping=mapping)
     interface.clear()
 
-    interface.log_error("Selected mapping template %s for event %s" % (template_name, str(event)))
+    interface.log_error(
+        "Selected mapping template %s for event %s" % (template_name, str(event))
+    )
 
     return previous_form(interface)
-
 
 
 help_button = HelpButton("WA_template_mapping_help")

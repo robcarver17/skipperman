@@ -10,7 +10,6 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_unique_object_with_attr_in_list,
     get_unique_object_with_multiple_attr_in_list,
-    get_idx_of_unique_object_with_attr_in_list,
     GenericListOfObjects,
     get_subset_of_list_that_matches_multiple_attr,
 )
@@ -75,7 +74,6 @@ class ListOfPatrolBoats(GenericListOfObjectsWithIds):
             attr_value=patrol_boat_name,
             default=default,
         )
-
 
 
 @dataclass
@@ -205,3 +203,4 @@ def get_location_for_boat(patrol_boat: PatrolBoat) -> str:
         return LAKE_SAFETY
     else:
         return RIVER_SAFETY
+

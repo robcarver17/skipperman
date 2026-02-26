@@ -124,7 +124,9 @@ class CsvDataApi(object):
         )
 
     @property
-    def data_wa_field_mapping_list_of_templates(self) -> CsvDataWAFieldMappingListOfTemplates:
+    def data_wa_field_mapping_list_of_templates(
+        self,
+    ) -> CsvDataWAFieldMappingListOfTemplates:
         return CsvDataWAFieldMappingListOfTemplates(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
@@ -220,7 +222,7 @@ class CsvDataApi(object):
     @property
     def data_list_of_identified_volunteers_at_event(
         self,
-    ) ->CsvDataListOfIdentifiedVolunteersAtEvent:
+    ) -> CsvDataListOfIdentifiedVolunteersAtEvent:
         return CsvDataListOfIdentifiedVolunteersAtEvent(
             master_data_path=self.master_data_path,
             backup_data_path=self.backup_data_path,
@@ -257,10 +259,12 @@ class CsvDataApi(object):
         )
 
     @property
-    def data_list_of_group_names_for_events_and_cadets_persistent_version(self) -> CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion:
+    def data_list_of_group_names_for_events_and_cadets_persistent_version(
+        self,
+    ) -> CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion:
         return CsvDataListOfGroupNamesForEventsAndCadetPersistentVersion(
             master_data_path=self.master_data_path,
-            backup_data_path=self.backup_data_path
+            backup_data_path=self.backup_data_path,
         )
 
     @property
@@ -399,7 +403,9 @@ class CsvDataApi(object):
         )
 
     @property
-    def data_list_of_last_roles_across_events_for_volunteers(self) -> CsvDataListOfLastRolesAcrossEventsForVolunteers:
+    def data_list_of_last_roles_across_events_for_volunteers(
+        self,
+    ) -> CsvDataListOfLastRolesAcrossEventsForVolunteers:
         return CsvDataListOfLastRolesAcrossEventsForVolunteers(
             self.master_data_path, backup_data_path=self.backup_data_path
         )

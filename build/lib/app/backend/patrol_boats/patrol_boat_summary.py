@@ -12,24 +12,21 @@ from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boa
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
 )
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_dict_of_patrol_boats_by_day_for_volunteer_at_event
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
+)
 
-
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_sorted_list_of_patrol_boats_at_event
 def get_summary_list_of_patrol_boat_allocations_for_events(
     object_store: ObjectStore, event: Event
 ) -> PandasDFTable:
-    dict_of_volunteers_at_event_with_patrol_boats = get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        object_store=object_store,
-        event=event
+    dict_of_volunteers_at_event_with_patrol_boats = (
+        get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
+            object_store=object_store, event=event
+        )
     )
 
-    list_of_boats_at_event = (
-        dict_of_volunteers_at_event_with_patrol_boats.list_of_unique_boats_at_event_including_unallocated()
-    )
-    list_of_all_boats = get_list_of_patrol_boats(object_store)
-    sorted_list_of_boats_at_event = (
-        list_of_boats_at_event.sort_from_other_list_of_boats(list_of_all_boats)
-    )
+    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(object_store=object_store, event=event)
 
     results_as_dict = dict(
         [

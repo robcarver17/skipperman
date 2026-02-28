@@ -92,7 +92,7 @@ def modify_cadet_given_form_contents(interface: abstractInterface):
         interface.log_error("Can't find cadet details in form")
         return
     modify_cadet(
-        object_store=interface.object_store,
+        interface=interface,
         existing_cadet=existing_cadet,
         new_cadet=new_cadet,
     )

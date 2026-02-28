@@ -16,7 +16,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button
+from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, back_menu_button
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 
 from app.objects.roles_and_teams import Team
@@ -43,13 +43,14 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
 
 
+
 def display_form_edit_individual_team_page(interface: abstractInterface) -> Form:
     team, dict_of_teams_and_roles = get_team_and_dict_of_teams_and_roles(interface)
     names = get_list_of_current_role_names(
         dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
     )
     list_of_roles_with_skills = get_list_of_roles_with_skills(interface.object_store)
-    navbar = ButtonBar([cancel_menu_button])
+    navbar = ButtonBar([back_menu_button])
     heading = Heading(
         "Add, remove or re-order members of volunteer team: %s " % team.name,
         centred=True,
@@ -137,7 +138,7 @@ def post_form_edit_individual_team_page(
         dict_of_teams_and_roles=dict_of_teams_and_roles, team=team
     )
 
-    if cancel_menu_button.pressed(last_button):
+    if back_menu_button.pressed(last_button):
         clear_team_id_in_state(interface)
         return interface.get_new_display_form_for_parent_of_function(
             post_form_edit_individual_team_page

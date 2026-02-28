@@ -10,7 +10,7 @@ from app.objects.roles_and_teams import (
     ListOfTeams,
     Team,
     all_role_locations,
-    role_location_no_warning,
+    role_location_no_warning, location_pretty_print, location_from_pretty_print,
 )
 from app.frontend.configuration.teams_and_roles.edit_individual_team import (
     display_form_edit_individual_team_page,
@@ -39,7 +39,7 @@ from app.frontend.configuration.generic_list_modifier import (
     edit_contents_button,
     edit_button_returned_from_generic_modifier,
     display_form_edit_generic_list,
-    post_form_edit_generic_list,
+    post_form_edit_generic_list, SAVE_AND_BACK_PRESSED,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -77,7 +77,7 @@ def post_form_config_teams_page(
         get_object_from_form_function=get_team_from_form,
     )
 
-    if generic_list_output is BACK_BUTTON_PRESSED:
+    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_teams_page
         )
@@ -117,7 +117,7 @@ def get_row_for_existing_entry(entry: Team, **kwargs_ignored) -> RowInTable:
 
 
 dict_of_location_options = dict(
-    [(location.name, location.name) for location in all_role_locations]
+    [(location_pretty_print(location), location_pretty_print(location)) for location in all_role_locations]
 )
 
 
@@ -135,9 +135,9 @@ def location_box_name(entry: Team = arg_not_passed) -> str:
 
 def dropdown_for_location(entry: Team = arg_not_passed) -> dropDownInput:
     if entry is arg_not_passed:
-        default_label = role_location_no_warning.name
+        default_label = location_pretty_print(role_location_no_warning)
     else:
-        default_label = entry.location_for_cadet_warning.name
+        default_label = location_pretty_print(entry.location_for_cadet_warning)
 
     location_input = dropDownInput(
         input_label="Warn on location",
@@ -158,15 +158,16 @@ def get_team_from_form(
     new_team_name = interface.value_from_form(
         text_box_name(existing_object), default=MISSING_FROM_FORM
     )
-    new_location = interface.value_from_form(
+    new_location_pretty_name = interface.value_from_form(
         location_box_name(existing_object), default=MISSING_FROM_FORM
     )
-    if MISSING_FROM_FORM in [new_location, new_team_name]:
+    if MISSING_FROM_FORM in [new_location_pretty_name, new_team_name]:
         interface.log_error("Can't update team %s as form error" % str(existing_object))
         return existing_object
 
+    new_location =location_from_pretty_print(new_location_pretty_name)
     new_team = Team(
-        name=new_team_name, location_for_cadet_warning=new_location, protected=False
+        name=new_team_name, location_for_cadet_warning=new_location
     )
 
     return new_team

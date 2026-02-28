@@ -20,6 +20,7 @@ class SqlDataListOfRoles(GenericSqlData):
     def add_role_with_skill(self, new_role: RoleWithSkills):
         if self.does_role_with_name_already_exist(new_role.name):
             raise Exception("Can't add as name %s already exists" % new_role.name)
+        self._add_role_with_skill_without_checks(new_role)
 
     def _add_role_with_skill_without_checks(self, new_role: RoleWithSkills):
         try:
@@ -135,7 +136,6 @@ class SqlDataListOfRoles(GenericSqlData):
         try:
             if self.table_does_not_exist(ROLES_TABLE):
                 raise Exception("Cannot modify as table dropped")
-            self.cursor.execute("DELETE FROM %s" % (ROLES_TABLE))
 
             name = new_role_with_skills.name
             hidden = bool2int(new_role_with_skills.hidden)
@@ -184,7 +184,7 @@ class SqlDataListOfRoles(GenericSqlData):
                 hidden=skill_with_id.hidden,
                 protected=skill_with_id.protected,
                 associate_sailing_group=skill_with_id.associate_sailing_group,
-                skills_dict=self.skills_dict_from_list_of_skill_ids(
+                skills_dict=self.padded_skills_dict_from_list_of_skill_ids(
                     skill_with_id.skill_ids_required
                 ),
                 id=skill_with_id.id,
@@ -194,14 +194,17 @@ class SqlDataListOfRoles(GenericSqlData):
 
         return ListOfRolesWithSkills(new_list)
 
-    def skills_dict_from_list_of_skill_ids(
+    def padded_skills_dict_from_list_of_skill_ids(
         self, list_of_skill_ids: List[str]
     ) -> SkillsDict:
         list_of_skills = self.list_of_skills
         list_of_skills_this_dict = ListOfSkills(
             [list_of_skills.skill_with_id(skill_id) for skill_id in list_of_skill_ids]
         )
-        return SkillsDict.from_list_of_skills(list_of_skills_this_dict)
+        skills_dict = SkillsDict.from_list_of_skills(list_of_skills_this_dict)
+        skills_dict.pad_with_missing_skills(self.list_of_skills)
+
+        return skills_dict
 
     @property
     def list_of_skills(self) -> ListOfSkills:

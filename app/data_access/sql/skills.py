@@ -51,7 +51,7 @@ class SqlDataListOfSkills(GenericSqlData):
                 self.create_table()
 
             self.cursor.execute(
-                "UPDATE %s SET %s=%s, %s=%d WHERE %s=%d"
+                "UPDATE %s SET %s='%s', %s=%d WHERE %s=%d"
                 % (
                     LIST_OF_SKILLS_TABLE,
                     SKILL_NAME,

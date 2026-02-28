@@ -19,7 +19,7 @@ from app.frontend.forms.reorder_form import (
 )
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
-    ADD_KEYBOARD_SHORTCUT,
+    ADD_KEYBOARD_SHORTCUT, SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -31,7 +31,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     cancel_menu_button,
-    HelpButton,
+    HelpButton, SAVE_AND_BACK_BUTTON_LABEL,
 )
 from app.objects.abstract_objects.abstract_lines import (
     Line,
@@ -120,7 +120,7 @@ BACK_BUTTON_PRESSED = object()
 BUTTON_NOT_KNOWN = object()
 REORDER_PRESSED = object()
 SAVE_OR_ADD_PRESSED = object()
-
+SAVE_AND_BACK_PRESSED= object()
 
 def display_form_edit_generic_list(
     existing_list: list,
@@ -136,7 +136,7 @@ def display_form_edit_generic_list(
     new_entries = row_for_new_entries()
     existing_entries.append(new_entries)
 
-    navbar = ButtonBar([cancel_menu_button, save_button, help_button])
+    navbar = ButtonBar([cancel_menu_button, save_button, save_and_back_button, help_button])
 
     return Form(
         [
@@ -158,6 +158,12 @@ save_button = Button(
     SAVE_ENTRY_BUTTON_LABEL,
     nav_button=True,
     shortcut=SAVE_KEYBOARD_SHORTCUT,
+)
+
+save_and_back_button = Button(
+    SAVE_AND_BACK_BUTTON_LABEL,
+    nav_button=True,
+    shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 
 add_button = Button(
@@ -278,6 +284,9 @@ def post_form_edit_generic_list(
         get_object_from_form_function=get_object_from_form_function,
     )
 
+    if save_and_back_button.pressed(last_button):
+        return SAVE_AND_BACK_PRESSED
+
     if save_button.pressed(last_button):
         ## already saved
         pass
@@ -323,6 +332,8 @@ def add_new_entry_from_form(interface: abstractInterface, adding_function: Calla
         except Exception as e:
             interface.log_error("Error when adding new entry: %s" % str(e))
 
+    interface.clear()
+
 
 def add_edits_from_form(
     interface: abstractInterface,
@@ -340,6 +351,7 @@ def add_edits_from_form(
     except Exception as e:
         interface.log_error("Error when modifying: %s" % (str(e)))
 
+    interface.clear()
 
 def add_edits_from_form_without_error_logging(
     interface: abstractInterface,
@@ -354,6 +366,8 @@ def add_edits_from_form_without_error_logging(
             existing_object=existing_object,
             get_object_from_form_function=get_object_from_form_function,
         )
+
+    interface.clear()
 
 
 def edit_specific_object_in_form(
@@ -394,6 +408,8 @@ def reorder_list_given_form(
     except Exception as e:
         interface.log_error("Error when reordering entry %s: " % str(e))
         new_list = copy(existing_list)
+
+    interface.clear()
 
     return new_list
 

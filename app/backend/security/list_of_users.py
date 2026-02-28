@@ -108,6 +108,7 @@ def generate_reset_message(interface: abstractInterface, username: str) -> str:
     change_password_for_user(
         interface=interface, username=username, new_password=new_password
     )
+
     return (
         "Message to send to user: Login with %s/%s/?username=%s&password=%s AND THEN CHANGE YOUR PASSWORD!!!"
         % (

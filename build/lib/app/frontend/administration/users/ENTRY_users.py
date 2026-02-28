@@ -12,7 +12,7 @@ from app.frontend.administration.users.render_users_form import (
     is_delete_button,
     is_reset_button,
     add_entry_button,
-    save_entry_button,
+    save_entry_button, save_and_back_button,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -36,6 +36,9 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
 
     save_changes_to_existing_users(interface)
 
+    if save_and_back_button.pressed(last_button):
+        return interface.get_new_display_form_for_parent_of_function(post_form_security)
+
     if save_entry_button.pressed(last_button):
         ## already done
         pass
@@ -55,6 +58,5 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-    interface.clear()
 
     return display_form_security(interface)

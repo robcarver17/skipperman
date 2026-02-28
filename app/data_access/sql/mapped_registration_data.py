@@ -92,7 +92,7 @@ class SqlDataMappedRegistrationData(GenericSqlData):
                 self.create_table()
 
             self.cursor.execute(
-                "DELETE FROM %s WHERE %s='%d"
+                "DELETE FROM %s WHERE %s='%d'"
                 % (MAPPED_REGISTRATION_DATA_TABLE, EVENT_ID, int(event_id))
             )
             for row_in_registration_data in mapped_wa_event:

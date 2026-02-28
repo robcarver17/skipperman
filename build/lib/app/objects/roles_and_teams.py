@@ -26,8 +26,14 @@ role_location_lake = RoleLocation.Lake_training
 role_location_river = RoleLocation.River_training
 role_location_no_warning = RoleLocation.No_warning
 
-all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
+def location_pretty_print(location: RoleLocation):
+    return location.name.replace("_", " ")
 
+def location_from_pretty_print(pretty_name: str):
+    return RoleLocation[pretty_name.replace(" ", "_")]
+
+all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
+all_role_locations_pretty = [location_pretty_print(location) for location in all_role_locations]
 
 @dataclass
 class RolesWithSkillIds(GenericSkipperManObjectWithIds):

@@ -51,7 +51,7 @@ class SqlDataListOfTeams(GenericSqlData):
             if self.table_does_not_exist(TEAMS_TABLE):
                 self.create_table()
             self.cursor.execute(
-                "UPDATE %s SET %s=%s, %s=%s, %s=%d WHERE %s=%d"
+                "UPDATE %s SET %s='%s', %s='%s', %s=%d WHERE %s=%d"
                 % (
                     TEAMS_TABLE,
                     TEAM_NAME,

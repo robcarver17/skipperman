@@ -503,7 +503,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             ## NEEDS TO DELETE OLD
             ## TEMPORARY UNTIL CAN DO PROPERLY
             self.cursor.execute(
-                "DELETE FROM %s WHERE %s=%sd "
+                "DELETE FROM %s WHERE %s=%d "
                 % (CADETS_AT_EVENT_TABLE, EVENT_ID, int(event_id))
             )
 
@@ -599,7 +599,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
 
             cursor = self.cursor
             cursor.execute(
-                "SELECT %s, %s FROM %s WHERE %s='%s' AND %s='%s'"
+                "SELECT %s, %s FROM %s WHERE %s=%d AND %s=%d "
                 % (
                     REGISTRATION_ROW_NAME,
                     REGISTRATION_ROW_VALUE,

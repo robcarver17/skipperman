@@ -149,30 +149,18 @@ def get_list_of_roles_with_skills(object_store: ObjectStore) -> ListOfRolesWithS
 def add_new_team(interface: abstractInterface, name_of_entry_to_add: str):
     team = Team(name_of_entry_to_add)
 
-    try:
-        interface.update(
+    interface.update(
             interface.object_store.data_api.data_list_of_teams.add_new_team,
             new_team=team,
-        )
-    except Exception as e:
-        interface.log_error(
-            "can't add team %s error: %s" % (name_of_entry_to_add, str(e))
         )
 
 
 def modify_team(interface: abstractInterface, existing_object: Team, new_object: Team):
-    try:
-        interface.update(
-            interface.object_store.data_api.data_list_of_teams.modify_team,
-            original_team=existing_object,
-            new_team=new_object,
-        )
-    except Exception as e:
-        interface.log_error(
-            "can't modify team %s to %s error: %s"
-            % (existing_object, new_object, str(e))
-        )
-
+    interface.update(
+        interface.object_store.data_api.data_list_of_teams.modify_team,
+        original_team=existing_object,
+        new_team=new_object,
+    )
 
 def get_list_of_teams(object_store: ObjectStore) -> ListOfTeams:
     return object_store.get(object_store.data_api.data_list_of_teams.read)

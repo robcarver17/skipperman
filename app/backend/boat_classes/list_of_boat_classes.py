@@ -16,7 +16,7 @@ def add_new_boat_class_given_string(
 ):
     new_boat = BoatClass(name_of_entry_to_add)
     interface.update(
-        interface.object_store.data_api.data_list_of_dinghies.add_new_boat_class_given_string,
+        interface.object_store.data_api.data_list_of_dinghies.add_new_boat_class,
         new_boat=new_boat,
     )
 

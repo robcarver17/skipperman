@@ -50,13 +50,16 @@ def delete_selected_user_from_user_list(interface: abstractInterface, last_butto
     username = username_from_deletion_button(last_button)
     print("deleting %s" % username)
     delete_user_from_user_list(interface=interface, username=username)
+    interface.clear()
 
 
 def generate_reset_message_for_user_name(
     last_button: str, interface: abstractInterface
 ):
     username = username_from_reset_button(last_button)
-    return generate_reset_message(username=username, interface=interface)
+    msg= generate_reset_message(username=username, interface=interface)
+    interface.clear()
+    return msg
 
 
 def add_new_user_if_present(interface: abstractInterface):
@@ -66,6 +69,7 @@ def add_new_user_if_present(interface: abstractInterface):
     if is_user_empty(user_values):
         return
     add_new_user(interface, user_values)
+    interface.clear()
 
 
 def add_new_user(interface: abstractInterface, user_values: SkipperManUserFromForm):
@@ -112,6 +116,8 @@ def save_changes_to_existing_users(interface: abstractInterface):
             save_change_to_user_from_form(interface=interface, user=user)
     except Exception as e:
         interface.log_error("Error updating users %s" % str(e))
+
+    interface.clear()
 
 
 def save_change_to_user_from_form(interface: abstractInterface, user: SkipperManUser):

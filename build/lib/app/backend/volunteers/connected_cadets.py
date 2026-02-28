@@ -12,7 +12,6 @@ from app.objects.utilities.cadet_matching_and_sorting import (
 from app.objects.utilities.utils import union_of_x_and_y
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.cadet_volunteer_associations import (
-    DEPRECATE_ListOfCadetVolunteerAssociations,
     DictOfCadetsAssociatedWithVolunteer,
 )
 

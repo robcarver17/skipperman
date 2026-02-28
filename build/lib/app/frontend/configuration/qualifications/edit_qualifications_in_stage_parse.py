@@ -45,6 +45,8 @@ def add_new_substage_to_qualification_from_form(interface: abstractInterface):
             "Can't add new substage %s because error %s" % (new_substage_name, str(e))
         )
 
+    interface.clear()
+
 
 def add_new_tick_list_item_from_form(interface: abstractInterface, button_pressed: str):
     qualification = get_qualification_from_state(interface)
@@ -74,6 +76,8 @@ def add_new_tick_list_item_from_form(interface: abstractInterface, button_presse
             % (new_tick_list_name, substage.name, str(e))
         )
 
+    interface.clear()
+
 
 def save_edited_values_in_qualifications_form(interface: abstractInterface):
     qualification = get_qualification_from_state(interface)
@@ -87,6 +91,8 @@ def save_edited_values_in_qualifications_form(interface: abstractInterface):
             qualification=qualification,
             substage=substage,
         )
+
+    interface.clear()
 
 
 def save_edited_values_in_qualifications_form_for_substage(

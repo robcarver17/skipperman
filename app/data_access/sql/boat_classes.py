@@ -67,7 +67,7 @@ class SqlDataListOfDinghies(GenericSqlData):
         finally:
             self.close()
 
-    def add_new_boat_class_given_string(self, new_boat: BoatClass):
+    def add_new_boat_class(self, new_boat: BoatClass):
         name_of_entry_to_add = new_boat.name
         if self.boat_name_already_exists(name_of_entry_to_add):
             raise Exception("Name %s already in data" % name_of_entry_to_add)
@@ -75,7 +75,9 @@ class SqlDataListOfDinghies(GenericSqlData):
         self._add_new_boat_class_without_checks(new_boat)
 
     def _add_new_boat_class_without_checks(self, new_boat: BoatClass):
-        idx = self.next_available_id()
+        idx = self.next_available_order()
+        id = self.next_available_id()
+        new_boat.id = id
         try:
             if self.table_does_not_exist(DINGHIES_TABLE):
                 self.create_table()

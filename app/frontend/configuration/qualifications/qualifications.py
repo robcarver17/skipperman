@@ -17,7 +17,7 @@ from app.frontend.configuration.generic_list_modifier import (
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
     BUTTON_NOT_KNOWN,
-    edit_button_returned_from_generic_modifier,
+    edit_button_returned_from_generic_modifier, SAVE_AND_BACK_PRESSED,
 )
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_qualification_name,
@@ -55,7 +55,7 @@ def post_form_config_qualifications_page(
         save_function=save_from_ordinary_list_of_qualifications,
     )
 
-    if generic_list_output is BACK_BUTTON_PRESSED:
+    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_qualifications_page
         )

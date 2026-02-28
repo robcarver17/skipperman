@@ -6,7 +6,7 @@ from app.data_access.configuration.fixed import (
     HELP_KEYBOARD_SHORTCUT,
     BACK_KEYBOARD_SHORTCUT,
     CANCEL_KEYBOARD_SHORTCUT,
-    SAVE_KEYBOARD_SHORTCUT,
+    SAVE_KEYBOARD_SHORTCUT, SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.utilities.exceptions import arg_not_passed
@@ -92,6 +92,7 @@ def get_nav_bar_with_just_main_menu_and_back_button() -> ButtonBar:
 
 SAVE_BUTTON_LABEL = "Save changes"
 
+
 # main_menu_button = Button(MAIN_MENU_BUTTON_LABEL, url = MAIN_MENU, nav_button=True, shortcut=MAIN_MENU_KEYBOARD_SHORTCUT)
 main_menu_button = MainMenuNavButton()
 back_menu_button = Button(
@@ -102,4 +103,8 @@ cancel_menu_button = Button(
 )
 save_menu_button = Button(
     SAVE_BUTTON_LABEL, nav_button=True, shortcut=SAVE_KEYBOARD_SHORTCUT
+)
+SAVE_AND_BACK_BUTTON_LABEL = "Save edits and go back"
+save_and_back_menu_button = Button(
+    SAVE_AND_BACK_BUTTON_LABEL, nav_button=True, shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT
 )

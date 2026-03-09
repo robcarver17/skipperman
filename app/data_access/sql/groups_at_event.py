@@ -267,12 +267,12 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
         return DictOfCadetsWithDaysAndGroupsAtEvent(
             [
                 (
-                    self.list_of_cadets.cadet_with_id(cadet_id),
+                    cadet,
                     self.days_and_group_at_event_for_cadet(
-                        event_id=event_id, cadet_id=cadet_id
+                        event_id=event_id, cadet_id=cadet.id
                     ),
                 )
-                for cadet_id in self.list_of_active_cadet_ids_at_event(event_id)
+                for cadet in self.list_of_active_cadets_at_event(event_id)
             ]
         )
 
@@ -319,7 +319,7 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
 
         return dict([(Day[raw_item[0]], str(raw_item[1])) for raw_item in raw_list])
 
-    def list_of_active_cadet_ids_at_event(self, event_id: str) -> List[str]:
+    def list_of_active_cadets_at_event(self, event_id: str) -> ListOfCadets:
         return self.object_store.get(
             self.object_store.data_api.data_cadets_at_event.get_list_of_active_cadets_at_event,
             event_id=event_id,

@@ -30,6 +30,7 @@ app/backend/cadets_at_event/add_unregistered_partner_cadet.py
 app/backend/cadets_at_event/cadet_availability.py
 app/backend/cadets_at_event/dict_of_all_cadet_at_event_data.py
 app/backend/cadets_at_event/instructor_marked_attendance.py
+app/backend/cadets_at_event/recent_events_and_new_cadets.py
 app/backend/cadets_at_event/update_status_and_availability_of_cadets_at_event.py
 app/backend/cadets_at_event/../../data_access/configuration/configuration.yaml
 app/backend/clothing/__init__.py

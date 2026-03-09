@@ -17,7 +17,7 @@ from app.objects.composed.cadets_at_event_with_groups import (
     DictOfCadetsWithDaysAndGroupsAtEvent,
 )
 from app.objects.events import Event, ListOfEvents
-from app.objects.utilities.exceptions import missing_data
+from app.objects.utilities.exceptions import missing_data, arg_not_passed
 
 
 def write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename(
@@ -53,15 +53,16 @@ def temp_file_name() -> str:
 
 
 def get_df_of_history_for_active_cadets(
-    object_store: ObjectStore, list_of_cadets: ListOfCadets
+    object_store: ObjectStore, list_of_cadets: ListOfCadets,
+        list_of_events: ListOfEvents = arg_not_passed
 ):
     dict_of_group_allocations = (
         get_dict_of_group_allocations_for_all_events_active_cadets_only(
             object_store=object_store
         )
     )
-
-    list_of_events = ListOfEvents(list(dict_of_group_allocations.keys()))
+    if list_of_events is arg_not_passed:
+        list_of_events = ListOfEvents(list(dict_of_group_allocations.keys()))
 
     list_of_dict_of_names = [
         get_dict_of_group_name_for_cadet_across_events(

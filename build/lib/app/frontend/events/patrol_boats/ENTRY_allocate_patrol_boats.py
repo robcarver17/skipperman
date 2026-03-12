@@ -22,7 +22,7 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_bottom_button_bar_for_patrol_boats,
     get_top_button_bar_for_patrol_boats,
-    quick_report_button,
+    quick_patrol_boat_report_button,
 )
 
 from app.frontend.events.patrol_boats.swapping import (
@@ -49,7 +49,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    save_menu_button,
+    save_menu_button, save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
@@ -98,17 +98,12 @@ def post_form_view_for_patrol_boat_allocation(
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    if quick_report_button.pressed(last_button_pressed):
+    if quick_patrol_boat_report_button.pressed(last_button_pressed):
         return create_quick_report(interface)
 
-    if is_admin_or_skipper(interface):
-        update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
-    else:
-        ## ignore
-        interface.log_error("User not permitted to change patrol boats")
-        return interface.get_new_form_given_function(
-            display_form_view_for_patrol_boat_allocation
-        )
+    update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
+
+
 
     ## New form
     if access_copy_menu_button.pressed(last_button_pressed):
@@ -118,7 +113,8 @@ def post_form_view_for_patrol_boat_allocation(
 
     if save_menu_button.pressed(last_button_pressed):
         pass  # already done
-
+    elif save_and_back_menu_button.pressed():
+        return previous_form(interface)
     elif is_save_warnings_button_pressed(last_button_pressed):
         pass  # already done
 

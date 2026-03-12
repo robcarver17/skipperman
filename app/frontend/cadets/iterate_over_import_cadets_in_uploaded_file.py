@@ -63,6 +63,7 @@ def process_current_cadet_in_temp_file(
     interface: abstractInterface, current_cadet: Cadet
 ) -> Union[Form, NewForm]:
     object_store = interface.object_store
+
     try:
         cadet_in_data = get_matching_cadet(
             object_store=object_store, cadet=current_cadet
@@ -85,6 +86,14 @@ def process_current_cadet_in_temp_file(
 def process_current_cadet_in_temp_file_when_no_exact_match(
     interface: abstractInterface, current_cadet: Cadet
 ) -> Union[Form, NewForm]:
+    if is_cadet_age_surprising(current_cadet):
+        ## ignoring, probably not a cadet
+        interface.log_error(
+            "Ignoring the import of %s as too old or young to be a cadet - add manually if required"
+            % str(current_cadet)
+        )
+        return next_iteration_over_rows_in_temp_cadet_file(interface)
+
     no_similar_cadets = are_there_no_similar_cadets(
         object_store=interface.object_store,
         cadet=current_cadet,
@@ -141,22 +150,7 @@ from app.objects.cadets import is_cadet_age_surprising
 def process_when_cadet_is_in_membership_list_and_not_in_system(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
-    if is_cadet_age_surprising(cadet):
-        ## ignoring, probably not a cadet
-        interface.log_error(
-            "Ignoring the import of %s as too old or young to be a cadet - add manually if required"
-            % str(cadet)
-        )
-        return next_iteration_over_rows_in_temp_cadet_file(interface)
 
-    return process_when_cadet_to_be_added_from_membership_list(
-        interface=interface, cadet=cadet
-    )
-
-
-def process_when_cadet_to_be_added_from_membership_list(
-    interface: abstractInterface, cadet: Cadet
-) -> Form:
     add_new_verified_cadet(interface=interface, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)

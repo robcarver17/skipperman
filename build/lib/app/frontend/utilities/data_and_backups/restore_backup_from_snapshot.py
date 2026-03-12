@@ -103,6 +103,7 @@ def restore_snapshot_given_button_pressed(
             backup_diff=backup_id,
             datapath=interface.object_store.backup_data_path,
         )
+        interface.clear()
 
     except Exception as e:
         interface.log_error("Can't restore backup, error %s" % str(e))

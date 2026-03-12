@@ -39,6 +39,7 @@ def save_food_data_in_form(interface: abstractInterface):
     save_cadet_food_data_in_form(interface)
     save_volunteer_food_data_in_form(interface)
 
+    interface.clear()
 
 def save_cadet_food_data_in_form(interface: abstractInterface):
     event = get_event_from_state(interface)

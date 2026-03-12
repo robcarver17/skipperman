@@ -41,6 +41,7 @@ def save_clothing_data(interface: abstractInterface):
             interface=interface, event=event, cadet=cadet, clothing=clothing
         )
 
+    interface.clear()
 
 def save_clothing_data_for_cadet(
     interface: abstractInterface, event: Event, cadet: Cadet, clothing: ClothingAtEvent
@@ -89,6 +90,7 @@ def distribute_colour_groups(interface: abstractInterface):
         distribute_colour_groups_at_event(interface=interface, event=event)
     except NotEnoughColours as error:
         interface.log_error(str(error))
+    interface.clear()
 
 
 def clear_all_colours(interface: abstractInterface):
@@ -100,3 +102,5 @@ def clear_all_colours(interface: abstractInterface):
 
     for cadet in dict_of_cadets_with_clothing.list_of_cadets:
         clear_colour_group_for_cadet(interface=interface, event=event, cadet=cadet)
+
+    interface.clear()

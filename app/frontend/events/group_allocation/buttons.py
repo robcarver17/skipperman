@@ -6,6 +6,7 @@ from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
     get_day_from_state_or_none,
 )
+from app.objects.abstract_objects.abstract_text import bold
 from app.frontend.shared.buttons import (
     get_button_value_for_day,
     get_button_value_for_day_button_with_non_day_value,
@@ -34,7 +35,7 @@ def get_day_buttons(interface: abstractInterface) -> Line:
         message = "  Choose day to edit (if you want to allocate cadets to different groups, boats or partners on specific days): "
     else:
         day = get_day_from_state_or_none(interface)
-        message = (
+        message = bold(
             "Currently editing %s: ** CHANGES WON'T BE APPLIED TO ALL DAYS! ** "
             % day.name
         )

@@ -13,7 +13,6 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
 from app.objects.day_selectors import DaySelector, Day
-from app.objects.events import Event
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import RegistrationStatus, ACTIVE_STATUS_NAMES
 from app.objects.utilities.exceptions import missing_data, MultipleMatches
@@ -255,11 +254,6 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             if self.table_does_not_exist(REGISTRATION_ROW_FOR_CADETS_TABLE):
                 self._create_registration_row_data_table()
 
-            row_in_registration_data = RowInRegistrationData()
-            row_in_registration_data[column_name] = new_value_for_column
-            as_str_dict = row_in_registration_data.as_str_dict()
-            value_as_str = as_str_dict[column_name]
-
             self.cursor.execute(
                 "DELETE FROM %s WHERE %s=%d AND %s=%d AND %s='%s'"
                 % (
@@ -272,6 +266,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
                     str(column_name),
                 )
             )
+            value_as_str = str(new_value_for_column)
 
             insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)" % (
                 REGISTRATION_ROW_FOR_CADETS_TABLE,

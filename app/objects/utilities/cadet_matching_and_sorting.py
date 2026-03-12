@@ -41,6 +41,8 @@ def get_list_of_similar_cadets(
         if similar_cadet(cadet, other_cadet, name_threshold=name_threshold)
     ]
 
+    print("SIMILAR %s" % (new_list))
+
     return ListOfCadets(new_list)
 
 
@@ -114,15 +116,14 @@ def similar_cadet(
         cadet_in_data.date_of_birth, other_cadet.date_of_birth
     )
 
-    if (
-        cadet_in_data.first_name.lower().strip()
-        == cadet_in_data.surname.lower().strip()
-    ):
+    if name_match < name_threshold:
+        return False
+
+    if other_cadet.does_not_have_real_date_of_birth or cadet_in_data.does_not_have_real_date_of_birth:
         return True
 
-    if name_match > name_threshold:
-        if dob_match_with_codes > 0.5:
-            return True
+    if dob_match_with_codes > 0.5:
+        return True
 
     return False
 

@@ -1,4 +1,6 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.composed.dict_of_volunteer_role_targets import DictOfTargetsForRolesAtEvent
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 from app.objects.volunteer_role_targets import (
     ListOfTargetForRoleWithIdAtEvent,
     TargetForRoleWithIdAtEvent,
@@ -92,6 +94,18 @@ class SqlDataListOfTargetForRoleAtEvent(GenericSqlData):
             )
         finally:
             self.close()
+
+    def get_dict_of_targets_for_roles_at_event(self, event_id: str) -> DictOfTargetsForRolesAtEvent:
+        raw_list = self.read(event_id)
+        new_dict =dict([(self.list_of_roles_with_skills.role_with_id(raw_item.role_id), raw_item.target) for raw_item in raw_list])
+
+        return DictOfTargetsForRolesAtEvent(new_dict)
+
+    @property
+    def list_of_roles_with_skills(self) -> ListOfRolesWithSkills:
+        return self.object_store.get(
+            self.object_store.data_api.data_list_of_roles.read_list_of_roles_with_skills
+        )
 
     def read(self, event_id: str) -> ListOfTargetForRoleWithIdAtEvent:
         if self.table_does_not_exist(VOLUNTEER_TARGETS_AT_EVENT_TABLE):

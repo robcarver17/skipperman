@@ -63,7 +63,7 @@ def display_form_edit_cadet_volunteer_connections(
 
 header_text = ListOfLines(
     [
-        "Edit volunteer and sailors connections (used to avoid putting group_allocations/parents together and to find volunteers):"
+        "Edit volunteer and sailors connections (used to avoid putting sailors and parents together):"
     ]
 )
 

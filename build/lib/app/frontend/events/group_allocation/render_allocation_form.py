@@ -57,7 +57,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton,
+    HelpButton, save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -86,6 +86,7 @@ def display_form_allocate_cadets_at_event(
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
+    clicker_line = Line("Click on another cadet name to show history / Click on cadet with history showing to hide") if any_cadet_clicked_on(interface) else Line("Click on a cadet name to show history and qualifications")
     day_buttons = get_day_buttons(interface)
     sort_line = get_sort_line(sort_order)
     inner_form = get_inner_form_for_cadet_allocation(
@@ -109,7 +110,7 @@ def display_form_allocate_cadets_at_event(
                 _______________,
                 day_buttons,
                 _______________,
-                Line("Click on a cadet name to show all previous events"),
+                clicker_line,
                 _______________,
                 inner_form,
                 _______________,
@@ -134,6 +135,7 @@ def get_nav_bar_top(interface: abstractInterface):
             [
                 cancel_menu_button,
                 save_menu_button,
+                save_and_back_menu_button,
                 guess_boat_button,
                 add_button,
                 quick_group_report_button,
@@ -147,6 +149,7 @@ def get_nav_bar_top(interface: abstractInterface):
             [
                 cancel_menu_button,
                 save_menu_button,
+                save_and_back_menu_button,
                 quick_spotters_report_button,
                 help_button,
             ]
@@ -156,10 +159,10 @@ def get_nav_bar_top(interface: abstractInterface):
 def get_nav_bar_bottom(interface: abstractInterface):
     if is_admin_or_skipper(interface):
         return ButtonBar(
-            [cancel_menu_button, save_menu_button, add_button, help_button]
+            [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, help_button]
         )
     else:
-        return ButtonBar([cancel_menu_button, save_menu_button, help_button])
+        return ButtonBar([cancel_menu_button, save_and_back_menu_button, save_menu_button, help_button])
 
 
 def get_allocations_and_classes_detail(
@@ -438,6 +441,13 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
         return False
 
     return selected_cadet == cadet
+
+def any_cadet_clicked_on(interface: abstractInterface):
+    try:
+        get_cadet_from_state(interface)
+        return True
+    except MissingData:
+        return False
 
 
 def get_list_of_all_cadets_with_event_data(interface: abstractInterface):

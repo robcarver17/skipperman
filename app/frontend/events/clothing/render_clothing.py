@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     save_menu_button,
     cancel_menu_button,
-    HelpButton,
+    HelpButton, save_and_back_menu_button,
 )
 
 
@@ -57,7 +57,7 @@ def get_button_bar_for_clothing(interface: abstractInterface) -> ButtonBar:
         export_buttons = [export_all_clothing_button, export_colours_button]
 
     button_bar = ButtonBar(
-        [cancel_menu_button, save_menu_button, filter_button, clear_all_colours_button]
+        [cancel_menu_button, save_menu_button, save_and_back_menu_button, filter_button, clear_all_colours_button]
         + export_buttons
     )
 

@@ -64,6 +64,11 @@ def new_status_and_status_message(
             "Sailor %s was cancelled; now active so probably new registration replacing the existing cancelled one"
             % str(cadet)
         )
+    elif old_status.is_cancelled_no_refund and new_status.is_active:
+        status_message = (
+            "Sailor %s was cancelled with no refund; WA doesn't know about cancellation and Skipperman does know. You should probably keep the status to Cancelled No Refund. Click 'Use original data' button"
+            % str(cadet)
+        )
 
     elif old_status.is_deleted and new_status.is_active:
         status_message = (
@@ -140,5 +145,5 @@ def update_data_row_for_existing_cadet_at_event(
         event_id=event.id,
         cadet_id=cadet.id,
         column_name=column_name,
-        new_value_for_colum=new_value_for_column,
+        new_value_for_column=new_value_for_column,
     )

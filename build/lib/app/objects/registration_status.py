@@ -8,6 +8,7 @@ MANUAL = "Manual"
 UNPAID = "Unpaid"
 PARTIAL_PAID = "PartialPaid"
 DELETED = "Deleted"
+CANCELLED_NO_REFUND = "CancelledNoRefund"
 POSSIBLE_STATUS_NAMES = [
     CANCELLED,
     ACTIVE_PAID,
@@ -16,6 +17,7 @@ POSSIBLE_STATUS_NAMES = [
     MANUAL,
     UNPAID,
     PARTIAL_PAID,
+    CANCELLED_NO_REFUND
 ]
 ACTIVE_STATUS_NAMES = [ACTIVE_PAID, UNPAID, PARTIAL_PAID, MANUAL]
 
@@ -43,11 +45,16 @@ class RegistrationStatus:
 
     @property
     def is_cancelled_or_deleted(self):
-        return self.is_cancelled or self.is_deleted
+        return self.is_cancelled or self.is_deleted or self.is_cancelled_no_refund
 
     @property
     def is_cancelled(self):
-        return self.name == CANCELLED
+        return self.name in [CANCELLED]
+
+    @property
+    def is_cancelled_no_refund(self):
+        return self.name in [CANCELLED_NO_REFUND]
+
 
     @property
     def is_deleted(self):
@@ -59,6 +66,7 @@ class RegistrationStatus:
 
 
 cancelled_status = RegistrationStatus(CANCELLED)
+cancelled_no_refund_status = RegistrationStatus(CANCELLED_NO_REFUND)
 active_paid_status = RegistrationStatus(ACTIVE_PAID)
 active_unpaid_status = RegistrationStatus(UNPAID)
 active_part_paid_status = RegistrationStatus(PARTIAL_PAID)
@@ -72,12 +80,14 @@ def get_states_allowed_give_current_status(
 ) -> List[RegistrationStatus]:
     if current_status in [
         cancelled_status,
+        cancelled_no_refund_status,
         active_paid_status,
         active_unpaid_status,
         active_part_paid_status,
     ]:
         allowable_status = [
             cancelled_status,
+            cancelled_no_refund_status,
             active_paid_status,
             active_unpaid_status,
             active_part_paid_status,
@@ -85,13 +95,14 @@ def get_states_allowed_give_current_status(
     elif current_status == deleted_status:
         allowable_status = [
             cancelled_status,
+            cancelled_no_refund_status,
             active_paid_status,
             active_unpaid_status,
             active_part_paid_status,
             deleted_status,
         ]
     elif current_status == manual_status:
-        allowable_status = [cancelled_status, manual_status]
+        allowable_status = [cancelled_status, cancelled_no_refund_status,manual_status]
     ## SHOULD NEVER BE EMPTY
     else:
         raise Exception("Status %s not recognised" % str(current_status))
@@ -104,6 +115,7 @@ all_possible_status = [
 ]
 all_possible_status_user_can_select = [
     cancelled_status,
+    cancelled_no_refund_status,
     active_paid_status,
     active_unpaid_status,
     active_part_paid_status,

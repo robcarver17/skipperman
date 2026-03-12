@@ -25,7 +25,7 @@ class QualificationAndDate:
 
 
 from app.objects.utilities.generic_list_of_objects import (
-    get_unique_object_with_attr_in_list,
+get_idx_of_unique_object_with_attr_in_list
 )
 
 
@@ -48,7 +48,7 @@ class QualificationsForCadet(List[QualificationAndDate]):
         return QualificationsForCadet([self[idx] for idx in idx_list])
 
     def idx_of_qualification_or_none(self, qualification: Qualification):
-        return get_unique_object_with_attr_in_list(
+        return get_idx_of_unique_object_with_attr_in_list(
             self, attr_name="qualification", attr_value=qualification, default=None
         )
 

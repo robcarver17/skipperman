@@ -22,11 +22,11 @@ from app.frontend.events.group_allocation.input_fields import (
     NOTES,
     ALLOCATION,
     CLUB_BOAT,
-    PARTNER,
     BOAT_CLASS,
     SAIL_NUMBER,
     ATTENDANCE,
 )
+from app.frontend.events.group_allocation.partnership_input_fields import PARTNER
 from app.frontend.events.group_allocation.buttons import (
     get_cadet_from_cadet_available_buttons,
     get_cadet_given_remove_partner_button_name,

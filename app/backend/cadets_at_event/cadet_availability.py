@@ -59,7 +59,7 @@ def get_attendance_matrix_for_list_of_cadets_at_event(
         object_store=object_store, event=event
     )
     if list_of_cadets is arg_not_passed:
-        list_of_cadets = all_event_info.list_of_cadets
+        list_of_cadets = all_event_info.list_of_cadets()
 
     dict_of_availability = dict(
         [

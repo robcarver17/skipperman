@@ -25,6 +25,7 @@ from app.backend.reporting.process_stages.strings_columns_groups import (
 @dataclass
 class PdfLayout:
     print_options: PrintOptions
+    header_str: str = ""
 
     def add_page(self, page: PageWithColumns):
         self.setup_page(page)
@@ -60,9 +61,10 @@ class PdfLayout:
             pass
 
     def add_title_to_page(self):
-        title_str = "%s (Printed %s)" % (
+        title_str = "%s (Printed %s) %s" % (
             self.title_str,
             datetime.datetime.now(local_timezone).strftime("%b %d %H:%M"),
+            self.header_str
         )
         pdf = self.pdf
         pdf.set_font(self.font, "", self._title_font_size())

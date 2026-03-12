@@ -153,6 +153,10 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     @property
+    def does_not_have_real_date_of_birth(self):
+        return self.date_of_birth in [DEFAULT_DATE_OF_BIRTH, UNCONFIRMED_DATE_OF_BIRTH, IRRELEVANT_DATE_OF_BIRTH]
+
+    @property
     def has_default_date_of_birth(self):
         return self.date_of_birth == DEFAULT_DATE_OF_BIRTH
 
@@ -278,9 +282,7 @@ def is_cadet_age_surprising(cadet: Cadet):
 
 def cant_check_dob(cadet: Cadet):
     return (
-        cadet.has_default_date_of_birth
-        or cadet.has_unknown_date_of_birth
-        or cadet.has_irrelevant_date_of_birth
+        cadet.does_not_have_real_date_of_birth
     )
 
 
@@ -288,43 +290,23 @@ def cadet_seems_too_old(cadet: Cadet):
     if cant_check_dob(cadet):
         return False
 
-    date_of_birth = cadet.date_of_birth
-    appropriate_year = get_appropriate_year_for_cadet_start_point()
-    cut_off_date = datetime.date(
-        year=appropriate_year - MAX_CADET_AGE - 1,
-        month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
-        day=1,
-    )
+    cadet_age = how_old(cadet.date_of_birth)
 
-    return date_of_birth < cut_off_date
-
+    return cadet_age>(MAX_CADET_AGE+1)
 
 def cadet_seems_too_young(cadet: Cadet):
     if cant_check_dob(cadet):
         return False
 
-    date_of_birth = cadet.date_of_birth
-    appropriate_year = get_appropriate_year_for_cadet_start_point()
-    cut_off_date = datetime.date(
-        year=appropriate_year - MIN_CADET_AGE - 1,
-        month=MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
-        day=1,
-    )
+    cadet_age = how_old(cadet.date_of_birth)
 
-    return date_of_birth >= cut_off_date
+    return cadet_age<(MIN_CADET_AGE-1)
 
 
 def how_old(date_of_birth: datetime.date):
     diff = datetime.date.today() - date_of_birth
     return diff.total_seconds() / (60 * 60 * 24 * 365.25)
 
-
-def get_appropriate_year_for_cadet_start_point():
-    today = datetime.date.today()
-    if today.month < MONTH_WHEN_CADET_AGE_BRACKET_BEGINS:
-        return today.year
-    else:
-        return today.year + 1
 
 
 PERMANENT_SKIP_TEST_CADET_ID = str(-9999)

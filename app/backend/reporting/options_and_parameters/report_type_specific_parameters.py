@@ -14,6 +14,7 @@ class SpecificParametersForTypeOfReport:
     group_order: List[str]
     report_type: str
     unallocated_group: str
+    header_str: str = ""
     group_annotations: GroupAnnotations = arg_not_passed
 
 

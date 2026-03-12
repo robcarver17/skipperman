@@ -36,10 +36,12 @@ def save_dict_of_df_as_spreadsheet_file(
     dict_of_df: Dict[str, pd.DataFrame],
     path_and_filename_no_extension: PathAndFilename,
     write_index: bool = False,
+        header_str: str = ""
 ) -> PathAndFilename:
     try:
         path_and_filename_with_extension = save_dict_of_df_as_xls(
-            dict_of_df, path_and_filename_no_extension, write_index=write_index
+            dict_of_df, path_and_filename_no_extension, write_index=write_index,
+            header_str=header_str
         )
     except:
         path_and_filename_with_extension = save_dict_of_df_as_csv(
@@ -53,14 +55,16 @@ def save_dict_of_df_as_xls(
     dict_of_df: Dict[str, pd.DataFrame],
     path_and_filename_without_extension: PathAndFilename,
     write_index: bool = False,
+        header_str: str = ""
 ) -> PathAndFilename:
     path_and_filename = copy(path_and_filename_without_extension)
     path_and_filename.add_or_replace_extension(".xlsx")
     with pd.ExcelWriter(path_and_filename.full_path_and_name) as writer:
         for sheet_name, df in dict_of_df.items():
-            full_sheet_name = "%s Printed %s" % (
+            full_sheet_name = "%s (Printed %s) %s" % (
                 sheet_name,
                 datetime.now(local_timezone).strftime("%b %d %H%M"),
+                header_str
             )
             df.to_excel(writer, sheet_name=full_sheet_name, index=write_index)
 

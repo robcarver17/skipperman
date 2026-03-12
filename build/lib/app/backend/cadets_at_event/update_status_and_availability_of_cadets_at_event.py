@@ -86,7 +86,7 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
     )
     if len(days_now_available) == 0:
         return [
-            "Error: You have set availability for %s so they have no days of attendance. If they are not coming cancel then registration instead."
+            "Error: You cannot set availability for sailors so they have no days of attendance. If %s is not coming to the event then cancel their registration instead."
             % cadet.name
         ]
 
@@ -117,6 +117,7 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
 
             messages += message_for_day
 
+    return messages
 
 def remove_availability_of_existing_cadet_on_day_and_return_messages(
     interface: abstractInterface, event: Event, cadet: Cadet, day: Day

@@ -139,6 +139,15 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 
         return boat_class_and_partner.boat_class
 
+    def has_valid_partner_on_day(self, day: Day):
+        boat_class_and_partner = self.boat_class_and_partner_on_day(
+            day, default=missing_data
+        )
+        if boat_class_and_partner is missing_data:
+            return False
+
+        return boat_class_and_partner.has_partner
+
     def partner_on_day(
         self, day: Day, default=no_cadet_partner_required
     ) -> [Cadet, object]:

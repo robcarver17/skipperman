@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton,
+    HelpButton, save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
@@ -41,6 +41,7 @@ def get_header_buttons_for_rota(interface: abstractInterface):
             [
                 cancel_menu_button,
                 save_menu_button,
+                save_and_back_menu_button,
                 add_volunteer_button,
                 access_copy_menu,
                 download_matrix_button,
@@ -64,6 +65,7 @@ def get_buttons_after_rota_table_if_not_swapping():
         [
             cancel_menu_button,
             save_menu_button,
+            save_and_back_menu_button,
             add_volunteer_button,
             help_button,
         ]

@@ -16,12 +16,11 @@ from app.data_access.store.object_store import ObjectStore
 
 
 def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-    object_store: ObjectStore, event: Event, ignore_empty: bool = False
+    object_store: ObjectStore, event: Event
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-        event_id=event.id,
-        ignore_empty=ignore_empty,
+        event_id=event.id
     )
 
 

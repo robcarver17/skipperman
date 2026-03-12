@@ -38,7 +38,7 @@ def get_list_of_actual_and_targets_for_roles_at_event(
         )
     )
 
-    targets_at_event = get_volunteer_targets_at_event(
+    targets_at_event = get_dict_of_volunteer_targets_at_event(
         object_store=object_store, event=event
     )
 
@@ -58,11 +58,11 @@ def get_list_of_actual_and_targets_for_roles_at_event(
     return all_rows
 
 
-def get_volunteer_targets_at_event(
+def get_dict_of_volunteer_targets_at_event(
     object_store: ObjectStore, event: Event
 ) -> DictOfTargetsForRolesAtEvent:
     return object_store.get(
-        object_store.data_api.data_list_of_targets_for_role_at_event.read,
+        object_store.data_api.data_list_of_targets_for_role_at_event.get_dict_of_targets_for_roles_at_event,
         event_id=event.id,
     )
 

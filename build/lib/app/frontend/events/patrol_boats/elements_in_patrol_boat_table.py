@@ -41,7 +41,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
     cancel_menu_button,
     save_menu_button,
-    Button,
+    Button, save_and_back_menu_button,
 )
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -244,6 +244,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
             [
                 cancel_menu_button,
                 save_menu_button,
+                save_and_back_menu_button,
                 access_copy_menu_button,
                 quick_report_button,
                 help_button,
@@ -272,13 +273,22 @@ def get_bottom_button_bar_for_patrol_boats(interface: abstractInterface) -> Butt
     in_swap_state = is_ready_to_swap(interface)
     if in_swap_state:
         return ButtonBar([])
-    return ButtonBar(
-        [
-            cancel_menu_button,
-            save_menu_button,
-            help_button,
-        ]
-    )
+    elif is_admin_or_skipper(interface):
+        return ButtonBar(
+            [
+                cancel_menu_button,
+                save_menu_button,
+                save_and_back_menu_button,
+                help_button,
+            ]
+        )
+    else:
+        return ButtonBar(
+            [
+                cancel_menu_button,
+                help_button,
+            ]
+        )
 
 
 help_button = HelpButton("patrol_boat_help")

@@ -58,6 +58,12 @@ class ListOfClubDinghies(GenericListOfObjectsWithIds):
 
         return self.object_with_id(dinghy_id, default=default)
 
+    def add_no_club_dinghy(self):
+        if no_club_dinghy in self:
+            return
+
+        self.append(no_club_dinghy)
+
 
 no_club_dinghy_id = no_club_dinghy.id
 

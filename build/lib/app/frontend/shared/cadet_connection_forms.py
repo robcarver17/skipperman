@@ -76,7 +76,7 @@ def get_row_for_connected_cadet(cadet: Cadet) -> Line:
 
 
 def button_label_for_deletion(cadet: Cadet):
-    return "Delete %s" % str(cadet)
+    return "Delete connection"
 
 
 def button_name_for_deletion(cadet: Cadet):
@@ -99,7 +99,7 @@ def row_for_new_entries(
         list_of_cadets_to_choose_from=list_of_cadets_to_choose_from,
     )
     drop_down = dropDownInput(
-        input_label="Add new connection",
+        input_label="",
         default_label=CADET_FILLER,
         dict_of_options=dict_of_options,
         input_name=CONNECTION,

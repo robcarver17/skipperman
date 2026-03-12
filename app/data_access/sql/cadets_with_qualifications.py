@@ -141,7 +141,7 @@ class SqlListOfCadetsWithQualifications(GenericSqlData):
         return DictOfQualificationsForCadets(
             dict(
                 [
-                    (cadet, self.get_ordered_list_of_qualifications_for_cadet(cadet))
+                    (cadet, self.get_ordered_list_of_qualifications_for_cadet(cadet.id))
                     for cadet in list_of_cadets
                 ]
             )

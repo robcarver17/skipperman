@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Dict
 
+from app.objects.boat_classes import ListOfBoatClasses
+from app.objects.club_dinghies import ListOfClubDinghies
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
     CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay,
@@ -10,8 +12,7 @@ from app.objects.composed.cadets_with_all_event_info_functions import (
 )
 from app.objects.day_selectors import  Day
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
-from app.objects.groups import Group, unallocated_group
-
+from app.objects.groups import Group, unallocated_group, ListOfGroups
 
 from app.objects.events import Event
 
@@ -58,6 +59,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
         dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
+            list_of_groups: ListOfGroups,
+            list_of_club_dinghies: ListOfClubDinghies,
+            list_of_boat_classes: ListOfBoatClasses,
         event: Event,
     ):
         super().__init__(raw_dict)
@@ -72,6 +76,10 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
             dict_of_cadets_with_registration_data
         )
         self._dict_of_cadets_with_days_and_groups = dict_of_cadets_with_days_and_groups
+        self._list_of_groups = list_of_groups
+        self._list_of_club_dinghies = list_of_club_dinghies
+        self._list_of_boat_classes = list_of_boat_classes
+
         self._event = event
 
     def list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
@@ -157,6 +165,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return all_data
 
+    def sorted_list_of_groups_at_event(self):
+        return self.dict_of_cadets_with_days_and_groups.sorted_all_groups_at_event(self.list_of_groups)
+
     @property
     def dict_of_cadets_and_boat_class_and_partners(self):
         return self._dict_of_cadets_and_boat_class_and_partners
@@ -176,9 +187,22 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return self._dict_of_cadets_with_days_and_groups
 
     @property
+    def list_of_cadets(self) -> ListOfCadets:
+        return ListOfCadets(list(self.keys()))
+
+    @property
+    def list_of_groups(self)-> ListOfGroups:
+        return self._list_of_groups
+
+    @property
+    def list_of_boat_classes(self) -> ListOfBoatClasses:
+        return self._list_of_boat_classes
+
+    @property
+    def list_of_club_dinghies(self) -> ListOfClubDinghies:
+        return self._list_of_club_dinghies
+
+    @property
     def event(self):
         return self._event
 
-    @property
-    def list_of_cadets(self) -> ListOfCadets:
-        return ListOfCadets(list(self.keys()))

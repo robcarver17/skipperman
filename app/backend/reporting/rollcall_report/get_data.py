@@ -55,7 +55,7 @@ def get_dict_of_df_for_reporting_rollcalls_with_flags(
         object_store=object_store, event=event
     )
     list_of_groups = (
-        dict_of_all_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event()
+        dict_of_all_event_data.dict_of_cadets_with_days_and_groups.all_groups_at_event_excluding_unallocated()
     )
     if include_unallocated_cadets:
         list_of_groups.append(unallocated_group)

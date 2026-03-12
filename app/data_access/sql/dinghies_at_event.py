@@ -14,7 +14,7 @@ from app.objects.day_selectors import Day
 from app.objects.partners import (
     from_partner_id_to_int,
     from_int_to_partner_id,
-    no_partner_allocated,
+    no_partner_allocated, from_partner_cadet_to_id_or_string, FAKE_ID_FOR_NOT_ALLOCATED,
 )
 from app.objects.utilities.exceptions import (
     arg_not_passed,
@@ -43,16 +43,16 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
             event_id=event_id, cadet_id=cadet_id, day=day
         )
         self._breakup_partnerships_with_cadet_on_day(
-            event_id=event_id, partner_cadet_id=cadet_id, day=day
+            event_id=event_id, existing_partner_cadet_id=cadet_id, day=day
         )
 
     def _breakup_partnerships_with_cadet_on_day(
         self,
         event_id: str,
-        partner_cadet_id: str,
+        existing_partner_cadet_id: str,
         day: Day,
     ):
-        partner_id = no_partner_allocated
+        new_partner_id_as_int = FAKE_ID_FOR_NOT_ALLOCATED
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 raise MissingData("Can't update partner for non existent cadet")
@@ -60,11 +60,11 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
             insertion = "UPDATE %s SET %s=%d  WHERE %s=%d AND %s=%d AND %s='%s' " % (
                 CADETS_AND_DINGHIES_TABLE,
                 PARTNER_CADET_ID,
-                from_partner_id_to_int(partner_id),
+                new_partner_id_as_int,
                 EVENT_ID,
                 int(event_id),
                 PARTNER_CADET_ID,
-                int(partner_cadet_id),
+                from_partner_id_to_int(existing_partner_cadet_id),
                 DAY,
                 day.name,
             )
@@ -223,7 +223,7 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
                 return
 
             self.cursor.execute(
-                "DELETE FROM %s WHERE %s='%s' AND %s=%d AND %s=%d "
+                "DELETE FROM %s WHERE %s='%s' AND %s=%d AND %s='%s' "
                 % (
                     CADETS_AND_DINGHIES_TABLE,
                     EVENT_ID,
@@ -355,7 +355,7 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         try:
             cursor = self.cursor
             cursor.execute(
-                """SELECT %s, %s, %s FROM %s WHERE %s='%s' AND %s=%d AND %s=%d """
+                """SELECT %s, %s, %s FROM %s WHERE %s=%d AND %s=%d AND %s='%s' """
                 % (
                     SAIL_NUMBER,
                     PARTNER_CADET_ID,
@@ -379,8 +379,7 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
             self.close()
 
         if len(raw_list) == 0:
-            if default is arg_not_passed:
-                return default
+            return default
 
         if len(raw_list) > 1:
             error = "More than one %s %s %s found in cadets and dinghies table" % (

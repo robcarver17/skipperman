@@ -5,6 +5,7 @@ import pandas as pd
 from app.backend.club_boats.club_boat_limits import (
     update_limit_for_club_dinghy_at_event,
     get_dict_of_names_and_limits_for_all_visible_club_boats_at_event,
+    get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event,
 )
 from app.backend.club_boats.list_of_club_dinghies import (
     get_list_of_club_dinghies,
@@ -155,25 +156,35 @@ def update_club_boat_limits_for_event_from_form(interface: abstractInterface):
         return
     event = get_event_from_state(interface)
     list_of_club_dinghies = get_list_of_club_dinghies(interface.object_store)
+    existing_limits = get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(object_store=interface.object_store,
+                                                                                       event=event)
 
     for club_dinghy in list_of_club_dinghies:
         update_club_boat_limit_for_specific_boat_and_event(
-            interface=interface, event=event, club_dinghy=club_dinghy
+            interface=interface, event=event,
+            existing_limits =existing_limits,
+            club_dinghy=club_dinghy
         )
 
 
 def update_club_boat_limit_for_specific_boat_and_event(
-    interface: abstractInterface, event: Event, club_dinghy: ClubDinghy
+    interface: abstractInterface, event: Event,
+        existing_limits: Dict[ClubDinghy, int],
+        club_dinghy: ClubDinghy
 ):
     new_limit = get_limit_for_boat_from_form(
         interface=interface, club_dinghy=club_dinghy
     )
-    update_limit_for_club_dinghy_at_event(
-        interface=interface,
-        club_dinghy=club_dinghy,
-        event=event,
-        new_limit=new_limit,
-    )
+    existing_limit = existing_limits[club_dinghy]
+    if existing_limit ==new_limit:
+        return
+    else:
+        update_limit_for_club_dinghy_at_event(
+            interface=interface,
+            club_dinghy=club_dinghy,
+            event=event,
+            new_limit=new_limit,
+        )
 
 
 def get_limit_for_boat_from_form(
@@ -182,4 +193,4 @@ def get_limit_for_boat_from_form(
     cell_name = get_cell_name_for_boat_limits(club_dinghy.name)
     limit = interface.value_from_form(cell_name, default=0)
 
-    return limit
+    return int(limit)

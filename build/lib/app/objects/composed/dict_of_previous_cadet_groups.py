@@ -30,7 +30,7 @@ class DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds(
                     dict_of_event_ids_and_group_names=dict(
                         [
                             (event.id, group_name)
-                            for event, group_name in dict_of_events_and_group_names
+                            for event, group_name in dict_of_events_and_group_names.items()
                         ]
                     ),
                 )

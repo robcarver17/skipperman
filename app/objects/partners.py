@@ -61,10 +61,19 @@ def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, NoCadetPartne
 
     return partner_cadet.id
 
+def partner_string_is_no_partner_type(partner_str: str):
+    return partner_str in [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR]
 
 def no_partnership_given_partner_cadet_as_str(partner_as_str: str):
     return partner_as_str in [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR]
 
+def from_no_partner_object_to_str(partner: NoCadetPartner):
+    if partner is no_cadet_partner_required:
+        return NO_PARTNER_REQUIRED_STR
+    elif partner is no_partner_allocated:
+        return NOT_ALLOCATED_STR
+    else:
+        raise
 
 def no_partnership_object_given_str(partner_as_str: str):
     if partner_as_str == NO_PARTNER_REQUIRED_STR:

@@ -140,7 +140,7 @@ class SqlDataListOfVolunteerSkills(GenericSqlData):
 
     @property
     def list_of_volunteers(self) -> ListOfVolunteers:
-        return self.object_store.get(self.object_store.data_api.list_of_volunteers.read)
+        return self.object_store.get(self.object_store.data_api.data_list_of_volunteers.read)
 
     def get_dict_of_existing_skills_for_volunteer(
         self, volunteer_id: str

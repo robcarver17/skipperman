@@ -83,7 +83,7 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    save_menu_button,
+    save_menu_button, save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -107,6 +107,9 @@ def post_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewFo
         return previous_form(interface)
 
     save_all_information_in_forms_on_page(interface)
+
+    if save_and_back_menu_button.pressed(last_button):
+        return previous_form(interface)
 
     if button_clicked_returns_new_form(last_button):
         return post_form_allocate_cadets_returns_new_form(interface, last_button)
@@ -227,9 +230,9 @@ def post_form_allocate_cadets_when_changing_data(
 
 
 def save_all_information_in_forms_on_page(interface: abstractInterface):
-    update_data_given_allocation_form(interface)
     update_club_boat_limits_for_event_from_form(interface)
     save_event_selection_from_form(interface)
+    update_data_given_allocation_form(interface)
 
     interface.clear()
 

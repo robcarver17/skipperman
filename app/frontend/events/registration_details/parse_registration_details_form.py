@@ -298,7 +298,6 @@ def typecast_input_of_column(column_name: str, value):
         return str(value)
     elif column_name in FIELDS_WITH_INTEGERS:
         return int(value)
-    ## don't do dates as hopefully parsed automatically
 
     return value
 

@@ -33,6 +33,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
+save_and_back_menu_button,
     HelpButton,
     Button,
 )
@@ -108,10 +109,10 @@ quick_report_button = Button("Quick roll call report", nav_button=True)
 
 
 nav_buttons_top = ButtonBar(
-    [cancel_menu_button, save_menu_button, add_button, quick_report_button, help_button]
+    [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, quick_report_button, help_button]
 )
 nav_buttons_bottom = ButtonBar(
-    [cancel_menu_button, save_menu_button, add_button, help_button]
+    [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, help_button]
 )
 
 from app.frontend.shared.buttons import (
@@ -130,10 +131,10 @@ def post_form_edit_registration_details(
     if cancel_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
 
-    save_details_from_form(interface)
-
     if quick_report_button.pressed(last_button_pressed):
-        return create_quick_spotters_report(interface)
+        return create_quick_rollcall_report(interface)
+
+    save_details_from_form(interface)
 
     if add_button.pressed(last_button_pressed):
         return interface.get_new_form_given_function(
@@ -146,7 +147,9 @@ def post_form_edit_registration_details(
     elif is_save_warnings_button_pressed(last_button_pressed):
         ## already saved
         pass
-
+    elif save_and_back_menu_button.pressed(last_button_pressed):
+        ## already saved
+        return previous_form(interface)
     elif is_button_sort_order(last_button_pressed):
         ## no change to stage required, just sort order
         sort_order = sort_order_from_button_pressed(last_button_pressed)
@@ -211,7 +214,7 @@ def get_sort_buttons():
 clear_sort_button = Button(label="Sort by registration order", nav_button=True)
 
 
-def create_quick_spotters_report(interface: abstractInterface) -> File:
+def create_quick_rollcall_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         rollcall_report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store, event=get_event_from_state(interface)

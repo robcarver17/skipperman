@@ -1,7 +1,7 @@
 from typing import List
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.objects.utilities.transform_data import int2date
+
 from app.objects.cadet_volunteer_connections_with_ids import (
     ListOfCadetVolunteerAssociationsWithIds,
     CadetVolunteerAssociationWithIds,
@@ -11,10 +11,8 @@ from app.objects.cadets import ListOfCadets, Cadet
 from app.objects.composed.cadet_volunteer_associations import (
     DictOfCadetsAssociatedWithVolunteer,
 )
-from app.objects.membership_status import MembershipStatus
+
 from app.objects.volunteers import Volunteer, ListOfVolunteers
-from app.data_access.sql.cadets import CADETS_TABLE
-from app.data_access.sql.volunteers import VOLUNTEERS_TABLE
 
 CADET_VOLUNTEER_CONNECTIONS_TABLE = "cadet_volunteer_associations"
 INDEX_CADET_VOLUNTEER_CONNECTIONS_TABLE = "index_cadet_volunteer_associations"
@@ -133,7 +131,6 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
         try:
             if self.table_does_not_exist(CADET_VOLUNTEER_CONNECTIONS_TABLE):
                 return False
-
             cursor = self.cursor
             cursor.execute(
                 """SELECT * FROM %s WHERE %s=%d AND %s=%d """
@@ -175,7 +172,7 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
                 % (
                     # select
                     CADET_ID,
-                    VOLUNTEERS_TABLE,
+                    CADET_VOLUNTEER_CONNECTIONS_TABLE,
                     VOLUNTEER_ID,  # equals
                     int(volunteer_id),
                 )
@@ -186,7 +183,7 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
         finally:
             self.close()
 
-        return [item[0] for item in raw_list]
+        return [str(item[0]) for item in raw_list]
 
     def get_list_of_volunteers_associated_with_cadet(
         self, cadet_id: str
@@ -208,7 +205,7 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
                 % (
                     # select
                     VOLUNTEER_ID,
-                    VOLUNTEERS_TABLE,
+                    CADET_VOLUNTEER_CONNECTIONS_TABLE,
                     CADET_ID,  # equals
                     int(cadet_id),
                 )

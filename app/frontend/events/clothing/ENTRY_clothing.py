@@ -68,15 +68,16 @@ def post_form_view_for_clothing_requirements(
 
     if save_menu_button.pressed(last_button_pressed):
         save_clothing_data(interface)
-        interface.clear()
+    elif save_and_back_menu_button.pressed(last_button_pressed):
+        save_clothing_data(interface)
+        return previous_form(interface)
 
     elif distribute_action_button.pressed(last_button_pressed):
         distribute_colour_groups(interface)
-        interface.clear()
 
     elif clear_all_colours_button.pressed(last_button_pressed):
         clear_all_colours(interface)
-        interface.clear()
+
 
     elif last_button_pressed in all_sort_types:
         sort_order = interface.last_button_pressed()

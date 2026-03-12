@@ -109,7 +109,7 @@ class SqlDataListOfIdentifiedCadetsAtEvent(GenericSqlData):
 
             cursor = self.cursor
             cursor.execute(
-                """SELECT * FROM %s WHERE %s=%d  AND %s=%s"""
+                """SELECT * FROM %s WHERE %s=%d AND %s='%s' """
                 % (
                     CADET_IDENTIFIED_AT_EVENT_TABLE,
                     EVENT_ID,

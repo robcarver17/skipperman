@@ -260,14 +260,13 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         return not any_volunteers_on_day
 
     def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
-        self, event_id: str, ignore_empty: bool = False
+        self, event_id: str
     ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
         raw_list = self.read(event_id)
         new_dict = {}
         for raw_item in raw_list:
-            if ignore_empty:
-                if raw_item.patrol_boat_id == EMPTY_VOLUNTEER_ID:
-                    continue
+            if raw_item.volunteer_id == EMPTY_VOLUNTEER_ID:
+                continue
             volunteer = self.list_of_volunteers.volunteer_with_id(raw_item.volunteer_id)
             dict_this_volunteer = new_dict.get(volunteer, PatrolBoatByDayDict())
             dict_this_volunteer[raw_item.day] = self.list_of_patrol_boats.boat_given_id(
@@ -296,7 +295,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         try:
             cursor = self.cursor
             cursor.execute(
-                """SELECT UNIQUE %s  FROM %s WHERE %s=%d """
+                """SELECT DISTINCT %s FROM %s WHERE %s=%d """
                 % (
                     PATROL_BOAT_ID,
                     PATROL_BOATS_AND_VOLUNTEERS_TABLE,

@@ -38,7 +38,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.partners import (
-    no_cadet_partner_required,
+    no_cadet_partner_required, from_partner_cadet_to_id_or_string,
 )
 
 from typing import List, Union
@@ -212,7 +212,7 @@ def propagate_changes_to_club_dinghies_for_cadet_in_underlying_data(
         event_id=event.id,
         day=day,
         cadet_id=cadet.id,
-        club_dinghy_id=club_dinghy,
+        club_dinghy_id=club_dinghy.id,
     )
 
 
@@ -236,7 +236,7 @@ def propagate_changes_to_boat_class_and_partners_for_cadet_in_underlying_data(
         day=day,
         boat_class_id=boat_class_and_partner_on_day.boat_class.id,
         sail_number=boat_class_and_partner_on_day.sail_number,
-        partner_id=boat_class_and_partner_on_day.partner_cadet.id,
+        partner_id=from_partner_cadet_to_id_or_string(boat_class_and_partner_on_day.partner_cadet),
     )
 
 

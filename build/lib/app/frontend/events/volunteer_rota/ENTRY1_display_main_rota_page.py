@@ -114,7 +114,10 @@ def post_form_view_for_volunteer_rota(
 
     save_all_information_across_forms(interface)
 
-    if is_a_form_change_that_changes_state(last_button_pressed):
+    if save_and_back_menu_button.pressed(last_button_pressed):
+        return previous_form(interface)
+
+    elif is_a_form_change_that_changes_state(last_button_pressed):
         return post_form_view_for_volunteer_rota_if_state_changed(
             interface, last_button_pressed
         )

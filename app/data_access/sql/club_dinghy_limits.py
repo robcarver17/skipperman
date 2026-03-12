@@ -35,9 +35,9 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
 
         return new_list
 
-    def get_dict_of_names_and_limits_for_all_visible_club_boats_at_event(
+    def get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
         self, event_id: str
-    ) -> Dict[str, int]:
+    ) -> Dict[ClubDinghy, int]:
         dict_of_club_boats_and_limits_at_event = (
             self.get_dict_of_club_boats_and_limits_at_event(event_id)
         )
@@ -50,7 +50,7 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         new_dict = dict(
             [
                 (
-                    boat.name,
+                    boat,
                     dict_of_club_boats_and_limits_at_event.get(
                         boat, generic_dict_of_club_boats_and_limits.get(boat, 0)
                     ),
@@ -149,7 +149,6 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
     def _add_limit_for_club_dinghy_without_checks(
         self, event_id: str, club_dinghy_id: str, limit: int
     ):
-        event_id = event_id_for_generic_limit
         try:
             if self.table_does_not_exist(CLUB_DINGHY_LIMIT_TABLE):
                 self.create_table()

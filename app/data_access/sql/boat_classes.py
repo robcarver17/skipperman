@@ -8,8 +8,6 @@ from app.data_access.sql.shared_column_names import (
 )
 from app.objects.boat_classes import ListOfBoatClasses, BoatClass
 from app.objects.utilities.exceptions import (
-    arg_not_passed,
-    MissingData,
     MultipleMatches,
     missing_data,
 )
@@ -150,6 +148,33 @@ class SqlDataListOfDinghies(GenericSqlData):
             self.close()
 
         return len(raw_list) > 0
+
+    def get_boat_class_from_name(self, name: str, default=missing_data):
+        try:
+            if self.table_does_not_exist(DINGHIES_TABLE):
+                return default
+
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT  %s, %s FROM %s WHERE %s='%s' """
+                % (HIDDEN, DINGHY_ID, DINGHIES_TABLE,DINGHY_NAME, name)
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading boat classes" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list)>1:
+            raise MultipleMatches("More than one boat called %s" % name)
+        elif len(raw_list)==0:
+            return default
+
+        raw_boat = raw_list[0]
+        return \
+            BoatClass(
+                name=str(name), hidden=int2bool(raw_boat[0]), id=str(raw_boat[1])
+            )
 
     def get_id_for_boat_with_name(self, name: str, default=missing_data):
         try:

@@ -95,11 +95,12 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def sort_by_firstname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
 
-    def volunteer_with_id(self, id: str) -> Volunteer:
-        return self.object_with_id(id)
+    def volunteer_with_id(self, id: str, default: Volunteer=arg_not_passed) -> Volunteer:
+        return self.object_with_id(id, default=default)
 
 
 default_volunteer = Volunteer(first_name=" ", surname=" ")
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"
+

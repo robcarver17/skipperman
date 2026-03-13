@@ -1,6 +1,8 @@
 from app.backend.reporting.boat_report.boat_report_parameters import (
     AdditionalParametersForBoatReport,
 )
+from app.frontend.forms.form_utils import get_availability_checkbox
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_form import yes_no_radio
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -12,7 +14,7 @@ from app.frontend.reporting.boats.processes import (
     EXCLUDE_LAKE,
     EXCLUDE_RIVER_TRAIN,
     DISPLAY_FULL_NAMES,
-    INCLUDE_IN_OUT,
+    INCLUDE_IN_OUT, DAYS_TO_SHOW,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 
@@ -47,9 +49,11 @@ def explain_additional_parameters_for_boat_report(
         if additional_parameters.in_out_columns
         else "No extra columns"
     )
-
+    days = "Report covers the following days: %s" % str(
+        additional_parameters.days_to_show.days_available_as_str()
+    )
     return ListOfLines(
-        [full_names, include_in_out, lake_text, river_text, unallocated]
+        [full_names, include_in_out, lake_text, river_text, unallocated, days]
     ).add_Lines()
 
 
@@ -86,6 +90,14 @@ def reporting_options_form_for_boat_additional_parameters(
         input_label="Exclude sailors not allocated to groups? %s" % explainer,
         default_is_yes=additional_parameters.exclude_unallocated_groups,
     )
+    event = get_event_from_state(interface)
+    choose_days = get_availability_checkbox(
+        input_name=DAYS_TO_SHOW,
+        availability=additional_parameters.days_to_show,
+        line_break=True,
+        include_all=True,
+        event=event,
+    )
 
     my_options = ListOfLines(
         [
@@ -94,6 +106,8 @@ def reporting_options_form_for_boat_additional_parameters(
             exclude_lake,
             exclude_river,
             exclude_unallocated,
+            "Select days to show in report:",
+            choose_days,
             _______________,
         ]
     )

@@ -6,19 +6,21 @@ import pandas as pd
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     apply_override_additional_options,
 )
+from app.frontend.forms.form_utils import get_availablity_from_form
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
 from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.events import Event
+from app.objects.day_selectors import DaySelector
+from app.objects.events import Event, get_past_days_selector_from_event_or_all_days_if_missing
 
 from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
     get_dict_of_df_for_reporting_allocations_with_flags,
 )
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.utilities.transform_data import (
     from_bool_to_str,
     from_str_to_bool,
@@ -45,10 +47,22 @@ def get_group_allocation_report_additional_parameters_from_form(
     )
     add_asterix_for_club_boats = interface.true_if_radio_was_yes(CLUB_BOAT_ASTERIX)
 
+    event = get_event_from_state(interface)
+    days_to_show = get_availablity_from_form(
+        event=event,
+        interface=interface,
+        input_name=DAYS_TO_SHOW,
+        default=MISSING_FROM_FORM,
+    )
+    if days_to_show is MISSING_FROM_FORM:
+        interface.log_error("Days to show missing from form")
+        days_to_show = event.day_selector_for_days_in_event_excluding_past_days()
+
     return AdditionalParametersForAllocationReport(
         display_full_names=display_full_names,
         include_unallocated_cadets=include_unallocated_cadets,
         add_asterix_for_club_boats=add_asterix_for_club_boats,
+        days_to_show=days_to_show
     )
 
 
@@ -62,6 +76,7 @@ def save_additional_parameters_for_allocation(
     save_unallocated_parameter(
         interface=interface, parameters=parameters, report_generator=report_generator
     )
+    save_days_to_show(interface=interface, parameters=parameters)
 
 
 def save_show_full_names_parameter(
@@ -101,6 +116,10 @@ def save_unallocated_parameter(
             interface=interface, report_generator=report_generator
         )
 
+def save_days_to_show(interface: abstractInterface,  parameters: AdditionalParametersForAllocationReport):
+    days_to_show_as_str = parameters.days_to_show.as_str()
+    interface.set_persistent_value(DAYS_TO_SHOW, days_to_show_as_str)
+
 
 def load_additional_parameters_for_allocation_report(
     interface: abstractInterface,
@@ -116,10 +135,18 @@ def load_additional_parameters_for_allocation_report(
     add_asterix_for_club_boats = interface.get_persistent_value(CLUB_BOAT_ASTERIX, TRUE)
     add_asterix_for_club_boats = from_str_to_bool(add_asterix_for_club_boats)
 
+    days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
+    if days_to_show_str is None:
+        event = get_event_from_state(interface)
+        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event)
+    else:
+        days_to_show = DaySelector.from_str(days_to_show_str)
+
     return AdditionalParametersForAllocationReport(
         display_full_names=display_full_names,
         include_unallocated_cadets=include_unallocated_cadets,
         add_asterix_for_club_boats=add_asterix_for_club_boats,
+        days_to_show=days_to_show
     )
 
 
@@ -129,6 +156,7 @@ def clear_additional_parameters_for_allocation_report(
     interface.clear_persistent_value(SHOW_FULL_NAMES)
     interface.clear_persistent_value(CLUB_BOAT_ASTERIX)
     interface.clear_persistent_value(INCLUDE_UNALLOCATED_CADETS)
+    interface.clear_persistent_value(DAYS_TO_SHOW)
 
 
 def get_dict_of_df_for_reporting_allocations(
@@ -158,6 +186,7 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(
         include_unallocated_cadets=additional_parameters.include_unallocated_cadets,
         display_full_names=additional_parameters.display_full_names,
         add_asterix_for_club_boats=additional_parameters.add_asterix_for_club_boats,
+        days_to_show=additional_parameters.days_to_show
     )
 
     return dict_of_df
@@ -166,3 +195,4 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(
 SHOW_FULL_NAMES = "Show_full_names"
 INCLUDE_UNALLOCATED_CADETS = "Include unallocated group allocations"
 CLUB_BOAT_ASTERIX = "Asterix for club boats"
+DAYS_TO_SHOW = "Days to show"

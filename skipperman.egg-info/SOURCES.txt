@@ -181,6 +181,7 @@ app/backend/rota/volunteer_table.py
 app/backend/rota/volunteers_and_cadets.py
 app/backend/rota/../../data_access/configuration/configuration.yaml
 app/backend/security/__init__.py
+app/backend/security/audit_logs.py
 app/backend/security/list_of_users.py
 app/backend/security/logged_in_user.py
 app/backend/security/user_access.py
@@ -248,6 +249,7 @@ app/data_access/csv/arch/wa_event_mapping.py
 app/data_access/csv/arch/wa_field_mapping.py
 app/data_access/csv/arch/../../configuration/configuration.yaml
 app/data_access/sql/__init__.py
+app/data_access/sql/audit_logs.py
 app/data_access/sql/boat_classes.py
 app/data_access/sql/cadet_attendance.py
 app/data_access/sql/cadet_clothing.py
@@ -306,6 +308,7 @@ app/data_access/store/object_store_elements.py
 app/data_access/store/../configuration/configuration.yaml
 app/frontend/__init__.py
 app/frontend/form_handler.py
+app/frontend/menu_construct.py
 app/frontend/menu_define.py
 app/frontend/template_for_form_generator_and_handling.py
 app/frontend/../data_access/configuration/configuration.yaml
@@ -542,6 +545,7 @@ app/frontend/shared/add_edit_cadet_form.py
 app/frontend/shared/add_edit_or_choose_volunteer_form.py
 app/frontend/shared/add_manual_registration.py
 app/frontend/shared/add_or_select_volunteer.py
+app/frontend/shared/audit_log.py
 app/frontend/shared/buttons.py
 app/frontend/shared/cadet_connection_forms.py
 app/frontend/shared/cadet_state.py
@@ -552,6 +556,7 @@ app/frontend/shared/event_selection.py
 app/frontend/shared/events_state.py
 app/frontend/shared/get_or_select_cadet_forms.py
 app/frontend/shared/qualification_and_tick_state_storage.py
+app/frontend/shared/quick_reports.py
 app/frontend/shared/team_state.py
 app/frontend/shared/volunteer_state.py
 app/frontend/shared/warnings_table.py
@@ -596,6 +601,7 @@ app/frontend/volunteers/volunteer_function_mapping.py
 app/frontend/volunteers/../../data_access/configuration/configuration.yaml
 app/objects/__init__.py
 app/objects/attendance.py
+app/objects/audit_log.py
 app/objects/boat_classes.py
 app/objects/cadet_at_event_with_boat_class_and_partners_with_ids.py
 app/objects/cadet_attendance.py

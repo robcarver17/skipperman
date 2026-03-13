@@ -13,6 +13,7 @@ from app.data_access.global_read_only import (
 )
 
 from app.data_access.csv.users import CsvDataListOfSkipperManUsers
+from app.data_access.sql.audit_logs import SqlDataListOfAuditUpdates
 from app.data_access.sql.cadet_attendance import (
     SqlDataAttendanceAtEventsForSpecificCadet,
 )
@@ -475,6 +476,13 @@ class MixedSqlAndCsvDataApi(object):
     ) -> SqlDataListOfLastRolesAcrossEventsForVolunteers:
         return SqlDataListOfLastRolesAcrossEventsForVolunteers(
             db_connection=self.db_connection, object_store=self.object_store
+        )
+
+    @property
+    def data_list_of_audit_updates(self) -> SqlDataListOfAuditUpdates:
+        return SqlDataListOfAuditUpdates(
+            db_connection=self.db_connection,
+            object_store=self.object_store
         )
 
     #### USERS

@@ -4,11 +4,13 @@ from app.backend.cadets.list_of_cadets import get_cadet_from_id
 from app.backend.events.list_of_events import get_event_from_id
 from app.backend.volunteers.list_of_volunteers import get_volunteer_from_id
 from app.data_access.store.object_store import ObjectStore
+from app.frontend.menu_define import REPORT_LINK
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     Button,
 )
+from app.objects.abstract_objects.abstract_form import ActionLink
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
@@ -206,3 +208,6 @@ def break_up_buttons(
     for i in range(0, len(rest_of_list), chunk_size):
         chunks.append(rest_of_list[i : i + chunk_size])
     return ListOfLines(chunks).add_Lines()
+
+
+report_link_button = ActionLink(REPORT_LINK)

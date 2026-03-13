@@ -141,6 +141,14 @@ class Event(GenericSkipperManObjectWithIds):
             dict([(day, day in weekdays_covered) for day in all_possible_days])
         )
 
+    def day_selector_for_days_in_event_excluding_past_days(self) -> DaySelector:
+        dates_in_event = self.dates_in_event()
+        weekdays_in_event = self.days_in_event()
+
+        return DaySelector(
+            dict([(day, date>=datetime.date.today()) for day,date in zip(weekdays_in_event, dates_in_event)])
+        )
+
     def days_in_event_as_single_string(self) -> str:
         names_of_days = self.days_in_event_as_list_of_string()
 
@@ -287,3 +295,10 @@ def list_of_events_excluding_one_event_and_past_events(
     list_of_events = list_of_events.sort_by(sort_by)
 
     return list_of_events
+
+def get_past_days_selector_from_event_or_all_days_if_missing(event: Event):
+    day_selector = event.day_selector_for_days_in_event_excluding_past_days()
+    if day_selector.days_available()==0:
+        return event.day_selector_for_days_in_event()
+    else:
+        return day_selector

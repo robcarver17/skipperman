@@ -17,7 +17,7 @@ from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
-from app.objects.events import Event
+from app.objects.events import Event, get_past_days_selector_from_event_or_all_days_if_missing
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, arg_not_passed
 
 DAYS_TO_SHOW = "DaysToShow"
@@ -29,7 +29,7 @@ def load_additional_parameters_for_patrol_boats_report(
     days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
     if days_to_show_str is None:
         event = get_event_from_state(interface)
-        days_to_show = event.day_selector_for_days_in_event()
+        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event)
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 
@@ -62,7 +62,7 @@ def get_patrol_boats_report_additional_parameters_from_form(
     )
     if days_to_show is MISSING_FROM_FORM:
         interface.log_error("Days to show missing from form")
-        days_to_show = event.day_selector_for_days_in_event()
+        days_to_show = event.day_selector_for_days_in_event_excluding_past_days()
 
     return AdditionalParametersForPatrolBoatReport(days_to_show=days_to_show)
 

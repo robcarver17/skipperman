@@ -48,6 +48,7 @@ EVENT_END_DATE = "event_end_date"
 
 VOLUNTEER_FIRST_NAME = "volunteer_first_name"
 VOLUNTEER_SURNAME = "volunteer_surname"
+VOLUNTEER_NAME = "volunteer_name"
 VOLUNTEER_ID = "volunteer_id"
 
 SKILL_NAME = "skill_name"
@@ -133,3 +134,6 @@ PATROL_BOAT_LABEL = "patrol_boat_label"
 
 ATTENDANCE_DATETIME = "attendance_datetime"
 CADET_ATTENDANCE = "cadet_attendance"
+
+USERNAME = "username"
+UPDATE_DATETIME = "update_datetime"

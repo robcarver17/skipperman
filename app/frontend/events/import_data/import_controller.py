@@ -1,5 +1,6 @@
 from typing import Union, Callable
 
+from app.backend.security.audit_logs import add_audit_log
 from app.frontend.events.food.automatically_get_food_data import (
     display_call_to_update_food_for_cadets_and_volunteers_from_registration_data_on_import,
 )
@@ -27,6 +28,7 @@ from app.frontend.events.volunteer_identification.add_volunteers_to_event import
 from app.frontend.events.volunteer_identification.ENTRY_volunteer_identification import (
     begin_volunteer_identification_process,
 )
+from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -56,6 +58,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     except NoMoreData:
         interface.log_error("Finished importing WA data")
         clear_index_of_last_import_done_in_state(interface)
+        log_import_finished(interface)
         return interface.get_new_display_form_for_parent_of_function(
             display_form_upload_event_file
         )
@@ -63,6 +66,10 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
     print("Next import %s" % str(next_import))
 
     return interface.get_new_form_given_function(next_import)
+
+def log_import_finished(interface: abstractInterface):
+    event = get_event_from_state(interface)
+    add_audit_log(interface=interface, event=event)
 
 
 def post_import_controller(interface):

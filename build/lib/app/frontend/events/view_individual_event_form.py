@@ -14,6 +14,8 @@ from app.backend.patrol_boats.patrol_boat_summary import (
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_teams_and_groups_for_events,
 )
+from app.frontend.shared.audit_log import get_audit_log_to_display_for_event
+from app.frontend.shared.buttons import report_link_button
 from app.frontend.shared.check_security import is_admin_or_skipper
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -27,7 +29,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
-    _______________,
+    _______________, DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_text import Heading
@@ -43,7 +45,7 @@ def get_event_form_for_event(
 
     lines_in_form = buttons + event_heading + summary_lines
 
-    return Form(lines_in_form.add_Lines())
+    return Form(lines_in_form)
 
 
 def get_event_heading(interface: abstractInterface, event: Event) -> ListOfLines:
@@ -66,6 +68,16 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     )
     if len(summarise_registrations) == 0:
         summarise_registrations = ""
+
+    audit_log_df = get_audit_log_to_display_for_event(interface)
+
+    if len(audit_log_df) == 0:
+        audit_log = ListOfLines(["No imports completed"])
+    else:
+        audit_log = DetailListOfLines(
+            ListOfLines([audit_log_df]), name="Imports"
+        )
+
 
     summarise_volunteers = PandasDFTable(
         summarise_volunteers_for_event(object_store=interface.object_store, event=event)
@@ -153,9 +165,13 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     else:
         clothing_summary_lines = ""
 
+
+
     summary_lines = ListOfLines(
         [
             summarise_registrations,
+            _______________,
+            audit_log,
             _______________,
             allocations_lines,
             _______________,
@@ -188,6 +204,7 @@ def get_event_buttons(interface: abstractInterface) -> ButtonBar:
                 patrol_boat_allocation_button,
                 food_button,
                 clothing_button,
+                report_link_button,
                 help_button,
             ]
         )
@@ -196,6 +213,7 @@ def get_event_buttons(interface: abstractInterface) -> ButtonBar:
             [
                 group_allocation_button,
                 patrol_boat_allocation_button,
+                report_link_button,
             ]
         )
 

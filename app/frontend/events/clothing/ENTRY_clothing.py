@@ -1,3 +1,5 @@
+from typing import Union
+
 from app.backend.clothing.summarise_clothing import summarise_clothing
 from app.frontend.events.clothing.downloads import (
     export_committee_clothing,
@@ -13,7 +15,6 @@ from app.frontend.events.clothing.render_clothing import *
 from app.objects.composed.clothing_at_event import all_sort_types
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.events.patrol_boats.parse_patrol_boat_table import *
 
 from app.objects.abstract_objects.abstract_form import (
     Form,

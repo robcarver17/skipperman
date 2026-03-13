@@ -205,3 +205,4 @@ def day_selector_to_text_in_stored_format(day_selector: DaySelector) -> str:
         if attending
     ]
     return ",".join(day_text_as_list)
+

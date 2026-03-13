@@ -1,3 +1,4 @@
+from app.frontend.menu_define import REPORT_LINK
 from app.objects.abstract_objects.abstract_buttons import *
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_lines import *
@@ -5,7 +6,7 @@ from app.objects.abstract_objects.abstract_tables import *
 from app.objects.abstract_objects.abstract_text import *
 from app.web.html.forms import *
 from app.web.html.html_components import *
-from app.web.html.url_define import MAIN_MENU_URL, get_help_url
+from app.web.html.url_define import MAIN_MENU_URL, get_help_url, get_action_first_page_url
 
 
 def get_html_for_simple_element_in_line(
@@ -15,6 +16,7 @@ def get_html_for_simple_element_in_line(
         DetailLine,
         Heading,
         HelpLink,
+        ActionLink,
         HorizontalLine,
         Image,
         Link,
@@ -125,6 +127,13 @@ def help_link_button(
         return nav_button_with_link_to_avoid_weird_routing_issue(
             "Help", url=url, open_new_window=True, shortcut=shortcut
         )
+
+def get_html_for_action_link_button(action_link: ActionLink):
+    action_name = action_link.action_name
+    url = get_action_first_page_url(action_name)
+    return nav_button_with_link_to_avoid_weird_routing_issue(
+        "Reporting menu", url=url, open_new_window=False
+    )
 
 
 def get_html_for_main_menu_nav_button(button: MainMenuNavButton) -> Html:
@@ -313,6 +322,7 @@ dict_of_html_to_function_mappings = {
     DetailLine: get_html_for_detail_line,
     Heading: get_html_for_heading,
     HelpButton: get_html_for_help_button,
+    ActionLink: get_html_for_action_link_button,
     HorizontalLine: html_for_horizontal_line,
     Link: get_html_for_link,
     MainMenuNavButton: get_html_for_main_menu_nav_button,

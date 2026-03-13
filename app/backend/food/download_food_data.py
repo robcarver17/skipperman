@@ -151,7 +151,7 @@ def get_allergy_list_as_df_for_cadets(
         specific_food_required
     )
 
-    list_of_names = subset.list_of_cadets()
+    list_of_names = subset.list_of_cadets
 
     df = pd.DataFrame(dict(type=["Cadet"] * len(list_of_names), name=list_of_names))
     df = df.sort_values("name")

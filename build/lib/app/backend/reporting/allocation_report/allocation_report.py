@@ -7,6 +7,7 @@ from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
 )
 from app.data_access.store.object_store import ObjectStore
+from app.objects.day_selectors import DaySelector
 from app.objects.utilities.exceptions import missing_data
 from app.objects.events import Event
 from app.objects.groups import unallocated_group
@@ -50,7 +51,7 @@ class AdditionalParametersForAllocationReport:
     display_full_names: bool
     include_unallocated_cadets: bool
     add_asterix_for_club_boats: bool
-
+    days_to_show: DaySelector
 
 def add_club_boat_asterix(
     object_store: ObjectStore,
@@ -89,15 +90,17 @@ def add_club_boat_asterix_to_cadet_with_group_on_day(
 def get_dict_of_df_for_reporting_allocations_with_flags(
     object_store: ObjectStore,
     event: Event,
+        days_to_show: DaySelector,
     display_full_names: bool = False,
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True,
+
 ) -> Dict[str, pd.DataFrame]:
     group_allocations_data = get_dict_of_cadets_with_groups_at_event(
         object_store=object_store, event=event
     )
     dict_of_df = {}
-    for day in event.days_in_event():
+    for day in days_to_show:
         list_of_cadets_with_groups = (
             group_allocations_data.get_list_of_cadets_with_group_for_specific_day(
                 day=day,

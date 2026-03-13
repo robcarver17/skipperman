@@ -9,13 +9,16 @@ from app.backend.reporting.boat_report.get_data import get_dict_of_df_for_boat_r
 from app.backend.reporting.options_and_parameters.report_type_specific_parameters import (
     apply_override_additional_options,
 )
+from app.frontend.forms.form_utils import get_availablity_from_form
 from app.frontend.reporting.shared.arrangement_state import (
     reset_arrangement_to_default_with_groups_in_data,
 )
 from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.day_selectors import DaySelector
+from app.objects.events import get_past_days_selector_from_event_or_all_days_if_missing
+from app.objects.utilities.exceptions import arg_not_passed, MISSING_FROM_FORM
 from app.objects.utilities.transform_data import (
     from_bool_to_str,
     TRUE,
@@ -28,7 +31,7 @@ EXCLUDE_LAKE = "exclude_lake"
 EXCLUDE_RIVER_TRAIN = "exclude_river_training"
 EXCLUDE_UNALLOCATED = "exclude_unallocated"
 INCLUDE_IN_OUT = "include_in_out"
-
+DAYS_TO_SHOW="days_to_show"
 
 def get_boat_allocation_report_additional_parameters_from_form_and_save(
     interface: abstractInterface, report_generator: ReportGenerator
@@ -48,6 +51,16 @@ def get_boat_report_additional_parameters_from_form(
     exclude_unallocated_groups = interface.true_if_radio_was_yes(EXCLUDE_UNALLOCATED)
     exclude_lake = interface.true_if_radio_was_yes(EXCLUDE_LAKE)
     exclude_river_training_groups = interface.true_if_radio_was_yes(EXCLUDE_RIVER_TRAIN)
+    event = get_event_from_state(interface)
+    days_to_show = get_availablity_from_form(
+        event=event,
+        interface=interface,
+        input_name=DAYS_TO_SHOW,
+        default=MISSING_FROM_FORM,
+    )
+    if days_to_show is MISSING_FROM_FORM:
+        interface.log_error("Days to show missing from form")
+        days_to_show = event.day_selector_for_days_in_event_excluding_past_days()
 
     return AdditionalParametersForBoatReport(
         display_full_names=display_full_names,
@@ -55,6 +68,7 @@ def get_boat_report_additional_parameters_from_form(
         exclude_river_training_groups=exclude_river_training_groups,
         exclude_unallocated_groups=exclude_unallocated_groups,
         in_out_columns=in_out_columms,
+        days_to_show=days_to_show
     )
 
 
@@ -68,6 +82,7 @@ def save_additional_parameters_for_boat_report(
     save_group_exclusion_parameters(
         interface=interface, parameters=parameters, report_generator=report_generator
     )
+    save_days_to_show(interface=interface, parameters=parameters)
 
 
 def save_show_full_names_parameter(
@@ -113,6 +128,10 @@ def save_group_exclusion_parameters(
             interface=interface, report_generator=report_generator
         )
 
+def save_days_to_show(interface: abstractInterface,
+    parameters: AdditionalParametersForBoatReport):
+    days_to_show_as_str = parameters.days_to_show.as_str()
+    interface.set_persistent_value(DAYS_TO_SHOW, days_to_show_as_str)
 
 def have_group_exclusion_parameters_changed(
     interface: abstractInterface, parameters: AdditionalParametersForBoatReport
@@ -151,6 +170,12 @@ def load_additional_parameters_for_boat_report(
         EXCLUDE_UNALLOCATED, FALSE
     )
     exclude_unallocated_groups = from_str_to_bool(exclude_unallocated_groups)
+    days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
+    if days_to_show_str is None:
+        event = get_event_from_state(interface)
+        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event)
+    else:
+        days_to_show = DaySelector.from_str(days_to_show_str)
 
     return AdditionalParametersForBoatReport(
         exclude_unallocated_groups=exclude_unallocated_groups,
@@ -158,6 +183,7 @@ def load_additional_parameters_for_boat_report(
         exclude_river_training_groups=exclude_river_training_groups,
         display_full_names=display_full_names,
         in_out_columns=include_in_out,
+        days_to_show=days_to_show
     )
 
 
@@ -170,6 +196,7 @@ def clear_additional_parameters_for_boat_report(
         EXCLUDE_RIVER_TRAIN,
         EXCLUDE_LAKE,
         INCLUDE_IN_OUT,
+        DAYS_TO_SHOW
     ]:
         interface.clear_persistent_value(parameter_name)
 

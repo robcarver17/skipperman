@@ -10,6 +10,7 @@ from app.backend.groups.previous_groups import (
     get_list_of_previous_groups_as_str,
     get_dict_of_event_allocations_given_list_of_events_from_persistent_data,
 )
+from app.frontend.shared.buttons import report_link_button
 from app.objects.composed.cadets_at_event_with_groups import (
     DictOfEventAllocations,
     GroupAllocationInfo,
@@ -140,6 +141,7 @@ def get_nav_bar_top(interface: abstractInterface):
                 add_button,
                 quick_group_report_button,
                 quick_spotters_report_button,
+                report_link_button,
                 update_group_names_button,
                 help_button,
             ]
@@ -151,6 +153,7 @@ def get_nav_bar_top(interface: abstractInterface):
                 save_menu_button,
                 save_and_back_menu_button,
                 quick_spotters_report_button,
+                report_link_button,
                 help_button,
             ]
         )

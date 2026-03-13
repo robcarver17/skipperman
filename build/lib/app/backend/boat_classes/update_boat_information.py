@@ -228,6 +228,10 @@ def propagate_changes_to_boat_class_and_partners_for_cadet_in_underlying_data(
             cadet
         ).boat_class_and_partner_on_day(day, default=missing_data)
     )
+    if boat_class_and_partner_on_day is missing_data:
+        raise Exception("%s missing in %s" % (day, str( dict_of_cadets_and_boat_class_and_partners.boat_classes_and_partner_for_cadet(
+            cadet
+        ))))
 
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_dinghies_at_event.update_or_add_boat_classes_and_partner_for_cadet,

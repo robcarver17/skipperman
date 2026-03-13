@@ -18,7 +18,7 @@ from app.objects.composed.volunteer_roles import RoleWithSkills
 from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
 from app.objects.groups import unallocated_group, Group, ListOfGroups
 from app.objects.utilities.exceptions import arg_not_passed
@@ -151,3 +151,4 @@ class AdditionalParametersForBoatReport:
     exclude_river_training_groups: bool
     exclude_unallocated_groups: bool
     in_out_columns: bool
+    days_to_show: DaySelector

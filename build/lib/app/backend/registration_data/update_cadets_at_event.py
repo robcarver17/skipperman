@@ -66,7 +66,7 @@ def new_status_and_status_message(
         )
     elif old_status.is_cancelled_no_refund and new_status.is_active:
         status_message = (
-            "Sailor %s was cancelled with no refund; WA doesn't know about cancellation and Skipperman does know. You should probably keep the status to Cancelled No Refund."
+            "Sailor %s was cancelled with no refund; WA doesn't know about cancellation and Skipperman does know. You should probably keep the status to Cancelled No Refund. Click 'Use original data' button"
             % str(cadet)
         )
 

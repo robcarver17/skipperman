@@ -112,9 +112,16 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
 
 
 def update_data_given_allocation_form(interface: abstractInterface):
-    event = get_event_from_state(interface)
-
     list_of_cadets = get_list_of_all_cadets_with_event_data(interface=interface)
+
+    update_attendance_data_and_notes_for_all_cadets_in_form(interface, list_of_cadets=list_of_cadets)
+    ## has to be done in one go because of swaps
+    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
+        interface=interface, list_of_cadets=list_of_cadets
+    )
+
+def update_attendance_data_and_notes_for_all_cadets_in_form(interface: abstractInterface, list_of_cadets: ListOfCadets):
+    event = get_event_from_state(interface)
     for cadet in list_of_cadets:
         if is_admin_or_skipper(interface):
             update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
@@ -124,11 +131,6 @@ def update_data_given_allocation_form(interface: abstractInterface):
             event=event,
             cadet=cadet,
         )
-
-    ## has to be done in one go because of swaps
-    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
-        interface=interface, list_of_cadets=list_of_cadets
-    )
 
 
 def update_attendance_data_for_cadet_in_form(

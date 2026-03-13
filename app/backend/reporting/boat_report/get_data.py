@@ -58,7 +58,7 @@ def get_dict_of_df_for_boat_report(
         object_store, event=event
     )
 
-    days_in_event = event.days_in_event()
+    days_in_event = additional_parameters.days_to_show
 
     dict_of_df = {}
     for day in days_in_event:

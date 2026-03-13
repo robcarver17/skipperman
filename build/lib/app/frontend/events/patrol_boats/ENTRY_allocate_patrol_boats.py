@@ -22,7 +22,7 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_bottom_button_bar_for_patrol_boats,
     get_top_button_bar_for_patrol_boats,
-    quick_patrol_boat_report_button,
+    quick_patrol_boat_report_button, quick_rota_report_button,
 )
 
 from app.frontend.events.patrol_boats.swapping import (
@@ -38,6 +38,7 @@ from app.frontend.shared.club_boats_instructors import (
     is_club_dinghy_instructor_button,
     handle_club_dinghy_instructor_allocation_button_pressed,
 )
+from app.frontend.shared.quick_reports import create_quick_rota_report
 from app.frontend.shared.warnings_table import (
     is_save_warnings_button_pressed,
 )
@@ -99,11 +100,11 @@ def post_form_view_for_patrol_boat_allocation(
         return previous_form(interface)
 
     if quick_patrol_boat_report_button.pressed(last_button_pressed):
-        return create_quick_report(interface)
+        return create_quick_patrol_boat_report(interface)
+    elif quick_rota_report_button.pressed(last_button_pressed):
+        return create_quick_rota_report(interface)
 
     update_data_from_form_entries_in_patrol_boat_allocation_page(interface)
-
-
 
     ## New form
     if access_copy_menu_button.pressed(last_button_pressed):
@@ -160,7 +161,7 @@ def previous_form(interface: abstractInterface):
     )
 
 
-def create_quick_report(interface: abstractInterface) -> File:
+def create_quick_patrol_boat_report(interface: abstractInterface) -> File:
     report_generator_with_specific_parameters = (
         patrol_boat_report_generator.add_specific_parameters_for_type_of_report(
             interface.object_store, event=get_event_from_state(interface)

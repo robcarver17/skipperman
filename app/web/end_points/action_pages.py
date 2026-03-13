@@ -2,7 +2,7 @@ from typing import Union
 
 from app.data_access.init_data import object_store
 from app.frontend.form_handler import FormHandler
-from app.frontend.menu_define import get_functions_mapping_for_action_name
+from app.frontend.menu_construct import get_functions_mapping_for_action_name
 from app.objects.abstract_objects.abstract_form import (
     File,
     Form,

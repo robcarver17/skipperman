@@ -61,8 +61,9 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
     reporting_options: ReportingOptions,
 ) -> PathAndFilename:
     print_options = reporting_options.print_options
+    header_str = reporting_options.specific_parameters.header_str
 
-    pdf_layout = PdfLayout(print_options=print_options)
+    pdf_layout = PdfLayout(print_options=print_options, header_str=header_str)
 
     for page in list_of_pages_with_columns:
         if len(page) == 0:
@@ -84,7 +85,8 @@ def create_csv_report_from_list_of_columns_and_return_filename(
     )
     path_and_filename_with_extension = (
         create_csv_report_from_dict_of_df_and_return_filename(
-            dict_of_df=dict_of_df, print_options=reporting_options.print_options
+            dict_of_df=dict_of_df, print_options=reporting_options.print_options,
+            header_str = reporting_options.specific_parameters.header_str
         )
     )
 
@@ -94,6 +96,7 @@ def create_csv_report_from_list_of_columns_and_return_filename(
 def create_csv_report_from_dict_of_df_and_return_filename(
     dict_of_df: Dict[str, pd.DataFrame],
     print_options: PrintOptions,
+        header_str: str = ""
 ) -> PathAndFilename:
     path_and_filename_no_extension = get_download_path_and_filename_for_report(
         print_options, use_extension=""
@@ -101,6 +104,7 @@ def create_csv_report_from_dict_of_df_and_return_filename(
     path_and_filename_with_extension = save_dict_of_df_as_spreadsheet_file(
         dict_of_df=dict_of_df,
         path_and_filename_no_extension=path_and_filename_no_extension,
+        header_str=header_str
     )
 
     return path_and_filename_with_extension

@@ -1,4 +1,5 @@
 from app.backend.volunteers.skills import get_dict_of_existing_skills_for_volunteer
+from app.frontend.shared.buttons import report_link_button
 from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.warnings_table import display_warnings_tables
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
@@ -248,6 +249,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
                 access_copy_menu_button,
                 quick_patrol_boat_report_button,
                 quick_rota_report_button,
+                report_link_button,
                 help_button,
             ]
         )
@@ -256,7 +258,8 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
             [
                 cancel_menu_button,
                 quick_patrol_boat_report_button,
-                quick_rota_report_button
+                quick_rota_report_button,
+                report_link_button
             ]
         )
 

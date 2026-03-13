@@ -92,10 +92,10 @@ default_user_if_not_logged_in = SkipperManUser(
 )
 
 
+
 new_blank_user = SkipperManUser(
     "", "", ADMIN_GROUP, email_address="", volunteer_id=NO_VOLUNTEER_ID
 )
-
 
 class ListOfSkipperManUsers(GenericListOfObjects):
     @property

@@ -1,5 +1,7 @@
 from typing import List
 
+from app.backend.club_boats.cadets_with_club_dinghies_at_event import get_dict_of_cadets_and_club_dinghies_at_event, \
+    add_club_dinghy_for_cadet_on_day
 from app.backend.groups.cadets_with_groups_at_event import (
     add_cadet_to_group_on_day,
     get_days_and_groups_for_cadet_at_event,
@@ -21,6 +23,7 @@ from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
 from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
+from app.objects.composed.people_at_event_with_club_dinghies import DictOfDaysAndClubDinghiesAtEventForPerson
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.utilities.exceptions import NoMoreData
@@ -78,7 +81,7 @@ def add_unregistered_partner_cadet(
     )
 
     print("Adding %s to sailing groups " % new_cadet)
-    add_new_cadet_to_groups(
+    add_new_cadet_to_groups_and_club_dinghies(
         interface=interface,
         new_cadet=new_cadet,
         original_cadet=original_cadet,
@@ -148,7 +151,7 @@ def get_list_of_days_given_original_cadet(
     return list_of_days
 
 
-def add_new_cadet_to_groups(
+def add_new_cadet_to_groups_and_club_dinghies(
     interface: abstractInterface,
     original_cadet: Cadet,
     new_cadet: Cadet,
@@ -162,12 +165,23 @@ def add_new_cadet_to_groups(
     original_cadet_groups = get_days_and_groups_for_cadet_at_event(
         object_store=interface.object_store, event=event, cadet=original_cadet
     )
+    club_boats_at_event_for_original_cadet = get_dict_of_cadets_and_club_dinghies_at_event(
+        object_store=interface.object_store,
+        event=event
+    ).club_dinghys_for_person(original_cadet)
 
     for day in list_of_days:
         add_new_cadet_to_same_group_as_original_cadet_on_day(
             interface=interface,
             event=event,
             original_cadet_groups=original_cadet_groups,
+            new_cadet=new_cadet,
+            day=day,
+        )
+        add_new_cadet_with_same_club_boat_as_original_cadet_on_day(
+            interface=interface,
+            event=event,
+            club_boats_at_event_for_original_cadet=club_boats_at_event_for_original_cadet,
             new_cadet=new_cadet,
             day=day,
         )
@@ -185,3 +199,24 @@ def add_new_cadet_to_same_group_as_original_cadet_on_day(
     add_cadet_to_group_on_day(
         interface=interface, event=event, cadet=new_cadet, group=group, day=day
     )
+
+
+def add_new_cadet_with_same_club_boat_as_original_cadet_on_day(
+    interface: abstractInterface,
+    club_boats_at_event_for_original_cadet: DictOfDaysAndClubDinghiesAtEventForPerson,
+    new_cadet: Cadet,
+    day: Day,
+    event: Event,
+):
+    boat = club_boats_at_event_for_original_cadet.dinghy_on_day(day, default=None)
+    if boat is None:
+        return
+
+    add_club_dinghy_for_cadet_on_day(
+        interface=interface,
+        event=event,
+        cadet=new_cadet,
+        club_dinghy=boat,
+        day=day
+    )
+

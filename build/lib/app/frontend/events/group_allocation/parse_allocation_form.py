@@ -38,7 +38,7 @@ from app.frontend.forms.form_utils import (
     get_availablity_from_form,
 )
 from app.backend.boat_classes.update_boat_information import (
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
+    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event, breakup_partnership,
 )
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     CadetWithDinghySailNumberBoatClassAndPartner,
@@ -327,21 +327,13 @@ def remove_partnership_for_cadet_from_group_allocation_button(
     )
 
     event = get_event_from_state(interface)
+    day = get_day_from_state_or_none(interface)
+    if day is None:
+        list_of_days = event.days_in_event()
+    else:
+        list_of_days = [day]
 
-    update = get_pseudo_update_to_remove_partner_from_cadet(
-        interface=interface, cadet=cadet
-    )
-    list_of_updates = [update]
-
-    update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(
-        interface=interface, event=event, list_of_updates=list_of_updates
-    )
-
-
-def get_pseudo_update_to_remove_partner_from_cadet(
-    interface: abstractInterface, cadet: Cadet
-) -> CadetWithDinghySailNumberBoatClassAndPartner:
-    update = get_update_for_cadet(interface, cadet)
-    update.two_handed_partner_cadet_as_str = NOT_ALLOCATED_STR
-
-    return update
+    breakup_partnership(interface=interface,
+                        event=event,
+                        cadet=cadet,
+                        list_of_days=list_of_days)

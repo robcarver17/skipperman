@@ -51,11 +51,10 @@ def update_if_copy_individual_button_pressed(
     )
 
     copy_parameters = from_copy_button_type_to_copy_parameters(copy_type)
-
     if copy_parameters.copy_boat:
         copy_across_boats_at_event(
             interface=interface,
-            day=day,
+            day_to_copy_from=day,
             volunteer=volunteer,
             event=event,
             allow_overwrite=copy_parameters.overwrite,
@@ -66,7 +65,7 @@ def update_if_copy_individual_button_pressed(
             interface=interface,
             event=event,
             volunteer=volunteer,
-            day=day,
+            day_to_copy_from=day,
             allow_replacement=copy_parameters.overwrite,
         )
 

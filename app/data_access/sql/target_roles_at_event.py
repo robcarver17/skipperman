@@ -66,7 +66,7 @@ class SqlDataListOfTargetForRoleAtEvent(GenericSqlData):
                 int(role_id),
             )
 
-            self.cursor.execute(insertion, (int(event_id), role_id, target))
+            self.cursor.execute(insertion)
             self.conn.commit()
         except Exception as e1:
             raise Exception(

@@ -1,5 +1,6 @@
 from app.backend.groups.sorting import (
     DEFAULT_SORT_ORDER,
+SortOrderGroups,
     from_string_to_sort_list,
     from_sort_list_to_string,
 )
@@ -31,12 +32,12 @@ def clear_day_in_state(interface: abstractInterface):
 SORT_ORDER = "sort_order_for_group_allocation"
 
 
-def save_new_sort_order(interface: abstractInterface, new_sort_order: list):
+def save_new_sort_order(interface: abstractInterface, new_sort_order: SortOrderGroups):
     sort_list_as_str = from_sort_list_to_string(new_sort_order)
     interface.set_persistent_value(SORT_ORDER, sort_list_as_str)
 
 
-def get_current_sort_order(interface: abstractInterface) -> list:
+def get_current_sort_order(interface: abstractInterface) -> SortOrderGroups:
     sort_list_as_str = interface.get_persistent_value(SORT_ORDER, default=None)
     if sort_list_as_str is None:
         return DEFAULT_SORT_ORDER

@@ -2,10 +2,15 @@ from app.backend.club_boats.volunteer_with_club_dinghies import (
     get_dict_of_volunteers_and_club_dinghies_at_event,
     copy_club_dinghy_for_instructor_across_list_of_days_allow_overwrite,
 )
+from app.backend.food.modify_food_data import remove_food_requirements_for_volunteer_at_event
+from app.backend.patrol_boats.changes import delete_volunteer_from_patrol_boat_on_all_days_of_event, \
+    delete_volunteer_from_patrol_boat_on_day_at_event
 from app.backend.registration_data.volunteer_registration_data import (
     get_dict_of_registration_data_for_volunteers_at_event,
     get_attendance_matrix_for_list_of_volunteers_at_event,
 )
+from app.backend.rota.changes import delete_role_at_event_for_volunteer_on_day, \
+    delete_role_at_event_for_volunteer_across_all_days
 from app.backend.volunteers.relevant_information_for_volunteer import (
     check_any_status_is_unable,
 )
@@ -288,9 +293,18 @@ def make_volunteer_available_on_day(
     )
 
 
+
+
 def make_volunteer_unavailable_on_day(
     interface: abstractInterface, volunteer: Volunteer, event: Event, day: Day
-):
+): ## ALSO NEED TO DO PATROL BOATS
+    delete_volunteer_from_patrol_boat_on_day_at_event(interface=interface, event=event, day=day, volunteer=volunteer)
+    remove_volunteer_from_event_data_on_day(interface=interface, event=event, day=day, volunteer=volunteer)
+    delete_role_at_event_for_volunteer_on_day(interface=interface, event=event, day=day, volunteer=volunteer)
+
+def remove_volunteer_from_event_data_on_day(
+    interface: abstractInterface, volunteer: Volunteer, event: Event, day: Day
+): ## ALSO NEED TO DO PATROL BOATS
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_at_event.make_volunteer_unavailable_on_day,
         volunteer_id=volunteer.id,
@@ -299,7 +313,17 @@ def make_volunteer_unavailable_on_day(
     )
 
 
-def delete_volunteer_at_event(
+
+def remove_volunteer_from_event(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+):
+    delete_volunteer_from_event_data(interface=interface, event=event,volunteer=volunteer)
+    remove_food_requirements_for_volunteer_at_event(interface=interface, event=event,volunteer=volunteer)
+    delete_volunteer_from_patrol_boat_on_all_days_of_event(interface=interface, event=event, volunteer=volunteer)
+    delete_role_at_event_for_volunteer_across_all_days(interface=interface, event=event, volunteer=volunteer)
+    return ""
+
+def delete_volunteer_from_event_data(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ):
     interface.update(
@@ -307,4 +331,3 @@ def delete_volunteer_at_event(
         volunteer_id=volunteer.id,
         event_id=event.id,
     )
-    return ""

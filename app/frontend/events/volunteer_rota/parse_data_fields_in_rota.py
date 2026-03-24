@@ -1,16 +1,18 @@
 from app.backend.groups.list_of_groups import get_group_with_name
 from app.backend.volunteers.roles_and_teams import get_role_from_name
+from app.objects.composed.volunteer_roles import RoleWithSkills
 
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, MissingData
-from app.objects.groups import unallocated_group
+from app.objects.groups import unallocated_group, Group
 from app.objects.volunteers import Volunteer
 
 from app.objects.events import Event
 
 from app.backend.rota.changes import (
     update_volunteer_notes_at_event,
-    update_role_and_group_at_event_for_volunteer_on_day,
+    update_role_and_group_at_event_for_volunteer_on_day, update_role_only_at_event_for_volunteer_on_day,
+    update_role_and_group_for_volunteer_given_specific_day_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.frontend.shared.events_state import get_event_from_state
@@ -26,40 +28,42 @@ from app.objects.day_selectors import Day
 
 def update_details_from_form_for_volunteer_at_event(
     interface: abstractInterface,
-    volunteer: Volunteer,
     volunteer_at_event_data: AllEventDataForVolunteer,
 ):
     update_details_for_days_from_form_for_volunteer_at_event(
         interface=interface,
-        volunteer=volunteer,
         volunteer_at_event_data=volunteer_at_event_data,
     )
     update_notes_for_volunteer_at_event_from_form(
         interface=interface,
-        volunteer=volunteer,
         volunteer_at_event_data=volunteer_at_event_data,
     )
 
 
 def update_details_for_days_from_form_for_volunteer_at_event(
     interface: abstractInterface,
-    volunteer: Volunteer,
     volunteer_at_event_data: AllEventDataForVolunteer,
 ):
     event = volunteer_at_event_data.event
     days_at_event = volunteer_at_event_data.event.days_in_event()
     for day in days_at_event:
         update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
-            interface=interface, event=event, day=day, volunteer=volunteer
+            interface=interface, event=event, day=day,
+            volunteer_at_event_data=volunteer_at_event_data
         )
 
 
 def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
     interface: abstractInterface,
     event: Event,
-    volunteer: Volunteer,
+    volunteer_at_event_data: AllEventDataForVolunteer,
     day: Day,
 ):
+    volunteer = volunteer_at_event_data.volunteer
+    roles_and_groups = volunteer_at_event_data.roles_and_groups.role_and_group_on_day(day)
+    existing_role = roles_and_groups.role
+    existing_group = roles_and_groups.group
+
     try:
         new_role = get_role_from_form(interface=interface, volunteer=volunteer, day=day)
     except MissingData:
@@ -69,14 +73,16 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
         interface=interface, volunteer=volunteer, day=day
     )  ### if arg_not_passed, no change
 
-    update_role_and_group_at_event_for_volunteer_on_day(
+    update_role_and_group_for_volunteer_given_specific_day_at_event(
         interface=interface,
         event=event,
         volunteer=volunteer,
         day=day,
+        existing_role=existing_role,
+        existing_group=existing_group,
         new_role=new_role,
         new_group=new_group,
-        allow_replacement=True,
+        allow_replacement=True
     )
 
 
@@ -90,6 +96,7 @@ def get_role_from_form(
         default=MISSING_FROM_FORM,
     )
     if new_role_name_from_form == MISSING_FROM_FORM:
+        ## This happens if the volunteer is filtered out
         raise MissingData
 
     new_role = get_role_from_name(
@@ -103,7 +110,8 @@ def get_group_from_form(
     interface: abstractInterface,
     volunteer: Volunteer,
     day: Day,
-):
+        default: Group = unallocated_group
+) -> Group:
     new_group_name_from_form = interface.value_from_form(
         input_name_for_group_and_volunteer(volunteer=volunteer, day=day),
         default=MISSING_FROM_FORM,
@@ -111,7 +119,7 @@ def get_group_from_form(
 
     if new_group_name_from_form == MISSING_FROM_FORM:
         ## no group dropdown as not relevant or unavailable
-        return unallocated_group
+        return default
     else:
         new_group = get_group_with_name(
             object_store=interface.object_store, group_name=new_group_name_from_form
@@ -122,10 +130,10 @@ def get_group_from_form(
 
 def update_notes_for_volunteer_at_event_from_form(
     interface: abstractInterface,
-    volunteer: Volunteer,
     volunteer_at_event_data: AllEventDataForVolunteer,
 ):
     event = get_event_from_state(interface)
+    volunteer = volunteer_at_event_data.volunteer
     new_notes = interface.value_from_form(
         input_name_for_notes_and_volunteer(volunteer), default=MISSING_FROM_FORM
     )

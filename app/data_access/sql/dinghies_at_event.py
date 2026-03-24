@@ -15,6 +15,7 @@ from app.objects.partners import (
     from_partner_id_to_int,
     from_int_to_partner_id,
     no_partner_allocated, from_partner_cadet_to_id_or_string, FAKE_ID_FOR_NOT_ALLOCATED,
+    no_partnership_given_partner_id_or_str, NOT_ALLOCATED_STR,
 )
 from app.objects.utilities.exceptions import (
     arg_not_passed,
@@ -44,6 +45,37 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         )
         self._breakup_partnerships_with_cadet_on_day(
             event_id=event_id, existing_partner_cadet_id=cadet_id, day=day
+        )
+
+
+    def breakup_partnership_with_cadet_on_day(
+        self,
+        event_id: str,
+        existing_cadet_id: str,
+        day: Day,
+    ):
+        existing_data =self.get_cadet_at_event_with_boat_class_and_partner_with_ids(
+            event_id=event_id,
+            cadet_id=existing_cadet_id,
+            day=day,
+            default=None
+        )
+        if existing_data is None:
+            return
+
+        partner_id = existing_data.partner_cadet_id
+        if no_partnership_given_partner_id_or_str(partner_id):
+           return
+
+        self._breakup_partnerships_with_cadet_on_day(
+            event_id=event_id,
+            existing_partner_cadet_id=partner_id,
+            day=day
+        )
+        self._breakup_partnerships_with_cadet_on_day(
+            event_id=event_id,
+            existing_partner_cadet_id=existing_cadet_id,
+            day=day
         )
 
     def _breakup_partnerships_with_cadet_on_day(
@@ -76,14 +108,13 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         finally:
             self.close()
 
-    def update_or_add_boat_classes_and_partner_for_cadet(
+    def update_or_add_boat_classes_and_sail_number_not_not_partner_for_cadet(
         self,
         event_id: str,
         cadet_id: str,
         day: Day,
         boat_class_id: str,
         sail_number: str,
-        partner_id: str,
     ):
         if self.is_cadet_already_in_data_on_day(
             event_id=event_id, day=day, cadet_id=cadet_id
@@ -94,7 +125,6 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
                 day=day,
                 boat_class_id=boat_class_id,
                 sail_number=sail_number,
-                partner_id=partner_id,
             )
         else:
             self._add_cadet_to_event_on_day_with_class_and_partner_without_checks(
@@ -102,8 +132,7 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
                 cadet_id=cadet_id,
                 day=day,
                 boat_class_id=boat_class_id,
-                sail_number=sail_number,
-                partner_id=partner_id,
+                sail_number=sail_number
             )
 
     def _update_boat_classes_and_partner_for_cadet_without_checks(
@@ -113,18 +142,15 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         day: Day,
         boat_class_id: str,
         sail_number: str,
-        partner_id: str,
     ):
         try:
             if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
                 raise MissingData("Can't update partner for non existent ")
 
             insertion = (
-                "UPDATE %s SET %s=%d,%s=%d,%s='%s'  WHERE %s=%d AND %s=%d AND %s='%s'"
+                "UPDATE %s SET %s=%d,%s='%s'  WHERE %s=%d AND %s=%d AND %s='%s'"
                 % (
                     CADETS_AND_DINGHIES_TABLE,
-                    PARTNER_CADET_ID,
-                    from_partner_id_to_int(partner_id),
                     DINGHY_ID,
                     int(boat_class_id),
                     SAIL_NUMBER,
@@ -293,7 +319,7 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         day: Day,
         boat_class_id: str,
         sail_number: str,
-        partner_id: str,
+                partner_id=NOT_ALLOCATED_STR,
     ):
         new_cadet_and_boat = CadetAtEventWithBoatClassAndPartnerWithIds(
             cadet_id=cadet_id,

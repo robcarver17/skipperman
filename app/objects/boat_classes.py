@@ -11,7 +11,7 @@ from app.objects.utilities.generic_list_of_objects import (
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.partners import (
     no_cadet_partner_required,
-    valid_partnership_given_partner_cadet,
+    valid_partnership_given_partner_cadet, no_partner_allocated,
 )
 
 NO_BOAT_CLASS_NAME = ""
@@ -69,7 +69,7 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
 class BoatClassAndPartnerAtEventOnDay:
     boat_class: BoatClass
     sail_number: str
-    partner_cadet: Cadet = no_cadet_partner_required
+    partner_cadet: Cadet = no_partner_allocated
 
     @property
     def has_partner(self) -> bool:
@@ -80,7 +80,7 @@ class BoatClassAndPartnerAtEventOnDay:
         return cls(
             boat_class=no_boat_class,
             sail_number="",
-            partner_cadet=no_cadet_partner_required,
+            partner_cadet=no_partner_allocated,
         )
 
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
@@ -214,3 +214,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
     def list_of_volunteers(self):
         return ListOfVolunteers(list(self.keys()))
 
+    @property
+    def list_of_information_per_volunteer(self) -> List[AllEventDataForVolunteer]:
+        return list(self.values())

@@ -6,6 +6,7 @@ from app.backend.club_boats.club_boat_limits import (
     update_limit_for_club_dinghy_at_event,
     get_dict_of_names_and_limits_for_all_visible_club_boats_at_event,
     get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event,
+    get_dict_of_boats_and_limits_for_all_club_boats_at_event,
 )
 from app.backend.club_boats.list_of_club_dinghies import (
     get_list_of_club_dinghies,
@@ -156,7 +157,7 @@ def update_club_boat_limits_for_event_from_form(interface: abstractInterface):
         return
     event = get_event_from_state(interface)
     list_of_club_dinghies = get_list_of_club_dinghies(interface.object_store)
-    existing_limits = get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(object_store=interface.object_store,
+    existing_limits = get_dict_of_boats_and_limits_for_all_club_boats_at_event(object_store=interface.object_store,
                                                                                        event=event)
 
     for club_dinghy in list_of_club_dinghies:

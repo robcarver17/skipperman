@@ -2,7 +2,7 @@ from app.backend.registration_data.identified_volunteers_at_event import (
     delete_volunteer_from_identified_data_and_return_rows_deleted,
 )
 from app.backend.volunteers.connected_cadets import delete_all_connections_for_volunteer
-from app.backend.volunteers.volunteers_at_event import delete_volunteer_at_event
+from app.backend.volunteers.volunteers_at_event import remove_volunteer_from_event
 from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import (
     delete_volunteer_from_most_common_role_and_group_data,
 )
@@ -43,7 +43,7 @@ def delete_volunteer_in_data_and_return_warnings(
 
     list_of_events = get_list_of_events(interface.object_store)
     for event in list_of_events:
-        event_messages = delete_volunteer_at_event(
+        event_messages = remove_volunteer_from_event(
             interface=interface, event=event, volunteer=volunteer_to_delete
         )
         rows_identified = delete_volunteer_from_identified_data_and_return_rows_deleted(

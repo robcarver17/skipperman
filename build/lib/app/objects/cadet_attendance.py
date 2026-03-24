@@ -8,6 +8,10 @@ from app.objects.volunteers import ListOfVolunteers, Volunteer
 
 
 class DictOfDaySelectors(Dict[Union[Cadet, Volunteer], DaySelector]):
+    def get_attendance_for_person(self, person: Union[Cadet, Volunteer]) -> DaySelector:
+        attendance = self.get(person, DaySelector.create_empty())
+        return attendance
+
     def align_with_list_of_days(self, list_of_days: List[Day]) -> "DictOfDaySelectors":
         return DictOfDaySelectors(
             dict(

@@ -28,8 +28,8 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
     ) -> ListOfPatrolBoats:
         boat_ids = self.boat_ids_at_event_including_unallocated(event_id)
         list_of_all_boats = self.list_of_patrol_boats
-
-        return list_of_all_boats.subset_from_list_of_ids_retaining_order(boat_ids)
+        sorted_list = list_of_all_boats.subset_from_list_of_ids_retaining_order(boat_ids)
+        return sorted_list
 
     def delete_volunteer_from_patrol_boat_on_day_at_event(
         self, event_id: str, volunteer_id: str, day: Day
@@ -85,19 +85,18 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         finally:
             self.close()
 
-    def add_unallocated_boat(
-        self, event_id: str, list_of_days: List[Day], patrol_boat_id: str
-    ):
-        try:
-            for day in list_of_days:
-                self.add_new_boat_day_volunteer_allocation(
-                    event_id=event_id,
-                    day=day,
-                    patrol_boat_id=patrol_boat_id,
-                    volunteer_id=EMPTY_VOLUNTEER_ID,
-                )
-        except:
-            raise "Can't add boat as already exists"
+    def add_unallocated_boat_on_day(
+        self, event_id: str, day: Day, patrol_boat_id: str):
+
+        if self.is_empty_boat_already_setup_for_today(event_id=event_id, day=day, patrol_boat_id=patrol_boat_id):
+            return
+        else:
+            self._add_boat_id_for_volunteer_on_day_without_checks(
+                event_id=event_id,
+                day=day,
+                patrol_boat_id=patrol_boat_id,
+                volunteer_id=EMPTY_VOLUNTEER_ID,
+            )
 
     def add_new_boat_day_volunteer_allocation(
         self,
@@ -106,10 +105,16 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         day: Day,
         volunteer_id: str,
     ):
+        try:
+            assert volunteer_id!=EMPTY_VOLUNTEER_ID
+        except:
+            raise Exception("Can't add empty boat with this method")
+
         existing_boat_id = self.existing_boat_id_for_volunteer_on_day(
             event_id=event_id, day=day, volunteer_id=volunteer_id, default=missing_data
         )
-        if existing_boat_id is missing_data:
+        boat_does_not_exist = existing_boat_id is missing_data
+        if boat_does_not_exist:
             self._add_boat_id_for_volunteer_on_day_without_checks(
                 event_id=event_id,
                 day=day,
@@ -118,8 +123,10 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
             )
         else:
             if existing_boat_id == patrol_boat_id:
+                ## no change required
                 return
-            raise Exception("volunteer already on boat that day")
+            else:
+                raise Exception("volunteer already on another boat that day")
 
     def is_boat_allocated_to_an_id_for_volunteer_on_day(
         self,
@@ -127,17 +134,85 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         day: Day,
         volunteer_id: str,
     ):
-        existing = self.existing_boat_id_for_volunteer_on_day(
-            event_id=event_id, day=day, volunteer_id=volunteer_id, default=missing_data
-        )
-        if existing is missing_data:
+        if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
             return False
-        else:
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT *  FROM %s WHERE %s=%d AND %s=%d AND %s='%s' """
+                % (
+                    PATROL_BOATS_AND_VOLUNTEERS_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    VOLUNTEER_ID,
+                    int(volunteer_id),
+                    DAY,
+                    day.name,
+                )
+            )
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when reading patrol boats and volunteers at event" % str(e1)
+            )
+        finally:
+            self.close()
+        if len(raw_list) == 0:
+            return False
+        elif len(raw_list)==1:
             return True
+        else:
+            raise MultipleMatches
+
+    def is_empty_boat_already_setup_for_today(
+        self, event_id: str, day: Day,  patrol_boat_id: str
+    ) -> bool:
+
+        if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT *  FROM %s WHERE %s=%d AND %s=%d AND %s=%d AND %s='%s' """
+                % (
+                    PATROL_BOATS_AND_VOLUNTEERS_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    PATROL_BOAT_ID,
+                    int(patrol_boat_id),
+                    VOLUNTEER_ID,
+                    int(EMPTY_VOLUNTEER_ID),
+                    DAY,
+                    day.name,
+                )
+            )
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when reading patrol boats and volunteers at event" % str(e1)
+            )
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return False
+        elif len(raw_list)==1:
+            return True
+        else:
+            raise MultipleMatches
 
     def existing_boat_id_for_volunteer_on_day(
         self, event_id: str, day: Day, volunteer_id: str, default=missing_data
     ) -> str:
+        try:
+            assert volunteer_id!=EMPTY_VOLUNTEER_ID
+        except:
+            raise Exception("Can't check boat for empty volunteer id")
+
         if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
             return default
 
@@ -179,12 +254,12 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
             if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
                 self.create_table()
 
-                volunteer_and_boat = VolunteerWithIdAtEventWithPatrolBoatId(
-                    volunteer_id=volunteer_id, patrol_boat_id=patrol_boat_id, day=day
-                )
-                self._add_volunteer_with_boat_without_commit_or_checks(
-                    event_id=event_id, volunteer_and_boat=volunteer_and_boat
-                )
+            volunteer_and_boat = VolunteerWithIdAtEventWithPatrolBoatId(
+                volunteer_id=volunteer_id, patrol_boat_id=patrol_boat_id, day=day
+            )
+            self._add_volunteer_with_boat_without_commit_or_checks(
+                event_id=event_id, volunteer_and_boat=volunteer_and_boat
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception(
@@ -203,18 +278,18 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
             if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
                 self.create_table()
 
-                self.cursor.execute(
-                    "DELETE FROM %s WHERE %s=%d AND %s=%d AND %s='%s' "
-                    % (
-                        PATROL_BOATS_AND_VOLUNTEERS_TABLE,
-                        EVENT_ID,
-                        int(event_id),
-                        VOLUNTEER_ID,
-                        int(volunteer_id),
-                        DAY,
-                        day.name,
-                    )
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d AND %s=%d AND %s='%s' "
+                % (
+                    PATROL_BOATS_AND_VOLUNTEERS_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    VOLUNTEER_ID,
+                    int(volunteer_id),
+                    DAY,
+                    day.name,
                 )
+            )
 
             self.conn.commit()
         except Exception as e1:
@@ -233,15 +308,19 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         try:
             cursor = self.cursor
             cursor.execute(
-                """SELECT *  FROM %s WHERE %s=%d AND %s=%s AND %s=%d AND %s<>%d """
+                """SELECT *  FROM %s WHERE %s=%d AND %s='%s' AND %s=%d AND %s<>%d """
                 % (
                     PATROL_BOATS_AND_VOLUNTEERS_TABLE,
+
                     EVENT_ID,
                     int(event_id),
+
                     DAY,
-                    day,
+                    day.name,
+
                     PATROL_BOAT_ID,
                     int(patrol_boat_id),
+
                     VOLUNTEER_ID,
                     int(EMPTY_VOLUNTEER_ID),
                 )
@@ -311,8 +390,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
             )
         finally:
             self.close()
-
-        return [raw_item[0] for raw_item in raw_list]
+        return [str(raw_item[0]) for raw_item in raw_list]
 
     def read(self, event_id: str) -> ListOfVolunteersWithIdAtEventWithPatrolBoatsId:
         if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
@@ -380,6 +458,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
     def _add_volunteer_with_boat_without_commit_or_checks(
         self, event_id: str, volunteer_and_boat: VolunteerWithIdAtEventWithPatrolBoatId
     ):
+
         volunteer_id = volunteer_and_boat.volunteer_id
 
         ## FIXME TEMP CODE

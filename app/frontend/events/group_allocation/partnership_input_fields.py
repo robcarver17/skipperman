@@ -1,8 +1,5 @@
-from typing import List, Union
-
 from app.backend.groups.data_for_group_display import *
-from app.frontend.events.group_allocation.buttons import button_name_for_delete_partner, button_name_for_add_partner, \
-    get_button_for_partnership_cell
+from app.frontend.events.group_allocation.buttons import button_name_for_delete_partner, button_name_for_add_partner
 from app.frontend.forms.form_utils import input_name_from_column_name_and_cadet_id
 from app.frontend.shared.check_security import is_admin_or_skipper
 from app.objects.abstract_objects.abstract_buttons import Button
@@ -12,8 +9,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 from app.objects.cadets import Cadet
 from app.objects.composed.cadets_with_all_event_info import DictOfAllEventInfoForCadets
 from app.objects.day_selectors import Day
-from app.objects.partners import no_partnership_given_partner_cadet, NoCadetPartner, from_no_partner_object_to_str, \
-    partner_string_is_no_partner_type, NO_PARTNERSHIP_LIST_OF_STR
+from app.objects.partners import no_partnership_given_partner_cadet, NoCadetPartner, from_no_partner_object_to_str,  NO_PARTNERSHIP_LIST_OF_STR
 from app.objects.utilities.exceptions import missing_data
 
 
@@ -22,6 +18,7 @@ def get_input_for_partner_allocation_on_day(
     cadet: Cadet,
     day: Day,
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
+
 ) -> ListOfLines:
     partner = get_two_handed_partner_for_cadet_on_day(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet, day=day

@@ -53,6 +53,9 @@ def get_button_for_specific_day(day: Day):
 def button_to_click_on_cadet(cadet: Cadet):
     return Button(str(cadet), value=get_button_value_for_cadet_selection(cadet))
 
+def button_to_click_on_cadet_when_already_selected(cadet: Cadet):
+    return Button("%s - click to hide details" % str(cadet), value=get_button_value_for_cadet_selection(cadet))
+
 
 RESET_DAY_BUTTON_LABEL = "Show all day view"
 reset_day_button = Button(

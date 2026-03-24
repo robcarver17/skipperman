@@ -23,7 +23,7 @@ class CadetAtEventWithBoatClassAndPartnerWithIds(GenericSkipperManObject):
     cadet_id: str
     day: Day
     sail_number: str = ""
-    partner_cadet_id: str = NO_PARTNER_REQUIRED_STR
+    partner_cadet_id: str = NOT_ALLOCATED_STR
     boat_class_id: str = NO_BOAT_CLASS_ID
 
     def __eq__(self, other):

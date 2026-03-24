@@ -92,6 +92,7 @@ def get_allocation_inputs_for_day_and_volunteer_when_available(
     day: Day,
     ready_to_swap: bool,
 ) -> ListOfLines:
+    print(day)
     role_and_group = volunteer_data_at_event.roles_and_groups.role_and_group_on_day(day)
     group_and_role_inputs = get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_available(
         volunteer=volunteer_data_at_event.volunteer,
@@ -118,7 +119,6 @@ def get_role_and_group_allocation_inputs_for_day_and_volunteer_in_role_when_avai
 ) -> list:
     role = role_and_group.role
     group = role_and_group.group
-
     role_input = get_allocation_input_for_role(
         interface=interface,
         role=role,
@@ -152,10 +152,11 @@ def get_allocation_input_for_role(
     day: Day,
     ready_to_swap: bool,
 ) -> Union[dropDownInput, str]:
-    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store)
 
     if ready_to_swap:
         return role.name
+    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store, set_role_name = role.name)
+
     return dropDownInput(
         input_label="",
         input_name=input_name_for_role_and_volunteer(day=day, volunteer=volunteer),

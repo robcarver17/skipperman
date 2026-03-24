@@ -35,10 +35,6 @@ class flaskInterface(abstractInterface):
         try:
             value = get_value_from_form(key)
         except:
-            print(
-                "%s missing from form, only have keys %s"
-                % (key, str(all_keys_in_form()))
-            )
             if default is arg_not_passed:
                 raise Exception("Value %s not found in form" % key)
             else:

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from app.frontend.events.volunteer_rota.edit_volunteer_details_from_rota import (
     get_volunteer_history_for_selected_volunteer,
@@ -118,6 +118,7 @@ def get_row_for_volunteer_at_event(
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool = False,
 ) -> RowInTable:
+    print(volunteer)
     first_part = get_first_part_of_row_for_volunteer_at_event(
         interface=interface,
         volunteer=volunteer,
@@ -179,10 +180,7 @@ def get_volunteer_name_cell(
     if ready_to_swap:
         return ListOfLines([volunteer.name])
 
-    volunteer_button = Button(
-        label=volunteer.name, value=get_button_value_for_volunteer_selection(volunteer)
-    )
-    other_material = get_volunteer_other_material(
+    volunteer_button, other_material = get_volunteer_button_and_other_material(
         interface=interface, volunteer=volunteer
     )
     raincheck_button = get_make_unavailable_button_for_volunteer_across_days(volunteer)
@@ -192,19 +190,32 @@ def get_volunteer_name_cell(
     return ListOfLines([volunteer_button, other_material, line_of_buttons]).add_Lines()
 
 
-def get_volunteer_other_material(
+def get_volunteer_button_and_other_material(
     interface: abstractInterface, volunteer: Volunteer
-) -> str:
+) -> Tuple[Button, str]:
+
+    if volunteer_is_selected(interface, volunteer):
+        event =get_event_from_state(interface)
+        other_material = get_volunteer_history_for_selected_volunteer(
+                interface=interface, volunteer=volunteer, event=event
+            )
+        volunteer_label = "%s (click to hide history)" % volunteer.name
+    else:
+        other_material = ""
+        volunteer_label = volunteer.name
+
+    volunteer_button = Button(
+        label=volunteer_label, value=get_button_value_for_volunteer_selection(volunteer)
+    )
+    return volunteer_button, other_material
+
+def volunteer_is_selected( interface: abstractInterface, volunteer: Volunteer):
     if is_volunteer_id_set_in_state(interface):
         volunteer_in_state = get_volunteer_from_state(interface)
         if volunteer_in_state == volunteer:
-            event = get_event_from_state(interface)
-            return get_volunteer_history_for_selected_volunteer(
-                interface=interface, volunteer=volunteer, event=event
-            )
+            return True
 
-    return ""
-
+    return False
 
 def get_last_part_of_row_for_volunteer_at_event(
     volunteer_data_at_event: AllEventDataForVolunteer, ready_to_swap: bool = False

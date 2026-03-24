@@ -32,24 +32,32 @@ def get_skills_filter_from_state(interface: abstractInterface) -> SkillsDict:
     all_skills = get_list_of_skills(object_store=interface.object_store)
 
     skill_as_list = interface.get_persistent_value(
-        SKILLS_FILTER, default=None
-    )  ### dict of enum okay to store?
-    if skill_as_list is None:
-        skills_dict = SkillsDict()  ##
-    else:
-        held_skills_as_list_of_id = list_from_str(skill_as_list, type_to_use=str)
-        held_skills = ListOfSkills(
-            [
-                all_skills.skill_with_id(skill_id)
-                for skill_id in held_skills_as_list_of_id
-            ]
-        )
-        skills_dict = SkillsDict.from_list_of_skills(held_skills)
+        SKILLS_FILTER, default=''
+    )
+    skills_dict = get_skills_dict_from_string(interface=interface, skill_as_list=skill_as_list)
 
     skills_dict.pad_with_missing_skills(all_skills=all_skills)
 
     return skills_dict
 
+
+def get_skills_dict_from_string(interface: abstractInterface, skill_as_list: str) -> SkillsDict:
+
+    if len(skill_as_list)==0:
+        return SkillsDict()
+
+    all_skills = get_list_of_skills(object_store=interface.object_store)
+
+    held_skills_as_list_of_id = list_from_str(skill_as_list, type_to_use=str)
+    held_skills = ListOfSkills(
+        [
+            all_skills.skill_with_id(skill_id)
+            for skill_id in held_skills_as_list_of_id
+        ]
+    )
+    skills_dict = SkillsDict.from_list_of_skills(held_skills)
+
+    return skills_dict
 
 def save_skills_filter_to_state(
     interface: abstractInterface, dict_of_skills: SkillsDict

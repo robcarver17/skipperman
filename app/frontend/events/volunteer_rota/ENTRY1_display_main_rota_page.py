@@ -186,7 +186,6 @@ def post_form_view_for_volunteer_rota_if_state_changed(
         )
 
     else:
-        print("missing button")
         return button_error_and_back_to_initial_state_form(interface)
 
     ## no need to save flush cache

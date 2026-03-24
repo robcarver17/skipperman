@@ -57,3 +57,11 @@ def get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
         object_store.data_api.data_List_of_club_dinghy_limits.get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event,
         event_id=event.id,
     )
+
+def get_dict_of_boats_and_limits_for_all_club_boats_at_event(
+    object_store: ObjectStore, event: Event
+) -> Dict[ClubDinghy, int]:
+    return object_store.get(
+        object_store.data_api.data_List_of_club_dinghy_limits.get_dict_of_boats_and_limits_for_all_club_boats_at_event,
+        event_id=event.id,
+    )

@@ -1,5 +1,4 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.objects.utilities.transform_data import bool2int, int2bool
 from app.data_access.sql.shared_column_names import *
 from app.objects.composed.roles_and_teams import DictOfTeamsWithRoles
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
@@ -11,7 +10,7 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
     DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 )
 from app.objects.day_selectors import Day
-
+from app.objects.utilities.exceptions import MultipleMatches, missing_data
 
 from app.objects.volunteer_roles_and_groups_with_id import (
     ListOfVolunteersWithIdInRoleAtEvent,
@@ -25,6 +24,32 @@ INDEX_VOLUNTEERS_IN_ROLES_TABLE = "index_volunteers_in_roles"
 
 
 class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
+    def update_group_only_at_event_for_volunteer_on_day(
+        self,
+        event_id: str,
+        volunteer_id: str,
+        day: Day,
+        new_group_id: str,
+        allow_replacement: bool,
+    ):
+        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day,
+                                                       default=missing_data)
+
+        if existing_role_id is missing_data:
+            raise Exception("Can't update group if no existing role entry")
+
+        allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        if allocated_role:
+            if not allow_replacement:
+                return
+
+        self._update_group_at_event_for_volunteer_on_day_without_checks(
+                    event_id=event_id,
+                    volunteer_id=volunteer_id,
+                    day=day,
+                    new_group_id=new_group_id,
+                )
+
     def update_role_only_at_event_for_volunteer_on_day(
         self,
         event_id: str,
@@ -37,17 +62,10 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             self.delete_role_at_event_for_volunteer_on_day(
                 event_id=event_id, volunteer_id=volunteer_id, day=day
             )
-        elif self.volunteer_already_has_role_on_day(
-            event_id=event_id, volunteer_id=volunteer_id, day=day
-        ):
-            if allow_replacement:
-                self._update_role_at_event_for_volunteer_on_day_without_checks(
-                    event_id=event_id,
-                    volunteer_id=volunteer_id,
-                    day=day,
-                    new_role_id=new_role_id,
-                )
-        else:
+            return
+
+        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data)
+        if existing_role_id==missing_data:
             self._add_role_and_group_at_event_for_volunteer_on_day(
                 event_id=event_id,
                 volunteer_id=volunteer_id,
@@ -55,6 +73,21 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
                 new_role_id=new_role_id,
                 new_group_id=UNALLOCATED_GROUP_ID,
             )
+            return
+
+        allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        if allocated_role:
+            if not allow_replacement:
+                return
+
+        self._update_role_at_event_for_volunteer_on_day_without_checks(
+                    event_id=event_id,
+                    volunteer_id=volunteer_id,
+                    day=day,
+                    new_role_id=new_role_id,
+                )
+
+
 
     def update_role_and_group_at_event_for_volunteer_on_day(
         self,
@@ -69,18 +102,10 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             self.delete_role_at_event_for_volunteer_on_day(
                 event_id=event_id, volunteer_id=volunteer_id, day=day
             )
-        elif self.volunteer_already_has_role_on_day(
-            event_id=event_id, volunteer_id=volunteer_id, day=day
-        ):
-            if allow_replacement:
-                self._update_role_and_group_at_event_for_volunteer_on_day_without_checks(
-                    event_id=event_id,
-                    volunteer_id=volunteer_id,
-                    day=day,
-                    new_role_id=new_role_id,
-                    new_group_id=new_group_id,
-                )
-        else:
+            return
+
+        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data)
+        if existing_role_id==missing_data:
             self._add_role_and_group_at_event_for_volunteer_on_day(
                 event_id=event_id,
                 volunteer_id=volunteer_id,
@@ -88,6 +113,57 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
                 new_role_id=new_role_id,
                 new_group_id=new_group_id,
             )
+            return
+
+        already_allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        if already_allocated_role:
+            if not allow_replacement:
+                return
+
+        self._update_role_and_group_at_event_for_volunteer_on_day_without_checks(
+                    event_id=event_id,
+                    volunteer_id=volunteer_id,
+                    day=day,
+                    new_role_id=new_role_id,
+                    new_group_id=new_group_id,
+                )
+
+
+    def _update_group_at_event_for_volunteer_on_day_without_checks(
+        self,
+        event_id: str,
+        volunteer_id: str,
+        day: Day,
+        new_group_id: str,
+    ):
+        try:
+            if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
+                return
+
+            self.cursor.execute(
+                "UPDATE %s SET %s=%d WHERE %s=%d AND %s=%d AND %s='%s'"
+                % (
+                    VOLUNTEERS_IN_ROLES_TABLE,
+                    GROUP_ID,
+                    int(new_group_id),
+                    EVENT_ID,
+                    int(event_id),
+                    VOLUNTEER_ID,
+                    int(volunteer_id),
+                    DAY,
+                    day.name,
+                )
+            )
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when writing to volunteers in roles at event table event# %s"
+                % (str(e1), event_id)
+            )
+        finally:
+            self.close()
+
 
     def _update_role_at_event_for_volunteer_on_day_without_checks(
         self,
@@ -137,7 +213,7 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
                 return
 
             self.cursor.execute(
-                "UPDATE %s SET %s=%d AND %s=%d WHERE %s=%d AND %s=%d AND %s='%s'"
+                "UPDATE %s SET %s=%d, %s=%d WHERE %s=%d AND %s=%d AND %s='%s'"
                 % (
                     VOLUNTEERS_IN_ROLES_TABLE,
                     ROLE_ID,
@@ -193,17 +269,18 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
         finally:
             self.close()
 
-    def volunteer_already_has_role_on_day(
-        self, event_id: str, day: Day, volunteer_id: str
-    ) -> bool:
+    def existing_role_id_on_day(
+        self, event_id: str, day: Day, volunteer_id: str, default: str = NO_ROLE_ALLOCATED_ID
+    ) -> str:
         if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
-            return False
+            return default
 
         try:
             cursor = self.cursor
             cursor.execute(
-                """SELECT * FROM %s WHERE %s=%d AND %s=%d AND %s='%s' """
+                """SELECT %s FROM %s WHERE %s=%d AND %s=%d AND %s='%s' """
                 % (
+                    ROLE_ID,
                     VOLUNTEERS_IN_ROLES_TABLE,
                     EVENT_ID,
                     int(event_id),
@@ -222,7 +299,40 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
         finally:
             self.close()
 
-        return len(raw_list) > 0
+        if len(raw_list)==0:
+            return default
+        elif len(raw_list)>1:
+            raise MultipleMatches
+
+        return str(raw_list[0][0])
+
+    def delete_role_at_event_for_volunteer_across_all_days(
+            self, event_id: str, volunteer_id: str
+    ):
+        try:
+            if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
+                return
+
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d AND %s=%d"
+                % (
+                    VOLUNTEERS_IN_ROLES_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    VOLUNTEER_ID,
+                    int(volunteer_id),
+                )
+            )
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when writing to volunteers in roles at event table event# %s"
+                % (str(e1), event_id)
+            )
+        finally:
+            self.close()
+
 
     def delete_role_at_event_for_volunteer_on_day(
         self, event_id: str, day: Day, volunteer_id: str
@@ -446,6 +556,7 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
     def _write_row_of_volunteer_data_without_checks_or_commit(
         self, event_id: str, volunteer_in_role: VolunteerWithIdInRoleAtEvent
     ):
+
         volunteer_id = int(volunteer_in_role.volunteer_id)
         day = volunteer_in_role.day.name
         group_id = int(volunteer_in_role.group_id)

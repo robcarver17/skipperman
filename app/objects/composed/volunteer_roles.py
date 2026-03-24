@@ -8,7 +8,7 @@ from app.objects.roles_and_teams import (
     ListOfRolesWithSkillIds,
     NO_ROLE_ALLOCATED,
     SI_ROLE_NAME,
-    no_role_allocated,
+    no_role_allocated, NO_ROLE_ALLOCATED_ID,
 )
 from app.objects.composed.volunteers_with_skills import SkillsDict
 
@@ -77,6 +77,7 @@ no_role_set = RoleWithSkills(
     protected=True,
     hidden=False,
     associate_sailing_group=True,
+    id=NO_ROLE_ALLOCATED_ID
 )
 
 

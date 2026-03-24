@@ -184,8 +184,8 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroup]):
 
         return most_common(roles_and_groups, RoleAndGroup.create_empty())
 
-    def role_and_group_on_day(self, day: Day) -> RoleAndGroup:
-        return self[day]
+    def role_and_group_on_day(self, day: Day, default=unallocated_role_and_group) -> RoleAndGroup:
+        return self.get(day, default)
 
     def contains_si(self) -> bool:
         return any([role_and_group.is_si for role_and_group in list(self.values())])

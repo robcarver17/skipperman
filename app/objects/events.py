@@ -298,7 +298,7 @@ def list_of_events_excluding_one_event_and_past_events(
 
 def get_past_days_selector_from_event_or_all_days_if_missing(event: Event):
     day_selector = event.day_selector_for_days_in_event_excluding_past_days()
-    if day_selector.days_available()==0:
+    if len(day_selector.days_available())==0:
         return event.day_selector_for_days_in_event()
     else:
         return day_selector

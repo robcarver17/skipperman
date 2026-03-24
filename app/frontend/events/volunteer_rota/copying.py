@@ -49,7 +49,7 @@ def update_if_individual_copy_overwrite_button_pressed(
     copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
         interface=interface,
         volunteer=volunteer,
-        day=day,
+        day_to_copy_from=day,
         event=event,
         allow_replacement=True,
     )
@@ -66,7 +66,7 @@ def update_if_individual_copy_fill_button_pressed(
         interface=interface,
         event=event,
         volunteer=volunteer,
-        day=day,
+        day_to_copy_from = day,
         allow_replacement=False,
     )
 
@@ -95,6 +95,7 @@ def update_if_copy_previous_role_button_pressed(
         event=event,
         volunteer=volunteer,
         new_role_and_group=previous_role_and_group,
+        allow_replacement = True
     )
 
 

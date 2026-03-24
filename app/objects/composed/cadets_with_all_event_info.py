@@ -11,12 +11,13 @@ from app.objects.composed.cadets_with_all_event_info_functions import (
     cadets_not_allocated_to_group_on_at_least_one_day_attending,
 )
 from app.objects.day_selectors import  Day
+from app.objects.partners import no_partnership_given_partner_cadet
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
 from app.objects.groups import Group, unallocated_group, ListOfGroups
 
 from app.objects.events import Event
 
-from app.objects.cadets import Cadet, ListOfCadets
+from app.objects.cadets import Cadet, ListOfCadets, NO_CADET_ID
 
 from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
     DictOfDaysBoatClassAndPartners,
@@ -82,6 +83,12 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         self._event = event
 
+
+    def get_most_common_partner_id_across_days(self, cadet: Cadet, default=NO_CADET_ID) -> str:
+        event_data_for_cadet = self.event_data_for_cadet(cadet)
+
+        return event_data_for_cadet.days_and_boat_class.get_most_common_partner_id_across_days(default)
+
     def list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         self, day: Day
     ) -> ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay:
@@ -133,11 +140,8 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
                 )
             )
 
-    def get_most_common_partner_name_across_days(self, cadet: Cadet) -> Cadet:
-        event_data_for_cadet = self.event_data_for_cadet(cadet)
-        partner = event_data_for_cadet.days_and_boat_class.most_common_partner()
 
-        return partner.name
+
 
     def get_most_common_boat_class_name_across_days(self, cadet: Cadet) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)

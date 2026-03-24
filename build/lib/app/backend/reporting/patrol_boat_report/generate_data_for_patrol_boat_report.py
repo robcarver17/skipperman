@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Dict, List, Tuple
 
 import pandas as pd
@@ -108,10 +109,10 @@ def get_df_for_reporting_patrol_boats_for_day(
 def get_df_for_location_on_day(
     volunteer_event_data: DictOfAllEventDataForVolunteers, location: str, day: Day
 ) -> pd.DataFrame:
-    boat_designations = unique_list_of_boat_designations_for_event_on_day(
+    boat_designations = sorted_unique_list_of_boat_designations_for_event_on_day_including_no_designation(
         volunteer_event_data=volunteer_event_data, day=day
     )
-    boat_designations.sort()
+
     all_df = [
         get_df_for_designation_and_location_on_day(
             volunteer_event_data=volunteer_event_data,
@@ -279,13 +280,16 @@ def boats_in_location_and_designation(
     return ListOfPatrolBoats(list_of_boats)
 
 
-def unique_list_of_boat_designations_for_event_on_day(
+def sorted_unique_list_of_boat_designations_for_event_on_day_including_no_designation(
     volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day
 ):
-    return volunteer_event_data.dict_of_patrol_boat_labels_for_event.unique_set_of_labels_at_event(
+    labels = copy(volunteer_event_data.dict_of_patrol_boat_labels_for_event.unique_set_of_labels_at_event(
         day=day
-    )
+    ))
+    labels.sort()
+    labels.append("")
 
+    return labels
 
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,

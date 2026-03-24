@@ -8,6 +8,7 @@ from app.objects.composed.volunteers_at_event_with_patrol_boats import (
 
 from app.objects.day_selectors import Day
 from app.objects.events import Event
+from app.objects.patrol_boats import PatrolBoat
 from app.objects.volunteers import Volunteer
 
 
@@ -59,12 +60,26 @@ def add_named_boat_to_event_with_no_allocation(
     patrol_boat = from_patrol_boat_name_to_boat(
         object_store=interface.object_store, boat_name=name_of_boat_added
     )
+    for day in event.days_in_event():
+        add_patrol_boat_to_event_with_no_allocation_on_day(
+            interface=interface,
+            boat_added=patrol_boat,
+            event=event,
+            day=day
+        )
+
+
+def add_patrol_boat_to_event_with_no_allocation_on_day(
+    interface: abstractInterface, event: Event, boat_added: PatrolBoat, day: Day
+):
     interface.update(
-        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_unallocated_boat,
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_unallocated_boat_on_day,
         event_id=event.id,
-        patrol_boat_id=patrol_boat.id,
-        list_of_days=event.days_in_event(),
+        patrol_boat_id=boat_added.id,
+        day=day,
     )
+
+
 
 
 def remove_patrol_boat_and_all_associated_volunteers_from_event(
@@ -89,3 +104,14 @@ def delete_volunteer_from_patrol_boat_on_day_at_event(
         volunteer_id=volunteer.id,
         day=day,
     )
+
+def delete_volunteer_from_patrol_boat_on_all_days_of_event(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+):
+    for day in event.days_in_event():
+        delete_volunteer_from_patrol_boat_on_day_at_event(
+            interface=interface,
+            event=event,
+            volunteer=volunteer,
+            day=day
+        )

@@ -31,7 +31,7 @@ from app.backend.rota.changes import (
 from app.backend.volunteers.volunteers_at_event import (
     make_volunteer_available_on_day,
     make_volunteer_unavailable_on_day,
-    delete_volunteer_at_event,
+    remove_volunteer_from_event,
 )
 from app.backend.rota.volunteer_matrix import get_volunteer_matrix
 from app.frontend.events.volunteer_rota.edit_cadet_connections_for_event_from_rota import (
@@ -78,13 +78,9 @@ def save_all_information_in_rota_page(interface: abstractInterface):
         )
     )
 
-    for (
-        volunteer,
-        volunteer_at_event_data,
-    ) in dict_of_volunteers_at_event_with_event_data.items():
+    for  volunteer_at_event_data in dict_of_volunteers_at_event_with_event_data.list_of_information_per_volunteer:
         update_details_from_form_for_volunteer_at_event(
             interface=interface,
-            volunteer=volunteer,
             volunteer_at_event_data=volunteer_at_event_data,
         )
 
@@ -190,7 +186,7 @@ def update_if_make_unavailable_across_days_button_pressed(
         object_store=interface.object_store, button=unavailable_button
     )
     event = get_event_from_state(interface)
-    delete_volunteer_at_event(interface=interface, event=event, volunteer=volunteer)
+    remove_volunteer_from_event(interface=interface, event=event, volunteer=volunteer)
 
 
 def update_if_make_unavailable_on_specific_day_button_pressed(

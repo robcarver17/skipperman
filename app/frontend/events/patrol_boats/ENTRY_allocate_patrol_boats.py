@@ -114,7 +114,7 @@ def post_form_view_for_patrol_boat_allocation(
 
     if save_menu_button.pressed(last_button_pressed):
         pass  # already done
-    elif save_and_back_menu_button.pressed():
+    elif save_and_back_menu_button.pressed(last_button_pressed):
         return previous_form(interface)
     elif is_save_warnings_button_pressed(last_button_pressed):
         pass  # already done

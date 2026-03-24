@@ -251,7 +251,7 @@ def guess_name_of_boat_class_on_day_from_other_information(
     )
 
     list_of_dinghies = (
-        dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners.list_of_boat_classes
+        dict_of_all_event_data.list_of_boat_classes
     )
     best_guess = guess_best_boat_class_name_given_list_of_possibly_matching_fields(
         list_of_boats=list_of_dinghies,

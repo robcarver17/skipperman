@@ -1,13 +1,16 @@
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_boat_allocated_to_volunteer_on_day_at_event,
 )
+from app.backend.registration_data.volunteer_registration_data import \
+    get_attendance_matrix_for_list_of_volunteers_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteers_on_patrol_boats_with_skills_and_roles import (
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoatsOnSpecificday,
     VolunteerAtEventWithSkillsAndRolesAndPatrolBoats,
 )
-from app.objects.day_selectors import Day
+from app.objects.day_selectors import Day, DaySelector
 from app.objects.events import Event
+from app.objects.patrol_boats import PatrolBoat
 from app.objects.utilities.exceptions import missing_data
 from app.objects.volunteers import Volunteer
 
@@ -174,7 +177,7 @@ def copy_across_earliest_allocation_of_boats_at_event(
         interface=interface,
         event=volunteer_with_boat_data.event,
         volunteer=volunteer_with_boat_data.volunteer,
-        day=earliest_day,
+        day_to_copy_from=earliest_day,
         allow_overwrite=allow_overwrite,
     )
 
@@ -183,44 +186,71 @@ def copy_across_boats_at_event(
     interface: abstractInterface,
     event: Event,
     volunteer: Volunteer,
-    day: Day,
+    day_to_copy_from: Day,
     allow_overwrite: bool,
 ):
+    attendance_matrix = get_attendance_matrix_for_list_of_volunteers_at_event(object_store=interface.object_store, event=event)
+    attendance_for_volunteer = attendance_matrix.get_attendance_for_person(volunteer)
+
     patrol_boat_to_copy = get_boat_allocated_to_volunteer_on_day_at_event(
         object_store=interface.object_store,
         event=event,
         volunteer=volunteer,
-        day=day,
+        day=day_to_copy_from,
         default=missing_data,
     )
     if patrol_boat_to_copy is missing_data:
-        raise Exception("Can't copy as no boat for %s on %s" % (volunteer, day))
+        raise Exception("Can't copy as no boat for %s on %s" % (volunteer, day_to_copy_from))
 
     for day_to_copy_over in event.days_in_event():
-        if day_to_copy_over == day:
+        if day_to_copy_over == day_to_copy_from:
+            continue
+        if not attendance_for_volunteer.available_on_day(day_to_copy_over):
             continue
 
-        existing_boat = interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_allocated_to_an_id_for_volunteer_on_day(
-            event_id=event.id, volunteer_id=volunteer.id, day=day
+        copy_across_boats_at_event_on_day(
+            interface=interface,
+            event=event,
+            volunteer=volunteer,
+            day_to_copy_over=day_to_copy_over,
+            patrol_boat_to_copy=patrol_boat_to_copy,
+            allow_overwrite=allow_overwrite
         )
-        if existing_boat:
-            if allow_overwrite:
-                interface.update(
-                    interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_boat_id_for_volunteer_on_day,
-                    event_id=event.id,
-                    volunteer_id=volunteer.id,
-                    day=day,
-                )
-            else:
-                continue
 
-        interface.update(
-            interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
-            event_id=event.id,
-            volunteer_id=volunteer.id,
-            day=day,
-            patrol_boat_id=patrol_boat_to_copy.id,
+def copy_across_boats_at_event_on_day(
+    interface: abstractInterface,
+    event: Event,
+    volunteer: Volunteer,
+patrol_boat_to_copy: PatrolBoat,
+        day_to_copy_over: Day,
+    allow_overwrite: bool,
+):
+
+    existing_boat = \
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.is_boat_allocated_to_an_id_for_volunteer_on_day(
+            event_id=event.id, volunteer_id=volunteer.id, day=day_to_copy_over
         )
+    if existing_boat:
+        if allow_overwrite:
+            ## existing boat needs to be deleted first
+            interface.update(
+                interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.delete_boat_id_for_volunteer_on_day,
+                event_id=event.id,
+                volunteer_id=volunteer.id,
+                day=day_to_copy_over,
+            )
+        else:
+            ## existing boat, no overwrite allowed, next loop
+            return
+
+    ## now there is definitely no existing boat, add the new one
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.add_new_boat_day_volunteer_allocation,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        day=day_to_copy_over,
+        patrol_boat_id=patrol_boat_to_copy.id,
+    )
 
 
 def earliest_day_with_boat_for_volunteer_or_none(

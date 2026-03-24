@@ -90,3 +90,13 @@ def update_volunteer_food_data(
         volunteer_id=volunteer.id,
         new_food_requirements=new_food_requirements,
     )
+
+def remove_food_requirements_for_volunteer_at_event(
+    interface: abstractInterface, event: Event, volunteer: Volunteer
+):
+    interface.update(
+        interface.object_store.data_api.data_list_of_volunteers_with_food_requirement_at_event.remove_food_requirements_for_volunteer_at_event,
+        event_id=event.id,
+        volunteer_id = volunteer.id
+    )
+

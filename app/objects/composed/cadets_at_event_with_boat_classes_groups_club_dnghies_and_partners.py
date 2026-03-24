@@ -11,7 +11,7 @@ from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
     CadetAtEventWithBoatClassAndPartnerWithIds,
 )
 from app.objects.partners import (
-    no_cadet_partner_required,
+    no_partner_allocated,
     from_cadet_id_to_partner_cadet,
     valid_partnership_given_partner_cadet,
     NoCadetPartner,
@@ -39,7 +39,7 @@ class CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay:
     day: Day
     club_dinghy: ClubDinghy = no_club_dinghy
     group: Group = unallocated_group
-    partner_cadet: Cadet = no_cadet_partner_required
+    partner_cadet: Cadet = no_partner_allocated
 
     def switch_partner(self):
         return CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
@@ -154,6 +154,9 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
             default=missing_data,
         )
 
+        """
+        FIXME: I Think this code is now redundant, since we can only modify one of the cadets in a partnership 
+        
         already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
             updated_list=updated_list,
             potentially_updated_cadet_at_event_with_info=potentially_updated_cadet_at_event_with_info,
@@ -161,6 +164,7 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
 
         if already_in_a_changed_partnership:
             continue
+        """
 
         if cadet_in_existing_list is not missing_data:
             if cadet_in_existing_list == potentially_updated_cadet_at_event_with_info:

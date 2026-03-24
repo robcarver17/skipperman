@@ -308,7 +308,7 @@ def how_old(date_of_birth: datetime.date):
     return diff.total_seconds() / (60 * 60 * 24 * 365.25)
 
 
-
+NO_CADET_ID = str(-19123123)
 PERMANENT_SKIP_TEST_CADET_ID = str(-9999)
 TEMPORARY_SKIP_TEST_CADET_ID = str(-9991)
 OLD_TEMPORARY_SKIP_TEST_CADET_ID = str(9991)

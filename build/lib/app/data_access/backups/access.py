@@ -51,11 +51,14 @@ def create_timestamp_file(backup_directory_for_this_backup: str):
 
 def read_timestamp_file(backup_directory_for_this_backup: str) -> datetime.datetime:
     filename = os.path.join(backup_directory_for_this_backup, TIMESTAMP_FILE_NAME)
-    with open(filename, "r") as f:
-        string = f.read()
+    try:
+        with open(filename, "r") as f:
+            string = f.read()
+            return transform_str_into_datetime(string)
+    except FileNotFoundError:
+        return UNKNOWN_DATE
 
-    return transform_str_into_datetime(string)
-
+UNKNOWN_DATE = datetime.date(1970,1,2)
 
 def delete_timestamp_file(backup_directory_for_this_backup):
     filename = os.path.join(backup_directory_for_this_backup, TIMESTAMP_FILE_NAME)

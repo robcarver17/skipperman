@@ -100,12 +100,13 @@ def process_form_when_cadet_chosen_as_partner(
         interface=interface, new_cadet=cadet
     )
     if check_if_registered:
-        attempt_to_link_existing_cadet(interface=interface,  new_cadet=cadet)
+        attempt_to_link_existing_cadet(interface=interface, new_cadet=cadet)
         return return_to_allocation_pages(interface)
 
     return add_matched_partner_cadet_with_duplicate_registration(
         interface=interface, new_cadet=cadet
     )
+
 
 def attempt_to_link_existing_cadet(interface: abstractInterface, new_cadet: Cadet):
     interface.log_error(
@@ -114,15 +115,18 @@ def attempt_to_link_existing_cadet(interface: abstractInterface, new_cadet: Cade
     )
     original_cadet, __ = get_primary_cadet_and_partner_name(interface)
     event = get_event_from_state(interface)
-    messages = add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages(interface=interface,
-                                                                         event=event,
-                                                                         original_cadet=original_cadet,
-                                                                         new_cadet=new_cadet)
+    messages = add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages(
+        interface=interface,
+        event=event,
+        original_cadet=original_cadet,
+        new_cadet=new_cadet,
+    )
 
     for msg in messages:
         interface.log_error(msg)
 
     interface.clear()
+
 
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet

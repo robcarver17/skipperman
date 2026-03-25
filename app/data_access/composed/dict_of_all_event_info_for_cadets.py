@@ -23,7 +23,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfDaysAndClubDinghiesAtEventForPerson,
     DictOfPeopleAndClubDinghiesAtEvent,
 )
-from app.objects.events import  Event
+from app.objects.events import Event
 from app.objects.groups import ListOfGroups
 
 
@@ -57,7 +57,9 @@ class ComposedDataAllEventInfoForCadets(ComposedBaseData):
             self.object_store.data_api.data_List_of_club_dinghies.read
         )
 
-        list_of_boat_classes = self.object_store.get(self.object_store.data_api.data_list_of_dinghies.read)
+        list_of_boat_classes = self.object_store.get(
+            self.object_store.data_api.data_list_of_dinghies.read
+        )
 
         return compose_dict_of_all_event_info_for_cadet(
             event=event,
@@ -67,7 +69,7 @@ class ComposedDataAllEventInfoForCadets(ComposedBaseData):
             dict_of_cadets_with_days_and_groups=dict_of_cadets_with_days_and_groups,
             list_of_groups=list_of_groups,
             list_of_club_dinghies=list_of_club_dinghies,
-            list_of_boat_classes=list_of_boat_classes
+            list_of_boat_classes=list_of_boat_classes,
         )
 
 
@@ -78,8 +80,8 @@ def compose_dict_of_all_event_info_for_cadet(
     dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
     dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
     list_of_groups: ListOfGroups,
-        list_of_club_dinghies: ListOfClubDinghies,
-        list_of_boat_classes: ListOfBoatClasses
+    list_of_club_dinghies: ListOfClubDinghies,
+    list_of_boat_classes: ListOfBoatClasses,
 ) -> DictOfAllEventInfoForCadets:
     raw_dict = compose_raw_dict_of_all_event_info_for_cadet(
         dict_of_cadets_with_registration_data=dict_of_cadets_with_registration_data,

@@ -22,7 +22,8 @@ from app.frontend.events.patrol_boats.render_patrol_boat_table import (
 from app.frontend.events.patrol_boats.elements_in_patrol_boat_table import (
     get_bottom_button_bar_for_patrol_boats,
     get_top_button_bar_for_patrol_boats,
-    quick_patrol_boat_report_button, quick_rota_report_button,
+    quick_patrol_boat_report_button,
+    quick_rota_report_button,
 )
 
 from app.frontend.events.patrol_boats.swapping import (
@@ -50,7 +51,8 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    save_menu_button, save_and_back_menu_button,
+    save_menu_button,
+    save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________

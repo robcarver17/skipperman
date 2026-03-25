@@ -109,7 +109,6 @@ class DictOfDaysAndClubDinghiesAtEventForPerson(Dict[Day, ClubDinghy]):
         return ListOfClubDinghies(list(self.values()))
 
 
-
 class ListOfClubDinghysAtEventOnDayForPeople(List[ClubDinghyAtEventOnDayForPerson]):
     @classmethod
     def from_list_of_cadets_at_event_with_id_and_club_dinghy(
@@ -238,7 +237,6 @@ class DictOfPeopleAndClubDinghiesAtEvent(
     @property
     def list_of_people(self):
         return list(self.keys())
-
 
 
 def compose_raw_dict_of_cadets_and_club_dinghies_at_event(

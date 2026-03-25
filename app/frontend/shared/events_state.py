@@ -1,6 +1,5 @@
 from app.backend.events.list_of_events import (
     get_event_from_id,
-
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import Event

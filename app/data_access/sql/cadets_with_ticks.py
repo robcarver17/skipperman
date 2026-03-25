@@ -72,17 +72,16 @@ class SqlDataListOfCadetsWithTickListItems(GenericSqlData):
             if self.table_does_not_exist(TICKS_FOR_CADET_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d " % (
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d " % (
                 TICKS_FOR_CADET_TABLE,
                 TICK_VALUE,
-                new_tick.name,
                 CADET_ID,
                 int(cadet_id),
                 TICK_SHEET_ITEM_ID,
                 int(tick_item_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (new_tick.name,))
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing ticks" % str(e1))

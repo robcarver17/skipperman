@@ -15,4 +15,3 @@ class ListOfCadetVolunteerAssociationsWithIds(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return CadetVolunteerAssociationWithIds
-

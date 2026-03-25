@@ -6,7 +6,6 @@ from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-
 )
 
 UNALLOCATED_GROUP_STR = "No group set"

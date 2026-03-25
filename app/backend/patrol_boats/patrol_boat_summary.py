@@ -16,7 +16,11 @@ from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
 )
 
-from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import get_sorted_list_of_patrol_boats_at_event
+from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
+    get_sorted_list_of_patrol_boats_at_event,
+)
+
+
 def get_summary_list_of_patrol_boat_allocations_for_events(
     object_store: ObjectStore, event: Event
 ) -> PandasDFTable:
@@ -26,7 +30,9 @@ def get_summary_list_of_patrol_boat_allocations_for_events(
         )
     )
 
-    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(object_store=object_store, event=event)
+    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
+        object_store=object_store, event=event
+    )
 
     results_as_dict = dict(
         [

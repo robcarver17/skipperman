@@ -152,10 +152,11 @@ def get_allocation_input_for_role(
     day: Day,
     ready_to_swap: bool,
 ) -> Union[dropDownInput, str]:
-
     if ready_to_swap:
         return role.name
-    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(interface.object_store, set_role_name = role.name)
+    dict_of_roles_for_dropdown = get_dict_of_roles_for_dropdown(
+        interface.object_store, set_role_name=role.name
+    )
 
     return dropDownInput(
         input_label="",

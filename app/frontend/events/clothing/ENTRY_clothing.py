@@ -79,7 +79,6 @@ def post_form_view_for_clothing_requirements(
     elif clear_all_colours_button.pressed(last_button_pressed):
         clear_all_colours(interface)
 
-
     elif last_button_pressed in all_sort_types:
         sort_order = interface.last_button_pressed()
         save_sort_order(interface=interface, sort_order=sort_order)

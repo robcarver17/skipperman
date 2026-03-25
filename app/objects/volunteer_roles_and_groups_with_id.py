@@ -1,11 +1,10 @@
-
 from dataclasses import dataclass
 
 
 from app.objects.roles_and_teams import Team, no_role_allocated_id
 
 from app.objects.day_selectors import Day
-from app.objects.utilities.exceptions import  arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_unique_object_with_multiple_attr_in_list,
@@ -48,7 +47,6 @@ class ListOfVolunteersWithIdInRoleAtEvent(GenericListOfObjects):
     @property
     def _object_class_contained(self):
         return VolunteerWithIdInRoleAtEvent
-
 
     def member_matching_volunteer_id_and_day(
         self, volunteer_id: str, day: Day, default=arg_not_passed

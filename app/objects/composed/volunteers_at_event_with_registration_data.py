@@ -6,7 +6,6 @@ from app.objects.utilities.exceptions import MissingData, arg_not_passed
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.volunteer_at_event_with_id import (
-
     VolunteerAtEventWithId,
 )
 from app.objects.cadets import ListOfCadets
@@ -25,8 +24,6 @@ class RegistrationDataForVolunteerAtEvent:
         ""  ## information only - double counted as required twice
     )
     notes: str = ""
-
-
 
     @classmethod
     def from_volunteer_at_event_with_id(
@@ -47,9 +44,6 @@ class RegistrationDataForVolunteerAtEvent:
 class DictOfRegistrationDataForVolunteerAtEvent(
     Dict[Volunteer, RegistrationDataForVolunteerAtEvent]
 ):
-
-
-
     def get_data_for_volunteer(
         self, volunteer: Volunteer, default=arg_not_passed
     ) -> RegistrationDataForVolunteerAtEvent:

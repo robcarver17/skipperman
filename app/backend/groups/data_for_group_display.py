@@ -250,9 +250,7 @@ def guess_name_of_boat_class_on_day_from_other_information(
         )
     )
 
-    list_of_dinghies = (
-        dict_of_all_event_data.list_of_boat_classes
-    )
+    list_of_dinghies = dict_of_all_event_data.list_of_boat_classes
     best_guess = guess_best_boat_class_name_given_list_of_possibly_matching_fields(
         list_of_boats=list_of_dinghies,
         list_of_options=[
@@ -575,7 +573,11 @@ def get_schedule_status_for_two_cadets(
     if cadet == other_cadet:
         return same_cadet
 
-    if already_partnered(dict_of_all_event_data=dict_of_all_event_data, other_cadet=other_cadet, specific_day=specific_day):
+    if already_partnered(
+        dict_of_all_event_data=dict_of_all_event_data,
+        other_cadet=other_cadet,
+        specific_day=specific_day,
+    ):
         return unavailable
 
     this_cadet_availability = cadet_availability_at_event_from_dict_of_all_event_data(
@@ -600,29 +602,37 @@ def get_schedule_status_for_two_cadets(
 
     return no_matched_schedule
 
-def already_partnered(   dict_of_all_event_data: DictOfAllEventInfoForCadets,
+
+def already_partnered(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
     other_cadet: Cadet,
-    specific_day: Day = arg_not_passed):
+    specific_day: Day = arg_not_passed,
+):
     if specific_day is arg_not_passed:
-        return any([
-            already_partnered_on_day(
-                dict_of_all_event_data=dict_of_all_event_data,
-                other_cadet=other_cadet,
-                day=day
-            ) for day in dict_of_all_event_data.event.days_in_event()
-        ])
+        return any(
+            [
+                already_partnered_on_day(
+                    dict_of_all_event_data=dict_of_all_event_data,
+                    other_cadet=other_cadet,
+                    day=day,
+                )
+                for day in dict_of_all_event_data.event.days_in_event()
+            ]
+        )
     else:
         return already_partnered_on_day(
             dict_of_all_event_data=dict_of_all_event_data,
             other_cadet=other_cadet,
-            day=specific_day
+            day=specific_day,
         )
 
 
-def already_partnered_on_day(   dict_of_all_event_data: DictOfAllEventInfoForCadets,
-    other_cadet: Cadet,
-    day: Day):
-        return dict_of_all_event_data.event_data_for_cadet(other_cadet).days_and_boat_class.has_valid_partner_on_day(day)
+def already_partnered_on_day(
+    dict_of_all_event_data: DictOfAllEventInfoForCadets, other_cadet: Cadet, day: Day
+):
+    return dict_of_all_event_data.event_data_for_cadet(
+        other_cadet
+    ).days_and_boat_class.has_valid_partner_on_day(day)
 
 
 NOT_AVAILABLE = "Not available"

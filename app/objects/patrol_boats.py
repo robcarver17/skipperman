@@ -203,4 +203,3 @@ def get_location_for_boat(patrol_boat: PatrolBoat) -> str:
         return LAKE_SAFETY
     else:
         return RIVER_SAFETY
-

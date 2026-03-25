@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import  ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,

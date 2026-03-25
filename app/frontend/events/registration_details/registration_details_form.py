@@ -62,9 +62,7 @@ def get_registration_details_inner_form_for_event(
     )
     rows_in_table = [
         row_for_cadet_in_event(
-            cadet=cadet,
-            registration_details=registration_details,
-            event=event
+            cadet=cadet, registration_details=registration_details, event=event
         )
         for cadet in registration_details.registration_data.list_of_cadets()
     ]
@@ -96,8 +94,7 @@ def get_top_row_for_table_of_registration_details(all_columns: list) -> RowInTab
 
 
 def row_for_cadet_in_event(
-        event: Event,
-    cadet: Cadet, registration_details: RegistrationDetailsForEvent
+    event: Event, cadet: Cadet, registration_details: RegistrationDetailsForEvent
 ) -> RowInTable:
     registration_details_for_cadet = registration_details.registration_data[cadet]
     status_button = get_status_button(

@@ -146,7 +146,12 @@ class Event(GenericSkipperManObjectWithIds):
         weekdays_in_event = self.days_in_event()
 
         return DaySelector(
-            dict([(day, date>=datetime.date.today()) for day,date in zip(weekdays_in_event, dates_in_event)])
+            dict(
+                [
+                    (day, date >= datetime.date.today())
+                    for day, date in zip(weekdays_in_event, dates_in_event)
+                ]
+            )
         )
 
     def days_in_event_as_single_string(self) -> str:
@@ -200,7 +205,6 @@ class ListOfEvents(GenericListOfObjectsWithIds):
 
     def event_with_id(self, event_id: str, default=arg_not_passed):
         return self.object_with_id(event_id, default=default)
-
 
     def confirm_event_does_not_already_exist(self, event: Event):
         exists = event.event_description in self.list_of_event_descriptions
@@ -296,9 +300,10 @@ def list_of_events_excluding_one_event_and_past_events(
 
     return list_of_events
 
+
 def get_past_days_selector_from_event_or_all_days_if_missing(event: Event):
     day_selector = event.day_selector_for_days_in_event_excluding_past_days()
-    if len(day_selector.days_available())==0:
+    if len(day_selector.days_available()) == 0:
         return event.day_selector_for_days_in_event()
     else:
         return day_selector

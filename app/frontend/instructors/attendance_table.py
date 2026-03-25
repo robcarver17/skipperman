@@ -19,7 +19,10 @@ from app.frontend.shared.cadet_state import is_cadet_set_in_state, get_cadet_fro
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import checkboxInput
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, make_long_thing_detail_box
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    make_long_thing_detail_box,
+)
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
 from app.objects.attendance import (
     Attendance,
@@ -101,7 +104,9 @@ def get_row_in_table_for_attendance(
         not_initial_registration_phase=not_initial_registration_phase,
     )
 
-    health_cell = make_long_thing_detail_box(health_for_cadet(interface=interface, event=event, cadet=cadet))
+    health_cell = make_long_thing_detail_box(
+        health_for_cadet(interface=interface, event=event, cadet=cadet)
+    )
 
     return RowInTable(
         [

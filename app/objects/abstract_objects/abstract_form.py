@@ -37,6 +37,7 @@ class HelpLink:
     text: str
     help_page_name: str
 
+
 @dataclass
 class ActionLink:
     action_name: str

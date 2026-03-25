@@ -6,7 +6,6 @@ from app.objects.groups import Group
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-
 )
 
 

@@ -157,27 +157,30 @@ def update_club_boat_limits_for_event_from_form(interface: abstractInterface):
         return
     event = get_event_from_state(interface)
     list_of_club_dinghies = get_list_of_club_dinghies(interface.object_store)
-    existing_limits = get_dict_of_boats_and_limits_for_all_club_boats_at_event(object_store=interface.object_store,
-                                                                                       event=event)
+    existing_limits = get_dict_of_boats_and_limits_for_all_club_boats_at_event(
+        object_store=interface.object_store, event=event
+    )
 
     for club_dinghy in list_of_club_dinghies:
         update_club_boat_limit_for_specific_boat_and_event(
-            interface=interface, event=event,
-            existing_limits =existing_limits,
-            club_dinghy=club_dinghy
+            interface=interface,
+            event=event,
+            existing_limits=existing_limits,
+            club_dinghy=club_dinghy,
         )
 
 
 def update_club_boat_limit_for_specific_boat_and_event(
-    interface: abstractInterface, event: Event,
-        existing_limits: Dict[ClubDinghy, int],
-        club_dinghy: ClubDinghy
+    interface: abstractInterface,
+    event: Event,
+    existing_limits: Dict[ClubDinghy, int],
+    club_dinghy: ClubDinghy,
 ):
     new_limit = get_limit_for_boat_from_form(
         interface=interface, club_dinghy=club_dinghy
     )
     existing_limit = existing_limits[club_dinghy]
-    if existing_limit ==new_limit:
+    if existing_limit == new_limit:
         return
     else:
         update_limit_for_club_dinghy_at_event(

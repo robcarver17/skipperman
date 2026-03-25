@@ -12,7 +12,8 @@ from app.frontend.configuration.generic_list_modifier import (
     display_form_edit_generic_list,
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
-    BUTTON_NOT_KNOWN, SAVE_AND_BACK_PRESSED,
+    BUTTON_NOT_KNOWN,
+    SAVE_AND_BACK_PRESSED,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -44,7 +45,7 @@ def post_form_config_dinghies_page(
         save_function=save_from_ordinary_list_of_dinghies,
     )
 
-    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
+    if generic_list_output in [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_dinghies_page
         )

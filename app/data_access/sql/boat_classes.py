@@ -47,17 +47,15 @@ class SqlDataListOfDinghies(GenericSqlData):
             name = new_boat.name
             hidden = bool2int(new_boat.hidden)
 
-            insertion = "UPDATE %s SET %s ='%s', %s=%d WHERE %s=%d" % (
+            insertion = "UPDATE %s SET %s =?, %s=? WHERE %s=%d" % (
                 DINGHIES_TABLE,
                 DINGHY_NAME,
-                name,
                 HIDDEN,
-                hidden,
                 DINGHY_ID,
                 int(existing_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (name, hidden))
 
             self.conn.commit()
         except Exception as e1:
@@ -157,7 +155,7 @@ class SqlDataListOfDinghies(GenericSqlData):
             cursor = self.cursor
             cursor.execute(
                 """SELECT  %s, %s FROM %s WHERE %s='%s' """
-                % (HIDDEN, DINGHY_ID, DINGHIES_TABLE,DINGHY_NAME, name)
+                % (HIDDEN, DINGHY_ID, DINGHIES_TABLE, DINGHY_NAME, name)
             )
             raw_list = cursor.fetchall()
         except Exception as e1:
@@ -165,16 +163,15 @@ class SqlDataListOfDinghies(GenericSqlData):
         finally:
             self.close()
 
-        if len(raw_list)>1:
+        if len(raw_list) > 1:
             raise MultipleMatches("More than one boat called %s" % name)
-        elif len(raw_list)==0:
+        elif len(raw_list) == 0:
             return default
 
         raw_boat = raw_list[0]
-        return \
-            BoatClass(
-                name=str(name), hidden=int2bool(raw_boat[0]), id=str(raw_boat[1])
-            )
+        return BoatClass(
+            name=str(name), hidden=int2bool(raw_boat[0]), id=str(raw_boat[1])
+        )
 
     def get_id_for_boat_with_name(self, name: str, default=missing_data):
         try:

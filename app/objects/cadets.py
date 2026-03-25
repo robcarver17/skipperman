@@ -154,7 +154,11 @@ class Cadet(GenericSkipperManObjectWithIds):
 
     @property
     def does_not_have_real_date_of_birth(self):
-        return self.date_of_birth in [DEFAULT_DATE_OF_BIRTH, UNCONFIRMED_DATE_OF_BIRTH, IRRELEVANT_DATE_OF_BIRTH]
+        return self.date_of_birth in [
+            DEFAULT_DATE_OF_BIRTH,
+            UNCONFIRMED_DATE_OF_BIRTH,
+            IRRELEVANT_DATE_OF_BIRTH,
+        ]
 
     @property
     def has_default_date_of_birth(self):
@@ -281,9 +285,7 @@ def is_cadet_age_surprising(cadet: Cadet):
 
 
 def cant_check_dob(cadet: Cadet):
-    return (
-        cadet.does_not_have_real_date_of_birth
-    )
+    return cadet.does_not_have_real_date_of_birth
 
 
 def cadet_seems_too_old(cadet: Cadet):
@@ -292,7 +294,8 @@ def cadet_seems_too_old(cadet: Cadet):
 
     cadet_age = how_old(cadet.date_of_birth)
 
-    return cadet_age>(MAX_CADET_AGE+1)
+    return cadet_age > (MAX_CADET_AGE + 1)
+
 
 def cadet_seems_too_young(cadet: Cadet):
     if cant_check_dob(cadet):
@@ -300,7 +303,7 @@ def cadet_seems_too_young(cadet: Cadet):
 
     cadet_age = how_old(cadet.date_of_birth)
 
-    return cadet_age<(MIN_CADET_AGE-1)
+    return cadet_age < (MIN_CADET_AGE - 1)
 
 
 def how_old(date_of_birth: datetime.date):

@@ -13,7 +13,8 @@ from app.frontend.reporting.allocations.processes import (
     load_additional_parameters_for_allocation_report,
     SHOW_FULL_NAMES,
     INCLUDE_UNALLOCATED_CADETS,
-    CLUB_BOAT_ASTERIX, DAYS_TO_SHOW,
+    CLUB_BOAT_ASTERIX,
+    DAYS_TO_SHOW,
 )
 from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
@@ -52,8 +53,7 @@ def reporting_options_form_for_group_additional_parameters(
             ),
             _______________,
             "Select days in the event you wish to include in the report:",
-            choose_days
-
+            choose_days,
         ]
     )
     return my_options.add_Lines()

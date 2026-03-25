@@ -17,7 +17,10 @@ from app.frontend.reporting.rollcall_and_contacts.rollcall_report import (
     rollcall_report_generator,
 )
 from app.frontend.reporting.shared.create_report import create_generic_report
-from app.frontend.shared.buttons import get_button_value_for_sort_order, report_link_button
+from app.frontend.shared.buttons import (
+    get_button_value_for_sort_order,
+    report_link_button,
+)
 from app.frontend.shared.warnings_table import (
     display_warnings_tables,
     save_warnings_from_table,
@@ -33,7 +36,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-save_and_back_menu_button,
+    save_and_back_menu_button,
     HelpButton,
     Button,
 )
@@ -109,10 +112,24 @@ quick_report_button = Button("Quick roll call report", nav_button=True)
 
 
 nav_buttons_top = ButtonBar(
-    [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, quick_report_button, report_link_button, help_button]
+    [
+        cancel_menu_button,
+        save_menu_button,
+        save_and_back_menu_button,
+        add_button,
+        quick_report_button,
+        report_link_button,
+        help_button,
+    ]
 )
 nav_buttons_bottom = ButtonBar(
-    [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, help_button]
+    [
+        cancel_menu_button,
+        save_menu_button,
+        save_and_back_menu_button,
+        add_button,
+        help_button,
+    ]
 )
 
 from app.frontend.shared.buttons import (

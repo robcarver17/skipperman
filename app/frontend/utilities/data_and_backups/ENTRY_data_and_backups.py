@@ -20,6 +20,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
     HelpButton,
 )
+
 BACKUP_FILES = "Backup all data to local machine"
 UPLOAD_DATA = "Upload data from local machine"
 RESTORE_DATA = "Restore data from data snapshot"

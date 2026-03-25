@@ -481,8 +481,7 @@ class MixedSqlAndCsvDataApi(object):
     @property
     def data_list_of_audit_updates(self) -> SqlDataListOfAuditUpdates:
         return SqlDataListOfAuditUpdates(
-            db_connection=self.db_connection,
-            object_store=self.object_store
+            db_connection=self.db_connection, object_store=self.object_store
         )
 
     #### USERS

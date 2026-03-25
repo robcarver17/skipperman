@@ -176,7 +176,6 @@ def add_volunteer_connection_to_cadet_in_master_list_of_volunteers(
         )
 
 
-
 def get_dict_of_cadets_associated_with_volunteers(
     object_store: ObjectStore,
 ) -> DictOfCadetsAssociatedWithVolunteer:

@@ -9,7 +9,6 @@ from app.frontend.instructors.render_ticksheet_table import (
     get_tick_from_dropdown_or_none,
     get_tick_from_checkbox_or_none,
     get_ticksheet_data_from_state,
-
 )
 
 from app.frontend.shared.qualification_and_tick_state_storage import (

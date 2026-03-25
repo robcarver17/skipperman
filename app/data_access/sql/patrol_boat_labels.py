@@ -2,7 +2,9 @@ from typing import List
 
 from app.data_access.sql.shared_column_names import *
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.objects.composed.volunteers_at_event_with_patrol_boats import DictOfLabelsForEvent
+from app.objects.composed.volunteers_at_event_with_patrol_boats import (
+    DictOfLabelsForEvent,
+)
 from app.objects.day_selectors import Day
 
 PATROL_BOATS_LABELS_TABLE = "patrol_boats_labels_table"
@@ -10,18 +12,21 @@ INDEX_PATROL_BOATS_LABELS_TABLE = "index_patrol_boats_labels_table"
 
 from app.objects.patrol_boats import (
     ListOfPatrolBoatLabelsAtEvents,
-    PatrolBoatLabelAtEvent, ListOfPatrolBoats,
+    PatrolBoatLabelAtEvent,
+    ListOfPatrolBoats,
 )
 
 
 class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
-    def get_dict_of_patrol_boat_labels_for_event(self, event_id: str) -> DictOfLabelsForEvent:
+    def get_dict_of_patrol_boat_labels_for_event(
+        self, event_id: str
+    ) -> DictOfLabelsForEvent:
         raw_list = self.read_for_event(event_id)
         list_of_patrol_boats = self.list_of_patrol_boats
 
         return DictOfLabelsForEvent.from_list_of_patrol_boat_labels_with_ids_for_event(
             list_of_patrol_boat_labels_with_ids=raw_list,
-            list_of_patrol_boats=list_of_patrol_boats
+            list_of_patrol_boats=list_of_patrol_boats,
         )
 
     @property
@@ -82,10 +87,9 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
             if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
                 raise Exception("Can't modify if existing doesn't exist")
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d AND %s='%s' " % (
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d AND %s='%s' " % (
                 PATROL_BOATS_LABELS_TABLE,
                 PATROL_BOAT_LABEL,
-                label,
                 EVENT_ID,
                 int(event_id),
                 PATROL_BOAT_ID,
@@ -94,7 +98,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
                 day.name,
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (label,))
 
             self.conn.commit()
         except Exception as e1:
@@ -125,8 +129,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
     def get_list_of_unique_labels(self) -> List[str]:
         return self.read().unique_set_of_labels()
 
-
-    def read_for_event(self, event_id:str) -> ListOfPatrolBoatLabelsAtEvents:
+    def read_for_event(self, event_id: str) -> ListOfPatrolBoatLabelsAtEvents:
         if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
             return PatrolBoatLabelAtEvent.create_empty()
 
@@ -140,7 +143,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
                     PATROL_BOAT_LABEL,
                     PATROL_BOATS_LABELS_TABLE,
                     EVENT_ID,
-                    int(event_id)
+                    int(event_id),
                 )
             )
 

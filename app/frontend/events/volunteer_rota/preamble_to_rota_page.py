@@ -1,4 +1,3 @@
-
 from app.backend.rota.volunteer_rota_summary import (
     get_summary_list_of_roles_and_groups_for_event,
     get_summary_list_of_teams_and_groups_for_events,

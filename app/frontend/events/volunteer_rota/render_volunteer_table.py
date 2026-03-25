@@ -193,12 +193,11 @@ def get_volunteer_name_cell(
 def get_volunteer_button_and_other_material(
     interface: abstractInterface, volunteer: Volunteer
 ) -> Tuple[Button, str]:
-
     if volunteer_is_selected(interface, volunteer):
-        event =get_event_from_state(interface)
+        event = get_event_from_state(interface)
         other_material = get_volunteer_history_for_selected_volunteer(
-                interface=interface, volunteer=volunteer, event=event
-            )
+            interface=interface, volunteer=volunteer, event=event
+        )
         volunteer_label = "%s (click to hide history)" % volunteer.name
     else:
         other_material = ""
@@ -209,13 +208,15 @@ def get_volunteer_button_and_other_material(
     )
     return volunteer_button, other_material
 
-def volunteer_is_selected( interface: abstractInterface, volunteer: Volunteer):
+
+def volunteer_is_selected(interface: abstractInterface, volunteer: Volunteer):
     if is_volunteer_id_set_in_state(interface):
         volunteer_in_state = get_volunteer_from_state(interface)
         if volunteer_in_state == volunteer:
             return True
 
     return False
+
 
 def get_last_part_of_row_for_volunteer_at_event(
     volunteer_data_at_event: AllEventDataForVolunteer, ready_to_swap: bool = False

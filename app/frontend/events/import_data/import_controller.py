@@ -67,6 +67,7 @@ def import_controller(interface: abstractInterface) -> Union[Form, NewForm]:
 
     return interface.get_new_form_given_function(next_import)
 
+
 def log_import_finished(interface: abstractInterface):
     event = get_event_from_state(interface)
     add_audit_log(interface=interface, event=event)

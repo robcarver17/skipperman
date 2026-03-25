@@ -119,6 +119,7 @@ def update_availability_of_existing_cadet_at_event_and_return_messages(
 
     return messages
 
+
 def remove_availability_of_existing_cadet_on_day_and_return_messages(
     interface: abstractInterface, event: Event, cadet: Cadet, day: Day
 ) -> List[str]:

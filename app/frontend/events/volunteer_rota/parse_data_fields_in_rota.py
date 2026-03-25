@@ -11,7 +11,8 @@ from app.objects.events import Event
 
 from app.backend.rota.changes import (
     update_volunteer_notes_at_event,
-    update_role_and_group_at_event_for_volunteer_on_day, update_role_only_at_event_for_volunteer_on_day,
+    update_role_and_group_at_event_for_volunteer_on_day,
+    update_role_only_at_event_for_volunteer_on_day,
     update_role_and_group_for_volunteer_given_specific_day_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -48,8 +49,10 @@ def update_details_for_days_from_form_for_volunteer_at_event(
     days_at_event = volunteer_at_event_data.event.days_in_event()
     for day in days_at_event:
         update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
-            interface=interface, event=event, day=day,
-            volunteer_at_event_data=volunteer_at_event_data
+            interface=interface,
+            event=event,
+            day=day,
+            volunteer_at_event_data=volunteer_at_event_data,
         )
 
 
@@ -60,7 +63,9 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
     day: Day,
 ):
     volunteer = volunteer_at_event_data.volunteer
-    roles_and_groups = volunteer_at_event_data.roles_and_groups.role_and_group_on_day(day)
+    roles_and_groups = volunteer_at_event_data.roles_and_groups.role_and_group_on_day(
+        day
+    )
     existing_role = roles_and_groups.role
     existing_group = roles_and_groups.group
 
@@ -82,7 +87,7 @@ def update_role_and_group_from_form_for_volunteer_given_specific_day_at_event(
         existing_group=existing_group,
         new_role=new_role,
         new_group=new_group,
-        allow_replacement=True
+        allow_replacement=True,
     )
 
 
@@ -110,7 +115,7 @@ def get_group_from_form(
     interface: abstractInterface,
     volunteer: Volunteer,
     day: Day,
-        default: Group = unallocated_group
+    default: Group = unallocated_group,
 ) -> Group:
     new_group_name_from_form = interface.value_from_form(
         input_name_for_group_and_volunteer(volunteer=volunteer, day=day),

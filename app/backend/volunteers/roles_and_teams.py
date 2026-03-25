@@ -150,9 +150,9 @@ def add_new_team(interface: abstractInterface, name_of_entry_to_add: str):
     team = Team(name_of_entry_to_add)
 
     interface.update(
-            interface.object_store.data_api.data_list_of_teams.add_new_team,
-            new_team=team,
-        )
+        interface.object_store.data_api.data_list_of_teams.add_new_team,
+        new_team=team,
+    )
 
 
 def modify_team(interface: abstractInterface, existing_object: Team, new_object: Team):
@@ -161,6 +161,7 @@ def modify_team(interface: abstractInterface, existing_object: Team, new_object:
         original_team=existing_object,
         new_team=new_object,
     )
+
 
 def get_list_of_teams(object_store: ObjectStore) -> ListOfTeams:
     return object_store.get(object_store.data_api.data_list_of_teams.read)

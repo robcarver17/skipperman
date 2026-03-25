@@ -112,24 +112,25 @@ class SqlDataListOfGroups(GenericSqlData):
         self, existing_group_id: str, new_group: Group
     ):
         try:
-            insertion = (
-                "UPDATE %s SET %s='%s', %s='%s', %s='%s', %s='%s'  WHERE %s=%d"
-                % (
-                    GROUPS_TABLE,
-                    GROUP_NAME,
-                    str(new_group.name),
-                    LOCATION,
-                    str(new_group.location.name),
-                    HIDDEN,
-                    bool2int(new_group.hidden),
-                    STREAMER,
-                    str(new_group.streamer),
-                    GROUP_ID,
-                    int(existing_group_id),
-                )
+            insertion = "UPDATE %s SET %s=?, %s=?, %s=?, %s=?  WHERE %s=%d" % (
+                GROUPS_TABLE,
+                GROUP_NAME,
+                LOCATION,
+                HIDDEN,
+                STREAMER,
+                GROUP_ID,
+                int(existing_group_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(
+                insertion,
+                (
+                    str(new_group.name),
+                    str(new_group.location.name),
+                    bool2int(new_group.hidden),
+                    str(new_group.streamer),
+                ),
+            )
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s writing groups data" % str(e1))

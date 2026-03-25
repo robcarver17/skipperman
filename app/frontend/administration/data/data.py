@@ -6,7 +6,12 @@ from app.data_access.sql.transfer import (
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.shared.audit_log import get_audit_log_to_display_for_all_events
-from app.objects.abstract_objects.abstract_lines import Line, ListOfLines, _______________, DetailListOfLines
+from app.objects.abstract_objects.abstract_lines import (
+    Line,
+    ListOfLines,
+    _______________,
+    DetailListOfLines,
+)
 
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -44,14 +49,11 @@ def display_form_data(
 ) -> Union[Form, NewForm]:  ##ignore warning
     audit_log = get_audit_log_to_display_for_all_events(interface)
     audits_as_lines = DetailListOfLines(
-        ListOfLines([
-            audit_log
-        ]), name="Import history:"
+        ListOfLines([audit_log]), name="Import history:"
     )
-    lines_inside_form = ListOfLines([nav_buttons,
-                                     option_buttons,
-                                     _______________,
-                                    audits_as_lines])
+    lines_inside_form = ListOfLines(
+        [nav_buttons, option_buttons, _______________, audits_as_lines]
+    )
 
     return Form(lines_inside_form)
 

@@ -16,7 +16,8 @@ from app.objects.composed.volunteer_with_group_and_role_at_event import (
 )
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
-    PatrolBoatByDayDict, DictOfLabelsForEvent,
+    PatrolBoatByDayDict,
+    DictOfLabelsForEvent,
 )
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     DictOfRegistrationDataForVolunteerAtEvent,
@@ -78,8 +79,10 @@ class ComposedDataAllEventInfoForVolunteers(ComposedBaseData):
         list_of_roles_with_skills = self.object_store.get(
             self.object_store.data_api.data_list_of_roles.read_list_of_roles_with_skills
         )
-        dict_of_patrol_boat_labels_for_event=self.object_store.get(self.object_store.data_api.data_list_of_patrol_boat_labels.get_dict_of_patrol_boat_labels_for_event,
-                                                                   event_id=event.id)
+        dict_of_patrol_boat_labels_for_event = self.object_store.get(
+            self.object_store.data_api.data_list_of_patrol_boat_labels.get_dict_of_patrol_boat_labels_for_event,
+            event_id=event.id,
+        )
 
         return compose_dict_of_all_event_data_for_volunteers(
             event=event,
@@ -93,7 +96,7 @@ class ComposedDataAllEventInfoForVolunteers(ComposedBaseData):
             dict_of_teams_and_roles=dict_of_teams_and_roles,
             list_of_groups=list_of_groups,
             list_of_roles_with_skills=list_of_roles_with_skills,
-            dict_of_patrol_boat_labels_for_event=dict_of_patrol_boat_labels_for_event
+            dict_of_patrol_boat_labels_for_event=dict_of_patrol_boat_labels_for_event,
         )
 
 
@@ -109,8 +112,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     dict_of_teams_and_roles: DictOfTeamsWithRoles,
     list_of_roles_with_skills: ListOfRolesWithSkills,
     list_of_groups: ListOfGroups,
-dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent
-
+    dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent,
 ) -> DictOfAllEventDataForVolunteers:
     raw_dict = compose_raw_dict_of_all_event_data_for_volunteers(
         dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
@@ -136,7 +138,7 @@ dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent
         dict_of_teams_and_roles=dict_of_teams_and_roles,
         list_of_groups=list_of_groups,
         list_of_roles_with_skills=list_of_roles_with_skills,
-        dict_of_patrol_boat_labels_for_event=dict_of_patrol_boat_labels_for_event
+        dict_of_patrol_boat_labels_for_event=dict_of_patrol_boat_labels_for_event,
     )
 
 

@@ -17,7 +17,7 @@ POSSIBLE_STATUS_NAMES = [
     MANUAL,
     UNPAID,
     PARTIAL_PAID,
-    CANCELLED_NO_REFUND
+    CANCELLED_NO_REFUND,
 ]
 ACTIVE_STATUS_NAMES = [ACTIVE_PAID, UNPAID, PARTIAL_PAID, MANUAL]
 
@@ -54,7 +54,6 @@ class RegistrationStatus:
     @property
     def is_cancelled_no_refund(self):
         return self.name in [CANCELLED_NO_REFUND]
-
 
     @property
     def is_deleted(self):
@@ -102,7 +101,7 @@ def get_states_allowed_give_current_status(
             deleted_status,
         ]
     elif current_status == manual_status:
-        allowable_status = [cancelled_status, cancelled_no_refund_status,manual_status]
+        allowable_status = [cancelled_status, cancelled_no_refund_status, manual_status]
     ## SHOULD NEVER BE EMPTY
     else:
         raise Exception("Status %s not recognised" % str(current_status))

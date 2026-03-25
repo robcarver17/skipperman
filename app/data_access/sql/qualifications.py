@@ -70,15 +70,14 @@ class SqlDataListOfQualifications(GenericSqlData):
             if self.table_does_not_exist(QUALIFICATION_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d " % (
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d " % (
                 QUALIFICATION_TABLE,
                 QUALIFICATION_NAME,
-                updated_qualification.name,
                 QUALIFICATION_ID,
                 int(existing_qualification_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (updated_qualification.name,))
 
             self.conn.commit()
         except Exception as e1:

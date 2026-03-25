@@ -1,6 +1,8 @@
 from typing import Dict
 
-from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
+    get_dict_of_all_event_info_for_cadets,
+)
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadet_attendance import DictOfDaySelectors
@@ -14,23 +16,23 @@ from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed
 
 
-
-
-def is_cadet_available_on_day_loading_all_event_data(object_store: ObjectStore,
-                                  event: Event,
-                                cadet: Cadet, day: Day):
-
+def is_cadet_available_on_day_loading_all_event_data(
+    object_store: ObjectStore, event: Event, cadet: Cadet, day: Day
+):
     return cadet_availability_at_event_loading_all_event_data(
         object_store=object_store, event=event, cadet=cadet
     ).available_on_day(day)
 
-def cadet_availability_at_event_loading_all_event_data(object_store: ObjectStore,
-                                  event: Event,
-                                cadet: Cadet):
 
-    all_info = get_dict_of_all_event_info_for_cadets(object_store=object_store, event=event)
-    return cadet_availability_at_event_from_dict_of_all_event_data(dict_of_all_event_data=all_info,
-                                                                   cadet=cadet)
+def cadet_availability_at_event_loading_all_event_data(
+    object_store: ObjectStore, event: Event, cadet: Cadet
+):
+    all_info = get_dict_of_all_event_info_for_cadets(
+        object_store=object_store, event=event
+    )
+    return cadet_availability_at_event_from_dict_of_all_event_data(
+        dict_of_all_event_data=all_info, cadet=cadet
+    )
 
 
 def cadet_availability_at_event_from_dict_of_all_event_data(

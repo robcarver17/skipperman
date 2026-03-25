@@ -5,7 +5,7 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
 from app.objects.composed.roles_and_teams import DictOfTeamsWithRoles
-from app.objects.composed.volunteer_roles import  ListOfRolesWithSkills
+from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 from app.objects.composed.volunteers_last_role_across_events import (
     DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
 )
@@ -18,7 +18,7 @@ from app.objects.composed.cadet_volunteer_associations import (
 )
 from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed, MissingData
-from app.objects.groups import  ListOfGroups
+from app.objects.groups import ListOfGroups
 
 from app.objects.volunteers import Volunteer, ListOfVolunteers
 from app.objects.composed.volunteers_with_skills import (
@@ -36,7 +36,8 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 )
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     PatrolBoatByDayDict,
-    DictOfVolunteersAtEventWithPatrolBoatsByDay, DictOfLabelsForEvent,
+    DictOfVolunteersAtEventWithPatrolBoatsByDay,
+    DictOfLabelsForEvent,
 )
 
 from app.objects.composed.people_at_event_with_club_dinghies import (
@@ -60,7 +61,6 @@ class AllEventDataForVolunteer:
         return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
 
 
-
 class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer]):
     def __init__(
         self,
@@ -76,7 +76,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         dict_of_teams_and_roles: DictOfTeamsWithRoles,
         list_of_roles_with_skills: ListOfRolesWithSkills,
         list_of_groups: ListOfGroups,
-            dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent
+        dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent,
     ):
         super().__init__(raw_dict)
         self._dict_of_registration_data_for_volunteers_at_event = (
@@ -102,9 +102,9 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
         self._list_of_groups = list_of_groups
         self._list_of_roles_with_skills = list_of_roles_with_skills
         self._event = event
-        self._dict_of_patrol_boat_labels_for_event = dict_of_patrol_boat_labels_for_event
-
-
+        self._dict_of_patrol_boat_labels_for_event = (
+            dict_of_patrol_boat_labels_for_event
+        )
 
     def not_on_patrol_boat_on_given_day_and_available(
         self, day: Day
@@ -118,8 +118,6 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             ]
         )
         return self.sort_by_list_of_volunteers(list_of_volunteers)
-
-
 
     def get_data_for_volunteer(self, volunteer, default=arg_not_passed):
         try:
@@ -148,7 +146,7 @@ class DictOfAllEventDataForVolunteers(Dict[Volunteer, AllEventDataForVolunteer])
             dict_of_teams_and_roles=self.dict_of_teams_and_roles,
             list_of_groups=self.list_of_groups,
             list_of_roles_with_skills=self.list_of_roles_with_skills,
-            dict_of_patrol_boat_labels_for_event=self.dict_of_patrol_boat_labels_for_event
+            dict_of_patrol_boat_labels_for_event=self.dict_of_patrol_boat_labels_for_event,
         )
 
     @property

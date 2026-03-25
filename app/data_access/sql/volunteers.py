@@ -63,17 +63,15 @@ class SqlDataListOfVolunteers(GenericSqlData):
             surname = updated_volunteer.surname
             existing_id = int(existing_volunteer.id)
 
-            update = "UPDATE %s SET %s='%s', %s='%s' WHERE %s=%d" % (
+            update = "UPDATE %s SET %s=?, %s=? WHERE %s=%d" % (
                 VOLUNTEERS_TABLE,
                 VOLUNTEER_FIRST_NAME,
-                first_name,
                 VOLUNTEER_SURNAME,
-                surname,
                 VOLUNTEER_ID,
                 existing_id,
             )
 
-            self.cursor.execute(update)
+            self.cursor.execute(update, (first_name, surname))
 
             self.conn.commit()
 

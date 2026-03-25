@@ -31,7 +31,6 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def __lt__(self, other):
         return self.name < other.name
 
-
     @classmethod
     def new(cls, first_name: str, surname: str, id: str = arg_not_passed):
         return cls(
@@ -52,8 +51,6 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return Volunteer
-
-
 
     def volunteer_with_matching_name(
         self, volunteer_name: str, default=arg_not_passed
@@ -95,7 +92,9 @@ class ListOfVolunteers(GenericListOfObjectsWithIds):
     def sort_by_firstname(self):
         return ListOfVolunteers(sorted(self, key=lambda x: x.first_name))
 
-    def volunteer_with_id(self, id: str, default: Volunteer=arg_not_passed) -> Volunteer:
+    def volunteer_with_id(
+        self, id: str, default: Volunteer = arg_not_passed
+    ) -> Volunteer:
         return self.object_with_id(id, default=default)
 
 
@@ -103,4 +102,3 @@ default_volunteer = Volunteer(first_name=" ", surname=" ")
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_NAME_SIMILARITY = "Sort by similarity with name"
-

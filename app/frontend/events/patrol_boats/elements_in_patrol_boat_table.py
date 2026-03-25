@@ -42,7 +42,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
     cancel_menu_button,
     save_menu_button,
-    Button, save_and_back_menu_button,
+    Button,
+    save_and_back_menu_button,
 )
 
 from app.frontend.forms.swaps import is_ready_to_swap
@@ -259,7 +260,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
                 cancel_menu_button,
                 quick_patrol_boat_report_button,
                 quick_rota_report_button,
-                report_link_button
+                report_link_button,
             ]
         )
 
@@ -351,9 +352,7 @@ def get_boat_label_entry(
     if in_swap_state:
         return Line([existing_label])
     input_name = get_name_of_boat_label_entry(patrol_boat=patrol_boat, day=day)
-    list_of_options = get_list_of_unique_labels(
-        object_store=interface.object_store
-    )
+    list_of_options = get_list_of_unique_labels(object_store=interface.object_store)
 
     return Line(
         [

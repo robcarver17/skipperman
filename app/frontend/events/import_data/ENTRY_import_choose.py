@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.security.audit_logs import get_list_of_audit_logs_for_event_newest_first
+from app.backend.security.audit_logs import (
+    get_list_of_audit_logs_for_event_newest_first,
+)
 from app.frontend.events.import_data.wa_import_gateway import (
     display_form_WA_import_gateway,
 )
@@ -32,11 +34,11 @@ option_buttons = Line([wa_import_button])
 
 def display_form_choose_import_source(interface: abstractInterface) -> Form:
     audit_log = get_audit_log_to_display_for_event(interface)
-    if len(audit_log) ==0:
+    if len(audit_log) == 0:
         audit_lines = ["No imports done"]
     else:
         audit_lines = ["Imports:", audit_log]
-    lines_inside_form = ListOfLines([nav_buttons, option_buttons]+audit_lines)
+    lines_inside_form = ListOfLines([nav_buttons, option_buttons] + audit_lines)
 
     return Form(lines_inside_form)
 

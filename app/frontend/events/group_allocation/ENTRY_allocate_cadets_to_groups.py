@@ -83,7 +83,8 @@ from app.objects.abstract_objects.abstract_form import (
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
-    save_menu_button, save_and_back_menu_button,
+    save_menu_button,
+    save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,

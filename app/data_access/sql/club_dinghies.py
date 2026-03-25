@@ -125,17 +125,21 @@ class SqlDataListOfClubDinghies(GenericSqlData):
         self, existing_club_dinghy_id: str, new_club_dinghy: ClubDinghy
     ):
         try:
-            insertion = "UPDATE %s SET %s='%s', %s='%s' WHERE %s=%d " % (
+            insertion = "UPDATE %s SET %s=?, %s=? WHERE %s=%d " % (
                 CLUB_DINGHIES_TABLE,
                 DINGHY_NAME,
-                new_club_dinghy.name,
                 HIDDEN,
-                bool2int(new_club_dinghy.hidden),
                 DINGHY_ID,
                 int(existing_club_dinghy_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(
+                insertion,
+                (
+                    new_club_dinghy.name,
+                    bool2int(new_club_dinghy.hidden),
+                ),
+            )
 
             self.conn.commit()
         except Exception as e1:

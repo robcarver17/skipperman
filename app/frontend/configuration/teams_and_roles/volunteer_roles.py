@@ -16,7 +16,8 @@ from app.frontend.configuration.generic_list_modifier import (
     display_form_edit_generic_list,
     post_form_edit_generic_list,
     BACK_BUTTON_PRESSED,
-    BUTTON_NOT_KNOWN, SAVE_AND_BACK_PRESSED,
+    BUTTON_NOT_KNOWN,
+    SAVE_AND_BACK_PRESSED,
 )
 
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills, RoleWithSkills
@@ -65,7 +66,7 @@ def post_form_config_volunteer_roles(
         get_object_from_form_function=get_modified_role_from_form,
     )
 
-    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
+    if generic_list_output in [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_volunteer_roles
         )
@@ -87,6 +88,7 @@ def get_row_for_existing_entry(entry: RoleWithSkills, **ignored_kwargs) -> RowIn
     else:
         return get_row_for_existing_entry_if_unprotected(entry)
 
+
 def get_row_for_protected_existing_entry(entry: RoleWithSkills) -> RowInTable:
     skills_as_str = entry.skills_dict.skills_held_as_str()
     if len(skills_as_str) == 0:
@@ -105,7 +107,8 @@ def get_row_for_protected_existing_entry(entry: RoleWithSkills) -> RowInTable:
             "Hidden in dropdowns" if entry.hidden else "Visible in dropdowns",
             "Protected, cannot edit",
         ]
-        )
+    )
+
 
 def get_row_for_existing_entry_if_unprotected(entry: RoleWithSkills) -> RowInTable:
     return RowInTable(

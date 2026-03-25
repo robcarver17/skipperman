@@ -42,15 +42,14 @@ class SqlDataListOfTickSubStages(GenericSqlData):
         new_name: str,
     ):
         try:
-            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d" % (
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d" % (
                 TICK_SUBSTAGE_TABLE,
                 TICK_SUBSTAGE_NAME,
-                str(new_name),
                 TICK_SUBSTAGE_ID,
                 int(existing_substage_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (str(new_name),))
 
             self.conn.commit()
         except Exception as e1:

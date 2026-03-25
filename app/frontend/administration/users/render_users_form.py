@@ -2,7 +2,8 @@ from typing import Union, List
 
 from app.data_access.configuration.fixed import (
     SAVE_KEYBOARD_SHORTCUT,
-    ADD_KEYBOARD_SHORTCUT, SAVE_AND_BACK_KEYBOARD_SHORTCUT,
+    ADD_KEYBOARD_SHORTCUT,
+    SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -68,8 +69,12 @@ def display_form_edit_list_of_users(
     user_table = table_for_users(
         interface=interface, existing_list_of_users=existing_list_of_users
     )
-    nav_buttons = ButtonBar([cancel_menu_button, save_and_back_button, save_entry_button, help_button])
-    footer_buttons = ButtonBar([cancel_menu_button, save_and_back_button, save_entry_button])
+    nav_buttons = ButtonBar(
+        [cancel_menu_button, save_and_back_button, save_entry_button, help_button]
+    )
+    footer_buttons = ButtonBar(
+        [cancel_menu_button, save_and_back_button, save_entry_button]
+    )
 
     return Form(
         [
@@ -98,9 +103,9 @@ save_entry_button = Button(
     shortcut=SAVE_KEYBOARD_SHORTCUT,
 )
 save_and_back_button = Button(
- SAVE_AND_BACK_BUTTON_LABEL,
+    SAVE_AND_BACK_BUTTON_LABEL,
     nav_button=True,
-    shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT
+    shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 
 add_entry_button = Button(ADD_ENTRY_BUTTON_LABEL, shortcut=ADD_KEYBOARD_SHORTCUT)

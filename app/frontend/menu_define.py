@@ -7,9 +7,10 @@ from app.objects.users_and_security import (
     INSTRUCTOR_GROUP,
     RACE_OFFICER_GROUP,
 )
+
 ### MUST MATCH UP TO MENU CONSTRUCT
 
-REPORT_LINK = "view_possible_reports" ## required for jump buttons
+REPORT_LINK = "view_possible_reports"  ## required for jump buttons
 
 menu_definition = {
     "Events": "view_list_of_events",
@@ -21,7 +22,6 @@ menu_definition = {
     "Utilities": "view_utilities",
     "Administration": "administration",
 }
-
 
 
 ## SECURITY
@@ -36,5 +36,3 @@ menu_security_dict = {
     "view_for_instructors": [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP],
     "administration": [ADMIN_GROUP],
 }
-
-

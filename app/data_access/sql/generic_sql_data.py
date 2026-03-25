@@ -59,5 +59,3 @@ class GenericSqlData(object):
     @property
     def db_connection(self):
         return self._db_connection
-
-

@@ -145,20 +145,22 @@ class SqlDataListOfRoles(GenericSqlData):
             )
 
             self.cursor.execute(
-                "UPDATE %s SET %s='%s', %s=%d, %s=%d, %s=%d WHERE %s=%d"
+                "UPDATE %s SET %s=?, %s=?, %s=?, %s=? WHERE %s=%d"
                 % (
                     ROLES_TABLE,
                     ROLE_NAME,
-                    name,
                     HIDDEN,
-                    hidden,
                     PROTECTED,
-                    protected,
                     ASSOCIATE_SAILING_GROUP,
-                    associate_sailing_group,
                     ROLE_ID,
                     int(role_id),
-                )
+                ),
+                (
+                    name,
+                    hidden,
+                    protected,
+                    associate_sailing_group,
+                ),
             )
 
             skill_ids_required = new_role_with_skills.list_of_skill_ids()

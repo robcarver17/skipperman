@@ -1,4 +1,4 @@
-from typing import  Tuple, Union
+from typing import Tuple, Union
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 

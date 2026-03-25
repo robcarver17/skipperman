@@ -29,7 +29,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
-    _______________, DetailListOfLines,
+    _______________,
+    DetailListOfLines,
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_text import Heading
@@ -74,10 +75,7 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
     if len(audit_log_df) == 0:
         audit_log = ListOfLines(["No imports completed"])
     else:
-        audit_log = DetailListOfLines(
-            ListOfLines([audit_log_df]), name="Imports"
-        )
-
+        audit_log = DetailListOfLines(ListOfLines([audit_log_df]), name="Imports")
 
     summarise_volunteers = PandasDFTable(
         summarise_volunteers_for_event(object_store=interface.object_store, event=event)
@@ -164,8 +162,6 @@ def summary_tables_for_event(interface: abstractInterface, event: Event) -> List
         )
     else:
         clothing_summary_lines = ""
-
-
 
     summary_lines = ListOfLines(
         [

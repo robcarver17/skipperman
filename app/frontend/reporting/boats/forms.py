@@ -14,7 +14,8 @@ from app.frontend.reporting.boats.processes import (
     EXCLUDE_LAKE,
     EXCLUDE_RIVER_TRAIN,
     DISPLAY_FULL_NAMES,
-    INCLUDE_IN_OUT, DAYS_TO_SHOW,
+    INCLUDE_IN_OUT,
+    DAYS_TO_SHOW,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 

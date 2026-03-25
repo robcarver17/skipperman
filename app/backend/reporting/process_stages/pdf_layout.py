@@ -64,7 +64,7 @@ class PdfLayout:
         title_str = "%s (Printed %s) %s" % (
             self.title_str,
             datetime.datetime.now(local_timezone).strftime("%b %d %H:%M"),
-            self.header_str
+            self.header_str,
         )
         pdf = self.pdf
         pdf.set_font(self.font, "", self._title_font_size())

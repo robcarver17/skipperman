@@ -1,11 +1,15 @@
 from app.data_access.sql.generic_sql_data import GenericSqlData
-from app.objects.audit_log import AuditLogUpdateWithIds, ListOfAuditLogUpdatesWithIds, ListOfAuditLogUpdatesWithEvents, AuditLogUpdateWithEvents
+from app.objects.audit_log import (
+    AuditLogUpdateWithIds,
+    ListOfAuditLogUpdatesWithIds,
+    ListOfAuditLogUpdatesWithEvents,
+    AuditLogUpdateWithEvents,
+)
 from app.objects.events import ListOfEvents
 from app.objects.utilities.transform_data import date2int, int2date
 
 from app.data_access.sql.shared_column_names import *
-from app.objects.utilities.exceptions import (
-    arg_not_passed)
+from app.objects.utilities.exceptions import arg_not_passed
 
 AUDIT_LOG_TABLE = "list_of_update_event_audit_logs"
 INDEX_AUDIT_LOG_TABLE = "index_list_of_update_event_audit_logs"
@@ -19,11 +23,13 @@ def get_sort_clause(sort_by: str = arg_not_passed):
     else:
         return ""
 
-def get_event_id_where_clause(event_id: str =arg_not_passed):
+
+def get_event_id_where_clause(event_id: str = arg_not_passed):
     if event_id is arg_not_passed:
         return ""
     else:
         return "WHERE %s=%d " % (EVENT_ID, int(event_id))
+
 
 class SqlDataListOfAuditUpdates(GenericSqlData):
     def add_audit_log(self, audit_log: AuditLogUpdateWithIds):
@@ -39,12 +45,15 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
         finally:
             self.close()
 
-    def read_for_all_events(self, sort_by: str =SORT_BY_DATE_DSC) -> ListOfAuditLogUpdatesWithEvents:
+    def read_for_all_events(
+        self, sort_by: str = SORT_BY_DATE_DSC
+    ) -> ListOfAuditLogUpdatesWithEvents:
         raw_data = self.read(sort_by=sort_by)
         return ListOfAuditLogUpdatesWithEvents(
             [
-                AuditLogUpdateWithEvents.from_audit_with_id_and_list_of_events(audit_with_id=audit_with_id,
-                                                                               list_of_events=self.list_of_events)
+                AuditLogUpdateWithEvents.from_audit_with_id_and_list_of_events(
+                    audit_with_id=audit_with_id, list_of_events=self.list_of_events
+                )
                 for audit_with_id in raw_data
             ]
         )
@@ -55,7 +64,9 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
             self.object_store.data_api.data_list_of_events.read
         )
 
-    def read(self, event_id: str =arg_not_passed, sort_by: str =SORT_BY_DATE_DSC) -> ListOfAuditLogUpdatesWithIds:
+    def read(
+        self, event_id: str = arg_not_passed, sort_by: str = SORT_BY_DATE_DSC
+    ) -> ListOfAuditLogUpdatesWithIds:
         if self.table_does_not_exist(AUDIT_LOG_TABLE):
             return ListOfAuditLogUpdatesWithIds()
 
@@ -84,10 +95,11 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
                 event_id=str(raw_item[0]),
                 username=str(raw_item[1]),
                 volunteer_name=str(raw_item[2]),
-                datetime_of_update=int2date(raw_item[3],
-                )
-            ) for raw_item in raw_list
-
+                datetime_of_update=int2date(
+                    raw_item[3],
+                ),
+            )
+            for raw_item in raw_list
         ]
 
         return ListOfAuditLogUpdatesWithIds(new_list)
@@ -119,7 +131,7 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
             EVENT_ID,
             USERNAME,
             VOLUNTEER_NAME,
-            UPDATE_DATETIME
+            UPDATE_DATETIME,
         )
 
         self.cursor.execute(insertion, (event_id, username, volunteer, update_datetime))
@@ -137,15 +149,15 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
             EVENT_ID,
             USERNAME,
             VOLUNTEER_NAME,
-            UPDATE_DATETIME
+            UPDATE_DATETIME,
         )
 
         index_creation_query = "CREATE UNIQUE INDEX %s ON %s (%s, %s, %s)" % (
-                INDEX_AUDIT_LOG_TABLE,
+            INDEX_AUDIT_LOG_TABLE,
             AUDIT_LOG_TABLE,
             EVENT_ID,
             USERNAME,
-            UPDATE_DATETIME
+            UPDATE_DATETIME,
         )
 
         try:
@@ -156,4 +168,3 @@ class SqlDataListOfAuditUpdates(GenericSqlData):
             raise Exception("Error %s creating audit table" % str(e1))
         finally:
             self.close()
-

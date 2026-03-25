@@ -64,17 +64,21 @@ class SqlDataListOfPatrolBoats(GenericSqlData):
             if self.table_does_not_exist(PATROL_BOATS_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s='%s', %s=%d WHERE %s=%d " % (
+            insertion = "UPDATE %s SET %s=?, %s=? WHERE %s=%d " % (
                 PATROL_BOATS_TABLE,
                 PATROL_BOAT_NAME,
-                str(new_patrol_boat.name),
                 HIDDEN,
-                bool2int(new_patrol_boat.hidden),
                 PATROL_BOAT_ID,
                 int(existing_patrol_boat_id),
             )
 
-            self.cursor.execute(insertion)
+            self.cursor.execute(
+                insertion,
+                (
+                    str(new_patrol_boat.name),
+                    bool2int(new_patrol_boat.hidden),
+                ),
+            )
 
             self.conn.commit()
         except Exception as e1:

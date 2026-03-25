@@ -6,7 +6,6 @@ from app.objects.composed.people_at_event_with_club_dinghies import (
 from app.objects.volunteers_and_cades_at_event_with_club_boat_with_ids import (
     ListOfCadetAtEventWithIdAndClubDinghies,
     CadetAtEventWithClubDinghyWithId,
-
 )
 from app.objects.club_dinghies import no_club_dinghy_id
 from app.data_access.sql.generic_sql_data import GenericSqlData

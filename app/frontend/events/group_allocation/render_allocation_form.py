@@ -11,7 +11,9 @@ from app.backend.groups.previous_groups import (
     get_dict_of_event_allocations_given_list_of_events_from_persistent_data,
 )
 from app.frontend.shared.buttons import report_link_button
-from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import ListOfBoatGroupings
+from app.objects.composed.cadets_at_event_with_boat_classes_and_partners import (
+    ListOfBoatGroupings,
+)
 from app.objects.composed.cadets_at_event_with_groups import (
     DictOfEventAllocations,
     GroupAllocationInfo,
@@ -25,7 +27,8 @@ from app.backend.qualifications_and_ticks.qualifications_for_cadet import (
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.group_allocation.buttons import (
     get_day_buttons,
-    button_to_click_on_cadet, button_to_click_on_cadet_when_already_selected,
+    button_to_click_on_cadet,
+    button_to_click_on_cadet_when_already_selected,
 )
 from app.frontend.shared.check_security import is_admin_or_skipper
 from app.frontend.shared.club_dinghies import get_club_dinghies_detail
@@ -59,7 +62,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton, save_and_back_menu_button,
+    HelpButton,
+    save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -88,7 +92,13 @@ def display_form_allocate_cadets_at_event(
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
-    clicker_line = Line("Click on another cadet name to show history / Click on cadet with history showing to hide") if any_cadet_clicked_on(interface) else Line("Click on a cadet name to show history and qualifications")
+    clicker_line = (
+        Line(
+            "Click on another cadet name to show history / Click on cadet with history showing to hide"
+        )
+        if any_cadet_clicked_on(interface)
+        else Line("Click on a cadet name to show history and qualifications")
+    )
     day_buttons = get_day_buttons(interface)
     sort_line = get_sort_line(sort_order)
     inner_form = get_inner_form_for_cadet_allocation(
@@ -163,10 +173,23 @@ def get_nav_bar_top(interface: abstractInterface):
 def get_nav_bar_bottom(interface: abstractInterface):
     if is_admin_or_skipper(interface):
         return ButtonBar(
-            [cancel_menu_button, save_menu_button, save_and_back_menu_button, add_button, help_button]
+            [
+                cancel_menu_button,
+                save_menu_button,
+                save_and_back_menu_button,
+                add_button,
+                help_button,
+            ]
         )
     else:
-        return ButtonBar([cancel_menu_button, save_and_back_menu_button, save_menu_button, help_button])
+        return ButtonBar(
+            [
+                cancel_menu_button,
+                save_and_back_menu_button,
+                save_menu_button,
+                help_button,
+            ]
+        )
 
 
 def get_allocations_and_classes_detail(
@@ -235,7 +258,9 @@ def get_previous_event_selection_detail(interface: abstractInterface, event: Eve
 
 def get_sort_line(sort_order: SortOrderGroups):
     current_sort_order = ", ".join(sort_order.sort_order_as_list)
-    keep_groups_together = "(Keep helm/crew pairs together)" if sort_order.keep_pairs_together else ""
+    keep_groups_together = (
+        "(Keep helm/crew pairs together)" if sort_order.keep_pairs_together else ""
+    )
     sort_line = Line(
         [
             "Current sort order: %s %s" % (current_sort_order, keep_groups_together),
@@ -347,7 +372,9 @@ def get_body_of_table_for_cadet_allocation(
     previous_groups_for_cadets: DictOfEventAllocations,
     list_of_cadets: ListOfCadets,
 ) -> List[RowInTable]:
-    list_of_boat_groupings = ListOfBoatGroupings(dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners)
+    list_of_boat_groupings = ListOfBoatGroupings(
+        dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners
+    )
     table_rows = [
         get_row_for_cadet(
             interface=interface,
@@ -355,12 +382,11 @@ def get_body_of_table_for_cadet_allocation(
             group_allocation_info=group_allocation_info,
             dict_of_all_event_data=dict_of_all_event_data,
             cadet=cadet,
-            list_of_boat_groupings=list_of_boat_groupings
+            list_of_boat_groupings=list_of_boat_groupings,
         )
         for cadet in list_of_cadets
     ]
     return table_rows
-
 
 
 def get_row_for_cadet(
@@ -368,9 +394,8 @@ def get_row_for_cadet(
     previous_groups_for_cadets: DictOfEventAllocations,
     group_allocation_info: GroupAllocationInfo,
     dict_of_all_event_data: DictOfAllEventInfoForCadets,
-        list_of_boat_groupings: ListOfBoatGroupings,
+    list_of_boat_groupings: ListOfBoatGroupings,
     cadet: Cadet,
-
 ) -> RowInTable:
     cell_for_cadet = get_cell_for_cadet(
         interface=interface,
@@ -394,8 +419,10 @@ def get_row_for_cadet(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
     input_fields = get_input_fields_for_cadet(
-        interface=interface, cadet=cadet, dict_of_all_event_data=dict_of_all_event_data,
-        list_of_boat_groupings=list_of_boat_groupings
+        interface=interface,
+        cadet=cadet,
+        dict_of_all_event_data=dict_of_all_event_data,
+        list_of_boat_groupings=list_of_boat_groupings,
     )
     if is_admin_or_skipper(interface):
         return RowInTable(
@@ -452,6 +479,7 @@ def this_cadet_has_been_clicked_on_already(interface: abstractInterface, cadet: 
         return False
 
     return selected_cadet == cadet
+
 
 def any_cadet_clicked_on(interface: abstractInterface):
     try:

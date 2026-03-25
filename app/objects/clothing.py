@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
-
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
@@ -26,7 +25,6 @@ class ListOfCadetsWithClothingAndIdsAtEvent(GenericListOfObjects):
         return [object.cadet_id for object in self]
 
 
-
 @dataclass
 class ClothingAtEvent:
     size: str = UNALLOCATED_SIZE
@@ -35,7 +33,6 @@ class ClothingAtEvent:
     @property
     def has_colour(self):
         return not self.colour == UNALLOCATED_COLOUR
-
 
     @classmethod
     def create_empty(cls):

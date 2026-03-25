@@ -11,7 +11,6 @@ from app.objects.utilities.generic_list_of_objects import (
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
 
-
 @dataclass
 class CadetAtEventWithClubDinghyWithId(GenericSkipperManObject):
     cadet_id: str
@@ -34,14 +33,11 @@ class ListOfCadetAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
     def list_of_cadet_ids(self):
         return [item.cadet_id for item in self]
 
-
-
     def has_allocation_for_cadet_on_day(self, cadet_id: str, day: Day) -> bool:
         idx = self.index_of_item_for_cadet_id_on_day(
             cadet_id=cadet_id, day=day, default=index_not_found
         )
         return not (idx is index_not_found)
-
 
     def index_of_item_for_cadet_id_on_day(
         self, cadet_id: str, day: Day, default=arg_not_passed
@@ -69,8 +65,6 @@ class ListOfVolunteerAtEventWithIdAndClubDinghies(GenericListOfObjectsWithIds):
 
     def list_of_volunteer_ids(self):
         return [item.volunteer_id for item in self]
-
-
 
     def has_allocation_for_volunteer_on_day(self, volunteer_id: str, day: Day) -> bool:
         idx = self.index_of_item_for_volunteer_id_on_day(

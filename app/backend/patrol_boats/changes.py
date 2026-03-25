@@ -62,10 +62,7 @@ def add_named_boat_to_event_with_no_allocation(
     )
     for day in event.days_in_event():
         add_patrol_boat_to_event_with_no_allocation_on_day(
-            interface=interface,
-            boat_added=patrol_boat,
-            event=event,
-            day=day
+            interface=interface, boat_added=patrol_boat, event=event, day=day
         )
 
 
@@ -78,8 +75,6 @@ def add_patrol_boat_to_event_with_no_allocation_on_day(
         patrol_boat_id=boat_added.id,
         day=day,
     )
-
-
 
 
 def remove_patrol_boat_and_all_associated_volunteers_from_event(
@@ -105,13 +100,11 @@ def delete_volunteer_from_patrol_boat_on_day_at_event(
         day=day,
     )
 
+
 def delete_volunteer_from_patrol_boat_on_all_days_of_event(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ):
     for day in event.days_in_event():
         delete_volunteer_from_patrol_boat_on_day_at_event(
-            interface=interface,
-            event=event,
-            volunteer=volunteer,
-            day=day
+            interface=interface, event=event, volunteer=volunteer, day=day
         )

@@ -35,7 +35,6 @@ returned = Attendance["Returned to parent or club"]
 temporary_absence = Attendance["Temporary absence"]
 
 
-
 @dataclass
 class RawAttendanceItem(GenericSkipperManObject):
     event_id: str

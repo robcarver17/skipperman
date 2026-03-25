@@ -25,7 +25,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     main_menu_button,
     back_menu_button,
-
 )
 
 

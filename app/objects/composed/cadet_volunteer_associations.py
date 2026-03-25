@@ -20,7 +20,9 @@ class DEPRECATE_CadetVolunteerAssociation:
     volunteer: Volunteer
 
 
-class DEPRECATE_ListOfCadetVolunteerAssociations(List[DEPRECATE_CadetVolunteerAssociation]):
+class DEPRECATE_ListOfCadetVolunteerAssociations(
+    List[DEPRECATE_CadetVolunteerAssociation]
+):
     def __init__(
         self,
         raw_list: List[DEPRECATE_CadetVolunteerAssociation],
@@ -44,7 +46,9 @@ class DEPRECATE_ListOfCadetVolunteerAssociations(List[DEPRECATE_CadetVolunteerAs
             self._add_association_without_checking(cadet=cadet, volunteer=volunteer)
 
     def _add_association_without_checking(self, cadet: Cadet, volunteer: Volunteer):
-        self.append(DEPRECATE_CadetVolunteerAssociation(cadet=cadet, volunteer=volunteer))
+        self.append(
+            DEPRECATE_CadetVolunteerAssociation(cadet=cadet, volunteer=volunteer)
+        )
         self.list_of_cadet_volunteer_associations_with_ids.add(
             cadet_id=cadet.id, volunteer_id=volunteer.id
         )
@@ -130,10 +134,5 @@ class DEPRECATE_ListOfCadetVolunteerAssociations(List[DEPRECATE_CadetVolunteerAs
         return self._list_of_cadet_volunteer_associations_with_ids
 
 
-
-
-
 class DictOfCadetsAssociatedWithVolunteer(Dict[Volunteer, ListOfCadets]):
     pass
-
-

@@ -1,6 +1,6 @@
 from app.backend.groups.sorting import (
     DEFAULT_SORT_ORDER,
-SortOrderGroups,
+    SortOrderGroups,
     from_string_to_sort_list,
     from_sort_list_to_string,
 )

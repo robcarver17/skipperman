@@ -15,13 +15,19 @@ from app.objects.cadet_at_event_with_boat_class_and_partners_with_ids import (
 
 from app.objects.cadets import Cadet, ListOfCadets, NO_CADET_ID
 from app.objects.day_selectors import Day
-from app.objects.utilities.exceptions import missing_data, arg_not_passed, MultipleMatches
+from app.objects.utilities.exceptions import (
+    missing_data,
+    arg_not_passed,
+    MultipleMatches,
+)
 from app.objects.partners import (
     no_cadet_partner_required,
     from_cadet_id_to_partner_cadet,
     no_partner_allocated,
     from_partner_cadet_to_id_or_string,
-    NoCadetPartner, no_partnership_given_partner_cadet, valid_partnership_given_partner_cadet,
+    NoCadetPartner,
+    no_partnership_given_partner_cadet,
+    valid_partnership_given_partner_cadet,
 )
 from app.objects.utilities.utils import most_common, flatten
 
@@ -68,7 +74,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
     def list_of_days(self):
         return list(self.keys())
 
-
     def most_common_boat_class(self) -> BoatClass:
         list_of_boat_classes = [
             boat_class_and_partner.boat_class
@@ -85,18 +90,20 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
     def has_multiple_partners(self):
         list_of_partners = self.list_of_partners_across_days()
 
-        return len(set(list_of_partners))>1
+        return len(set(list_of_partners)) > 1
 
     def list_of_partners_across_days(self):
         list_of_partners = [
             boat_class_and_partner.partner_cadet
             for boat_class_and_partner in self.values()
-            if valid_partnership_given_partner_cadet(boat_class_and_partner.partner_cadet)
+            if valid_partnership_given_partner_cadet(
+                boat_class_and_partner.partner_cadet
+            )
         ]
 
         return list_of_partners
 
-    def get_most_common_partner_id_across_days(self,  default=NO_CADET_ID) -> str:
+    def get_most_common_partner_id_across_days(self, default=NO_CADET_ID) -> str:
         partner = self.most_common_partner()
         if no_partnership_given_partner_cadet(partner):
             return default
@@ -151,18 +158,14 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
 
         return boat_class_and_partner.has_partner
 
-    def partner_id_on_day(self, day: Day, default=NO_CADET_ID
-    ) -> str:
+    def partner_id_on_day(self, day: Day, default=NO_CADET_ID) -> str:
         partner_on_day = self.partner_on_day(day, default=no_partner_allocated)
         if no_partnership_given_partner_cadet(partner_on_day):
             return default
 
         return partner_on_day.id
 
-
-    def partner_on_day(
-        self, day: Day, default=no_partner_allocated
-    ) -> [Cadet, object]:
+    def partner_on_day(self, day: Day, default=no_partner_allocated) -> [Cadet, object]:
         boat_class_and_partner = self.boat_class_and_partner_on_day(
             day, default=missing_data
         )
@@ -236,7 +239,6 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
 
 
 class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
-
     def unique_sorted_list_of_boat_classes_at_event(
         self, sorted_list_of_boat_classes: ListOfBoatClasses
     ):
@@ -253,7 +255,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
         ]
 
         return ListOfBoatClasses(sorted_list)
-
 
     def boat_classes_and_partner_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
@@ -296,7 +297,6 @@ def compose_raw_dict_of_cadets_and_boat_classes_and_partners(
     return raw_dict
 
 
-
 @dataclass
 class BoatGrouping:
     first_id: str
@@ -305,41 +305,53 @@ class BoatGrouping:
     def matches_eithier_id(self, match_id: str):
         return match_id in [self.first_id, self.second_id]
 
-    def is_first_id(self, match_id:str):
-        return match_id==self.first_id
+    def is_first_id(self, match_id: str):
+        return match_id == self.first_id
+
 
 class _InternalListOfBoatGroupings(List[BoatGrouping]):
-    def does_cadet_with_id_have_edit_rights_given_partner_id(self, cadet_id: str, partner_id:str):
+    def does_cadet_with_id_have_edit_rights_given_partner_id(
+        self, cadet_id: str, partner_id: str
+    ):
         existing_boat = self.grouping_matching_eithier_id(cadet_id, default=None)
         if existing_boat is None:
             self.add_new_grouping(cadet_id, partner_id)
             return True
 
-        return existing_boat.is_first_id(cadet_id) ## should always be False, but you never know
+        return existing_boat.is_first_id(
+            cadet_id
+        )  ## should always be False, but you never know
 
-    def add_new_grouping(self, cadet_id: str, partner_id:str):
+    def add_new_grouping(self, cadet_id: str, partner_id: str):
         self.append(BoatGrouping(cadet_id, partner_id))
 
     def grouping_matching_eithier_id(self, match_id: str, default=None) -> BoatGrouping:
         matches = [x for x in self if x.matches_eithier_id(match_id)]
-        if len(matches)>1:
+        if len(matches) > 1:
             raise MultipleMatches("can't be on more than one boat")
 
-        if len(matches)==0:
+        if len(matches) == 0:
             return default
         else:
             return matches[0]
 
 
 class ListOfBoatGroupings:
-    def __init__(self, dict_of_cadets_boat_classes_and_partners: DictOfCadetsAndBoatClassAndPartners):
-        self._dict_of_cadets_boat_classes_and_partners = dict_of_cadets_boat_classes_and_partners
+    def __init__(
+        self,
+        dict_of_cadets_boat_classes_and_partners: DictOfCadetsAndBoatClassAndPartners,
+    ):
+        self._dict_of_cadets_boat_classes_and_partners = (
+            dict_of_cadets_boat_classes_and_partners
+        )
         self._list_of_boat_groupings = _InternalListOfBoatGroupings()
 
     def does_cadet_have_edit_rights_on_day(self, cadet: Cadet, day: Day):
         partner_id = self.partner_id_for_cadet_on_day(cadet, day)
 
-        return self.does_cadet_with_id_have_edit_rights_given_partner_id(cadet.id, partner_id)
+        return self.does_cadet_with_id_have_edit_rights_given_partner_id(
+            cadet.id, partner_id
+        )
 
     def does_cadet_have_edit_rights_across_days(self, cadet: Cadet):
         if self.has_multiple_partners(cadet):
@@ -348,32 +360,45 @@ class ListOfBoatGroupings:
 
         partner_id = self.partner_id_for_cadet_across_days(cadet)
 
-        return self.does_cadet_with_id_have_edit_rights_given_partner_id(cadet.id, partner_id)
+        return self.does_cadet_with_id_have_edit_rights_given_partner_id(
+            cadet.id, partner_id
+        )
 
-    def does_cadet_with_id_have_edit_rights_given_partner_id(self, cadet_id: str, partner_id:str):
-        if partner_id==NO_CADET_ID:
+    def does_cadet_with_id_have_edit_rights_given_partner_id(
+        self, cadet_id: str, partner_id: str
+    ):
+        if partner_id == NO_CADET_ID:
             ## no partner, not an issue
             return True
         else:
-            return self.list_of_boat_groupings.does_cadet_with_id_have_edit_rights_given_partner_id(cadet_id=cadet_id, partner_id=partner_id)
+            return self.list_of_boat_groupings.does_cadet_with_id_have_edit_rights_given_partner_id(
+                cadet_id=cadet_id, partner_id=partner_id
+            )
 
     def has_multiple_partners(self, cadet: Cadet):
         return self.boat_classes_and_partner_for_cadet(cadet).has_multiple_partners()
 
     def partner_id_for_cadet_across_days(self, cadet: Cadet):
-        return self.boat_classes_and_partner_for_cadet(cadet).get_most_common_partner_id_across_days(default=NO_CADET_ID)
+        return self.boat_classes_and_partner_for_cadet(
+            cadet
+        ).get_most_common_partner_id_across_days(default=NO_CADET_ID)
 
     def partner_id_for_cadet_on_day(self, cadet: Cadet, day: Day):
-        return self.boat_classes_and_partner_for_cadet(cadet).partner_id_on_day(day, default=NO_CADET_ID)
+        return self.boat_classes_and_partner_for_cadet(cadet).partner_id_on_day(
+            day, default=NO_CADET_ID
+        )
 
     def boat_classes_and_partner_for_cadet(self, cadet: Cadet):
-        return self.dict_of_cadets_boat_classes_and_partners.boat_classes_and_partner_for_cadet(cadet)
+        return self.dict_of_cadets_boat_classes_and_partners.boat_classes_and_partner_for_cadet(
+            cadet
+        )
 
     @property
-    def dict_of_cadets_boat_classes_and_partners(self) -> DictOfCadetsAndBoatClassAndPartners:
+    def dict_of_cadets_boat_classes_and_partners(
+        self,
+    ) -> DictOfCadetsAndBoatClassAndPartners:
         return self._dict_of_cadets_boat_classes_and_partners
 
     @property
     def list_of_boat_groupings(self) -> _InternalListOfBoatGroupings:
         return self._list_of_boat_groupings
-

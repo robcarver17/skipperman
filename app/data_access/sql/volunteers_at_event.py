@@ -50,16 +50,16 @@ class SqlDataListOfVolunteersAtEvent(GenericSqlData):
             current_availability.make_unavailable_on_day(day)
         try:
             self.cursor.execute(
-                "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d "
+                "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d "
                 % (
                     VOLUNTEERS_AT_EVENT_TABLE,
                     VOLUNTEER_AVAILABLITY,
-                    current_availability.as_str(),
                     EVENT_ID,
                     int(event_id),
                     VOLUNTEER_ID,
                     int(volunteer_id),
-                )
+                ),
+                (current_availability.as_str(),),
             )
 
             self.conn.commit()
@@ -135,16 +135,16 @@ class SqlDataListOfVolunteersAtEvent(GenericSqlData):
             if self.table_does_not_exist(VOLUNTEERS_AT_EVENT_TABLE):
                 return
             self.cursor.execute(
-                "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d "
+                "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d "
                 % (
                     VOLUNTEERS_AT_EVENT_TABLE,
                     VOLUNTEER_NOTES,
-                    new_notes,
                     EVENT_ID,
                     int(event_id),
                     VOLUNTEER_ID,
                     int(volunteer_id),
-                )
+                ),
+                (new_notes,),
             )
 
             self.conn.commit()

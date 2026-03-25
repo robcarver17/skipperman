@@ -32,23 +32,24 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
         new_group_id: str,
         allow_replacement: bool,
     ):
-        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day,
-                                                       default=missing_data)
+        existing_role_id = self.existing_role_id_on_day(
+            event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data
+        )
 
         if existing_role_id is missing_data:
             raise Exception("Can't update group if no existing role entry")
 
-        allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        allocated_role = existing_role_id != NO_ROLE_ALLOCATED_ID
         if allocated_role:
             if not allow_replacement:
                 return
 
         self._update_group_at_event_for_volunteer_on_day_without_checks(
-                    event_id=event_id,
-                    volunteer_id=volunteer_id,
-                    day=day,
-                    new_group_id=new_group_id,
-                )
+            event_id=event_id,
+            volunteer_id=volunteer_id,
+            day=day,
+            new_group_id=new_group_id,
+        )
 
     def update_role_only_at_event_for_volunteer_on_day(
         self,
@@ -64,8 +65,10 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
             return
 
-        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data)
-        if existing_role_id==missing_data:
+        existing_role_id = self.existing_role_id_on_day(
+            event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data
+        )
+        if existing_role_id == missing_data:
             self._add_role_and_group_at_event_for_volunteer_on_day(
                 event_id=event_id,
                 volunteer_id=volunteer_id,
@@ -75,19 +78,17 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
             return
 
-        allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        allocated_role = existing_role_id != NO_ROLE_ALLOCATED_ID
         if allocated_role:
             if not allow_replacement:
                 return
 
         self._update_role_at_event_for_volunteer_on_day_without_checks(
-                    event_id=event_id,
-                    volunteer_id=volunteer_id,
-                    day=day,
-                    new_role_id=new_role_id,
-                )
-
-
+            event_id=event_id,
+            volunteer_id=volunteer_id,
+            day=day,
+            new_role_id=new_role_id,
+        )
 
     def update_role_and_group_at_event_for_volunteer_on_day(
         self,
@@ -104,8 +105,10 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
             return
 
-        existing_role_id =self.existing_role_id_on_day(event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data)
-        if existing_role_id==missing_data:
+        existing_role_id = self.existing_role_id_on_day(
+            event_id=event_id, volunteer_id=volunteer_id, day=day, default=missing_data
+        )
+        if existing_role_id == missing_data:
             self._add_role_and_group_at_event_for_volunteer_on_day(
                 event_id=event_id,
                 volunteer_id=volunteer_id,
@@ -115,19 +118,18 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
             return
 
-        already_allocated_role = existing_role_id!=NO_ROLE_ALLOCATED_ID
+        already_allocated_role = existing_role_id != NO_ROLE_ALLOCATED_ID
         if already_allocated_role:
             if not allow_replacement:
                 return
 
         self._update_role_and_group_at_event_for_volunteer_on_day_without_checks(
-                    event_id=event_id,
-                    volunteer_id=volunteer_id,
-                    day=day,
-                    new_role_id=new_role_id,
-                    new_group_id=new_group_id,
-                )
-
+            event_id=event_id,
+            volunteer_id=volunteer_id,
+            day=day,
+            new_role_id=new_role_id,
+            new_group_id=new_group_id,
+        )
 
     def _update_group_at_event_for_volunteer_on_day_without_checks(
         self,
@@ -163,7 +165,6 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
         finally:
             self.close()
-
 
     def _update_role_at_event_for_volunteer_on_day_without_checks(
         self,
@@ -270,7 +271,11 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             self.close()
 
     def existing_role_id_on_day(
-        self, event_id: str, day: Day, volunteer_id: str, default: str = NO_ROLE_ALLOCATED_ID
+        self,
+        event_id: str,
+        day: Day,
+        volunteer_id: str,
+        default: str = NO_ROLE_ALLOCATED_ID,
     ) -> str:
         if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
             return default
@@ -299,15 +304,15 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
         finally:
             self.close()
 
-        if len(raw_list)==0:
+        if len(raw_list) == 0:
             return default
-        elif len(raw_list)>1:
+        elif len(raw_list) > 1:
             raise MultipleMatches
 
         return str(raw_list[0][0])
 
     def delete_role_at_event_for_volunteer_across_all_days(
-            self, event_id: str, volunteer_id: str
+        self, event_id: str, volunteer_id: str
     ):
         try:
             if self.table_does_not_exist(VOLUNTEERS_IN_ROLES_TABLE):
@@ -332,7 +337,6 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
             )
         finally:
             self.close()
-
 
     def delete_role_at_event_for_volunteer_on_day(
         self, event_id: str, day: Day, volunteer_id: str
@@ -556,7 +560,6 @@ class SqlDataListOfVolunteersInRolesAtEvent(GenericSqlData):
     def _write_row_of_volunteer_data_without_checks_or_commit(
         self, event_id: str, volunteer_in_role: VolunteerWithIdInRoleAtEvent
     ):
-
         volunteer_id = int(volunteer_in_role.volunteer_id)
         day = volunteer_in_role.day.name
         group_id = int(volunteer_in_role.group_id)

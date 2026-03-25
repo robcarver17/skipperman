@@ -72,16 +72,16 @@ class SqlDataListOfGroupNotesAtEvent(GenericSqlData):
                 self.create_table()
 
             self.cursor.execute(
-                "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d"
+                "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d"
                 % (
                     GROUP_NOTES_AT_EVENT_TABLE,
                     GROUP_NOTES,
-                    str(notes),
                     GROUP_ID,
                     int(group_id),
                     EVENT_ID,
                     int(event_id),
-                )
+                ),
+                (str(notes),),
             )
 
             self.conn.commit()

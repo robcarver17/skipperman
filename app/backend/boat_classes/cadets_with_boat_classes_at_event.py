@@ -20,7 +20,6 @@ def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
     )
 
 
-
 def remove_cadet_from_boats_data_across_days_and_return_messages(
     interface: abstractInterface, event: Event, cadet: Cadet
 ) -> List[str]:

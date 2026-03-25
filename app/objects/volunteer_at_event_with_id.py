@@ -1,12 +1,10 @@
 from dataclasses import dataclass
 
 
-
 from app.objects.day_selectors import (
     DaySelector,
     day_selector_stored_format_from_text,
     day_selector_to_text_in_stored_format,
-
 )
 from app.objects.utilities.exceptions import (
     missing_data,
@@ -96,8 +94,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
         for volunteer_at_event in self:
             volunteer_at_event.clear_user_data()
 
-
-
     def volunteer_at_event_with_id(
         self, volunteer_id: str, default=arg_not_passed
     ) -> VolunteerAtEventWithId:
@@ -117,7 +113,6 @@ class ListOfVolunteersAtEventWithId(GenericListOfObjects):
             attr_value=volunteer_id,
             default=default,
         )
-
 
     def volunteer_already_exist(self, volunteer_at_event: VolunteerAtEventWithId):
         volunteer = self.volunteer_at_event_with_id(

@@ -39,16 +39,14 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         self, event_id: str
     ) -> Dict[ClubDinghy, int]:
         return self._get_dict_of_boats_and_limits_for_club_boats_at_event(
-            event_id=event_id,
-            visible_only=False
+            event_id=event_id, visible_only=False
         )
 
     def get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
         self, event_id: str
     ) -> Dict[ClubDinghy, int]:
         return self._get_dict_of_boats_and_limits_for_club_boats_at_event(
-            event_id=event_id,
-            visible_only=True
+            event_id=event_id, visible_only=True
         )
 
     def _get_dict_of_boats_and_limits_for_club_boats_at_event(
@@ -60,7 +58,6 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         generic_dict_of_club_boats_and_limits = (
             self.get_dict_of_club_boats_and_limits_at_event(event_id_for_generic_limit)
         )
-
 
         if visible_only:
             list_of_boats = self.visible_club_boats
@@ -80,7 +77,6 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
         )
 
         return new_dict
-
 
     def get_dict_of_club_boats_and_limits_at_event(
         self, event_id: str

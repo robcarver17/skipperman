@@ -17,7 +17,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton, save_and_back_menu_button,
+    HelpButton,
+    save_and_back_menu_button,
 )
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines
@@ -35,7 +36,9 @@ help_button = HelpButton("edit_qualification_tick_help")
 
 def display_form_edit_qualification_details(interface: abstractInterface) -> Form:
     qualification = get_qualification_from_state(interface)
-    navbar = ButtonBar([cancel_menu_button, save_menu_button, save_and_back_menu_button, help_button])
+    navbar = ButtonBar(
+        [cancel_menu_button, save_menu_button, save_and_back_menu_button, help_button]
+    )
     heading = Heading(
         "Edit qualification elements for %s" % qualification.name, centred=True, size=5
     )
@@ -60,17 +63,19 @@ def post_form_edit_qualification_details(
         add_new_tick_list_item_from_form(
             interface=interface, button_pressed=last_button_pressed
         )
-    elif save_menu_button.pressed(last_button_pressed) or save_and_back_menu_button.pressed(last_button_pressed):
+    elif save_menu_button.pressed(
+        last_button_pressed
+    ) or save_and_back_menu_button.pressed(last_button_pressed):
         save_edited_values_in_qualifications_form(interface)
         if save_and_back_menu_button.pressed(last_button_pressed):
             return previous_form(interface)
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
-
     return display_form_edit_qualification_details(interface)
 
-def previous_form(interface:abstractInterface):
+
+def previous_form(interface: abstractInterface):
     clear_qualification_id_in_state(interface)
     return interface.get_new_display_form_for_parent_of_function(
         display_form_edit_qualification_details

@@ -108,7 +108,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return CadetWithIdAtEvent
 
-
     def clear_private_data(self):
         for cadet_with_id_at_event in self:
             cadet_with_id_at_event.clear_private_data()
@@ -119,7 +118,6 @@ class ListOfCadetsWithIDAtEvent(GenericListOfObjectsWithIds):
         return get_unique_object_with_attr_in_list(
             some_list=self, attr_name="cadet_id", attr_value=cadet_id, default=default
         )
-
 
     def is_cadet_id_in_event(self, cadet_id: str):
         return cadet_id in self.list_of_cadet_ids()

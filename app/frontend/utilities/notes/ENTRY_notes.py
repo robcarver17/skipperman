@@ -22,7 +22,8 @@ from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     ButtonBar,
     cancel_menu_button,
-    check_if_button_in_list_was_pressed, save_and_back_menu_button,
+    check_if_button_in_list_was_pressed,
+    save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -82,24 +83,22 @@ def post_form_notes(interface: abstractInterface) -> Union[Form, NewForm]:
 
     if cancel_menu_button.pressed(button_pressed):
         return interface.get_new_display_form_for_parent_of_function(display_form_notes)
-    
+
     elif was_sort_button(interface):
         update_sort_status(interface)
         save_all_notes(interface)
         interface.clear()
-        return interface.get_new_form_given_function(
-            display_form_notes
-        )
+        return interface.get_new_form_given_function(display_form_notes)
 
     elif was_save_button(interface):
         save_all_notes(interface)
         interface.clear()
         if save_and_back_menu_button.pressed(button_pressed):
-            return interface.get_new_display_form_for_parent_of_function(display_form_notes)
-        else:
-            return interface.get_new_form_given_function(
+            return interface.get_new_display_form_for_parent_of_function(
                 display_form_notes
             )
+        else:
+            return interface.get_new_form_given_function(display_form_notes)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
@@ -114,5 +113,10 @@ def was_sort_button(interface: abstractInterface):
 def was_save_button(interface: abstractInterface):
     return check_if_button_in_list_was_pressed(
         interface.last_button_pressed(),
-        [save_button, save_quick_note_button, save_table_entries, save_and_back_menu_button],
+        [
+            save_button,
+            save_quick_note_button,
+            save_table_entries,
+            save_and_back_menu_button,
+        ],
     )

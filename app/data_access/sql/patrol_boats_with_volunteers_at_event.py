@@ -23,12 +23,13 @@ INDEX_PATROL_BOATS_AND_VOLUNTEERS_TABLE = "index_patrol_boats_and_volunteers_tab
 
 class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
     def get_sorted_list_of_patrol_boats_at_event(
-            self,
-            event_id: str
+        self, event_id: str
     ) -> ListOfPatrolBoats:
         boat_ids = self.boat_ids_at_event_including_unallocated(event_id)
         list_of_all_boats = self.list_of_patrol_boats
-        sorted_list = list_of_all_boats.subset_from_list_of_ids_retaining_order(boat_ids)
+        sorted_list = list_of_all_boats.subset_from_list_of_ids_retaining_order(
+            boat_ids
+        )
         return sorted_list
 
     def delete_volunteer_from_patrol_boat_on_day_at_event(
@@ -85,10 +86,10 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         finally:
             self.close()
 
-    def add_unallocated_boat_on_day(
-        self, event_id: str, day: Day, patrol_boat_id: str):
-
-        if self.is_empty_boat_already_setup_for_today(event_id=event_id, day=day, patrol_boat_id=patrol_boat_id):
+    def add_unallocated_boat_on_day(self, event_id: str, day: Day, patrol_boat_id: str):
+        if self.is_empty_boat_already_setup_for_today(
+            event_id=event_id, day=day, patrol_boat_id=patrol_boat_id
+        ):
             return
         else:
             self._add_boat_id_for_volunteer_on_day_without_checks(
@@ -106,7 +107,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         volunteer_id: str,
     ):
         try:
-            assert volunteer_id!=EMPTY_VOLUNTEER_ID
+            assert volunteer_id != EMPTY_VOLUNTEER_ID
         except:
             raise Exception("Can't add empty boat with this method")
 
@@ -161,15 +162,14 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
             self.close()
         if len(raw_list) == 0:
             return False
-        elif len(raw_list)==1:
+        elif len(raw_list) == 1:
             return True
         else:
             raise MultipleMatches
 
     def is_empty_boat_already_setup_for_today(
-        self, event_id: str, day: Day,  patrol_boat_id: str
+        self, event_id: str, day: Day, patrol_boat_id: str
     ) -> bool:
-
         if self.table_does_not_exist(PATROL_BOATS_AND_VOLUNTEERS_TABLE):
             return False
 
@@ -200,7 +200,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
 
         if len(raw_list) == 0:
             return False
-        elif len(raw_list)==1:
+        elif len(raw_list) == 1:
             return True
         else:
             raise MultipleMatches
@@ -209,7 +209,7 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
         self, event_id: str, day: Day, volunteer_id: str, default=missing_data
     ) -> str:
         try:
-            assert volunteer_id!=EMPTY_VOLUNTEER_ID
+            assert volunteer_id != EMPTY_VOLUNTEER_ID
         except:
             raise Exception("Can't check boat for empty volunteer id")
 
@@ -311,16 +311,12 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
                 """SELECT *  FROM %s WHERE %s=%d AND %s='%s' AND %s=%d AND %s<>%d """
                 % (
                     PATROL_BOATS_AND_VOLUNTEERS_TABLE,
-
                     EVENT_ID,
                     int(event_id),
-
                     DAY,
                     day.name,
-
                     PATROL_BOAT_ID,
                     int(patrol_boat_id),
-
                     VOLUNTEER_ID,
                     int(EMPTY_VOLUNTEER_ID),
                 )
@@ -458,7 +454,6 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
     def _add_volunteer_with_boat_without_commit_or_checks(
         self, event_id: str, volunteer_and_boat: VolunteerWithIdAtEventWithPatrolBoatId
     ):
-
         volunteer_id = volunteer_and_boat.volunteer_id
 
         ## FIXME TEMP CODE

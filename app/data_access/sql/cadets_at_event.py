@@ -208,7 +208,7 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
                 CADET_ID,
                 int(cadet_id),
             )
-            self.cursor.execute(insertion,                 (str(new_notes),))
+            self.cursor.execute(insertion, (str(new_notes),))
 
             self.conn.commit()
         except Exception as e1:
@@ -226,16 +226,15 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
             if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
                 raise Exception("No cadet at event data")
 
-            insertion = "UPDATE %s SET %s='%s' WHERE %s=%d AND %s=%d" % (
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
                 CADETS_AT_EVENT_TABLE,
                 CADET_HEALTH,
-                str(new_health),
                 EVENT_ID,
                 int(event_id),
                 CADET_ID,
                 int(cadet_id),
             )
-            self.cursor.execute(insertion)
+            self.cursor.execute(insertion, (str(new_health),))
 
             self.conn.commit()
         except Exception as e1:

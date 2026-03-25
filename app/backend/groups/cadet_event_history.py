@@ -53,8 +53,9 @@ def temp_file_name() -> str:
 
 
 def get_df_of_history_for_active_cadets(
-    object_store: ObjectStore, list_of_cadets: ListOfCadets,
-        list_of_events: ListOfEvents = arg_not_passed
+    object_store: ObjectStore,
+    list_of_cadets: ListOfCadets,
+    list_of_events: ListOfEvents = arg_not_passed,
 ):
     dict_of_group_allocations = (
         get_dict_of_group_allocations_for_all_events_active_cadets_only(

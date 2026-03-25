@@ -6,7 +6,11 @@ from app.objects.abstract_objects.abstract_tables import *
 from app.objects.abstract_objects.abstract_text import *
 from app.web.html.forms import *
 from app.web.html.html_components import *
-from app.web.html.url_define import MAIN_MENU_URL, get_help_url, get_action_first_page_url
+from app.web.html.url_define import (
+    MAIN_MENU_URL,
+    get_help_url,
+    get_action_first_page_url,
+)
 
 
 def get_html_for_simple_element_in_line(
@@ -127,6 +131,7 @@ def help_link_button(
         return nav_button_with_link_to_avoid_weird_routing_issue(
             "Help", url=url, open_new_window=True, shortcut=shortcut
         )
+
 
 def get_html_for_action_link_button(action_link: ActionLink):
     action_name = action_link.action_name

@@ -7,7 +7,7 @@ from app.data_access.configuration.configuration import (
     MAX_CADET_AGE,
 )
 from app.data_access.configuration.fixed import (
-    MONTH_WHEN_CADET_AGE_BRACKET_BEGINS,
+
     DAYS_IN_YEAR,
 )
 from app.objects.utilities.generic_list_of_objects import (
@@ -126,6 +126,13 @@ class Cadet(GenericSkipperManObjectWithIds):
         )
 
     def approx_age_years(self, at_date: datetime.date = arg_not_passed) -> float:
+        if self.has_default_date_of_birth:
+            return 0
+        elif self.has_unknown_date_of_birth:
+            return 0
+        elif self.has_irrelevant_date_of_birth:
+            return 0
+
         if at_date is arg_not_passed:
             at_date = datetime.date.today()
 
@@ -271,6 +278,13 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             return temporary_skip_cadet
 
         return self.object_with_id(cadet_id, default=default)
+
+
+    def list_of_DOB(self):
+        return [item.date_of_birth_as_string() for item in self]
+
+    def list_of_ages(self):
+        return [item.approx_age_years() for item in self]
 
 
 def cadet_is_too_young_to_be_without_parent(cadet: Cadet) -> bool:

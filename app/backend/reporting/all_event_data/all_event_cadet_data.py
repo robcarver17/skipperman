@@ -36,7 +36,7 @@ from app.backend.registration_data.identified_cadets_at_event import (
     get_list_of_identified_cadets_at_event,
 )
 from app.objects.volunteers import ListOfVolunteers
-
+from app.backend.clothing.dict_of_clothing_for_event import get_dict_of_cadets_with_clothing_at_event
 
 def get_df_for_cadets_event_data_dump(object_store: ObjectStore, event: Event):
     list_of_identified_cadets = get_list_of_identified_cadets_at_event(
@@ -55,6 +55,15 @@ def get_df_for_cadets_event_data_dump(object_store: ObjectStore, event: Event):
         ]
     )
     list_of_cadet_names = list_of_cadets.list_of_names()
+    list_of_cadet_DOB = list_of_cadets.list_of_DOB()
+    list_of_Cadet_ages = list_of_cadets.list_of_ages()
+    list_of_colour_for_cadet = [
+        colour_group_for_cadet(
+            object_store=object_store,
+            event=event,
+            cadet=cadet,
+        ) for cadet in list_of_cadets
+    ]
     list_of_availability = [
         data_from_cadets_at_event_data_or_empty(
             object_store=object_store,
@@ -119,6 +128,9 @@ def get_df_for_cadets_event_data_dump(object_store: ObjectStore, event: Event):
         {
             ROW_ID: list_of_row_ids,
             "Cadet": list_of_cadet_names,
+            "DOB": list_of_cadet_DOB,
+            "Age": list_of_Cadet_ages,
+            "Colour group": list_of_colour_for_cadet,
             "Status": list_of_status,
             "Group": list_of_groups,
             "Attendance": list_of_availability,
@@ -284,3 +296,7 @@ def group_string_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet
     )
 
     return day_item_dict_as_string_or_single_if_identical(day_item_dict)
+
+def colour_group_for_cadet(object_store: ObjectStore, event: Event, cadet: Cadet):
+    dict_of_clothing = get_dict_of_cadets_with_clothing_at_event(object_store=object_store,event=event)
+    return dict_of_clothing.clothing_for_cadet(cadet).colour

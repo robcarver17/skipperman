@@ -1,6 +1,5 @@
 import os.path
 import shutil
-import subprocess
 
 from app.data_access.backups.access import (
     get_oldest_backup_number,
@@ -13,13 +12,14 @@ from app.data_access.configuration.configuration import NUMBER_OF_BACKUPS
 def make_backup(backup_data_path: str, master_data_path: str):
     remove_oldest_backup_if_too_old(backup_data_path)
     backup_number = get_oldest_backup_number(backup_data_path)
-    while backup_number > 0:
+    while backup_number >= 0:
         move_backup_to_previous_backup(
             backup_number=backup_number, datapath=backup_data_path
         )
         backup_number -= 1
-    if backup_number == 0:
-        simlink_copy_first_backup(backup_data_path)
+
+    #if backup_number == 0:
+    #    simlink_copy_first_backup(backup_data_path)
     make_first_backup(
         backup_data_path=backup_data_path, master_data_path=master_data_path
     )
@@ -45,7 +45,7 @@ def move_backup_to_previous_backup(backup_number: int, datapath: str):
     next_backup_dir = get_backup_directory(
         backup_number=backup_number + 1, datapath=datapath
     )
-    shutil.copytree(backup_dir, next_backup_dir, dirs_exist_ok=True)
+    os.rename(backup_dir, next_backup_dir)
 
 
 def simlink_copy_first_backup(datapath):
@@ -68,13 +68,6 @@ def make_first_backup(backup_data_path: str, master_data_path: str):
         os.mkdir(backup_directory_for_this_backup)
     except:
         pass
-    subprocess.run(
-        [
-            "rsync",
-            "-a",
-            "--delete",
-            "%s/" % master_data_path,
-            "%s/" % backup_directory_for_this_backup,
-        ]
-    )
+    shutil.copytree(master_data_path, backup_directory_for_this_backup, dirs_exist_ok=True)
+
     create_timestamp_file(backup_directory_for_this_backup)

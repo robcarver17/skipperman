@@ -134,7 +134,7 @@ def add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_re
         if is_cadet_already_partnered_on_day(
             data_for_cadet=data_for_new_partner, day=day
         ):
-            msgs.append("Cadet %s is already partnered on %s, not adding new partner that day" % (original_cadet, day))
+            msgs.append("Cadet %s is already partnered on %s, not adding new partner that day" % (original_cadet, day.name))
             continue
 
 

@@ -24,6 +24,13 @@ class Form(list):
     def form_name(self):
         return self.title
 
+    @property
+    def include_main_menu_bar(self):
+        return getattr(self, "_main_menu", False)
+
+    @include_main_menu_bar.setter
+    def include_main_menu_bar(self, include: bool):
+        self._main_meny = include
 
 @dataclass
 class Link:
@@ -36,11 +43,6 @@ class Link:
 class HelpLink:
     text: str
     help_page_name: str
-
-
-@dataclass
-class ActionLink:
-    action_name: str
 
 
 @dataclass

@@ -12,7 +12,8 @@ from app.frontend.administration.users.render_users_form import (
     is_delete_button,
     is_reset_button,
     add_entry_button,
-    save_entry_button, save_and_back_button,
+    save_entry_button,
+    save_and_back_button,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.objects.abstract_objects.abstract_form import Form, NewForm
@@ -57,6 +58,5 @@ def post_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
         interface.log_error(reset_link)
     else:
         return button_error_and_back_to_initial_state_form(interface)
-
 
     return display_form_security(interface)

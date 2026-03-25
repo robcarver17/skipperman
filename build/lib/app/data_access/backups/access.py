@@ -58,7 +58,9 @@ def read_timestamp_file(backup_directory_for_this_backup: str) -> datetime.datet
     except FileNotFoundError:
         return UNKNOWN_DATE
 
-UNKNOWN_DATE = datetime.datetime(1970,1,2)
+
+UNKNOWN_DATE = datetime.datetime(1970, 1, 2)
+
 
 def delete_timestamp_file(backup_directory_for_this_backup):
     filename = os.path.join(backup_directory_for_this_backup, TIMESTAMP_FILE_NAME)

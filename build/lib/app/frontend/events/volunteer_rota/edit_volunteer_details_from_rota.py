@@ -1,4 +1,3 @@
-
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.volunteers import Volunteer
 

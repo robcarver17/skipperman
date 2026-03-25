@@ -33,7 +33,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -57,7 +57,9 @@ def display_form_for_event_cleaning_sort_order_passed(
     navbar = ButtonBar([back_menu_button, HelpButton("event_cleaning_help")])
 
     contents_of_form = ListOfLines(
-        [
+        [MainMenuBar("Utilities"),
+
+                 _______________,
             navbar,
             _______________,
             Heading(

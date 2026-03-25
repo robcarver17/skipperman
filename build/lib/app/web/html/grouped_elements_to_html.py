@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     DetailListOfLines,
     DetailLine,
-    ProgressBar,
+    ProgressBar, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_tables import (
     DetailTable,
@@ -36,6 +36,7 @@ from app.objects.abstract_objects.abstract_text import (
     Heading,
 )
 from app.objects.utilities.exceptions import arg_not_passed
+from app.web.end_points.underlying_menu_pages import get_button_bar_of_menu_buttons_for_actions
 
 from app.web.html.abstract_components_to_html import (
     generic_html_button,
@@ -52,7 +53,7 @@ from app.web.html.html_components import (
     html_table_row_wrapper,
     html_table_heading_row_wrapper,
     html_table_element_wrapper,
-    html_table_heading_wrapper,
+    html_table_heading_wrapper, submenu_bar_wrapper,
 )
 from app.web.html.config_html import DEBUG
 from app.objects.abstract_objects.abstract_lines import HorizontalLine
@@ -83,6 +84,11 @@ def get_html_for_element_in_form(element, urls_of_interest: UrlsOfInterest) -> H
     elif type(element) is ButtonBar:
         html_this_element = html_bar_wrapper.wrap_around(
             get_html_for_line(element, urls_of_interest=urls_of_interest)
+        )
+    elif type(element) is MainMenuBar:
+        button_bar_line = get_button_bar_of_menu_buttons_for_actions(element)
+        html_this_element = submenu_bar_wrapper.wrap_around(
+            get_html_for_line(button_bar_line, urls_of_interest=urls_of_interest)
         )
     else:
         ## Single element

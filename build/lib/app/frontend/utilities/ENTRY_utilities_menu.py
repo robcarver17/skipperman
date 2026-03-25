@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    Line,
+    Line, MainMenuBar, _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import missing_data
@@ -54,7 +54,9 @@ def function_given_pressed_button_label(label) -> Callable:
 
 
 def display_form_utilities_menu(interface: abstractInterface) -> Form:
-    lines_inside_form = ListOfLines([nav_buttons, list_of_menu_buttons])
+    lines_inside_form = ListOfLines([MainMenuBar("Utilities"),
+
+                 _______________,nav_buttons, list_of_menu_buttons])
 
     return Form(lines_inside_form)
 

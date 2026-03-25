@@ -14,7 +14,10 @@ from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
-from app.objects.events import Event, get_past_days_selector_from_event_or_all_days_if_missing
+from app.objects.events import (
+    Event,
+    get_past_days_selector_from_event_or_all_days_if_missing,
+)
 
 from app.backend.reporting.allocation_report.allocation_report import (
     AdditionalParametersForAllocationReport,
@@ -62,7 +65,7 @@ def get_group_allocation_report_additional_parameters_from_form(
         display_full_names=display_full_names,
         include_unallocated_cadets=include_unallocated_cadets,
         add_asterix_for_club_boats=add_asterix_for_club_boats,
-        days_to_show=days_to_show
+        days_to_show=days_to_show,
     )
 
 
@@ -116,7 +119,10 @@ def save_unallocated_parameter(
             interface=interface, report_generator=report_generator
         )
 
-def save_days_to_show(interface: abstractInterface,  parameters: AdditionalParametersForAllocationReport):
+
+def save_days_to_show(
+    interface: abstractInterface, parameters: AdditionalParametersForAllocationReport
+):
     days_to_show_as_str = parameters.days_to_show.as_str()
     interface.set_persistent_value(DAYS_TO_SHOW, days_to_show_as_str)
 
@@ -146,7 +152,7 @@ def load_additional_parameters_for_allocation_report(
         display_full_names=display_full_names,
         include_unallocated_cadets=include_unallocated_cadets,
         add_asterix_for_club_boats=add_asterix_for_club_boats,
-        days_to_show=days_to_show
+        days_to_show=days_to_show,
     )
 
 
@@ -186,7 +192,7 @@ def get_dict_of_df_for_reporting_allocations_given_event_and_state(
         include_unallocated_cadets=additional_parameters.include_unallocated_cadets,
         display_full_names=additional_parameters.display_full_names,
         add_asterix_for_club_boats=additional_parameters.add_asterix_for_club_boats,
-        days_to_show=additional_parameters.days_to_show
+        days_to_show=additional_parameters.days_to_show,
     )
 
     return dict_of_df

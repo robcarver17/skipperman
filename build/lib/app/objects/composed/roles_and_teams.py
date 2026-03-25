@@ -41,7 +41,6 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
     def list_of_teams(self) -> ListOfTeams:
         return ListOfTeams(list(self.keys()))
 
-
     def roles_in_instructor_team(self) -> ListOfRolesWithSkills:
         instructor_team = self.list_of_teams.instructor_team_from_list()
         return self.roles_for_team(instructor_team)
@@ -67,7 +66,6 @@ class DictOfTeamsWithRoles(Dict[Team, ListOfRolesWithSkills]):
         return ListOfTeamsAndIndices(list_of_teams_and_index)
 
 
-
 def list_of_all_roles_not_already_in_team(
     list_of_roles_with_skills: ListOfRolesWithSkills,
     dict_of_teams_and_roles: DictOfTeamsWithRoles,
@@ -76,4 +74,3 @@ def list_of_all_roles_not_already_in_team(
     list_of_roles_in_team = dict_of_teams_and_roles[team]
 
     return in_x_not_in_y(list_of_roles_with_skills, list_of_roles_in_team)
-

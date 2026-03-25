@@ -39,7 +39,6 @@ def get_volunteer_targets_table_and_save_button(
     interface: abstractInterface,
     event: Event,
 ) -> DetailListOfLines:
-
     table = get_volunteer_targets_table(event=event, interface=interface)
     elements_to_return = [table, save_targets_button]
 

@@ -23,7 +23,9 @@ def get_dict_of_roles_for_dropdown(object_store: ObjectStore, set_role_name: str
     volunteer_roles = get_list_of_roles(object_store)
     volunteer_roles = volunteer_roles + [no_role_set]
     dict_of_roles = {
-        role.name: role.name for role in volunteer_roles if not role.hidden or role.name == set_role_name
+        role.name: role.name
+        for role in volunteer_roles
+        if not role.hidden or role.name == set_role_name
     }
 
     return dict_of_roles

@@ -29,6 +29,7 @@ DEFAULT_SORT_ORDER_LIST = [
     SORT_SECOND_NAME,
 ]
 
+
 @dataclass
 class SortOrderGroups:
     sort_order_as_list: List[str]
@@ -41,6 +42,7 @@ class SortOrderGroups:
             return new_list
         else:
             return self.sort_order_as_list
+
 
 DEFAULT_SORT_ORDER = SortOrderGroups(DEFAULT_SORT_ORDER_LIST, keep_pairs_together=True)
 
@@ -68,17 +70,22 @@ def from_sort_list_to_string(sort_order: SortOrderGroups):
     sort_list = sort_order.sort_order_as_list
     keep_pairs_together = sort_order.keep_pairs_together
     as_int = [str(from_sort_to_id(sort_name)) for sort_name in sort_list]
-    as_int = [str(bool2int(keep_pairs_together))]+as_int
+    as_int = [str(bool2int(keep_pairs_together))] + as_int
     return "".join(as_int)
+
 
 from app.objects.utilities.transform_data import bool2int, int2bool
 
+
 def from_string_to_sort_list(sort_list_as_str: str) -> SortOrderGroups:
     ids_as_list = list(sort_list_as_str)
-    keep_pairs_together=int2bool(int(ids_as_list.pop(0)))
-    sort_order_as_list= [from_id_to_sort_name(int(id)) for id in ids_as_list]
+    keep_pairs_together = int2bool(int(ids_as_list.pop(0)))
+    sort_order_as_list = [from_id_to_sort_name(int(id)) for id in ids_as_list]
 
-    return SortOrderGroups(sort_order_as_list=sort_order_as_list, keep_pairs_together=keep_pairs_together)
+    return SortOrderGroups(
+        sort_order_as_list=sort_order_as_list, keep_pairs_together=keep_pairs_together
+    )
+
 
 def sorted_active_cadets(
     object_store: ObjectStore,
@@ -142,11 +149,15 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
         for cadet in active_cadets
     ]
     list_of_partner_ids = [
-        dict_of_all_event_data.get_most_common_partner_id_across_days(cadet, default=NO_CADET_ID)
+        dict_of_all_event_data.get_most_common_partner_id_across_days(
+            cadet, default=NO_CADET_ID
+        )
         for cadet in active_cadets
     ]
-    partners = from_list_of_partners_to_list_of_nominal_codes(list_of_partner_ids=list_of_partner_ids,
-                                                              list_of_cadet_ids = active_cadets.list_of_ids)
+    partners = from_list_of_partners_to_list_of_nominal_codes(
+        list_of_partner_ids=list_of_partner_ids,
+        list_of_cadet_ids=active_cadets.list_of_ids,
+    )
 
     df_as_dict = {
         CADET: active_cadets,
@@ -167,30 +178,31 @@ def get_active_cadets_as_data_frame_on_non_specified_day(
 
     return active_cadets_as_data_frame
 
-NO_PARTNER = 0
-STARTING_CODE =1
 
-def from_list_of_partners_to_list_of_nominal_codes(list_of_cadet_ids: List[str], list_of_partner_ids: List[str]) -> List[int]:
-    list_of_codes =[NO_PARTNER]*len(list_of_partner_ids)
+NO_PARTNER = 0
+STARTING_CODE = 1
+
+
+def from_list_of_partners_to_list_of_nominal_codes(
+    list_of_cadet_ids: List[str], list_of_partner_ids: List[str]
+) -> List[int]:
+    list_of_codes = [NO_PARTNER] * len(list_of_partner_ids)
     boat_number = STARTING_CODE
     for idx, partner_id in enumerate(list_of_partner_ids):
-        if partner_id==NO_CADET_ID:
+        if partner_id == NO_CADET_ID:
             continue
 
         partner_idx_in_cadets = list_of_cadet_ids.index(partner_id)
         boat_code = list_of_codes[partner_idx_in_cadets]
-        if boat_code==NO_PARTNER:
+        if boat_code == NO_PARTNER:
             boat_code_to_use = copy(boat_number)
-            boat_number+=1
+            boat_number += 1
             list_of_codes[partner_idx_in_cadets] = boat_code_to_use
             list_of_codes[idx] = boat_code_to_use
         else:
             list_of_codes[idx] = boat_code
 
     return list_of_codes
-
-
-
 
 
 def get_active_cadets_as_data_frame_on_specific_day(
@@ -220,12 +232,15 @@ def get_active_cadets_as_data_frame_on_specific_day(
         for cadet in active_cadets
     ]
     list_of_partner_ids = [
-        dict_of_all_event_data.event_data_for_cadet(cadet)
-        .days_and_boat_class.partner_id_on_day(day, default=NO_CADET_ID)
+        dict_of_all_event_data.event_data_for_cadet(
+            cadet
+        ).days_and_boat_class.partner_id_on_day(day, default=NO_CADET_ID)
         for cadet in active_cadets
     ]
-    partners = from_list_of_partners_to_list_of_nominal_codes(list_of_cadet_ids=active_cadets.list_of_ids,
-                                                              list_of_partner_ids=list_of_partner_ids)
+    partners = from_list_of_partners_to_list_of_nominal_codes(
+        list_of_cadet_ids=active_cadets.list_of_ids,
+        list_of_partner_ids=list_of_partner_ids,
+    )
 
     df_as_dict = {
         CADET: active_cadets,
@@ -287,12 +302,14 @@ def remove_empty_values(some_list: List) -> list:
 
 
 def get_sorted_active_cadets_df(
-        active_cadets_as_data_frame: pd.DataFrame , sort_order: SortOrderGroups
+    active_cadets_as_data_frame: pd.DataFrame, sort_order: SortOrderGroups
 ) -> pd.DataFrame:
     if len(active_cadets_as_data_frame) == 0:
         return active_cadets_as_data_frame
 
-    active_cadets_as_data_frame= active_cadets_as_data_frame.sort_values(sort_order.sort_order())
+    active_cadets_as_data_frame = active_cadets_as_data_frame.sort_values(
+        sort_order.sort_order()
+    )
 
     return active_cadets_as_data_frame
 

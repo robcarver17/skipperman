@@ -7,13 +7,14 @@ from app.backend.groups.cadet_event_history import (
 from app.backend.cadets_at_event.recent_events_and_new_cadets import (
     write_new_sailors_recent_group_history_and_qualification_status_to_temp_csv_file_and_return_filename,
 )
-from app.objects.abstract_objects.abstract_lines import Line
+from app.objects.abstract_objects.abstract_lines import Line, MainMenuBar, _______________
 from app.frontend.reporting.sailors.qualification_status import *
 
 
 def display_form_for_sailors_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
-        [
+        [MainMenuBar("Reports"),
+         _______________,
             ButtonBar([main_menu_button, back_menu_button, help_button]),
             Line(
                 [

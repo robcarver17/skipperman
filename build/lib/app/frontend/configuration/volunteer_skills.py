@@ -33,7 +33,8 @@ from app.frontend.configuration.generic_list_modifier import (
     get_list_of_arrow_buttons,
     reorder_list_given_form,
     display_form_edit_generic_list,
-    post_form_edit_generic_list, SAVE_AND_BACK_PRESSED,
+    post_form_edit_generic_list,
+    SAVE_AND_BACK_PRESSED,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 
@@ -68,7 +69,7 @@ def post_form_config_volunteer_skills(
         save_function=save_from_ordinary_list_of_skills,
     )
 
-    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
+    if generic_list_output in [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_volunteer_skills
         )

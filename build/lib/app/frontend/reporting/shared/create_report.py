@@ -1,4 +1,3 @@
-
 from app.data_access.file_access import generate_qr_code_for_file_in_public_path
 from app.backend.reporting.options_and_parameters.print_options import PrintOptions
 from app.backend.reporting.process_stages.create_column_report_from_df import (

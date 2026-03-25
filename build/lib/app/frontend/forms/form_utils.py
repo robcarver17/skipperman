@@ -17,7 +17,6 @@ from app.objects.events import Event
 from app.objects.food import (
     FoodRequirements,
     OTHER_IN_FOOD_REQUIRED,
-
 )
 from app.objects.registration_status import (
     RegistrationStatus,

@@ -34,7 +34,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
     DetailListOfLines,
-    Line,
+    Line, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
@@ -47,7 +47,7 @@ def get_preamble_before_table(
     header_buttons = get_header_buttons_for_rota(interface)
     if is_ready_to_swap(interface):
         return ListOfLines(
-            [
+            [MainMenuBar("Events"), _______________,
                 header_buttons,
                 title,
                 _______________,
@@ -66,7 +66,7 @@ def get_preamble_before_table(
     warnings = get_volunteer_warning_table(interface)
 
     return ListOfLines(
-        [
+        [MainMenuBar("Events"), _______________,
             header_buttons,
             title,
             _______________,

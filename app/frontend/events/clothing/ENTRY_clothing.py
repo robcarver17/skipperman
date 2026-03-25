@@ -26,7 +26,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     save_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________
+from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
@@ -43,7 +43,7 @@ def display_form_view_for_clothing_requirements(interface: abstractInterface) ->
     summary = summarise_clothing(object_store=interface.object_store, event=event)
     return Form(
         ListOfLines(
-            [
+            [MainMenuBar("Events"), _______________,
                 button_bar,
                 title,
                 _______________,

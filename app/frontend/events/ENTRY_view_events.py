@@ -35,7 +35,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -57,7 +57,9 @@ def display_form_view_of_events_sort_order_passed(
     navbar = ButtonBar([main_menu_button, add_button, help_button])
 
     contents_of_form = ListOfLines(
-        [
+        [MainMenuBar("Events"),
+
+                 _______________,
             navbar,
             _______________,
             sort_buttons_for_event_list,

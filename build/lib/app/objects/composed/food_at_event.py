@@ -15,8 +15,6 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         for food_required in self.values():
             food_required.clear_other_field_if_empty()
 
-
-
     def subset_matches_food_required_description(
         self, specific_food_requirements: FoodRequirements
     ):
@@ -38,7 +36,6 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
 
         return unique_list
 
-
     def filter_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
         raw_dict = dict(
             [(cadet, self.food_for_cadet(cadet)) for cadet in list_of_cadets]
@@ -58,12 +55,10 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         return food
 
 
-
 class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequirements]):
     def remove_empty_food_required(self):
         for food_required in self.values():
             food_required.clear_other_field_if_empty()
-
 
     def subset_matches_food_required_description(
         self, specific_food_requirements: FoodRequirements
@@ -86,7 +81,6 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
 
         return unique_list
 
-
     def filter_for_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):
         raw_dict = dict(
             [
@@ -107,4 +101,3 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
 
     def list_of_volunteers(self) -> ListOfVolunteers:
         return ListOfVolunteers(list(self.keys()))
-

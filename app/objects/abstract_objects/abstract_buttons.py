@@ -70,7 +70,6 @@ class ActionOptionButton:
     label: str
     url: str = ""
 
-
 @dataclass
 class HelpButton:
     help_page: str
@@ -78,7 +77,14 @@ class HelpButton:
     from_main_menu: bool = False
 
 
-class ButtonBar(List[Union[HelpButton, Button]]):
+@dataclass
+class ActionLink:
+    action_name: str
+    action_label: str = ""
+    open_new_window: bool = True
+    on_submenu_bar: bool = False
+
+class ButtonBar(List[Union[HelpButton, Button, ActionLink]]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 

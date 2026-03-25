@@ -10,7 +10,7 @@ from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_
 from app.objects.composed.cadets_with_all_event_info_functions import (
     cadets_not_allocated_to_group_on_at_least_one_day_attending,
 )
-from app.objects.day_selectors import  Day
+from app.objects.day_selectors import Day
 from app.objects.partners import no_partnership_given_partner_cadet
 from app.objects.utilities.exceptions import MissingData, arg_not_passed
 from app.objects.groups import Group, unallocated_group, ListOfGroups
@@ -39,7 +39,6 @@ from app.objects.composed.cadets_at_event_with_groups import (
 )
 
 
-
 @dataclass
 class AllEventInfoForCadet:
     registration_data: CadetRegistrationData
@@ -51,7 +50,6 @@ class AllEventInfoForCadet:
         return self.registration_data.status.is_active
 
 
-
 class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     def __init__(
         self,
@@ -60,9 +58,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         dict_of_cadets_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
         dict_of_cadets_with_registration_data: DictOfCadetsWithRegistrationData,
         dict_of_cadets_with_days_and_groups: DictOfCadetsWithDaysAndGroupsAtEvent,
-            list_of_groups: ListOfGroups,
-            list_of_club_dinghies: ListOfClubDinghies,
-            list_of_boat_classes: ListOfBoatClasses,
+        list_of_groups: ListOfGroups,
+        list_of_club_dinghies: ListOfClubDinghies,
+        list_of_boat_classes: ListOfBoatClasses,
         event: Event,
     ):
         super().__init__(raw_dict)
@@ -83,11 +81,14 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         self._event = event
 
-
-    def get_most_common_partner_id_across_days(self, cadet: Cadet, default=NO_CADET_ID) -> str:
+    def get_most_common_partner_id_across_days(
+        self, cadet: Cadet, default=NO_CADET_ID
+    ) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
 
-        return event_data_for_cadet.days_and_boat_class.get_most_common_partner_id_across_days(default)
+        return event_data_for_cadet.days_and_boat_class.get_most_common_partner_id_across_days(
+            default
+        )
 
     def list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         self, day: Day
@@ -126,7 +127,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
 
         return ListOfCadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(new_list)
 
-
     def cadets_in_group_during_event(self, group: Group) -> ListOfCadets:
         if group is unallocated_group:
             return cadets_not_allocated_to_group_on_at_least_one_day_attending(
@@ -139,9 +139,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
                     group
                 )
             )
-
-
-
 
     def get_most_common_boat_class_name_across_days(self, cadet: Cadet) -> str:
         event_data_for_cadet = self.event_data_for_cadet(cadet)
@@ -159,7 +156,6 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         group = event_data_for_cadet.days_and_groups.most_common()
         return group.name
 
-
     def event_data_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
     ) -> AllEventInfoForCadet:
@@ -170,7 +166,9 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return all_data
 
     def sorted_list_of_groups_at_event(self):
-        return self.dict_of_cadets_with_days_and_groups.sorted_all_groups_at_event(self.list_of_groups)
+        return self.dict_of_cadets_with_days_and_groups.sorted_all_groups_at_event(
+            self.list_of_groups
+        )
 
     @property
     def dict_of_cadets_and_boat_class_and_partners(self):
@@ -195,7 +193,7 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
         return ListOfCadets(list(self.keys()))
 
     @property
-    def list_of_groups(self)-> ListOfGroups:
+    def list_of_groups(self) -> ListOfGroups:
         return self._list_of_groups
 
     @property
@@ -209,4 +207,3 @@ class DictOfAllEventInfoForCadets(Dict[Cadet, AllEventInfoForCadet]):
     @property
     def event(self):
         return self._event
-

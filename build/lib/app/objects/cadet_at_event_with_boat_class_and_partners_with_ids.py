@@ -4,7 +4,6 @@ from app.objects.day_selectors import Day
 
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
-
 )
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObject,
@@ -52,4 +51,3 @@ class ListOfCadetAtEventWithBoatClassAndPartnerWithIds(GenericListOfObjectsWithI
     @property
     def _object_class_contained(self):
         return CadetAtEventWithBoatClassAndPartnerWithIds
-

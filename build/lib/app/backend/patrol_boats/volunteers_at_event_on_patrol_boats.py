@@ -20,7 +20,7 @@ def get_dict_of_patrol_boats_by_day_for_volunteer_at_event(
 ) -> DictOfVolunteersAtEventWithPatrolBoatsByDay:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_dict_of_patrol_boats_by_day_for_volunteer_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
 
 
@@ -42,7 +42,7 @@ def get_sorted_list_of_patrol_boats_at_event(
 ) -> ListOfPatrolBoats:
     return object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event_with_patrol_boats.get_sorted_list_of_patrol_boats_at_event,
-        event_id=event.id
+        event_id=event.id,
     )
 
 
@@ -80,7 +80,9 @@ def get_boat_allocated_to_volunteer_on_day_at_event(
 def get_list_of_visible_boat_names_excluding_boats_already_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[str]:
-    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(object_store=object_store, event=event)
+    sorted_list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
+        object_store=object_store, event=event
+    )
     names_of_boats_at_event = sorted_list_of_boats_at_event.list_of_names()
 
     all_boats = get_list_of_patrol_boats(object_store)

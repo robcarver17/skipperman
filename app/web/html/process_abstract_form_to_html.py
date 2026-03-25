@@ -1,4 +1,3 @@
-from typing import Union
 
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 
@@ -22,10 +21,15 @@ def process_abstract_form_to_html(form: Form, urls_of_interest: UrlsOfInterest) 
 
 
 def process_abstract_objects_to_html(
-    list_of_abstract_objects, urls_of_interest: UrlsOfInterest
+    form: Form, urls_of_interest: UrlsOfInterest
 ) -> Html:
     return_html = ""
-    for element in list_of_abstract_objects:
+
+    #if form.include_main_menu_bar:
+    #    html_this_element =get_html_for_element_in_form(get_button_bar_of_menu_buttons_for_actions(), urls_of_interest=urls_of_interest)
+    #    return_html = return_html + html_this_element
+
+    for element in form:
         html_this_element = get_html_for_element_in_form(
             element=element, urls_of_interest=urls_of_interest
         )

@@ -47,5 +47,3 @@ class DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents(
                 for volunteer, most_common in self.items()
             ]
         )
-
-

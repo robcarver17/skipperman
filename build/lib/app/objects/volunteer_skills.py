@@ -42,7 +42,6 @@ class ListOfSkills(GenericListOfObjectsWithIds):
     def SI_skill(self):
         return self[self.idx_of_skill_with_name(SI_SKILL_NAME)]
 
-
     def skill_with_id(self, skill_id: str, default=arg_not_passed):
         return self.object_with_id(skill_id, default=default)
 

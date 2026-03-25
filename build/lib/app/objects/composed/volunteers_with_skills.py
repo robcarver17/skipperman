@@ -1,4 +1,3 @@
-
 from typing import Dict, List
 
 
@@ -111,6 +110,7 @@ class SkillsDict(Dict[Skill, bool]):
     @property
     def is_SI(self) -> bool:
         return SI_SKILL_NAME in self.list_of_held_skill_names()
+
 
 class DictOfVolunteersWithSkills(Dict[Volunteer, SkillsDict]):
     def dict_of_skills_for_volunteer(self, volunteer: Volunteer) -> SkillsDict:

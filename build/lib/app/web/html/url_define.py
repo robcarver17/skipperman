@@ -1,4 +1,3 @@
-
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 from app.objects.abstract_objects.form_function_mapping import HOME_PAGE_OF_ACTION
 from app.objects.utilities.exceptions import arg_not_passed

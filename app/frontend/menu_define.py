@@ -9,7 +9,7 @@ from app.objects.users_and_security import (
 )
 
 ### MUST MATCH UP TO MENU CONSTRUCT
-
+### DO NOT CHANGE THESE VALUES
 REPORT_LINK = "view_possible_reports"  ## required for jump buttons
 
 menu_definition = {

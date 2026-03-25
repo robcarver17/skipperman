@@ -12,7 +12,7 @@ from app.frontend.utilities.data_and_backups.restore_backup_from_snapshot import
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, MainMenuBar, _______________
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -41,7 +41,10 @@ nav_buttons = ButtonBar([main_menu_button, back_menu_button, help_button])
 
 
 def display_form_data_and_backups(interface: abstractInterface) -> Form:
-    lines_inside_form = ListOfLines([nav_buttons, list_of_menu_buttons])
+    lines_inside_form = ListOfLines([MainMenuBar("Utilities"),
+
+
+                 _______________,nav_buttons, list_of_menu_buttons])
 
     return Form(lines_inside_form)
 

@@ -16,7 +16,11 @@ from app.objects.abstract_objects.abstract_text import Heading
 
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, cancel_menu_button, back_menu_button
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    cancel_menu_button,
+    back_menu_button,
+)
 from app.objects.composed.volunteer_roles import ListOfRolesWithSkills
 
 from app.objects.roles_and_teams import Team
@@ -41,7 +45,6 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 from app.backend.volunteers.roles_and_teams import get_list_of_roles_with_skills
-
 
 
 def display_form_edit_individual_team_page(interface: abstractInterface) -> Form:

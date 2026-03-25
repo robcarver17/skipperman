@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from typing import Dict, List
 
@@ -17,14 +16,14 @@ from app.objects.patrol_boats import (
 )
 
 from app.objects.day_selectors import Day
-class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
 
+
+class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
     def boat_on_day(self, day: Day, default=arg_not_passed) -> PatrolBoat:
         if default is arg_not_passed:
             default = no_patrol_boat
 
         return self.get(day, default)
-
 
     def on_any_patrol_boat_on_given_day(self, day: Day):
         return not self.not_on_patrol_boat_on_given_day(day)
@@ -42,7 +41,6 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
             return False
 
         return boat_on_day == patrol_boat
-
 
     def assigned_to_specific_boat_on_any_day(self, patrol_boat: PatrolBoat):
         return patrol_boat.name in self.list_of_boats.list_of_names()
@@ -71,6 +69,7 @@ class PatrolBoatByDayDict(Dict[Day, PatrolBoat]):
     def list_of_boats(self):
         return ListOfPatrolBoats(list(self.values()))
 
+
 class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDayDict]):
     def get_dict_of_patrol_boats_with_locations(self):
         all_boats = self.list_of_unique_boats_at_event_including_unallocated()
@@ -82,8 +81,6 @@ class DictOfVolunteersAtEventWithPatrolBoatsByDay(Dict[Volunteer, PatrolBoatByDa
         )
 
         return boats_with_locations
-
-
 
     def volunteers_assigned_to_boat_on_day(
         self, patrol_boat: PatrolBoat, day: Day
@@ -145,14 +142,17 @@ class DictOfLabelsForEventAndBoat(Dict[Day, str]):
     def label_for_day(self, day: Day, default=""):
         return self.get(day, default)
 
+
 class DictOfLabelsForEvent(Dict[PatrolBoat, DictOfLabelsForEventAndBoat]):
     @classmethod
-    def from_list_of_patrol_boat_labels_with_ids_for_event(cls, list_of_patrol_boat_labels_with_ids: ListOfPatrolBoatLabelsAtEvents,
-                                                           list_of_patrol_boats: ListOfPatrolBoats):
-
-        new_dict={}
+    def from_list_of_patrol_boat_labels_with_ids_for_event(
+        cls,
+        list_of_patrol_boat_labels_with_ids: ListOfPatrolBoatLabelsAtEvents,
+        list_of_patrol_boats: ListOfPatrolBoats,
+    ):
+        new_dict = {}
         for raw_list_item in list_of_patrol_boat_labels_with_ids:
-            boat_id =raw_list_item.boat_id
+            boat_id = raw_list_item.boat_id
             day = raw_list_item.day
             label = raw_list_item.label
 
@@ -164,8 +164,9 @@ class DictOfLabelsForEvent(Dict[PatrolBoat, DictOfLabelsForEventAndBoat]):
 
         return cls(new_dict)
 
-
-    def label_for_boat_at_event_on_day(self, day: Day, patrol_boat: PatrolBoat, default="") -> str:
+    def label_for_boat_at_event_on_day(
+        self, day: Day, patrol_boat: PatrolBoat, default=""
+    ) -> str:
         return self.labels_for_boat(patrol_boat).label_for_day(day, default=default)
 
     def labels_for_boat(self, patrol_boat: PatrolBoat) -> DictOfLabelsForEventAndBoat:
@@ -175,12 +176,13 @@ class DictOfLabelsForEvent(Dict[PatrolBoat, DictOfLabelsForEventAndBoat]):
         return list(set(self.labels_for_day(day)))
 
     def labels_for_day(self, day: Day) -> List[str]:
-        list_of_labels = [labels_for_boat.label_for_day(day, "") for labels_for_boat in list(self.values())]
+        list_of_labels = [
+            labels_for_boat.label_for_day(day, "")
+            for labels_for_boat in list(self.values())
+        ]
         list_of_labels = [label for label in list_of_labels if label is not ""]
 
         return list_of_labels
-
-
 
 
 @dataclass

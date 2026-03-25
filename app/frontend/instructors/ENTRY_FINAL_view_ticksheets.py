@@ -48,7 +48,7 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
@@ -97,7 +97,9 @@ def display_form_view_ticksheets_for_event_and_group(
         )
     )
     lines_inside_form = ListOfLines(
-        [
+        [MainMenuBar("Instructors"),
+
+                 _______________,
             navbar,
             _______________,
             header,

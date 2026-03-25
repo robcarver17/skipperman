@@ -250,7 +250,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
                 access_copy_menu_button,
                 quick_patrol_boat_report_button,
                 quick_rota_report_button,
-                report_link_button,
+
                 help_button,
             ]
         )
@@ -260,7 +260,7 @@ def get_top_button_bar_for_patrol_boats(interface: abstractInterface) -> ButtonB
                 cancel_menu_button,
                 quick_patrol_boat_report_button,
                 quick_rota_report_button,
-                report_link_button,
+
             ]
         )
 

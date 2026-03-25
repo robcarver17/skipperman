@@ -188,6 +188,11 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroup]):
     def contains_si(self) -> bool:
         return any([role_and_group.is_si for role_and_group in list(self.values())])
 
+    def list_of_groups(self) -> ListOfGroups:
+        roles_and_groups = list(self.values())
+        groups = [role_and_group.group for role_and_group in roles_and_groups]
+
+        return ListOfGroups(list(set(groups)))
 
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
     def role_and_group_and_team_on_day(

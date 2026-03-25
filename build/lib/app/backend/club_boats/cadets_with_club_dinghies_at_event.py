@@ -48,10 +48,9 @@ def add_club_dinghy_for_cadet_on_day(
     interface: abstractInterface,
     event: Event,
     cadet: Cadet,
-        club_dinghy: ClubDinghy,
-        day: Day
+    club_dinghy: ClubDinghy,
+    day: Day,
 ):
-
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.update_or_add_cadet_with_club_dinghy_on_day,
         event_id=event.id,
@@ -59,4 +58,3 @@ def add_club_dinghy_for_cadet_on_day(
         cadet_id=cadet.id,
         club_dinghy_id=club_dinghy.id,
     )
-

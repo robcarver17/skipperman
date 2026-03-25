@@ -6,7 +6,6 @@ from app.objects.utilities.generic_list_of_objects import GenericListOfObjectsWi
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 
 
-
 @dataclass
 class CadetIdWithGroup(GenericSkipperManObjectWithIds):
     cadet_id: str
@@ -18,7 +17,6 @@ class ListOfCadetIdsWithGroups(GenericListOfObjectsWithIds):
     @property
     def _object_class_contained(self):
         return CadetIdWithGroup
-
 
     @property
     def list_of_cadet_ids(self) -> list:

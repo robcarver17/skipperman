@@ -17,9 +17,7 @@ from app.objects.composed.volunteer_roles import (
     no_role_set,
     ListOfRolesWithSkills,
 )
-from app.objects.composed.roles_and_teams import (
-    ListOfTeamsAndIndices
-)
+from app.objects.composed.roles_and_teams import ListOfTeamsAndIndices
 from app.objects.roles_and_teams import ListOfRolesWithSkillIds
 
 
@@ -33,7 +31,6 @@ class VolunteerWithRoleGroupAndTeamAtEvent:
 
     def in_instructor_team(self):
         return self.list_of_team_and_index.in_instructor_team()
-
 
 
 @dataclass
@@ -121,7 +118,6 @@ class RoleAndGroupAndTeam:
     def not_in_team(self):
         return len(self.list_of_team_and_index) == 0
 
-
     def role_and_group(self):
         return RoleAndGroup(role=self.role, group=self.group)
 
@@ -184,15 +180,21 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroup]):
 
         return most_common(roles_and_groups, RoleAndGroup.create_empty())
 
-    def role_and_group_on_day(self, day: Day, default=unallocated_role_and_group) -> RoleAndGroup:
+    def role_and_group_on_day(
+        self, day: Day, default=unallocated_role_and_group
+    ) -> RoleAndGroup:
         return self.get(day, default)
 
     def contains_si(self) -> bool:
         return any([role_and_group.is_si for role_and_group in list(self.values())])
 
+    def list_of_groups(self) -> ListOfGroups:
+        roles_and_groups = list(self.values())
+        groups = [role_and_group.group for role_and_group in roles_and_groups]
+
+        return ListOfGroups(list(set(groups)))
 
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
-
     def role_and_group_and_team_on_day(
         self, day: Day, default=arg_not_passed
     ) -> RoleAndGroupAndTeam:

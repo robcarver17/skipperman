@@ -70,3 +70,12 @@ def make_long_thing_detail_box(some_string: str):
 class ProgressBar:
     label: str
     percentage: int
+
+
+@dataclass
+class MainMenuBar:
+    exclude_action: str
+    open_new_window: bool = True
+
+
+main_menu_bar_open_window = MainMenuBar(True)

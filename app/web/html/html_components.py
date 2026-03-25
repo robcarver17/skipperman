@@ -77,6 +77,7 @@ def get_detail_wrapper(summary_text: str, open_detail: bool = False):
 
 
 html_bar_wrapper = HtmlWrapper('<div class="w3-bar w3-grey">%s</div>')
+submenu_bar_wrapper = HtmlWrapper('<div class="w3-bar w3-center w3-orange ">%s</div>')
 
 html_h1_logo_wrapper = HtmlWrapper('<h1 class="logo">%s</h1>')
 

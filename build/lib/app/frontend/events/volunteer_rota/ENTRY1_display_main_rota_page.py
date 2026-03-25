@@ -271,5 +271,3 @@ def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(
         display_form_view_for_volunteer_rota
     )
-
-

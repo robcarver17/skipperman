@@ -6,7 +6,8 @@ from app.data_access.configuration.fixed import (
     HELP_KEYBOARD_SHORTCUT,
     BACK_KEYBOARD_SHORTCUT,
     CANCEL_KEYBOARD_SHORTCUT,
-    SAVE_KEYBOARD_SHORTCUT, SAVE_AND_BACK_KEYBOARD_SHORTCUT,
+    SAVE_KEYBOARD_SHORTCUT,
+    SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )
 from app.objects.abstract_objects.abstract_text import Arrow, Pointer, Symbol
 from app.objects.utilities.exceptions import arg_not_passed
@@ -69,7 +70,6 @@ class ActionOptionButton:
     label: str
     url: str = ""
 
-
 @dataclass
 class HelpButton:
     help_page: str
@@ -77,7 +77,14 @@ class HelpButton:
     from_main_menu: bool = False
 
 
-class ButtonBar(List[Union[HelpButton, Button]]):
+@dataclass
+class ActionLink:
+    action_name: str
+    action_label: str = ""
+    open_new_window: bool = True
+    on_submenu_bar: bool = False
+
+class ButtonBar(List[Union[HelpButton, Button, ActionLink]]):
     def __repr__(self):
         return "ButtonBar contents %s" % str(super().__repr__())
 
@@ -106,5 +113,7 @@ save_menu_button = Button(
 )
 SAVE_AND_BACK_BUTTON_LABEL = "Save edits and go back"
 save_and_back_menu_button = Button(
-    SAVE_AND_BACK_BUTTON_LABEL, nav_button=True, shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT
+    SAVE_AND_BACK_BUTTON_LABEL,
+    nav_button=True,
+    shortcut=SAVE_AND_BACK_KEYBOARD_SHORTCUT,
 )

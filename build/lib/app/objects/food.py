@@ -173,7 +173,6 @@ class ListOfCadetsWithFoodRequirementsAtEvent(GenericListOfObjects):
             [object for object in self if object.food_requirements == food_requirements]
         )
 
-
     def list_of_cadet_ids(self) -> List[str]:
         return [cadet_with_food.cadet_id for cadet_with_food in self]
 
@@ -228,11 +227,8 @@ class ListOfVolunteersWithFoodRequirementsAtEvent(GenericListOfObjects):
             [object for object in self if object.food_requirements == food_requirements]
         )
 
-
-
     def list_of_volunteer_ids(self) -> List[str]:
         return [object.volunteer_id for object in self]
-
 
     def volunteer_has_food_already(self, volunteer_id):
         volunteer_with_food = self.volunteer_with_food_with_volunteer_id(

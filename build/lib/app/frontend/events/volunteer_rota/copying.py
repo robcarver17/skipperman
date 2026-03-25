@@ -66,7 +66,7 @@ def update_if_individual_copy_fill_button_pressed(
         interface=interface,
         event=event,
         volunteer=volunteer,
-        day_to_copy_from = day,
+        day_to_copy_from=day,
         allow_replacement=False,
     )
 
@@ -95,7 +95,7 @@ def update_if_copy_previous_role_button_pressed(
         event=event,
         volunteer=volunteer,
         new_role_and_group=previous_role_and_group,
-        allow_replacement = True
+        allow_replacement=True,
     )
 
 

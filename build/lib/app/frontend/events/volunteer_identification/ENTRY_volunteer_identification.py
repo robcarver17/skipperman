@@ -54,7 +54,7 @@ from app.objects.cadets import Cadet
 from app.objects.event_warnings import (
     VOLUNTEER_IDENTITY,
 )
-from app.data_access.configuration.fixed import  HIGH_PRIORITY
+from app.data_access.configuration.fixed import HIGH_PRIORITY
 
 from app.objects.utilities.exceptions import NoMoreData, arg_not_passed, missing_data
 from app.objects.relevant_information_for_volunteers import (

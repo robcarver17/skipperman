@@ -10,7 +10,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
-    DetailListOfLines,
+    DetailListOfLines, MainMenuBar,
 )
 
 from app.objects.abstract_objects.abstract_buttons import (
@@ -52,7 +52,7 @@ def display_form_data(
         ListOfLines([audit_log]), name="Import history:"
     )
     lines_inside_form = ListOfLines(
-        [nav_buttons, option_buttons, _______________, audits_as_lines]
+        [MainMenuBar("Administration"),nav_buttons, option_buttons, _______________, audits_as_lines]
     )
 
     return Form(lines_inside_form)

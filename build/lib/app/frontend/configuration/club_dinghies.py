@@ -21,7 +21,8 @@ from app.frontend.configuration.generic_list_modifier import (
     hide_button_for_entry,
     up_button_for_entry,
     down_button_for_entry,
-    hidden_box_name, SAVE_AND_BACK_PRESSED,
+    hidden_box_name,
+    SAVE_AND_BACK_PRESSED,
 )
 from app.frontend.forms.form_utils import is_radio_yes_or_no
 from app.objects.abstract_objects.abstract_form import (
@@ -131,13 +132,12 @@ def post_form_config_club_dinghies_page(
         get_object_from_form_function=get_modified_dinghy_and_limit_from_form,
     )
 
-    if generic_list_output in  [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
+    if generic_list_output in [BACK_BUTTON_PRESSED, SAVE_AND_BACK_PRESSED]:
         return interface.get_new_display_form_for_parent_of_function(
             post_form_config_club_dinghies_page
         )
     elif generic_list_output is BUTTON_NOT_KNOWN:
         return button_error_and_back_to_initial_state_form(interface)
-
 
     return interface.get_new_form_given_function(display_form_config_club_dinghies_page)
 

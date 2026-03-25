@@ -12,7 +12,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, MainMenuBar, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 USERS_BUTTON_LABEL = "Users, passwords and access"
@@ -28,7 +28,7 @@ config_option_buttons = Line([user_button, data_button])
 def display_form_main_admin_page(
     interface: abstractInterface,
 ) -> Form:  ##ignore warning
-    lines_inside_form = ListOfLines([nav_buttons, config_option_buttons])
+    lines_inside_form = ListOfLines([MainMenuBar("Administration"), _______________, nav_buttons, config_option_buttons])
 
     return Form(lines_inside_form)
 

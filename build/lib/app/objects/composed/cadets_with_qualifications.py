@@ -25,7 +25,7 @@ class QualificationAndDate:
 
 
 from app.objects.utilities.generic_list_of_objects import (
-get_idx_of_unique_object_with_attr_in_list
+    get_idx_of_unique_object_with_attr_in_list,
 )
 
 

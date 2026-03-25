@@ -8,7 +8,6 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjects,
     get_idx_of_unique_object_with_attr_in_list,
     index_not_found,
-
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 from app.objects.utilities.exceptions import arg_not_passed
@@ -67,8 +66,6 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
         count_of_identified_row = self.count_of_rows_identified_as_cadets()
         return count_of_identified_row - count_of_cadet_ids
 
-
-
     def row_does_not_have_identified_cadet_including_skip_cadets(self, row_id: str):
         in_rows = row_id in self.list_of_all_row_ids()
         return not in_rows
@@ -86,8 +83,6 @@ class ListOfIdentifiedCadetsAtEvent(GenericListOfObjects):
 
     def list_of_all_row_ids(self):
         return [item.row_id for item in self]
-
-
 
     def row_id_is_temporary_skip(self, row_id: str):
         item = self.item_given_row_id(row_id, default_when_missing=missing_data)

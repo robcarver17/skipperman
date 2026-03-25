@@ -42,7 +42,10 @@ def copy_across_duties_for_volunteer_at_event_from_one_day_to_all_other_days(
     allow_replacement: bool = True,
 ):
     role_and_group = get_role_and_group_on_day_for_event_and_volunteer(
-        object_store=interface.object_store, event=event, volunteer=volunteer, day=day_to_copy_from
+        object_store=interface.object_store,
+        event=event,
+        volunteer=volunteer,
+        day=day_to_copy_from,
     )
 
     for day_to_copy_to in event.days_in_event():

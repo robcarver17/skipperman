@@ -7,7 +7,6 @@ from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     GenericListOfObjects,
     get_unique_object_with_attr_in_list,
-
 )
 from app.objects.utilities.generic_objects import (
     GenericSkipperManObjectWithIds,
@@ -26,14 +25,20 @@ role_location_lake = RoleLocation.Lake_training
 role_location_river = RoleLocation.River_training
 role_location_no_warning = RoleLocation.No_warning
 
+
 def location_pretty_print(location: RoleLocation):
     return location.name.replace("_", " ")
+
 
 def location_from_pretty_print(pretty_name: str):
     return RoleLocation[pretty_name.replace(" ", "_")]
 
+
 all_role_locations = [role_location_no_warning, role_location_lake, role_location_river]
-all_role_locations_pretty = [location_pretty_print(location) for location in all_role_locations]
+all_role_locations_pretty = [
+    location_pretty_print(location) for location in all_role_locations
+]
+
 
 @dataclass
 class RolesWithSkillIds(GenericSkipperManObjectWithIds):
@@ -102,7 +107,6 @@ class ListOfRolesWithSkillIds(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return RolesWithSkillIds
 
-
     def matches_name(self, role_name: str, default=arg_not_passed):
         if role_name == no_role_allocated.name:
             return no_role_allocated
@@ -160,8 +164,6 @@ class ListOfTeams(GenericListOfObjectsWithIds):
     def _object_class_contained(self):
         return Team
 
-
-
     def instructor_team_from_list(self):
         return self.matching_team_name(INSTRUCTOR_TEAM)
 
@@ -212,7 +214,6 @@ class ListOfTeamsAndRolesWithIds(GenericListOfObjects):
                 for idx, role_id in enumerate(list_of_role_ids)
             ]
         )
-
 
     def ordered_role_ids_for_team_id(self, team_id: str):
         raw_list = [

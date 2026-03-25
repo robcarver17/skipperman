@@ -43,7 +43,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    DetailListOfLines,
+    DetailListOfLines, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -62,7 +62,8 @@ def display_form_cadet_committee(
     cadet_table = table_of_all_committee_members(interface)
 
     list_of_lines_inside_form = ListOfLines(
-        [
+        [MainMenuBar("Sailors"),
+         _______________,
             nav_buttons,
             Heading("Edit cadet committee members", size=4),
             suggestions,

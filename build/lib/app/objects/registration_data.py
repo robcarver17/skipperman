@@ -253,8 +253,6 @@ class RegistrationDataForEvent(GenericListOfObjects):
         return cls([])
 
 
-
-
 def get_volunteer_status_from_row(row: RowInRegistrationData):
     return row.get_item(VOLUNTEER_STATUS, "")
 

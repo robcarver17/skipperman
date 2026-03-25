@@ -35,7 +35,7 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.data_access.file_access import (
     web_pathname_of_public_version_of_local_file_without_extension,
 )
-from app.objects.utilities.exceptions import  MISSING_FROM_FORM
+from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 empty_name = ""
 FILE_NAME = "filename"

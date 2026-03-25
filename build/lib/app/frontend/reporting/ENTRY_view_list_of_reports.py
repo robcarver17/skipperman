@@ -34,7 +34,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    Line,
+    Line, MainMenuBar, _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import missing_data
@@ -77,7 +77,8 @@ def function_given_pressed_button_label(label) -> Callable:
 def display_form_view_of_reports(
     interface: abstractInterface,
 ) -> Form:  ## have to keep interface as standard input
-    return Form(ListOfLines([nav_buttons, list_of_report_buttons]))
+    return Form(ListOfLines([MainMenuBar("Reports"),
+         _______________,nav_buttons, list_of_report_buttons]))
 
 
 def post_form_view_of_reports(interface: abstractInterface) -> Union[Form, NewForm]:

@@ -38,7 +38,8 @@ from app.frontend.forms.form_utils import (
     get_availablity_from_form,
 )
 from app.backend.boat_classes.update_boat_information import (
-    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event, breakup_partnership,
+    update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event,
+    breakup_partnership,
 )
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     CadetWithDinghySailNumberBoatClassAndPartner,
@@ -114,13 +115,18 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
 def update_data_given_allocation_form(interface: abstractInterface):
     list_of_cadets = get_list_of_all_cadets_with_event_data(interface=interface)
 
-    update_attendance_data_and_notes_for_all_cadets_in_form(interface, list_of_cadets=list_of_cadets)
+    update_attendance_data_and_notes_for_all_cadets_in_form(
+        interface, list_of_cadets=list_of_cadets
+    )
     ## has to be done in one go because of swaps
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
         interface=interface, list_of_cadets=list_of_cadets
     )
 
-def update_attendance_data_and_notes_for_all_cadets_in_form(interface: abstractInterface, list_of_cadets: ListOfCadets):
+
+def update_attendance_data_and_notes_for_all_cadets_in_form(
+    interface: abstractInterface, list_of_cadets: ListOfCadets
+):
     event = get_event_from_state(interface)
     for cadet in list_of_cadets:
         if is_admin_or_skipper(interface):
@@ -333,7 +339,6 @@ def remove_partnership_for_cadet_from_group_allocation_button(
     else:
         list_of_days = [day]
 
-    breakup_partnership(interface=interface,
-                        event=event,
-                        cadet=cadet,
-                        list_of_days=list_of_days)
+    breakup_partnership(
+        interface=interface, event=event, cadet=cadet, list_of_days=list_of_days
+    )

@@ -38,7 +38,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import (
     abstractInterface,
@@ -146,7 +146,9 @@ def display_form_edit_generic_list(
     return Form(
         [
             ListOfLines(
-                [
+                [MainMenuBar("Configuration"),
+
+                 _______________,
                     navbar,
                     Heading(header_text, centred=True, size=4),
                     _______________,

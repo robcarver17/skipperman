@@ -53,6 +53,7 @@ class AdditionalParametersForAllocationReport:
     add_asterix_for_club_boats: bool
     days_to_show: DaySelector
 
+
 def add_club_boat_asterix(
     object_store: ObjectStore,
     list_of_cadets_with_groups: ListOfCadetsWithGroupOnDay,
@@ -90,11 +91,10 @@ def add_club_boat_asterix_to_cadet_with_group_on_day(
 def get_dict_of_df_for_reporting_allocations_with_flags(
     object_store: ObjectStore,
     event: Event,
-        days_to_show: DaySelector,
+    days_to_show: DaySelector,
     display_full_names: bool = False,
     include_unallocated_cadets: bool = False,
     add_asterix_for_club_boats: bool = True,
-
 ) -> Dict[str, pd.DataFrame]:
     group_allocations_data = get_dict_of_cadets_with_groups_at_event(
         object_store=object_store, event=event

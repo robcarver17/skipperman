@@ -182,6 +182,7 @@ class DictOfCadetsWithClothingAtEvent(Dict[Cadet, ClothingAtEvent]):
 
         return clothing
 
+
 SORT_BY_SURNAME = "Sort by surname"
 SORT_BY_FIRSTNAME = "Sort by first name"
 SORT_BY_DOB_ASC = "Sort by date of birth, ascending"

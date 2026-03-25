@@ -27,7 +27,7 @@ from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
     _______________,
-    DetailListOfLines,
+    DetailListOfLines, MainMenuBar,
 )
 
 from app.frontend.shared.events_state import get_event_from_state
@@ -80,7 +80,9 @@ def display_form_choose_level_for_group_at_event(interface: abstractInterface) -
         interface, event=event, group=group
     )
     lines_inside_form = ListOfLines(
-        [
+        [MainMenuBar("Instructors"),
+
+                 _______________,
             navbar,
             _______________,
             header,

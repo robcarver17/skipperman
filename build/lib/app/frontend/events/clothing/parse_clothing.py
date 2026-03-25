@@ -43,6 +43,7 @@ def save_clothing_data(interface: abstractInterface):
 
     interface.clear()
 
+
 def save_clothing_data_for_cadet(
     interface: abstractInterface, event: Event, cadet: Cadet, clothing: ClothingAtEvent
 ):

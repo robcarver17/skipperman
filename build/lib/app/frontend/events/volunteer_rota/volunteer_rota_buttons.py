@@ -15,14 +15,16 @@ from app.frontend.events.volunteer_rota.swapping import (
 )
 from app.frontend.shared.buttons import (
     get_button_value_given_type_and_attributes,
-    get_attributes_from_button_pressed_of_known_type, report_link_button,
+    get_attributes_from_button_pressed_of_known_type,
+
 )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
     cancel_menu_button,
     save_menu_button,
-    HelpButton, save_and_back_menu_button,
+    HelpButton,
+    save_and_back_menu_button,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import Line
@@ -46,7 +48,6 @@ def get_header_buttons_for_rota(interface: abstractInterface):
                 access_copy_menu,
                 download_matrix_button,
                 quick_report_button,
-                report_link_button,
                 update_most_common_role_button,
                 help_button,
             ]

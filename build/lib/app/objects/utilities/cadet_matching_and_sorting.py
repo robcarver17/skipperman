@@ -119,7 +119,10 @@ def similar_cadet(
     if name_match < name_threshold:
         return False
 
-    if other_cadet.does_not_have_real_date_of_birth or cadet_in_data.does_not_have_real_date_of_birth:
+    if (
+        other_cadet.does_not_have_real_date_of_birth
+        or cadet_in_data.does_not_have_real_date_of_birth
+    ):
         return True
 
     if dob_match_with_codes > 0.5:

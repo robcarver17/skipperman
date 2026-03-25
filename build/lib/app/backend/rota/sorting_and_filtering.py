@@ -43,13 +43,15 @@ class RotaSortsAndFilters:
     sort_by_location: bool
 
 
-def create_empty_sorts_and_filters(event:Event):
+def create_empty_sorts_and_filters(event: Event):
     return RotaSortsAndFilters(
         sort_by_location=False,
         skills_filter=SkillsDict(),
-        availability_filter=dict([(day.name, FILTER_ALL) for day in event.days_in_event()]),
+        availability_filter=dict(
+            [(day.name, FILTER_ALL) for day in event.days_in_event()]
+        ),
         sort_by_day=arg_not_passed,
-        sort_by_volunteer_name=arg_not_passed
+        sort_by_volunteer_name=arg_not_passed,
     )
 
 

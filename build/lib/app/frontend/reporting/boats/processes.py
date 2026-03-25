@@ -31,7 +31,8 @@ EXCLUDE_LAKE = "exclude_lake"
 EXCLUDE_RIVER_TRAIN = "exclude_river_training"
 EXCLUDE_UNALLOCATED = "exclude_unallocated"
 INCLUDE_IN_OUT = "include_in_out"
-DAYS_TO_SHOW="days_to_show"
+DAYS_TO_SHOW = "days_to_show"
+
 
 def get_boat_allocation_report_additional_parameters_from_form_and_save(
     interface: abstractInterface, report_generator: ReportGenerator
@@ -68,7 +69,7 @@ def get_boat_report_additional_parameters_from_form(
         exclude_river_training_groups=exclude_river_training_groups,
         exclude_unallocated_groups=exclude_unallocated_groups,
         in_out_columns=in_out_columms,
-        days_to_show=days_to_show
+        days_to_show=days_to_show,
     )
 
 
@@ -128,10 +129,13 @@ def save_group_exclusion_parameters(
             interface=interface, report_generator=report_generator
         )
 
-def save_days_to_show(interface: abstractInterface,
-    parameters: AdditionalParametersForBoatReport):
+
+def save_days_to_show(
+    interface: abstractInterface, parameters: AdditionalParametersForBoatReport
+):
     days_to_show_as_str = parameters.days_to_show.as_str()
     interface.set_persistent_value(DAYS_TO_SHOW, days_to_show_as_str)
+
 
 def have_group_exclusion_parameters_changed(
     interface: abstractInterface, parameters: AdditionalParametersForBoatReport
@@ -183,7 +187,7 @@ def load_additional_parameters_for_boat_report(
         exclude_river_training_groups=exclude_river_training_groups,
         display_full_names=display_full_names,
         in_out_columns=include_in_out,
-        days_to_show=days_to_show
+        days_to_show=days_to_show,
     )
 
 
@@ -196,7 +200,7 @@ def clear_additional_parameters_for_boat_report(
         EXCLUDE_RIVER_TRAIN,
         EXCLUDE_LAKE,
         INCLUDE_IN_OUT,
-        DAYS_TO_SHOW
+        DAYS_TO_SHOW,
     ]:
         interface.clear_persistent_value(parameter_name)
 

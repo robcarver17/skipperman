@@ -283,13 +283,16 @@ def boats_in_location_and_designation(
 def sorted_unique_list_of_boat_designations_for_event_on_day_including_no_designation(
     volunteer_event_data: DictOfAllEventDataForVolunteers, day: Day
 ):
-    labels = copy(volunteer_event_data.dict_of_patrol_boat_labels_for_event.unique_set_of_labels_at_event(
-        day=day
-    ))
+    labels = copy(
+        volunteer_event_data.dict_of_patrol_boat_labels_for_event.unique_set_of_labels_at_event(
+            day=day
+        )
+    )
     labels.sort()
     labels.append("")
 
     return labels
+
 
 def apply_sorts_and_transforms_to_df(
     df_for_reporting_volunteers_for_day: pd.DataFrame,

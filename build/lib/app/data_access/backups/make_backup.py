@@ -18,7 +18,7 @@ def make_backup(backup_data_path: str, master_data_path: str):
         )
         backup_number -= 1
 
-    #if backup_number == 0:
+    # if backup_number == 0:
     #    simlink_copy_first_backup(backup_data_path)
     make_first_backup(
         backup_data_path=backup_data_path, master_data_path=master_data_path
@@ -68,6 +68,8 @@ def make_first_backup(backup_data_path: str, master_data_path: str):
         os.mkdir(backup_directory_for_this_backup)
     except:
         pass
-    shutil.copytree(master_data_path, backup_directory_for_this_backup, dirs_exist_ok=True)
+    shutil.copytree(
+        master_data_path, backup_directory_for_this_backup, dirs_exist_ok=True
+    )
 
     create_timestamp_file(backup_directory_for_this_backup)

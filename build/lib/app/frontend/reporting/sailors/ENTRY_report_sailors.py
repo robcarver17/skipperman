@@ -4,22 +4,24 @@ from app.frontend.reporting.sailors.achieved_qualifications import (
 from app.backend.groups.cadet_event_history import (
     write_group_history_and_qualification_status_to_temp_csv_file_and_return_filename,
 )
-from app.backend.cadets_at_event.recent_events_and_new_cadets import \
-    write_new_sailors_recent_group_history_and_qualification_status_to_temp_csv_file_and_return_filename
-from app.objects.abstract_objects.abstract_lines import Line
+from app.backend.cadets_at_event.recent_events_and_new_cadets import (
+    write_new_sailors_recent_group_history_and_qualification_status_to_temp_csv_file_and_return_filename,
+)
+from app.objects.abstract_objects.abstract_lines import Line, MainMenuBar, _______________
 from app.frontend.reporting.sailors.qualification_status import *
 
 
 def display_form_for_sailors_report(interface: abstractInterface):
     contents_of_form = ListOfLines(
-        [
+        [MainMenuBar("Reports"),
+         _______________,
             ButtonBar([main_menu_button, back_menu_button, help_button]),
             Line(
                 [
                     create_qualification_list_report_button,
                     expected_qualification_report_button,
                     history_report_button,
-                    new_sailors_report_button
+                    new_sailors_report_button,
                 ]
             ),
         ]
@@ -44,6 +46,7 @@ expected_qualification_report_button = Button(
 )  ## tile
 history_report_button = Button(GROUP_HISTORY_BUTTON_LABEL, tile=True)
 new_sailors_report_button = Button(NEW_SAILORS_REPORT, tile=True)
+
 
 def post_form_for_sailors_report(
     interface: abstractInterface,
@@ -74,7 +77,6 @@ def post_form_for_sailors_report(
         return File(filename)
     else:
         return button_error_and_back_to_initial_state_form(interface)
-
 
 
 def previous_form(interface: abstractInterface):

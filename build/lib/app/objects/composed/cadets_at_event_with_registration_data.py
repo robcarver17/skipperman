@@ -14,9 +14,7 @@ from app.objects.utilities.utils import flatten
 
 from app.objects.utilities.exceptions import MissingData, arg_not_passed, missing_data
 
-from app.objects.cadet_with_id_at_event import (
-    CadetWithIdAtEvent
-)
+from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.utilities.cadet_matching_and_sorting import sort_a_list_of_cadets
 from app.objects.day_selectors import DaySelector, empty_day_selector
@@ -106,8 +104,6 @@ class CadetRegistrationData:
 
 
 class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
-
-
     def availability_dict(self) -> Dict[Cadet, DaySelector]:
         return dict(
             [
@@ -120,7 +116,6 @@ class DictOfCadetsWithRegistrationData(Dict[Cadet, CadetRegistrationData]):
                 for cadet in self.list_of_cadets()
             ]
         )
-
 
     def list_of_registration_fields(self):
         all_fields = [reg_data.data_fields for reg_data in list(self.values())]

@@ -1,6 +1,8 @@
 from typing import Union
 
-from app.backend.security.audit_logs import get_list_of_audit_logs_for_event_newest_first
+from app.backend.security.audit_logs import (
+    get_list_of_audit_logs_for_event_newest_first,
+)
 from app.frontend.events.import_data.wa_import_gateway import (
     display_form_WA_import_gateway,
 )
@@ -19,7 +21,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
     HelpButton,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
+from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, MainMenuBar, _______________
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 IMPORT_FROM_WA = "Import from Wild Apricot"
@@ -32,11 +34,12 @@ option_buttons = Line([wa_import_button])
 
 def display_form_choose_import_source(interface: abstractInterface) -> Form:
     audit_log = get_audit_log_to_display_for_event(interface)
-    if len(audit_log) ==0:
+    main_menu =[MainMenuBar("Events"), _______________]
+    if len(audit_log) == 0:
         audit_lines = ["No imports done"]
     else:
         audit_lines = ["Imports:", audit_log]
-    lines_inside_form = ListOfLines([nav_buttons, option_buttons]+audit_lines)
+    lines_inside_form = ListOfLines(main_menu+[nav_buttons, option_buttons] + audit_lines)
 
     return Form(lines_inside_form)
 

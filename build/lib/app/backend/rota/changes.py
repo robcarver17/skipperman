@@ -36,7 +36,7 @@ def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
     event: Event,
     volunteer: Volunteer,
     new_role_and_group: RoleAndGroupAndTeam,
-    allow_replacement: bool
+    allow_replacement: bool,
 ):
     availability = get_availability_volunteer_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
@@ -106,18 +106,19 @@ def swap_roles_and_groups_for_volunteers_in_allocation(
         )
 
 
-def update_role_and_group_for_volunteer_given_specific_day_at_event(interface: abstractInterface,
-                                                                    event: Event,
-                                                                    volunteer: Volunteer,
-                                                                    day: Day,
-                                                                    existing_role: RoleWithSkills,
-                                                                    new_role: RoleWithSkills,
-                                                                    existing_group: Group,
-                                                                    new_group: Group,
-                                                                    allow_replacement: bool):
-
-    role_matches = new_role==existing_role
-    group_matches = new_group==existing_group
+def update_role_and_group_for_volunteer_given_specific_day_at_event(
+    interface: abstractInterface,
+    event: Event,
+    volunteer: Volunteer,
+    day: Day,
+    existing_role: RoleWithSkills,
+    new_role: RoleWithSkills,
+    existing_group: Group,
+    new_group: Group,
+    allow_replacement: bool,
+):
+    role_matches = new_role == existing_role
+    group_matches = new_group == existing_group
     ## Note use of if/elif not to make code easier to read
     if role_matches:
         if group_matches:
@@ -125,12 +126,14 @@ def update_role_and_group_for_volunteer_given_specific_day_at_event(interface: a
             return
         elif not group_matches:
             ## change to group not role
-            update_group_only_at_event_for_volunteer_on_day(  interface=interface,
+            update_group_only_at_event_for_volunteer_on_day(
+                interface=interface,
                 event=event,
                 volunteer=volunteer,
                 day=day,
                 new_group=new_group,
-                allow_replacement=allow_replacement)
+                allow_replacement=allow_replacement,
+            )
     elif not role_matches:
         if group_matches:
             ### change to role only
@@ -163,18 +166,18 @@ def update_role_and_group_at_event_for_volunteer_on_day(
     day: Day,
     new_role: RoleWithSkills,
     new_group: Group,
-    allow_replacement: bool
+    allow_replacement: bool,
 ):
     print("update %s on %s to %s, %s" % (volunteer, day, new_role, new_group))
     interface.update(
-            interface.object_store.data_api.data_list_of_volunteers_in_roles_at_event.update_role_and_group_at_event_for_volunteer_on_day,
-            event_id=event.id,
-            volunteer_id=volunteer.id,
-            day=day,
-            new_role_id=new_role.id,
-            new_group_id=new_group.id,
-            allow_replacement=allow_replacement,
-        )
+        interface.object_store.data_api.data_list_of_volunteers_in_roles_at_event.update_role_and_group_at_event_for_volunteer_on_day,
+        event_id=event.id,
+        volunteer_id=volunteer.id,
+        day=day,
+        new_role_id=new_role.id,
+        new_group_id=new_group.id,
+        allow_replacement=allow_replacement,
+    )
 
 
 def update_role_only_at_event_for_volunteer_on_day(
@@ -238,6 +241,7 @@ def delete_role_at_event_for_volunteer_on_day(
         day=day,
         volunteer_id=volunteer.id,
     )
+
 
 def delete_role_at_event_for_volunteer_across_all_days(
     interface: abstractInterface, volunteer: Volunteer, event: Event

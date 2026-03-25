@@ -40,15 +40,15 @@ def get_list_of_boats_and_generic_limits(
 def get_dict_of_names_and_limits_for_all_visible_club_boats_at_event(
     object_store: ObjectStore, event: Event
 ) -> Dict[str, int]:
-    dict_of_boats_and_limits = get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
-        object_store=object_store,event=event
-    )
-    return dict([
-        (
-            boat.name, limit
+    dict_of_boats_and_limits = (
+        get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
+            object_store=object_store, event=event
         )
-        for boat, limit in dict_of_boats_and_limits.items()
-    ])
+    )
+    return dict(
+        [(boat.name, limit) for boat, limit in dict_of_boats_and_limits.items()]
+    )
+
 
 def get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
     object_store: ObjectStore, event: Event
@@ -57,6 +57,7 @@ def get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event(
         object_store.data_api.data_List_of_club_dinghy_limits.get_dict_of_boats_and_limits_for_all_visible_club_boats_at_event,
         event_id=event.id,
     )
+
 
 def get_dict_of_boats_and_limits_for_all_club_boats_at_event(
     object_store: ObjectStore, event: Event

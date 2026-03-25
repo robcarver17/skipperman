@@ -21,7 +21,6 @@ from app.objects.groups import Group, ListOfGroups, unallocated_group
 CADET_NAME = "cadet"
 
 
-
 @dataclass
 class CadetWithGroupOnDay(GenericSkipperManObject):
     ## For display purposes, can't store
@@ -80,7 +79,6 @@ class ListOfCadetsWithGroupOnDay(List[CadetWithGroupOnDay]):
         return ListOfCadetsWithGroupOnDay(new_list)
 
 
-
 class DaysAndGroups(Dict[Day, Group]):
     def update_group_on_day(self, day: Day, group: Group):
         if group.is_unallocated:
@@ -96,7 +94,6 @@ class DaysAndGroups(Dict[Day, Group]):
             default = unallocated_group
 
         return self.get(day, default)
-
 
     def day_selector_when_cadet_in_group(self, group: Group) -> DaySelector:
         return DaySelector(
@@ -117,8 +114,6 @@ class DaysAndGroups(Dict[Day, Group]):
     @classmethod
     def create_empty(cls):
         return cls()
-
-
 
 
 class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
@@ -216,7 +211,7 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
         return ListOfGroups(list_of_groups)
 
-    def unique_list_of_groups_at_event(self)-> ListOfGroups:
+    def unique_list_of_groups_at_event(self) -> ListOfGroups:
         all_days_and_groups = self.days_and_groups()
         list_of_groups = [
             day_and_group.list_of_groups for day_and_group in all_days_and_groups
@@ -248,12 +243,9 @@ class DictOfCadetsWithDaysAndGroupsAtEvent(Dict[Cadet, DaysAndGroups]):
 
         return unique_list
 
-
     @property
     def list_of_cadets(self) -> ListOfCadets:
         return ListOfCadets(list(self.keys()))
-
-
 
 
 GROUP_STR_NAME = "group"

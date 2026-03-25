@@ -17,7 +17,10 @@ from app.backend.reporting.report_generator import ReportGenerator
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.day_selectors import DaySelector
-from app.objects.events import Event, get_past_days_selector_from_event_or_all_days_if_missing
+from app.objects.events import (
+    Event,
+    get_past_days_selector_from_event_or_all_days_if_missing,
+)
 from app.objects.utilities.exceptions import MISSING_FROM_FORM, arg_not_passed
 
 DAYS_TO_SHOW = "DaysToShow"
@@ -26,7 +29,6 @@ DAYS_TO_SHOW = "DaysToShow"
 def load_additional_parameters_for_rota_report(
     interface: abstractInterface,
 ) -> AdditionalParametersForVolunteerReport:
-
     days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
     if days_to_show_str is None:
         event = get_event_from_state(interface)

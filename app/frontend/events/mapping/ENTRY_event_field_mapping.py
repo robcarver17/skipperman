@@ -18,7 +18,7 @@ from app.objects.abstract_objects.abstract_form import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     BACK_BUTTON_LABEL,
@@ -71,7 +71,7 @@ def display_form_event_field_mapping_existing_mapping(
 
     return Form(
         ListOfLines(
-            [
+            [MainMenuBar("Events"), _______________,
                 nav_bar,
                 Heading(
                     "Mapping already set up for %s" % str(event), centred=True, size=4
@@ -117,7 +117,7 @@ def display_form_event_field_mapping_no_existing_mapping() -> Union[Form, NewFor
     )
 
     return Form(
-        ListOfLines([information, _______________, mapping_buttons(), _______________])
+        ListOfLines([MainMenuBar("Events"), _______________,information, _______________, mapping_buttons(), _______________])
     )
 
 

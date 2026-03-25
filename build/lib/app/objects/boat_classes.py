@@ -11,7 +11,8 @@ from app.objects.utilities.generic_list_of_objects import (
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.partners import (
     no_cadet_partner_required,
-    valid_partnership_given_partner_cadet, no_partner_allocated,
+    valid_partnership_given_partner_cadet,
+    no_partner_allocated,
 )
 
 NO_BOAT_CLASS_NAME = ""

@@ -150,7 +150,6 @@ from app.objects.cadets import is_cadet_age_surprising
 def process_when_cadet_is_in_membership_list_and_not_in_system(
     interface: abstractInterface, cadet: Cadet
 ) -> Form:
-
     add_new_verified_cadet(interface=interface, cadet=cadet)
     interface.log_error(
         "Automatically added new cadet from membership list %s" % str(cadet)

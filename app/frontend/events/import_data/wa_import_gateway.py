@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines
+from app.objects.abstract_objects.abstract_lines import ListOfLines, MainMenuBar, _______________, Line
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -54,8 +54,8 @@ def display_form_WA_import_gateway(
     nav_bar = ButtonBar([main_menu_button, back_menu_button, help_button])
     upload_status = report_on_status_of_upload(interface=interface, event=event)
     buttons = get_buttons_depending_on_event_status(interface=interface, event=event)
-
-    return Form(ListOfLines([nav_bar, heading, upload_status, buttons]).add_Lines())
+    return Form(ListOfLines(
+        [MainMenuBar("Events"), _______________, nav_bar, Line(heading), upload_status, buttons]))
 
 
 def report_on_status_of_upload(
@@ -110,7 +110,7 @@ def get_buttons_depending_on_event_status(
         return get_buttons_if_field_mapping_set_up(interface=interface, event=event)
     else:
         ## no mapping have to do mapping first
-        return [new_wa_field_mapping_button, first_upload_file_button]
+        return Line([new_wa_field_mapping_button, first_upload_file_button])
 
 
 def get_buttons_if_field_mapping_set_up(
@@ -124,7 +124,7 @@ def get_buttons_if_field_mapping_set_up(
         interface=interface, event=event
     )
 
-    return (
+    return Line(
         [existing_wa_field_mapping_button]
         + upload_or_imports_button_from_combo
         + [clear_event_mapping_button]

@@ -8,9 +8,8 @@ from app.frontend.menu_define import REPORT_LINK
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button,
+    Button, ActionLink,
 )
-from app.objects.abstract_objects.abstract_form import ActionLink
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
@@ -210,4 +209,4 @@ def break_up_buttons(
     return ListOfLines(chunks).add_Lines()
 
 
-report_link_button = ActionLink(REPORT_LINK)
+report_link_button = ActionLink(action_name=REPORT_LINK, action_label="Reporting menu")

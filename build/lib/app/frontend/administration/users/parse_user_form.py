@@ -57,7 +57,7 @@ def generate_reset_message_for_user_name(
     last_button: str, interface: abstractInterface
 ):
     username = username_from_reset_button(last_button)
-    msg= generate_reset_message(username=username, interface=interface)
+    msg = generate_reset_message(username=username, interface=interface)
     interface.clear()
     return msg
 

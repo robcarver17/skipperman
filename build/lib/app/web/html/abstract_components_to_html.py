@@ -1,12 +1,16 @@
-from app.frontend.menu_define import REPORT_LINK
 from app.objects.abstract_objects.abstract_buttons import *
+from app.objects.abstract_objects.abstract_buttons import ActionLink
 from app.objects.abstract_objects.abstract_form import *
 from app.objects.abstract_objects.abstract_lines import *
 from app.objects.abstract_objects.abstract_tables import *
 from app.objects.abstract_objects.abstract_text import *
 from app.web.html.forms import *
 from app.web.html.html_components import *
-from app.web.html.url_define import MAIN_MENU_URL, get_help_url, get_action_first_page_url
+from app.web.html.url_define import (
+    MAIN_MENU_URL,
+    get_help_url,
+    get_action_first_page_url,
+)
 
 
 def get_html_for_simple_element_in_line(
@@ -128,11 +132,15 @@ def help_link_button(
             "Help", url=url, open_new_window=True, shortcut=shortcut
         )
 
+
 def get_html_for_action_link_button(action_link: ActionLink):
     action_name = action_link.action_name
+    action_label = action_link.action_label
     url = get_action_first_page_url(action_name)
+    on_submenu_bar = action_link.on_submenu_bar
     return nav_button_with_link_to_avoid_weird_routing_issue(
-        "Reporting menu", url=url, open_new_window=False
+        action_label, url=url, open_new_window=action_link.open_new_window,
+        on_submenu_bar=on_submenu_bar
     )
 
 
@@ -201,7 +209,7 @@ def generic_html_button(
 
 
 def nav_button_with_link_to_avoid_weird_routing_issue(
-    button_text, url, open_new_window: bool = False, shortcut=arg_not_passed
+    button_text, url, open_new_window: bool = False, shortcut=arg_not_passed, on_submenu_bar: bool = False
 ):
     ## Shouldn't really be required but button breaks for main menu
     if open_new_window:
@@ -215,11 +223,19 @@ def nav_button_with_link_to_avoid_weird_routing_issue(
         shortcut_str = 'accesskey="%s"' % shortcut
         button_text = "%s [Alt-%s]" % (button_text, shortcut)
 
+    if on_submenu_bar:
+        colour_str = "w3-black"
+        size = 'style="font-size : 5px; width: 100%; height: 40px;"'
+        button_text = button_text.upper()
+    else:
+        colour_str = "w3-dark-grey"
+        size = ""
+
     return Html(
         """
-    '<a class = "w3-btn w3-dark-grey"  href="%s" %s %s> %s </a>' 
+    '<a class = "w3-btn %s %s"  href="%s" %s %s> %s </a>' 
     """
-        % (url, target, shortcut_str, button_text)
+        % (colour_str, size, url, target, shortcut_str, button_text)
     )
 
 

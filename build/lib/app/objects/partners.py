@@ -7,13 +7,13 @@ NO_PARTNER_REQUIRED_STR = "Singlehander"
 NOT_ALLOCATED_STR = "Unallocated"
 NO_PARTNERSHIP_LIST_OF_STR = [NOT_ALLOCATED_STR, NO_PARTNER_REQUIRED_STR]
 
-FAKE_ID_FOR_SINGLEHANDERS = -999 ## no longer using but required for backwards
+FAKE_ID_FOR_SINGLEHANDERS = -999  ## no longer using but required for backwards
 FAKE_ID_FOR_NOT_ALLOCATED = -777
 
 
 def from_partner_id_to_int(partnerid: str) -> int:
     if partnerid == NO_PARTNER_REQUIRED_STR:
-        return  FAKE_ID_FOR_NOT_ALLOCATED
+        return FAKE_ID_FOR_NOT_ALLOCATED
     elif partnerid == NOT_ALLOCATED_STR:
         return FAKE_ID_FOR_NOT_ALLOCATED
     else:
@@ -38,7 +38,9 @@ def valid_partnership_given_partner_id_or_str(partnership_str: str):
 
 
 NoCadetPartner = Enum("NoCadetPartner", [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR])
-no_cadet_partner_required = NoCadetPartner.Singlehander ## no longer using but required for backwards
+no_cadet_partner_required = (
+    NoCadetPartner.Singlehander
+)  ## no longer using but required for backwards
 no_partner_allocated = NoCadetPartner.Unallocated
 
 
@@ -61,11 +63,14 @@ def from_partner_cadet_to_id_or_string(partner_cadet: Union[Cadet, NoCadetPartne
 
     return partner_cadet.id
 
+
 def partner_string_is_no_partner_type(partner_str: str):
     return partner_str in [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR]
 
+
 def no_partnership_given_partner_cadet_as_str(partner_as_str: str):
     return partner_as_str in [NO_PARTNER_REQUIRED_STR, NOT_ALLOCATED_STR]
+
 
 def from_no_partner_object_to_str(partner: NoCadetPartner):
     if partner is no_cadet_partner_required:
@@ -74,6 +79,7 @@ def from_no_partner_object_to_str(partner: NoCadetPartner):
         return NOT_ALLOCATED_STR
     else:
         raise
+
 
 def no_partnership_object_given_str(partner_as_str: str):
     if partner_as_str == NO_PARTNER_REQUIRED_STR:

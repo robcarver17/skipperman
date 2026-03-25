@@ -30,7 +30,7 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
     _______________,
-    DetailListOfLines,
+    DetailListOfLines, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.abstract_objects.abstract_text import Heading
@@ -43,8 +43,10 @@ def get_event_form_for_event(
     event_heading = get_event_heading(interface=interface, event=event)
     summary_lines = summary_tables_for_event(interface=interface, event=event)
     buttons = ListOfLines([get_event_buttons(interface)])
+    main_menu = ListOfLines([MainMenuBar("Events"),_______________])
 
-    lines_in_form = buttons + event_heading + summary_lines
+
+    lines_in_form = main_menu+ buttons + event_heading + summary_lines
 
     return Form(lines_in_form)
 
@@ -200,7 +202,6 @@ def get_event_buttons(interface: abstractInterface) -> ButtonBar:
                 patrol_boat_allocation_button,
                 food_button,
                 clothing_button,
-                report_link_button,
                 help_button,
             ]
         )
@@ -209,7 +210,6 @@ def get_event_buttons(interface: abstractInterface) -> ButtonBar:
             [
                 group_allocation_button,
                 patrol_boat_allocation_button,
-                report_link_button,
             ]
         )
 

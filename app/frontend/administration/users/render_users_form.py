@@ -24,7 +24,7 @@ from app.objects.abstract_objects.abstract_tables import RowInTable, Table
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________,
+    _______________, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_text import bold, Heading
 from app.objects.abstract_objects.abstract_buttons import (
@@ -79,7 +79,8 @@ def display_form_edit_list_of_users(
     return Form(
         [
             ListOfLines(
-                [
+                [MainMenuBar("Administration"),
+                 _______________,
                     nav_buttons,
                     header_text,
                     _______________,

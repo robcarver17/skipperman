@@ -29,7 +29,7 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    Line,
+    Line, MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_text import Heading, bold
 from app.objects.attendance import unknown
@@ -55,7 +55,9 @@ def display_instructor_attendance(interface: abstractInterface):
     save_buttons = get_save_buttons(interface, event=event, group=group, day=day)
     return Form(
         ListOfLines(
-            [
+            [MainMenuBar("Instructors"),
+
+                 _______________,
                 nav_bar,
                 _______________,
                 _______________,

@@ -78,7 +78,9 @@ def save_all_information_in_rota_page(interface: abstractInterface):
         )
     )
 
-    for  volunteer_at_event_data in dict_of_volunteers_at_event_with_event_data.list_of_information_per_volunteer:
+    for (
+        volunteer_at_event_data
+    ) in dict_of_volunteers_at_event_with_event_data.list_of_information_per_volunteer:
         update_details_from_form_for_volunteer_at_event(
             interface=interface,
             volunteer_at_event_data=volunteer_at_event_data,

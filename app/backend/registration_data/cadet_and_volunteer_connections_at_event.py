@@ -4,7 +4,7 @@ from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
 )
 from app.backend.registration_data.volunteer_registration_data import (
-    is_volunteer_already_at_event,
+    is_volunteer_at_event,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -133,11 +133,10 @@ def get_list_of_volunteers_associated_with_cadet_at_event(
     volunteers = [
         volunteer
         for volunteer in list_of_volunteers
-        if is_volunteer_already_at_event(
+        if is_volunteer_at_event(
             object_store=object_store, event=event, volunteer=volunteer
         )
     ]
-
     return ListOfVolunteers(volunteers)
 
 

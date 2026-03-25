@@ -8,6 +8,7 @@ from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.backend.cadets_at_event.add_unregistered_partner_cadet import (
     add_unregistered_partner_cadet,
     get_registered_two_handed_partner_name_for_cadet_at_event,
+    add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages,
 )
 from app.objects.partners import from_partner_name_to_cadet
 
@@ -99,16 +100,29 @@ def process_form_when_cadet_chosen_as_partner(
         interface=interface, new_cadet=cadet
     )
     if check_if_registered:
-        interface.log_error(
-            "%s is already attending the event - add them as a two handed partner from the dropdown"
-            % cadet.name
-        )
+        attempt_to_link_existing_cadet(interface=interface,  new_cadet=cadet)
         return return_to_allocation_pages(interface)
 
     return add_matched_partner_cadet_with_duplicate_registration(
         interface=interface, new_cadet=cadet
     )
 
+def attempt_to_link_existing_cadet(interface: abstractInterface, new_cadet: Cadet):
+    interface.log_error(
+        "%s is already attending the event - will try to add as partner"
+        % new_cadet.name
+    )
+    original_cadet, __ = get_primary_cadet_and_partner_name(interface)
+    event = get_event_from_state(interface)
+    messages = add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages(interface=interface,
+                                                                         event=event,
+                                                                         original_cadet=original_cadet,
+                                                                         new_cadet=new_cadet)
+
+    for msg in messages:
+        interface.log_error(msg)
+
+    interface.clear()
 
 def add_matched_partner_cadet_with_duplicate_registration(
     interface: abstractInterface, new_cadet: Cadet

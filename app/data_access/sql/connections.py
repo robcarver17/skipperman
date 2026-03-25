@@ -216,7 +216,7 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
         finally:
             self.close()
 
-        return [item[0] for item in raw_list]
+        return [str(item[0]) for item in raw_list]
 
     def read(self) -> ListOfCadetVolunteerAssociationsWithIds:
         try:

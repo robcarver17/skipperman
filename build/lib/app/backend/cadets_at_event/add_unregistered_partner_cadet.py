@@ -1,14 +1,7 @@
 from typing import List
 
-from app.backend.club_boats.cadets_with_club_dinghies_at_event import get_dict_of_cadets_and_club_dinghies_at_event, \
-    add_club_dinghy_for_cadet_on_day
-from app.backend.groups.cadets_with_groups_at_event import (
-    add_cadet_to_group_on_day,
-    get_days_and_groups_for_cadet_at_event,
-)
-from app.backend.boat_classes.cadets_with_boat_classes_at_event import (
-    add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet,
-)
+from app.backend.boat_classes.update_boat_information import link_two_cadets_in_new_partnership_return_message_if_fails
+from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import get_dict_of_all_event_info_for_cadets
 from app.backend.registration_data.cadet_registration_data import (
     add_new_cadet_to_event_from_row_in_registration_data,
 )
@@ -22,8 +15,9 @@ from app.backend.registration_data.raw_mapped_registration_data import (
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet
-from app.objects.composed.cadets_at_event_with_groups import DaysAndGroups
-from app.objects.composed.people_at_event_with_club_dinghies import DictOfDaysAndClubDinghiesAtEventForPerson
+from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import \
+    CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay
+from app.objects.composed.cadets_with_all_event_info import AllEventInfoForCadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.utilities.exceptions import NoMoreData
@@ -73,20 +67,15 @@ def add_unregistered_partner_cadet(
     )
 
     print("Adding %s as partner " % new_cadet)
-    add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
+    msgs = add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages(
         interface=interface,
         event=event,
         original_cadet=original_cadet,
         new_cadet=new_cadet,
     )
 
-    print("Adding %s to sailing groups " % new_cadet)
-    add_new_cadet_to_groups_and_club_dinghies(
-        interface=interface,
-        new_cadet=new_cadet,
-        original_cadet=original_cadet,
-        event=event,
-    )
+    for msg in msgs:
+        interface.log_error(msg)
 
 
 def add_cloned_row_to_raw_registration_data_and_return_row(
@@ -116,27 +105,62 @@ def add_cloned_row_to_raw_registration_data_and_return_row(
     return new_row
 
 
-def add_two_handed_partnership_on_for_new_cadet_when_have_dinghy_for_existing_cadet(
+def add_two_handed_partnership_for_new_cadet_modifies_groups_club_boats_class_returns_messages(
     interface: abstractInterface,
     event: Event,
     original_cadet: Cadet,
     new_cadet: Cadet,
-):
+) -> List[str]:
     ## We only need to include the original cadet as will copy over
     list_of_days = get_list_of_days_given_original_cadet(
         object_store=interface.object_store,
         event=event,
         original_cadet=original_cadet,
     )
+    all_event_data = get_dict_of_all_event_info_for_cadets(object_store=interface.object_store, event=event)
+
+    data_for_cadet= all_event_data.event_data_for_cadet(original_cadet)
+    data_for_new_partner = all_event_data.event_data_for_cadet(new_cadet)
+
+    msgs=[]
     for day in list_of_days:
-        add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(
+        ## already partnered?
+        if is_cadet_already_partnered_on_day(
+            data_for_cadet=data_for_cadet, day=day
+        ):
+            msgs.append("Cadet %s is already partnered on %s, not adding new partner that day" % (original_cadet, day))
+            continue
+
+        if is_cadet_already_partnered_on_day(
+            data_for_cadet=data_for_new_partner, day=day
+        ):
+            msgs.append("Cadet %s is already partnered on %s, not adding new partner that day" % (original_cadet, day))
+            continue
+
+
+        cadet_boat_class_group_club_dinghy_and_partner_on_day=CadetBoatClassClubDinghyGroupAndPartnerAtEventOnDay(
+            day=day,
+            cadet=original_cadet,
+            partner_cadet=new_cadet,
+            sail_number=data_for_cadet.days_and_boat_class.sail_number_on_day(day),
+            club_dinghy=data_for_cadet.days_and_club_dinghies.dinghy_on_day(day),
+            boat_class=data_for_cadet.days_and_boat_class.boat_class_on_day(day),
+            group=data_for_cadet.days_and_groups.group_on_day(day)
+        )
+        print(cadet_boat_class_group_club_dinghy_and_partner_on_day)
+        msg = link_two_cadets_in_new_partnership_return_message_if_fails(
             interface=interface,
             event=event,
-            original_cadet=original_cadet,
-            new_cadet=new_cadet,
-            day=day,
+            cadet_boat_class_group_club_dinghy_and_partner_on_day=cadet_boat_class_group_club_dinghy_and_partner_on_day
         )
+        if len(msg)>0:
+            msgs.append(msg)
 
+    return msgs
+
+def is_cadet_already_partnered_on_day(data_for_cadet: AllEventInfoForCadet, day: Day ):
+
+    return data_for_cadet.days_and_boat_class.has_valid_partner_on_day(day)
 
 def get_list_of_days_given_original_cadet(
     object_store: ObjectStore,
@@ -150,73 +174,4 @@ def get_list_of_days_given_original_cadet(
 
     return list_of_days
 
-
-def add_new_cadet_to_groups_and_club_dinghies(
-    interface: abstractInterface,
-    original_cadet: Cadet,
-    new_cadet: Cadet,
-    event: Event,
-):
-    list_of_days = get_list_of_days_given_original_cadet(
-        object_store=interface.object_store,
-        event=event,
-        original_cadet=original_cadet,
-    )
-    original_cadet_groups = get_days_and_groups_for_cadet_at_event(
-        object_store=interface.object_store, event=event, cadet=original_cadet
-    )
-    club_boats_at_event_for_original_cadet = get_dict_of_cadets_and_club_dinghies_at_event(
-        object_store=interface.object_store,
-        event=event
-    ).club_dinghys_for_person(original_cadet)
-
-    for day in list_of_days:
-        add_new_cadet_to_same_group_as_original_cadet_on_day(
-            interface=interface,
-            event=event,
-            original_cadet_groups=original_cadet_groups,
-            new_cadet=new_cadet,
-            day=day,
-        )
-        add_new_cadet_with_same_club_boat_as_original_cadet_on_day(
-            interface=interface,
-            event=event,
-            club_boats_at_event_for_original_cadet=club_boats_at_event_for_original_cadet,
-            new_cadet=new_cadet,
-            day=day,
-        )
-
-
-def add_new_cadet_to_same_group_as_original_cadet_on_day(
-    interface: abstractInterface,
-    original_cadet_groups: DaysAndGroups,
-    new_cadet: Cadet,
-    day: Day,
-    event: Event,
-):
-    group = original_cadet_groups.group_on_day(day)
-
-    add_cadet_to_group_on_day(
-        interface=interface, event=event, cadet=new_cadet, group=group, day=day
-    )
-
-
-def add_new_cadet_with_same_club_boat_as_original_cadet_on_day(
-    interface: abstractInterface,
-    club_boats_at_event_for_original_cadet: DictOfDaysAndClubDinghiesAtEventForPerson,
-    new_cadet: Cadet,
-    day: Day,
-    event: Event,
-):
-    boat = club_boats_at_event_for_original_cadet.dinghy_on_day(day, default=None)
-    if boat is None:
-        return
-
-    add_club_dinghy_for_cadet_on_day(
-        interface=interface,
-        event=event,
-        cadet=new_cadet,
-        club_dinghy=boat,
-        day=day
-    )
 

@@ -19,8 +19,8 @@ You will probably see a warning that it looks like there are existing sailors wi
 
 Once you have chosen the sailor they will be registered to the event with the existing sailors registration details, boat class, sail number, club boat and training group copied across (where relevant).
 
-If they are already registered you will get an error message - sailors who are already registered should be paired up by selecting them as two-handed partners from the dropdown menu in the [group allocation page](group_allocation_help.md).
-
+If they are already registered at the event then they will be paired up as a new partnership, but only on days where (i) they have no existing partner, and (ii) both sailors are available. 
+ 
 ## If this is a new sailor - not on Skipperman
 
  **It's really important that you don't add duplicate cadets to the Skipperman data**

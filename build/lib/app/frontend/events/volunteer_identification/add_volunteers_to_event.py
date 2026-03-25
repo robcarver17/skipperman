@@ -23,7 +23,7 @@ from app.backend.volunteers.volunteers_at_event import (
     add_volunteer_at_event,
 )
 from app.backend.registration_data.volunteer_registration_data import (
-    is_volunteer_already_at_event,
+    is_volunteer_at_event,
 )
 from app.frontend.shared.events_state import get_event_from_state
 from app.frontend.events.volunteer_identification.track_state_in_volunteer_allocation import (
@@ -88,7 +88,7 @@ def process_identified_volunteer_at_event(
 def process_identified_volunteer_at_event_with_valid_registered_cadets(
     interface: abstractInterface, event: Event, volunteer: Volunteer
 ) -> Union[Form, NewForm]:
-    already_added = is_volunteer_already_at_event(
+    already_added = is_volunteer_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
     if already_added:

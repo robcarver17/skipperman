@@ -20,21 +20,6 @@ def get_dict_of_cadets_and_boat_classes_and_partners_at_events(
     )
 
 
-def add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet(
-    interface: abstractInterface,
-    day: Day,
-    event: Event,
-    original_cadet: Cadet,
-    new_cadet: Cadet,
-):
-    interface.update(
-        interface.object_store.data_api.data_list_of_cadets_with_dinghies_at_event.add_two_handed_partnership_on_day_for_new_cadet_when_have_dinghy_for_existing_cadet,
-        event_id=event.id,
-        day=day,
-        original_cadet_id=original_cadet.id,
-        new_cadet_id=new_cadet.id,
-    )
-
 
 def remove_cadet_from_boats_data_across_days_and_return_messages(
     interface: abstractInterface, event: Event, cadet: Cadet

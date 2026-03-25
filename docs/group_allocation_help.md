@@ -55,8 +55,10 @@ The following should also be included for training events:
 - Can swim 25m 
 - Has bouyancy aid 
 
+
 The following should be used at racing events: 
 - Boat class 
+- Wants Coached racing (if available)
 
 The following are not recommended for use, but are kept for backwards compatibility with previous events:
 - Highest qualification (We advise this isn't used as it's better to use the Skipperman qualification record)
@@ -118,7 +120,7 @@ Sail numbers are autofilled if the sail number field has been included in the fi
 
 To create a sailing partnership, just select the 'allocate two handed partner' dropdown. You will see a list of sailors who can be made partners and put on the same boat. 
 
-If you see a * next to a sailors name in the dropdown, that means there is a scheduling conflict - the sailors aren't at the event on the same day. If you add them as a partner, you will need to [edit event days individually](#dealing-with-different-days) to deal with this.
+If you see a * next to a sailors name in the dropdown, that means there is a scheduling conflict - the sailors aren't at the event on the same day. If you add them as a partner, you will need to subsequently [edit event days individually](#dealing-with-different-days) to deal with this.
 
 If a sailor isn't listed at all in the dropdown, that means there are no days at the event when both the sailor and their potential partner are there.
 
@@ -147,12 +149,12 @@ Once this is done, everything in Isabelle's registration record will be duplicat
 
 More help on adding sailing partners can be found [here](help_adding_partner.md).
 
-Note: Why do we see the `Add Hattie.. as new cadet` button for Hector? It's because Skipperman doesn't know that Harriet and Hattie are the same sailor. If you tried to add Hattie as a new registrant, then you would eithier:
+Note: Why do we see the `Add Hattie.. as new cadet` button for Hector? It's because Skipperman doesn't know that Harriet and Hattie are the same sailor. If you select 'Add Hattie.. as new cadet' then choose the existing record for Harriet it will create a new partnership.
 
-- add Hattie as a duplicate cadet - the system would warn you about this and hopefully you wouldn't do it! 
-- try and register Harriet to the event. This will throw up an error since Harriet is already registered.
 
 ## Subsequent changes to sailing partners
+
+Once sailors are joined in a partnership, you will only see edit details for one of the partners. 
 
 If you make any change to one half of a sailing partnership (boats, sail numbers or training groups), it will automatically be applied to the other member.
 
@@ -187,7 +189,9 @@ Click on the sailors name again, or on anyone elses nam, and the additional info
 
 # Changing the sort order
 
-It can sometimes be helpful to sort the sailors table in different ways. Click the `Change sort order` button. You can move the various categories up and down, and then click `Back` to return to the allocation screen.
+It can sometimes be helpful to sort the sailors table in different ways. Click the `Change sort order` button. You can move the various categories up and down, and then click `Save edits and go back` to return to the allocation screen.
+
+By default we show paired sailors in a partnership together; you can change this here as well.
 
 # Seeing a summary
 

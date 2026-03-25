@@ -21,7 +21,7 @@ from app.objects.partners import (
     from_cadet_id_to_partner_cadet,
     no_partner_allocated,
     from_partner_cadet_to_id_or_string,
-    NoCadetPartner, no_partnership_given_partner_cadet,
+    NoCadetPartner, no_partnership_given_partner_cadet, valid_partnership_given_partner_cadet,
 )
 from app.objects.utilities.utils import most_common, flatten
 
@@ -69,21 +69,6 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
         return list(self.keys())
 
 
-    def allocate_partner_for_cadet_on_day(
-        self, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
-    ):
-        boat_class_and_partner_on_day = self.boat_class_and_partner_on_day(day)
-        boat_class_and_partner_on_day.partner_cadet = cadet_partner
-
-    def update_boat_class_and_sail_number_on_day(
-        self, day: Day, boat_class: BoatClass, sail_number: str
-    ):
-        boat_class_and_partner_on_day = self.boat_class_and_partner_on_day(day)
-        boat_class_and_partner_on_day.boat_class = boat_class
-        boat_class_and_partner_on_day.sail_number = sail_number
-
-        self[day] = boat_class_and_partner_on_day
-
     def most_common_boat_class(self) -> BoatClass:
         list_of_boat_classes = [
             boat_class_and_partner.boat_class
@@ -93,12 +78,23 @@ class DictOfDaysBoatClassAndPartners(Dict[Day, BoatClassAndPartnerAtEventOnDay])
         return most_common(list_of_boat_classes, no_boat_class)
 
     def most_common_partner(self) -> Cadet:
+        list_of_partners = self.list_of_partners_across_days()
+
+        return most_common(list_of_partners, default=no_partner_allocated)
+
+    def has_multiple_partners(self):
+        list_of_partners = self.list_of_partners_across_days()
+
+        return len(set(list_of_partners))>1
+
+    def list_of_partners_across_days(self):
         list_of_partners = [
             boat_class_and_partner.partner_cadet
             for boat_class_and_partner in self.values()
+            if valid_partnership_given_partner_cadet(boat_class_and_partner.partner_cadet)
         ]
 
-        return most_common(list_of_partners, default=no_partner_allocated)
+        return list_of_partners
 
     def get_most_common_partner_id_across_days(self,  default=NO_CADET_ID) -> str:
         partner = self.most_common_partner()
@@ -240,33 +236,6 @@ class ListOfCadetBoatClassAndPartnerAtEventOnDay(
 
 
 class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPartners]):
-    def create_fresh_two_handed_partnership(
-        self, cadet: Cadet, partner_cadet: Cadet, day: Day
-    ):
-        print(
-            "Partnering original cadet %s and new cadet %s"
-            % (cadet.name, partner_cadet.name)
-        )
-        original_cadet_details = self.boat_classes_and_partner_for_cadet(
-            cadet
-        ).boat_class_and_partner_on_day(day)
-        self.update_boat_class_and_sail_number_on_day(
-            cadet=partner_cadet,
-            day=day,
-            boat_class=original_cadet_details.boat_class,
-            sail_number=original_cadet_details.sail_number,
-        )
-
-        self.allocate_partner_for_cadet_on_day(
-            cadet=cadet, cadet_partner=partner_cadet, day=day
-        )
-        self.allocate_partner_for_cadet_on_day(
-            cadet=partner_cadet, cadet_partner=cadet, day=day
-        )
-
-    def breakup_partnership(self, cadet: Cadet, partner_cadet: Cadet, day: Day):
-        self.unallocate_partner_for_cadet_on_day(cadet=cadet, day=day)
-        self.unallocate_partner_for_cadet_on_day(cadet=partner_cadet, day=day)
 
     def unique_sorted_list_of_boat_classes_at_event(
         self, sorted_list_of_boat_classes: ListOfBoatClasses
@@ -285,31 +254,6 @@ class DictOfCadetsAndBoatClassAndPartners(Dict[Cadet, DictOfDaysBoatClassAndPart
 
         return ListOfBoatClasses(sorted_list)
 
-    def unallocate_partner_for_cadet_on_day(self, cadet: Cadet, day: Day):
-        self.allocate_partner_for_cadet_on_day(
-            cadet=cadet, day=day, cadet_partner=no_partner_allocated
-        )
-
-    def allocate_partner_for_cadet_on_day(
-        self, cadet: Cadet, day: Day, cadet_partner: Union[NoCadetPartner, Cadet]
-    ):
-        print(
-            "Partnering %s with %s on %s" % (cadet.name, cadet_partner.name, day.name)
-        )
-        boat_class_and_partners = self.boat_classes_and_partner_for_cadet(cadet=cadet)
-        boat_class_and_partners.allocate_partner_for_cadet_on_day(
-            day=day, cadet_partner=cadet_partner
-        )
-        self[cadet] = boat_class_and_partners
-
-    def update_boat_class_and_sail_number_on_day(
-        self, cadet: Cadet, day: Day, boat_class: BoatClass, sail_number: str
-    ):
-        boat_class_and_partners = self.boat_classes_and_partner_for_cadet(cadet=cadet)
-        boat_class_and_partners.update_boat_class_and_sail_number_on_day(
-            day=day, boat_class=boat_class, sail_number=sail_number
-        )
-        self[cadet] = boat_class_and_partners
 
     def boat_classes_and_partner_for_cadet(
         self, cadet: Cadet, default=arg_not_passed
@@ -398,6 +342,10 @@ class ListOfBoatGroupings:
         return self.does_cadet_with_id_have_edit_rights_given_partner_id(cadet.id, partner_id)
 
     def does_cadet_have_edit_rights_across_days(self, cadet: Cadet):
+        if self.has_multiple_partners(cadet):
+            ### can't edit
+            return False
+
         partner_id = self.partner_id_for_cadet_across_days(cadet)
 
         return self.does_cadet_with_id_have_edit_rights_given_partner_id(cadet.id, partner_id)
@@ -408,6 +356,9 @@ class ListOfBoatGroupings:
             return True
         else:
             return self.list_of_boat_groupings.does_cadet_with_id_have_edit_rights_given_partner_id(cadet_id=cadet_id, partner_id=partner_id)
+
+    def has_multiple_partners(self, cadet: Cadet):
+        return self.boat_classes_and_partner_for_cadet(cadet).has_multiple_partners()
 
     def partner_id_for_cadet_across_days(self, cadet: Cadet):
         return self.boat_classes_and_partner_for_cadet(cadet).get_most_common_partner_id_across_days(default=NO_CADET_ID)

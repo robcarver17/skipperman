@@ -60,7 +60,7 @@ def update_list_of_registration_data_for_volunteers_at_event(
     )
 
 
-def is_volunteer_already_at_event(
+def is_volunteer_at_event(
     object_store: ObjectStore, volunteer: Volunteer, event: Event
 ) -> bool:
     return object_store.data_api.data_list_of_volunteers_at_event.is_volunteer_already_at_event(

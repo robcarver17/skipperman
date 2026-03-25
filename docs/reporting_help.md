@@ -27,3 +27,7 @@ There are also some other ways to get event data out of Skipperman, which can be
 - Clothing requirements for an event with merch - from the [Events / clothing page](clothing_help.md)
 - Tick sheets for instructors from the [Instructors menu option](ticksheets_help.md)
 
+## I want a list of all cadets with ages and colour groups (probably for fancy dress)
+
+1- Generate All event Data dump.
+2- On the 5th tab ('Cadets') if an .xlsx file, or in the 5th block of data if .csv, you will find the columns: Cadet, DOB, Age, Colour group 

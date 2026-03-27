@@ -51,6 +51,7 @@ class ParametersForGetOrSelectVolunteerForm:
     volunteer_is_default: bool = False
     see_all_volunteers: bool = False
     sort_by: str = SORT_BY_NAME_SIMILARITY
+    include_search_button: bool = True
 
     @property
     def list_of_extra_buttons(self):
@@ -192,6 +193,9 @@ def get_list_of_main_buttons(parameters: ParametersForGetOrSelectVolunteerForm) 
         main_buttons = [check_for_me_volunteer_button, add_volunteer_button]
     else:
         main_buttons = [check_confirm_volunteer_button]
+
+    if parameters.include_search_button:
+        main_buttons.append(search_button)
 
     return Line(main_buttons)
 
@@ -346,6 +350,7 @@ def response_requires_new_form(interface: abstractInterface):
             check_confirm_volunteer_button,
             check_for_me_volunteer_button,
             refresh_list_button,
+            search_button
         ],
     )
 
@@ -367,6 +372,8 @@ def generic_post_response_to_add_or_select_volunteer_when_returning_new_form(
         ## verify results already in form, display form again, allow final this time
         parameters.see_all_volunteers = True
         parameters.sort_by = SORT_BY_NAME_SIMILARITY
+    elif search_button.pressed(last_button_pressed):
+        pass
 
     elif check_if_button_in_list_was_pressed(
         last_button_pressed=last_button_pressed,
@@ -418,6 +425,7 @@ FINAL_VOLUNTEER_ADD_BUTTON_LABEL = (
     "Yes - these details are correct - add this new volunteer"
 )
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
+SEARCH_BUTTON_LABEL = "Search for volunteer with similar name"
 
 add_volunteer_button = Button(FINAL_VOLUNTEER_ADD_BUTTON_LABEL)
 
@@ -428,3 +436,4 @@ check_for_me_volunteer_button = Button(CHECK_FOR_ME_VOLUNTEER_BUTTON_LABEL)
 check_confirm_volunteer_button = Button(CONFIRM_CHECKED_VOLUNTEER_BUTTON_LABEL)
 
 refresh_list_button = Button(REFRESH_LIST_BUTTON_LABEL)
+search_button = Button(SEARCH_BUTTON_LABEL)

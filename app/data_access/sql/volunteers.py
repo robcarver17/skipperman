@@ -85,7 +85,8 @@ class SqlDataListOfVolunteers(GenericSqlData):
             raise Exception(
                 "Volunteer %s with identical name already exists!" % str(volunteer)
             )
-
+        if volunteer.names_too_short():
+            raise Exception("Eithier first or surname is too short for %s" % volunteer)
         volunteer.id = str(self.next_available_volunteer_id())
 
         try:

@@ -50,7 +50,7 @@ def add_volunteer_to_event_with_availability(
     if no_availability:
         availability = DaySelector.create_empty()
     else:
-        availability = event.day_selector_for_days_in_event()
+        availability = event.day_selector_for_volunteer_days_in_event()
 
     registration_data = RegistrationDataForVolunteerAtEvent(
         availablity=availability, list_of_associated_cadets=ListOfCadets([])

@@ -35,8 +35,13 @@ def get_availability_checkbox(
     input_label="",
     line_break: bool = False,
     include_all: bool = False,
+    exclude_registration_date: bool = False
 ) -> checkboxInput:
-    possible_days = event.days_in_event()
+    if exclude_registration_date:
+        possible_days =event.volunteer_days_in_event()
+    else:
+        possible_days = event.days_in_event()
+
     dict_of_labels = dict([(day.name, day.name) for day in possible_days])
     dict_of_checked = dict(
         [(day.name, availability.get(day, False)) for day in possible_days]
@@ -58,6 +63,7 @@ def get_availablity_from_form(
     event: Event,
     input_name: str,
     default=MISSING_FROM_FORM,
+        exclude_registration_date: bool = False
 ) -> DaySelector:
     list_of_days_ticked_in_form = interface.value_of_multiple_options_from_form(
         input_name, default=MISSING_FROM_FORM
@@ -65,7 +71,11 @@ def get_availablity_from_form(
     if list_of_days_ticked_in_form == MISSING_FROM_FORM:
         return default
 
-    possible_days = event.days_in_event()
+    if exclude_registration_date:
+        possible_days =event.volunteer_days_in_event()
+    else:
+        possible_days = event.days_in_event()
+
     day_selector = DaySelector({})
     all_ticked = ALL_AVAILABLE in list_of_days_ticked_in_form
 

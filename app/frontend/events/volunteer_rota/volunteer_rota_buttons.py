@@ -166,11 +166,11 @@ sort_by_day_marker = "SortByDay"
 
 def get_buttons_for_days_at_event(event: Event, ready_to_swap: bool):
     if ready_to_swap:
-        return event.days_in_event_as_list_of_string()
+        return event.volunteer_days_in_event_as_list_of_string()
     else:
         return [
             Line([button_for_day(day), " (click to sort group/role)"])
-            for day in event.days_in_event()
+            for day in event.volunteer_days_in_event()
         ]
 
 

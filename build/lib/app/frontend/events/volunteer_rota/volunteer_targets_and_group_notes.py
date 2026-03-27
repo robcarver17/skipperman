@@ -64,7 +64,7 @@ def get_volunteer_targets_table(
 
 def get_top_row_of_volunteer_targets_table(event: Event) -> RowInTable:
     actual_for_days_at_event_as_str = [
-        "%s (allocated)" % day.name for day in event.days_in_event()
+        "%s (allocated)" % day.name for day in event.volunteer_days_in_event()
     ]
     return RowInTable(
         ["Role"]
@@ -98,7 +98,7 @@ def get_row_for_volunteer_targets_at_event(
 ) -> RowInTable:
     role_name = row_of_data.role.name
     daily_counts = row_of_data.daily_counts
-    daily_values = [daily_counts[day] for day in event.days_in_event()]
+    daily_values = [daily_counts[day] for day in event.volunteer_days_in_event()]
     target_box = get_target_box_in_form(
         role=role_name, target=row_of_data.target, ready_to_swap=ready_to_swap
     )

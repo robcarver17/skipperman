@@ -145,7 +145,7 @@ def get_availability_filter_from_state(interface: abstractInterface) -> Dict[str
 
 def default_availability_filter(interface: abstractInterface) -> Dict[str, str]:
     event = get_event_from_state(interface=interface)
-    return dict([(day.name, FILTER_ALL) for day in event.days_in_event()])
+    return dict([(day.name, FILTER_ALL) for day in event.volunteer_days_in_event()])
 
 
 def get_sort_by_day_from_state(interface: abstractInterface) -> Union[str, Day, object]:

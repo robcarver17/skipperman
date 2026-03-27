@@ -70,7 +70,7 @@ def verify_volunteer_and_warn(
     object_store: ObjectStore, volunteer: Volunteer, cadet: Cadet = arg_not_passed
 ) -> str:
     warn_text = ""
-    if len(volunteer.surname) < 3:
+    if len(volunteer.surname) < 4:
         warn_text += "Surname seems too short. "
     if len(volunteer.first_name) < 3:
         warn_text += "First name seems too short. "

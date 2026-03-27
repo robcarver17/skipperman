@@ -43,7 +43,7 @@ def process_all_warnings_for_patrol_boats(interface: abstractInterface, event: E
 
 def warn_on_double_booking(interface: abstractInterface, event: Event):
     list_of_warnings = []
-    for day in event.days_in_event():
+    for day in event.volunteer_days_in_event():
         list_of_warnings += warn_on_double_booking_on_day(
             interface.object_store, event, day
         )
@@ -120,7 +120,7 @@ def warn_on_pb2_drivers_for_boat(
         warn_on_pb2_drivers_for_boat_on_day(
             object_store=object_store, event=event, patrol_boat=patrol_boat, day=day
         )
-        for day in event.days_in_event()
+        for day in event.volunteer_days_in_event()
     ]
 
     return list_of_warnings

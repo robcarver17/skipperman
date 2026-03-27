@@ -46,6 +46,8 @@ class Volunteer(GenericSkipperManObjectWithIds):
     def similarity_of_names(self, other_volunteer: "Volunteer") -> float:
         return similar(self.name, other_volunteer.name)
 
+    def names_too_short(self):
+        return len(self.first_name)<3 or len(self.surname)<3
 
 class ListOfVolunteers(GenericListOfObjectsWithIds):
     @property

@@ -52,6 +52,7 @@ class ParametersForGetOrSelectCadetForm:
     sort_by: str = SORT_BY_SIMILARITY_BOTH
     similarity_name_threshold: float = SIMILARITY_LEVEL_TO_WARN_NAME
     button_for_non_members: bool = False
+    include_search_button: bool = False
 
     @property
     def list_of_extra_buttons(self):
@@ -187,6 +188,9 @@ def get_list_of_main_buttons(
         main_buttons = [check_confirm_allow_to_add_cadet_button, add_non_member_cadet]
     else:
         main_buttons = [check_confirm_allow_to_add_cadet_button]
+
+    if parameters.include_search_button:
+        main_buttons.append(search_button)
 
     return Line(main_buttons)
 
@@ -356,6 +360,7 @@ def response_requires_new_form(interface: abstractInterface):
             check_confirm_allow_to_add_cadet_button,
             check_cadet_for_me_button,
             refresh_button,
+            search_button
         ],
     )
 
@@ -378,7 +383,8 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
     elif check_cadet_for_me_button.pressed(last_button_pressed):
         parameters.final_add_button = True
         ## verify results already in form, display form again, allow final this time
-
+    elif search_button.pressed(last_button_pressed):
+        pass
     elif see_all_cadets_button.pressed(last_button_pressed):
         ## verify results already in form, display form again, allow final this time
         parameters.see_all_cadets_button = True
@@ -422,7 +428,7 @@ FINAL_CADET_ADD_BUTTON_LABEL = "Yes - these details are correct - add this new c
 SINGLE_NONMEMBER_ADD_BUTTON_LABEL = "Add this cadet as a non-member"
 SEE_ALL_CADETS_BUTTON_LABEL = "Choose from all existing cadets"
 SEE_SIMILAR_CADETS_ONLY_LABEL = "See similar cadets only"
-
+SEARCH_BUTTON_LABEL = "Search for cadets with similar names"
 SKIP_BUTTON_LABEL = "Skip"
 REFRESH_LIST_BUTTON_LABEL = "Refresh list"
 
@@ -430,6 +436,7 @@ REFRESH_LIST_BUTTON_LABEL = "Refresh list"
 add_cadet_button = Button(FINAL_CADET_ADD_BUTTON_LABEL)
 check_cadet_for_me_button = Button(CHECK_CADET_FOR_ME_BUTTON_LABEL)
 check_confirm_allow_to_add_cadet_button = Button(CHECK_CADET_CONFIRM_BUTTON_LABEL)
+search_button = Button(SEARCH_BUTTON_LABEL)
 see_similar_cadets_only_button = Button(SEE_SIMILAR_CADETS_ONLY_LABEL)
 see_all_cadets_button = Button(SEE_ALL_CADETS_BUTTON_LABEL)
 add_non_member_cadet = Button(SINGLE_NONMEMBER_ADD_BUTTON_LABEL)

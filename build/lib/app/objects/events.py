@@ -18,6 +18,7 @@ from app.objects.day_selectors import (
     DaySelector,
 )
 
+NO_REGISTRATION_DATE = datetime.date(1970,1,1)
 
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
@@ -25,6 +26,19 @@ class Event(GenericSkipperManObjectWithIds):
     start_date: datetime.date
     end_date: datetime.date
     id: str = arg_not_passed
+    registration_date: datetime.date = NO_REGISTRATION_DATE
+
+
+    @property
+    def first_date_is_registration(self):
+        return self.registration_date == self.start_date
+
+    @property
+    def first_day_of_volunteer_rota(self):
+        if self.first_date_is_registration:
+            return self.dates_in_event()[1]
+        else:
+            return self.dates_in_event()[0]
 
     @property
     def name(self):
@@ -44,8 +58,11 @@ class Event(GenericSkipperManObjectWithIds):
 
     @classmethod
     def from_date_length_and_name_only(
-        cls, event_name: str, start_date: datetime.date, duration: int
+        cls, event_name: str, start_date: datetime.date, duration: int,
+            first_date_is_registration_date: bool
     ):
+        if len(event_name)<3:
+            raise Exception("Event names must be at least three characters")
         if duration > 7:
             raise Exception("Events cannot be more than one week long")
 
@@ -54,17 +71,30 @@ class Event(GenericSkipperManObjectWithIds):
         else:
             end_date = add_days(start_date, duration - 1)
 
-        return cls(event_name=event_name, start_date=start_date, end_date=end_date)
+        if first_date_is_registration_date:
+            if duration<2:
+                raise Exception("Events with registration days must be at least two days long")
+            else:
+                registration_date = start_date
+        else:
+            registration_date = NO_REGISTRATION_DATE
+
+        return cls(event_name=event_name, start_date=start_date, end_date=end_date, registration_date=registration_date)
 
     def details_as_list_of_str(self):
+        if self.first_date_is_registration:
+            extra =" (%s is registration day)" % self.days_in_event()[0].name
+        else:
+            extra = ""
         return [
             self.event_description,
-            "From %s to %s, %d days: %s"
+            "From %s to %s, %d days: %s %s"
             % (
                 str(self.start_date),
                 str(self.end_date),
                 self.duration,
                 self.days_in_event_as_single_string(),
+                extra
             ),
         ]
 
@@ -141,9 +171,19 @@ class Event(GenericSkipperManObjectWithIds):
             dict([(day, day in weekdays_covered) for day in all_possible_days])
         )
 
-    def day_selector_for_days_in_event_excluding_past_days(self) -> DaySelector:
-        dates_in_event = self.dates_in_event()
-        weekdays_in_event = self.days_in_event()
+    def day_selector_for_volunteer_days_in_event(self) -> DaySelector:
+        weekdays_covered = self.volunteer_days_in_event()
+        return DaySelector(
+            dict([(day, day in weekdays_covered) for day in all_possible_days])
+        )
+
+    def day_selector_for_days_in_event_excluding_past_days(self, exclude_registration_date: bool = False) -> DaySelector:
+        if exclude_registration_date:
+            dates_in_event = self.volunteer_dates_in_event()
+            weekdays_in_event = self.volunteer_days_in_event()
+        else:
+            dates_in_event = self.dates_in_event()
+            weekdays_in_event = self.days_in_event()
 
         return DaySelector(
             dict(
@@ -165,11 +205,24 @@ class Event(GenericSkipperManObjectWithIds):
 
         return names_of_days
 
+    def volunteer_days_in_event_as_list_of_string(self) -> List[str]:
+        weekdays_in_event = self.volunteer_days_in_event()
+        names_of_days = [day.name for day in weekdays_in_event]
+
+        return names_of_days
+
     def days_in_event(self) -> List[Day]:
         date_list = self.dates_in_event()
         weekdays = [day_given_datetime(some_day) for some_day in date_list]
 
         return weekdays
+
+    def volunteer_days_in_event(self):
+        days_in_event = self.days_in_event()
+        if self.first_date_is_registration:
+            return days_in_event[1:]
+        else:
+            return days_in_event
 
     def dates_in_event(self) -> list:
         some_date = self.start_date
@@ -179,6 +232,12 @@ class Event(GenericSkipperManObjectWithIds):
             some_date += datetime.timedelta(days=1)
 
         return date_list
+
+    def volunteer_dates_in_event(self) -> list:
+        if self.first_date_is_registration:
+            return self.dates_in_event()[1:]
+        else:
+            return self.dates_in_event()
 
     def in_the_past(self) -> bool:
         date_diff = datetime.date.today() - self.end_date
@@ -301,8 +360,8 @@ def list_of_events_excluding_one_event_and_past_events(
     return list_of_events
 
 
-def get_past_days_selector_from_event_or_all_days_if_missing(event: Event):
-    day_selector = event.day_selector_for_days_in_event_excluding_past_days()
+def get_past_days_selector_from_event_or_all_days_if_missing(event: Event, exclude_registration_date: bool = False):
+    day_selector = event.day_selector_for_days_in_event_excluding_past_days(exclude_registration_date)
     if len(day_selector.days_available()) == 0:
         return event.day_selector_for_days_in_event()
     else:

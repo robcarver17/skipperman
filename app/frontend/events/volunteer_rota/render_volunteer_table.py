@@ -143,7 +143,7 @@ def get_first_part_of_row_for_volunteer_at_event(
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> list:
-    name_button = get_volunteer_name_cell(interface=interface, volunteer=volunteer)
+    name_button = get_volunteer_name_cell(interface=interface, volunteer_data_at_event=volunteer_data_at_event)
     location = get_location_button(
         interface=interface,
         volunteer_data_at_event=volunteer_data_at_event,
@@ -173,15 +173,15 @@ def get_first_part_of_row_for_volunteer_at_event(
 
 
 def get_volunteer_name_cell(
-    interface: abstractInterface, volunteer: Volunteer
+    interface: abstractInterface, volunteer_data_at_event: AllEventDataForVolunteer
 ) -> ListOfLines:
     ready_to_swap = is_ready_to_swap(interface)
-
+    volunteer = volunteer_data_at_event.volunteer
     if ready_to_swap:
         return ListOfLines([volunteer.name])
 
     volunteer_button, other_material = get_volunteer_button_and_other_material(
-        interface=interface, volunteer=volunteer
+        interface=interface, volunteer_data_at_event=volunteer_data_at_event
     )
     raincheck_button = get_make_unavailable_button_for_volunteer_across_days(volunteer)
     remove_role_button = get_remove_role_button_for_volunteer_across_days(volunteer)
@@ -190,9 +190,11 @@ def get_volunteer_name_cell(
     return ListOfLines([volunteer_button, other_material, line_of_buttons]).add_Lines()
 
 
+
 def get_volunteer_button_and_other_material(
-    interface: abstractInterface, volunteer: Volunteer
+    interface: abstractInterface, volunteer_data_at_event: AllEventDataForVolunteer
 ) -> Tuple[Button, str]:
+    volunteer = volunteer_data_at_event.volunteer
     if volunteer_is_selected(interface, volunteer):
         event = get_event_from_state(interface)
         other_material = get_volunteer_history_for_selected_volunteer(
@@ -202,6 +204,9 @@ def get_volunteer_button_and_other_material(
     else:
         other_material = ""
         volunteer_label = volunteer.name
+
+    if volunteer_data_at_event.unavailable_on_all_days():
+        other_material+="Parent on site, not volunteering on any days"
 
     volunteer_button = Button(
         label=volunteer_label, value=get_button_value_for_volunteer_selection(volunteer)

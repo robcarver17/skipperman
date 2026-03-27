@@ -25,6 +25,7 @@ from app.objects.abstract_objects.abstract_form import (
     dateInput,
     intInput,
     listInput,
+yes_no_radio,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -69,14 +70,14 @@ def get_add_event_form_with_information_passed(
         interface=interface, event=event_and_text.event
     )
     form_is_blank = event_and_text.is_default
-    verification_line = Line(event_and_text.verification_text)
+    verification_lines = ListOfLines(event_and_text.verification_text).add_Lines()
     footer_buttons = get_footer_buttons(form_is_blank)
     list_of_elements_inside_form = ListOfLines(
         [
             Heading("Add a new event", centred=True, size=4),
             _______________,
-            form_entries,
-            verification_line,
+            form_entries]+
+            verification_lines+[
             footer_buttons,
         ]
     )
@@ -126,12 +127,17 @@ def form_fields_for_add_event(
         input_name=EVENT_LENGTH_DAYS,
         value=event.duration,
     )
-
+    first_day_is_registration = yes_no_radio(
+        input_label="First day of event is registration (no volunteer rota)",
+        input_name=FIRST_DAY_IS_REGISTRATION,
+        default_is_yes=event.first_date_is_registration
+    )
     list_of_form_entries = [
         event_name,
         heading,
         start_date,
         days,
+        first_day_is_registration,
         _______________,
     ]
 
@@ -165,24 +171,26 @@ def process_form_when_checking_event(
 ) -> EventAndVerificationText:
     try:
         event = get_event_from_form(interface)
-        verify_text = verify_event_and_warn(
+        list_of_verify_text = verify_event_and_warn(
             object_store=interface.object_store, event=event
         )
     except Exception as e:
-        verify_text = "Doesn't appear to be a valid event: error %s" % str(e)
+        list_of_verify_text = ["Doesn't appear to be a valid event: error %s" % str(e)]
 
         event = default_event
 
-    return EventAndVerificationText(event=event, verification_text=verify_text)
+    return EventAndVerificationText(event=event, verification_text=list_of_verify_text)
 
 
 def get_event_from_form(interface) -> Event:
     event_name = interface.value_from_form(EVENT_NAME)
     start_date = interface.value_from_form(EVENT_START_DATE, value_is_date=True)
     duration = int(interface.value_from_form(EVENT_LENGTH_DAYS))
+    first_date_is_registration_date = interface.true_if_radio_was_yes(FIRST_DAY_IS_REGISTRATION)
 
     event = Event.from_date_length_and_name_only(
-        event_name=event_name, start_date=start_date, duration=duration
+        event_name=event_name, start_date=start_date, duration=duration,
+        first_date_is_registration_date=first_date_is_registration_date
     )
 
     return event
@@ -212,7 +220,7 @@ EVENT_NAME = "event_name"
 EVENT_START_DATE = "event_start_date"
 EVENT_LENGTH_DAYS = "event_length_days"
 EVENT_CONTAINS = "event_contains"
-
+FIRST_DAY_IS_REGISTRATION = "first_day_is_registration"
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(

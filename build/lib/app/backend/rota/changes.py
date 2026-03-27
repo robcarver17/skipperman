@@ -41,6 +41,7 @@ def update_role_and_group_at_event_for_volunteer_on_all_days_when_available(
     availability = get_availability_volunteer_at_event(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )
+
     for day in availability.days_available():
         update_role_and_group_at_event_for_volunteer_on_day(
             interface=interface,

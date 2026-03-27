@@ -1,6 +1,7 @@
 import datetime
 import re
 from dataclasses import dataclass
+from typing import List
 
 from app.data_access.store.object_store import ObjectStore
 
@@ -9,8 +10,19 @@ from app.backend.events.list_of_events import get_sorted_list_of_events
 from app.objects.events import Event, default_event
 
 
-def verify_event_and_warn(object_store: ObjectStore, event: Event) -> str:
+def verify_event_and_warn(object_store: ObjectStore, event: Event) -> List[str]:
     warn_text = ""
+    info_text = ""
+
+    if event.first_date_is_registration:
+        info_text+="Event will start on %s which is the registration date, and volunteer rota will start on %s. " % (event.start_date, event.first_day_of_volunteer_rota)
+        if len(event.dates_in_event())<2:
+            warn_text="Event only one day long but registration is on that day. "
+    else:
+        info_text+="Event starts on %s. " % event.start_date
+
+    info_text+="Event ends on %s. " % event.end_date
+
     if contains_2_more_digits(event.event_name):
         warn_text += "Looks like event name contains a year - don't do that! Fine if it is an event number."
 
@@ -34,7 +46,7 @@ def verify_event_and_warn(object_store: ObjectStore, event: Event) -> str:
     if len(warn_text) > 0:
         warn_text = "DOUBLE CHECK BEFORE ADDING: " + warn_text
 
-    return warn_text
+    return [info_text, warn_text]
 
 
 def contains_2_more_digits(string: str) -> bool:
@@ -56,8 +68,8 @@ def warning_for_similar_events(object_store: ObjectStore, event: Event) -> str:
 
 @dataclass
 class EventAndVerificationText:
+    verification_text: List[str]
     event: Event = default_event
-    verification_text: str = ("",)
 
     @property
     def is_default(self) -> bool:
@@ -65,5 +77,5 @@ class EventAndVerificationText:
 
 
 event_and_text_if_first_time = EventAndVerificationText(
-    event=default_event, verification_text=""
+    event=default_event, verification_text=[]
 )

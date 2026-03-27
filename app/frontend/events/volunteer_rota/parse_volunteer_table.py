@@ -286,7 +286,7 @@ def update_volunteer_skills_filter(interface: abstractInterface):
 def update_volunteer_availability_filter(interface: abstractInterface):
     event = get_event_from_state(interface)
     availabilty_filter_dict = dict()
-    for day in event.days_in_event():
+    for day in event.volunteer_days_in_event():
         try:
             availabilty_filter_dict[
                 str(day.name)

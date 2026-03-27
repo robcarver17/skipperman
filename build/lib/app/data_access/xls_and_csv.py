@@ -88,6 +88,7 @@ def save_dict_of_df_as_csv(
 
     return path_and_filename
 
+SPREADSHEET_FILE_EXTENSIONS = [".csv", ".xlsx"]
 
 def load_spreadsheet_file_and_clear_nans(filename: str) -> pd.DataFrame:
     wa_as_df = load_spreadsheet_file(filename)

@@ -199,7 +199,7 @@ def get_nav_bar_with_just_cancel_button() -> ButtonBar:
 
 
 def break_up_buttons(
-    list_of_buttons: List[Button], first_line: int = 3, chunk_size: int = 6
+    list_of_buttons: List[Button], first_line: int = 6, chunk_size: int = 6
 ) -> ListOfLines:
     first_chunk = list_of_buttons[:first_line]
     rest_of_list = list_of_buttons[first_line:]

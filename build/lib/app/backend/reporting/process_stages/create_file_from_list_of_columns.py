@@ -1,3 +1,4 @@
+import os
 from typing import Dict
 
 import pandas as pd
@@ -28,7 +29,7 @@ from app.data_access.init_directories import (
     public_reporting_directory,
     download_directory,
 )
-from app.data_access.xls_and_csv import save_dict_of_df_as_spreadsheet_file
+from app.data_access.xls_and_csv import save_dict_of_df_as_spreadsheet_file, SPREADSHEET_FILE_EXTENSIONS
 from shutil import copy2 as copy_file
 
 
@@ -71,8 +72,12 @@ def create_pdf_report_from_list_of_columns_and_return_filename(
         pdf_layout.add_page(page)
 
     path_and_filename = get_download_path_and_filename_for_report(print_options, "pdf")
-    pdf_layout.output_file(path_and_filename.full_path_and_name)
+    try:
+        os.remove(path_and_filename.full_path_and_name)
+    except:
+        pass
 
+    pdf_layout.output_file(path_and_filename.full_path_and_name)
     return path_and_filename
 
 
@@ -102,6 +107,7 @@ def create_csv_report_from_dict_of_df_and_return_filename(
     path_and_filename_no_extension = get_download_path_and_filename_for_report(
         print_options, use_extension=""
     )
+    delete_all_spreadsheet_files(path_and_filename_no_extension)
     path_and_filename_with_extension = save_dict_of_df_as_spreadsheet_file(
         dict_of_df=dict_of_df,
         path_and_filename_no_extension=path_and_filename_no_extension,
@@ -109,6 +115,13 @@ def create_csv_report_from_dict_of_df_and_return_filename(
     )
 
     return path_and_filename_with_extension
+
+def delete_all_spreadsheet_files(path_and_filename_no_extension: PathAndFilename):
+    for ext in SPREADSHEET_FILE_EXTENSIONS:
+        try:
+            os.remove("%s.%s" % (path_and_filename_no_extension.full_path_and_name, ext))
+        except:
+            pass
 
 
 def web_pathname_of_public_version_of_local_report_file(print_options: PrintOptions):

@@ -108,7 +108,6 @@ def get_availability_information_for_volunteer(
     same_or_different_key = dict_of_fields_for_volunteer[
         SAME_OR_VARIED_KEY_IN_VOLUNTEER_FIELDS_DICT
     ]
-
     cadet_availability = get_sailor_attendance_selection_from_event_row(
         event=event, row=row_in_mapped_event
     )  ## will cover all days
@@ -120,7 +119,10 @@ def get_availability_information_for_volunteer(
     )
 
     if volunteer_availability.is_empty():
-        volunteer_availability = cadet_availability
+        cadet_availability_overlap_rota_days = cadet_availability.days_that_intersect_with(
+            DaySelector.from_list_of_days(event.volunteer_days_in_event())
+        )
+        volunteer_availability = cadet_availability_overlap_rota_days
 
     return RelevantInformationForVolunteerAvailability(
         cadet_availability=cadet_availability,
@@ -152,7 +154,7 @@ def get_availability_for_volunteer(
     weekend_available_text = row_in_mapped_event.get_item(weekend_available_key, "")
     day_available_text = row_in_mapped_event.get_item(day_available_key, "")
 
-    days_in_event = event.days_in_event()
+    days_in_event = event.volunteer_days_in_event()
 
     if len(weekend_available_text) > 0:
         return create_day_selector_from_short_form_text_with_passed_days(

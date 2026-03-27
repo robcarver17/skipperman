@@ -67,7 +67,7 @@ def get_summary_table_of_instructors_and_groups_for_event(
 def get_top_row_of_table_of_instructor_counts(
     event: Event, list_of_instructor_type_roles_at_event_sorted_by_seniority: list
 ) -> RowInTable:
-    list_of_days = [day.name for day in event.days_in_event()]
+    list_of_days = [day.name for day in event.volunteer_days_in_event()]
     instructor_roles_as_names = [
         role.name for role in list_of_instructor_type_roles_at_event_sorted_by_seniority
     ]
@@ -200,7 +200,7 @@ def get_dict_of_instructors_by_day_for_specific_role_in_group(
     role: RoleWithSkills,
     group: Group,
 ):
-    days_in_event = event.days_in_event()
+    days_in_event = event.volunteer_days_in_event()
 
     dict_of_instructors_by_day = {}
     for day in days_in_event:
@@ -338,7 +338,7 @@ def get_instructor_count_allocated_to_group_as_dict(
         group=group,
     )
     result_dict = {}
-    for day in event.days_in_event():
+    for day in event.volunteer_days_in_event():
         result_dict[day.name] = len(dict_of_instructors_by_day_for_group[day])
 
     return result_dict
@@ -349,7 +349,7 @@ def get_dict_of_instructors_by_day_for_group(
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     group: Group,
 ):
-    days_in_event = event.days_in_event()
+    days_in_event = event.volunteer_days_in_event()
 
     dict_of_instructors_by_day = {}
     for day in days_in_event:
@@ -413,7 +413,7 @@ def get_cadet_count_for_group_over_days_as_dict(
         object_store=object_store, event=event
     )
     results = {}
-    for day in event.days_in_event():
+    for day in event.volunteer_days_in_event():
         if group.is_unallocated:
             results[day.name] = 0
         else:

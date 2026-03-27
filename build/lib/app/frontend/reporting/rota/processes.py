@@ -32,7 +32,7 @@ def load_additional_parameters_for_rota_report(
     days_to_show_str = interface.get_persistent_value(DAYS_TO_SHOW, None)
     if days_to_show_str is None:
         event = get_event_from_state(interface)
-        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event)
+        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event, exclude_registration_date=True)
     else:
         days_to_show = DaySelector.from_str(days_to_show_str)
 
@@ -65,7 +65,7 @@ def get_rota_report_additional_parameters_from_form(
     )
     if days_to_show is MISSING_FROM_FORM:
         interface.log_error("Days to show missing from form")
-        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event)
+        days_to_show = get_past_days_selector_from_event_or_all_days_if_missing(event, exclude_registration_date=True)
 
     return AdditionalParametersForVolunteerReport(days_to_show=days_to_show)
 

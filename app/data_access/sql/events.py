@@ -4,20 +4,20 @@ from app.objects.utilities.transform_data import date2int, int2date
 from app.data_access.sql.shared_column_names import *
 from app.objects.utilities.exceptions import (
     arg_not_passed,
-    MissingData,
     MultipleMatches,
     missing_data,
 )
 
 EVENTS_TABLE = "list_of_events"
 INDEX_EVENTS_TABLE = "index_list_of_events"
+REGISTRATION_DATES_APPLIED_FOR_EVENTS_TABLE = "registration_dates_applied_for_events"
 
 from app.objects.events import (
     ListOfEvents,
     SORT_BY_START_DSC,
     SORT_BY_START_ASC,
     SORT_BY_NAME,
-    Event,
+    Event, NO_REGISTRATION_DATE,
 )
 
 
@@ -30,6 +30,8 @@ def get_sort_clause(sort_by: str = arg_not_passed):
         return "ORDER BY %s DESC" % EVENT_START_DATE
     else:
         return ""
+
+
 
 
 class SqlDataListOfEvents(GenericSqlData):
@@ -82,10 +84,11 @@ class SqlDataListOfEvents(GenericSqlData):
 
         try:
             cursor = self.cursor
-            statement = "SELECT %s, %s, %s FROM %s WHERE %s=%d " % (
+            statement = "SELECT %s, %s, %s, %s FROM %s WHERE %s=%d " % (
                 EVENT_NAME,
                 EVENT_START_DATE,
                 EVENT_END_DATE,
+                EVENT_REG_DATE,
                 EVENTS_TABLE,
                 EVENT_ID,
                 int(event_id),
@@ -107,6 +110,7 @@ class SqlDataListOfEvents(GenericSqlData):
             event_name=raw_event[0],
             start_date=int2date(raw_event[1]),
             end_date=int2date(raw_event[2]),
+            registration_date=int2date(raw_event[3]),
             id=event_id,
         )
 
@@ -116,13 +120,22 @@ class SqlDataListOfEvents(GenericSqlData):
         if self.table_does_not_exist(EVENTS_TABLE):
             return ListOfEvents.create_empty()
 
+        ## FIXME CAN DELETE ONCE ALL PAST DATA CLEARED FROM SNAPSHOTS
+        try:
+            self.cursor.execute("ALTER TABLE %s ADD %s INTEGER DEFAULT %d" % (EVENTS_TABLE, EVENT_REG_DATE,
+                                                                                      date2int(NO_REGISTRATION_DATE )))
+            self.conn.commit()
+        except:
+            pass
+
         try:
             sort_clause = get_sort_clause(sort_by)
             cursor = self.cursor
-            statement = "SELECT %s, %s, %s, %s FROM %s %s" % (
+            statement = "SELECT %s, %s, %s, %s, %s FROM %s %s" % (
                 EVENT_NAME,
                 EVENT_START_DATE,
                 EVENT_END_DATE,
+                EVENT_REG_DATE,
                 EVENT_ID,
                 EVENTS_TABLE,
                 sort_clause,
@@ -140,7 +153,8 @@ class SqlDataListOfEvents(GenericSqlData):
                 event_name=raw_event[0],
                 start_date=int2date(raw_event[1]),
                 end_date=int2date(raw_event[2]),
-                id=str(raw_event[3]),
+                registration_date=int2date(raw_event[3]),
+                id = str(raw_event[4]),
             )
 
             new_list.append(event)
@@ -170,16 +184,19 @@ class SqlDataListOfEvents(GenericSqlData):
         start_date = date2int(event.start_date)
         end_date = date2int(event.end_date)
         event_id = int(event.id)
+        registration_date = date2int(event.registration_date)
 
-        insertion = "INSERT INTO %s ( %s, %s, %s, %s) VALUES ( ?,?,?,?)" % (
+        insertion = "INSERT INTO %s ( %s, %s, %s, %s, %s) VALUES ( ?,?,?,?, ?)" % (
             EVENTS_TABLE,
             EVENT_NAME,
             EVENT_START_DATE,
             EVENT_END_DATE,
+            EVENT_REG_DATE,
             EVENT_ID,
         )
 
-        self.cursor.execute(insertion, (event_name, start_date, end_date, event_id))
+        self.cursor.execute(insertion, (event_name, start_date, end_date, registration_date, event_id))
+
 
     def create_table(self):
         table_creation_query = """
@@ -211,3 +228,4 @@ class SqlDataListOfEvents(GenericSqlData):
             raise Exception("Error %s creating events table" % str(e1))
         finally:
             self.close()
+

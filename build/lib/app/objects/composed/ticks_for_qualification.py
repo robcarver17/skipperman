@@ -11,6 +11,10 @@ from app.objects.substages import TickSubStage, TickSheetItem, ListOfTickSheetIt
 
 
 class DictOfTickSheetItemsAndTicksForCadet(Dict[TickSheetItem, Tick]):
+    def completed(self):
+        full_ticks = [tick == full_tick for tick in self.list_of_ticks]
+        return all(full_ticks)
+
     def percentage_complete(self) -> float:
         full_ticks = [1.0 for tick in self.list_of_ticks if tick == full_tick]
         half_ticks = [0.5 for tick in self.list_of_ticks if tick == half_tick]

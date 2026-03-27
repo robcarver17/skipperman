@@ -1,8 +1,10 @@
+from app.frontend.instructors.ticksheet_table_elements import user_can_award_qualifications
 from app.frontend.shared.events_state import get_event_from_state
+from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM
 
 from app.frontend.shared.cadet_state import get_cadet_from_state
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from app.objects.cadets import ListOfCadets, Cadet
 
@@ -15,7 +17,7 @@ from app.objects.composed.ticks_for_qualification import (
 from app.frontend.instructors.buttons import (
     get_cadet_buttons_at_start_of_row_in_edit_state,
     get_button_or_label_for_tickitem_name,
-    get_select_cadet_button_when_in_no_edit_mode,
+    get_select_cadet_button_when_in_no_edit_mode, award_all_full_ticks_button,
 )
 from app.backend.qualifications_and_ticks.ticksheets import (
     get_ticksheet_data_for_cadets_at_event_in_group_with_qualification,
@@ -71,7 +73,7 @@ def get_top_two_rows_for_table(
         ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
     )
 
-    first_row = [""]
+    first_row = [get_corner_cell(interface)]
     second_row = [""]
     current_substage = ""
     for tick_item, substage_name in zip(
@@ -94,6 +96,14 @@ def get_top_two_rows_for_table(
 
     return [first_row, second_row]
 
+def get_corner_cell(interface: abstractInterface) -> Union[Button, str]:
+    if not_editing(interface):
+        return ""
+    can_award_qualification = user_can_award_qualifications(interface)
+    if can_award_qualification:
+        return award_all_full_ticks_button
+    else:
+        return ""
 
 def get_body_of_table(
     interface: abstractInterface,

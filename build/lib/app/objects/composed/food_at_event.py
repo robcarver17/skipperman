@@ -31,9 +31,6 @@ class DictOfCadetsWithFoodRequirementsAtEvent(Dict[Cadet, FoodRequirements]):
         unique_list = list(set(self.values()))
         unique_list = [item for item in unique_list if not item.is_empty()]
 
-        if len(unique_list) == 0:
-            return no_food_requirements
-
         return unique_list
 
     def filter_for_list_of_cadets(self, list_of_cadets: ListOfCadets):
@@ -76,8 +73,6 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         unique_list = list(set(self.values()))
         unique_list = [item for item in unique_list if not item.is_empty()]
 
-        if len(unique_list) == 0:
-            return no_food_requirements
 
         return unique_list
 

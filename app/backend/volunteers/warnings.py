@@ -321,7 +321,7 @@ def warn_about_volunteer_availablity_at_event_with_connected_cadets(
     )
     volunteer_registration_data = volunteer_event_data.registration_data
     warnings = []
-    for day in event.days_in_event():
+    for day in event.volunteer_days_in_event():
         warnings = warning_about_volunteer_availability_on_specific_day(
             volunteer_registration_data=volunteer_registration_data,
             active_connected_cadets=active_connected_cadets,

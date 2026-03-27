@@ -7,7 +7,6 @@ from app.objects.abstract_objects.abstract_tables import PandasDFTable
 from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import ListOfPatrolBoats, PatrolBoat
-from app.backend.patrol_boats.list_of_patrol_boats import get_list_of_patrol_boats
 
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     DictOfVolunteersAtEventWithPatrolBoatsByDay,
@@ -44,13 +43,13 @@ def get_summary_list_of_patrol_boat_allocations_for_events(
                     list_of_boats_at_event=sorted_list_of_boats_at_event,
                 ),
             )
-            for day in event.days_in_event()
+            for day in event.volunteer_days_in_event()
         ]
     )
     boat_index = [boat.name for boat in sorted_list_of_boats_at_event]
 
     summary_df = pd.DataFrame(results_as_dict, index=boat_index)
-    summary_df.columns = event.days_in_event_as_list_of_string()
+    summary_df.columns = event.volunteer_days_in_event_as_list_of_string()
 
     if len(summary_df) > 0:
         summary_df.loc["TOTAL"] = summary_df.sum(axis=0, numeric_only=True)

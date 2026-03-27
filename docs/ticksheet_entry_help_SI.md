@@ -52,6 +52,7 @@ Important notes:
 - Qualifications that have already been awarded should not be withdrawn because you disagree with a previous decision - only in case of accident
 - If you withdraw a qualification from a cadet, it won't affect their ticks.
 - This means if you accidentally award a qualification to a cadet without all their ticks, and then withdraw it, you will see the missing ticks again once you have withdrawn the award.
+- If you want to award qualifications to all the cadets with full ticks, just click "Award qualification to fully ticked sailors"
 
 # Skipperman on mobile - individual cadet editing
 

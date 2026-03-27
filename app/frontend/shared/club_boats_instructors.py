@@ -87,7 +87,7 @@ def get_club_dinghies_instructors_form(
 
 
 def get_top_row_in_club_dinghy_instructors_form(event: Event) -> RowInTable:
-    list_of_days = [day.name for day in event.days_in_event()]
+    list_of_days = [day.name for day in event.volunteer_days_in_event()]
 
     return RowInTable(
         ["Club boat"] + list_of_days,
@@ -107,7 +107,7 @@ def get_row_in_club_dinghy_instructors_form(
             club_dinghy=club_dinghy,
             day=day,
         )
-        for day in event.days_in_event()
+        for day in event.volunteer_days_in_event()
     ]
     return RowInTable([club_dinghy.name] + day_cells)
 

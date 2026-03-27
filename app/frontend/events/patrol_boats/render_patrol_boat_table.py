@@ -156,7 +156,7 @@ def get_patrol_boat_table(interface: abstractInterface, event: Event) -> Table:
 
 
 def get_top_row_for_patrol_boat_table(event: Event) -> RowInTable:
-    list_of_days_at_event_as_str = event.days_in_event_as_list_of_string()
+    list_of_days_at_event_as_str = event.volunteer_days_in_event_as_list_of_string()
     list_of_days_at_event_as_bold_text = [
         bold(text) for text in list_of_days_at_event_as_str
     ]
@@ -183,7 +183,7 @@ def get_bottom_row_for_patrol_boat_table(
 
 
 def get_bottom_row_padding_columns_for_patrol_boat_table(event: Event) -> List[str]:
-    list_of_days_at_event_as_str = event.days_in_event_as_list_of_string()
+    list_of_days_at_event_as_str = event.volunteer_days_in_event_as_list_of_string()
     number_of_padding_columns = len(list_of_days_at_event_as_str)
     padding_columns = [""] * number_of_padding_columns
 
@@ -250,7 +250,7 @@ def get_allocation_inputs_for_boat_across_days(
         get_allocation_inputs_for_day_and_boat(
             patrol_boat=patrol_boat, day=day, event=event, interface=interface
         )
-        for day in event.days_in_event()
+        for day in event.volunteer_days_in_event()
     ]
     return day_inputs
 

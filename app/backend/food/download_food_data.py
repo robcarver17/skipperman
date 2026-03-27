@@ -59,6 +59,8 @@ def get_list_of_allergies_as_df(
     list_of_food_requirements = get_combined_list_of_food_requirement_items(
         object_store=object_store, event=event
     )
+    if len(list_of_food_requirements)==0:
+        return pd.DataFrame()
 
     list_of_required_df = []
     for food_required in list_of_food_requirements:
@@ -91,7 +93,6 @@ def get_combined_list_of_food_requirement_items(
     list_of_requirements_for_volunteers = (
         volunteer_food_requirements.unique_list_of_food_requirements()
     )
-
     return list(
         set(list_of_requirements_for_volunteers + list_of_requirements_for_cadets)
     )
@@ -199,7 +200,6 @@ def row_for_volunteer_in_data(
     food_required: FoodRequirements,
 ) -> pd.Series:
     availability_for_volunteer = availability_dict[volunteer]
-
     return pd.Series(
         dict(
             name=volunteer.name,

@@ -15,13 +15,16 @@ def verify_event_and_warn(object_store: ObjectStore, event: Event) -> List[str]:
     info_text = ""
 
     if event.first_date_is_registration:
-        info_text+="Event will start on %s which is the registration date, and volunteer rota will start on %s. " % (event.start_date, event.first_day_of_volunteer_rota)
-        if len(event.dates_in_event())<2:
-            warn_text="Event only one day long but registration is on that day. "
+        info_text += (
+            "Event will start on %s which is the registration date, and volunteer rota will start on %s. "
+            % (event.start_date, event.first_day_of_volunteer_rota)
+        )
+        if len(event.dates_in_event()) < 2:
+            warn_text = "Event only one day long but registration is on that day. "
     else:
-        info_text+="Event starts on %s. " % event.start_date
+        info_text += "Event starts on %s. " % event.start_date
 
-    info_text+="Event ends on %s. " % event.end_date
+    info_text += "Event ends on %s. " % event.end_date
 
     if contains_2_more_digits(event.event_name):
         warn_text += "Looks like event name contains a year - don't do that! Fine if it is an event number."

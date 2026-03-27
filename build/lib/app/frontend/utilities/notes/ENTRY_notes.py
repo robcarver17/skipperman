@@ -25,7 +25,11 @@ from app.objects.abstract_objects.abstract_buttons import (
     check_if_button_in_list_was_pressed,
     save_and_back_menu_button,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    MainMenuBar,
+)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -51,9 +55,9 @@ def display_form_notes(interface: abstractInterface):
     complete_table = get_existing_complete_notes(interface, list_of_notes=list_of_notes)
 
     contents_of_form = ListOfLines(
-        [MainMenuBar("Utilities"),
-
-                 _______________,
+        [
+            MainMenuBar("Utilities"),
+            _______________,
             navbar,
             _______________,
             _______________,

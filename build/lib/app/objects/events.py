@@ -18,7 +18,8 @@ from app.objects.day_selectors import (
     DaySelector,
 )
 
-NO_REGISTRATION_DATE = datetime.date(1970,1,1)
+NO_REGISTRATION_DATE = datetime.date(1970, 1, 1)
+
 
 @dataclass
 class Event(GenericSkipperManObjectWithIds):
@@ -27,7 +28,6 @@ class Event(GenericSkipperManObjectWithIds):
     end_date: datetime.date
     id: str = arg_not_passed
     registration_date: datetime.date = NO_REGISTRATION_DATE
-
 
     @property
     def first_date_is_registration(self):
@@ -58,10 +58,13 @@ class Event(GenericSkipperManObjectWithIds):
 
     @classmethod
     def from_date_length_and_name_only(
-        cls, event_name: str, start_date: datetime.date, duration: int,
-            first_date_is_registration_date: bool
+        cls,
+        event_name: str,
+        start_date: datetime.date,
+        duration: int,
+        first_date_is_registration_date: bool,
     ):
-        if len(event_name)<3:
+        if len(event_name) < 3:
             raise Exception("Event names must be at least three characters")
         if duration > 7:
             raise Exception("Events cannot be more than one week long")
@@ -72,18 +75,25 @@ class Event(GenericSkipperManObjectWithIds):
             end_date = add_days(start_date, duration - 1)
 
         if first_date_is_registration_date:
-            if duration<2:
-                raise Exception("Events with registration days must be at least two days long")
+            if duration < 2:
+                raise Exception(
+                    "Events with registration days must be at least two days long"
+                )
             else:
                 registration_date = start_date
         else:
             registration_date = NO_REGISTRATION_DATE
 
-        return cls(event_name=event_name, start_date=start_date, end_date=end_date, registration_date=registration_date)
+        return cls(
+            event_name=event_name,
+            start_date=start_date,
+            end_date=end_date,
+            registration_date=registration_date,
+        )
 
     def details_as_list_of_str(self):
         if self.first_date_is_registration:
-            extra =" (%s is registration day)" % self.days_in_event()[0].name
+            extra = " (%s is registration day)" % self.days_in_event()[0].name
         else:
             extra = ""
         return [
@@ -94,7 +104,7 @@ class Event(GenericSkipperManObjectWithIds):
                 str(self.end_date),
                 self.duration,
                 self.days_in_event_as_single_string(),
-                extra
+                extra,
             ),
         ]
 
@@ -177,7 +187,9 @@ class Event(GenericSkipperManObjectWithIds):
             dict([(day, day in weekdays_covered) for day in all_possible_days])
         )
 
-    def day_selector_for_days_in_event_excluding_past_days(self, exclude_registration_date: bool = False) -> DaySelector:
+    def day_selector_for_days_in_event_excluding_past_days(
+        self, exclude_registration_date: bool = False
+    ) -> DaySelector:
         if exclude_registration_date:
             dates_in_event = self.volunteer_dates_in_event()
             weekdays_in_event = self.volunteer_days_in_event()
@@ -360,8 +372,12 @@ def list_of_events_excluding_one_event_and_past_events(
     return list_of_events
 
 
-def get_past_days_selector_from_event_or_all_days_if_missing(event: Event, exclude_registration_date: bool = False):
-    day_selector = event.day_selector_for_days_in_event_excluding_past_days(exclude_registration_date)
+def get_past_days_selector_from_event_or_all_days_if_missing(
+    event: Event, exclude_registration_date: bool = False
+):
+    day_selector = event.day_selector_for_days_in_event_excluding_past_days(
+        exclude_registration_date
+    )
     if len(day_selector.days_available()) == 0:
         return event.day_selector_for_days_in_event()
     else:

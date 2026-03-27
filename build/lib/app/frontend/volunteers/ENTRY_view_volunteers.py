@@ -32,7 +32,8 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.volunteers.list_of_volunteers import (
@@ -54,9 +55,9 @@ def get_form_view_of_volunteers(interface: abstractInterface, sort_order: str) -
     )
 
     form_contents = ListOfLines(
-        [MainMenuBar("Volunteers"),
-
-                 _______________,
+        [
+            MainMenuBar("Volunteers"),
+            _______________,
             nav_buttons,
             _______________,
             sort_buttons,

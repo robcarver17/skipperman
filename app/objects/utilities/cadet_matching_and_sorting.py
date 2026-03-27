@@ -11,7 +11,7 @@ from app.objects.cadets import (
     DEFAULT_DATE_OF_BIRTH,
     ListOfCadets,
     IRRELEVANT_DATE_OF_BIRTH,
-UNCONFIRMED_DATE_OF_BIRTH
+    UNCONFIRMED_DATE_OF_BIRTH,
 )
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.utilities.utils import similar
@@ -133,7 +133,11 @@ def similar_cadet(
 
 
 def similarity_date_score(date_in_data: datetime.date, other_date: datetime.date):
-    if date_in_data in [DEFAULT_DATE_OF_BIRTH, IRRELEVANT_DATE_OF_BIRTH, UNCONFIRMED_DATE_OF_BIRTH]:
+    if date_in_data in [
+        DEFAULT_DATE_OF_BIRTH,
+        IRRELEVANT_DATE_OF_BIRTH,
+        UNCONFIRMED_DATE_OF_BIRTH,
+    ]:
         return 0
 
     dob_match_with_codes = similar_cadet_DOB_match_returns_code(

@@ -194,6 +194,7 @@ class DictOfDaysRolesAndGroups(Dict[Day, RoleAndGroup]):
 
         return ListOfGroups(list(set(groups)))
 
+
 class DictOfDaysRolesAndGroupsAndTeams(Dict[Day, RoleAndGroupAndTeam]):
     def role_and_group_and_team_on_day(
         self, day: Day, default=arg_not_passed

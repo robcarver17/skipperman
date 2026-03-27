@@ -29,7 +29,10 @@ from app.data_access.init_directories import (
     public_reporting_directory,
     download_directory,
 )
-from app.data_access.xls_and_csv import save_dict_of_df_as_spreadsheet_file, SPREADSHEET_FILE_EXTENSIONS
+from app.data_access.xls_and_csv import (
+    save_dict_of_df_as_spreadsheet_file,
+    SPREADSHEET_FILE_EXTENSIONS,
+)
 from shutil import copy2 as copy_file
 
 
@@ -116,10 +119,13 @@ def create_csv_report_from_dict_of_df_and_return_filename(
 
     return path_and_filename_with_extension
 
+
 def delete_all_spreadsheet_files(path_and_filename_no_extension: PathAndFilename):
     for ext in SPREADSHEET_FILE_EXTENSIONS:
         try:
-            os.remove("%s.%s" % (path_and_filename_no_extension.full_path_and_name, ext))
+            os.remove(
+                "%s.%s" % (path_and_filename_no_extension.full_path_and_name, ext)
+            )
         except:
             pass
 

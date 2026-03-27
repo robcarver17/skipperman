@@ -92,7 +92,6 @@ def get_team_and_dict_of_teams_and_roles(
     interface: abstractInterface,
 ) -> Tuple[Team, DictOfTeamsWithRoles]:
     team = get_team_from_state(interface)
-    print("SELECTED %s" % team)
     dict_of_teams_and_roles = get_dict_of_teams_and_roles(interface.object_store)
 
     return team, dict_of_teams_and_roles

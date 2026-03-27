@@ -350,12 +350,6 @@ class SqlDataListOfClubDinghyLimits(GenericSqlData):
                 elif club_dinghy_id < 0:
                     continue
 
-                ## FIXME OLD DATA CAN REMOVE
-                if event_id == OLD_event_id_for_generic_limit:
-                    event_id = int(event_id_for_generic_limit)
-                else:
-                    event_id = int(event_id)
-
                 insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
                     CLUB_DINGHY_LIMIT_TABLE,
                     EVENT_ID,

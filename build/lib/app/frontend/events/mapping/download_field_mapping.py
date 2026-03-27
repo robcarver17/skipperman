@@ -20,7 +20,11 @@ from app.objects.abstract_objects.abstract_form import (
     File,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    MainMenuBar,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
@@ -41,7 +45,9 @@ def display_form_for_download_field_mapping(interface: abstractInterface):
     this_event_button = get_button_for_this_event(interface)
 
     contents_of_form = ListOfLines(
-        [MainMenuBar("Events"), _______________,
+        [
+            MainMenuBar("Events"),
+            _______________,
             ButtonBar([cancel_menu_button, help_button]),
             _______________,
             _______________,

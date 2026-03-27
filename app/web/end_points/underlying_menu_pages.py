@@ -2,7 +2,12 @@ from copy import copy
 from typing import List
 
 from app.frontend.menu_define import menu_definition, menu_security_dict
-from app.objects.abstract_objects.abstract_buttons import ButtonBar, HelpButton, ActionOptionButton, ActionLink
+from app.objects.abstract_objects.abstract_buttons import (
+    ButtonBar,
+    HelpButton,
+    ActionOptionButton,
+    ActionLink,
+)
 from app.objects.abstract_objects.abstract_form import Form
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, MainMenuBar
 from app.web.flask.security import get_access_group_for_current_user
@@ -29,15 +34,18 @@ def get_button_bar_of_menu_buttons_for_actions(main_menu_bar: MainMenuBar):
     except:
         pass
 
-    list_of_buttons = get_button_bar_menu_from_filtered_menu(filtered_menu_definition,
-                                                             open_new_window=main_menu_bar.open_new_window)
+    list_of_buttons = get_button_bar_menu_from_filtered_menu(
+        filtered_menu_definition, open_new_window=main_menu_bar.open_new_window
+    )
 
     return list_of_buttons
 
 
 def get_large_tiled_menu_buttons_for_actions() -> Line:
     filtered_menu_definition = filter_menu_for_user_permissions(menu_definition)
-    list_of_buttons = get_large_tiled_menu_buttons_from_filtered_menu(filtered_menu_definition)
+    list_of_buttons = get_large_tiled_menu_buttons_from_filtered_menu(
+        filtered_menu_definition
+    )
 
     return Line(list_of_buttons)
 
@@ -48,22 +56,27 @@ def get_large_tiled_menu_buttons_from_filtered_menu(
     list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
         list_of_buttons.append(
-            ActionOptionButton(label=label, url=get_action_first_page_url(action_name),
-                               )
+            ActionOptionButton(
+                label=label,
+                url=get_action_first_page_url(action_name),
+            )
         )
 
     return list_of_buttons
 
 
 def get_button_bar_menu_from_filtered_menu(
-    filtered_menu_definition: dict,
-open_new_window: bool
+    filtered_menu_definition: dict, open_new_window: bool
 ) -> ButtonBar:
     list_of_buttons = []
     for label, action_name in filtered_menu_definition.items():
         list_of_buttons.append(
-            ActionLink(action_name=action_name, action_label=label, open_new_window=open_new_window,
-                       on_submenu_bar=True)
+            ActionLink(
+                action_name=action_name,
+                action_label=label,
+                open_new_window=open_new_window,
+                on_submenu_bar=True,
+            )
         )
 
     return ButtonBar(list_of_buttons)

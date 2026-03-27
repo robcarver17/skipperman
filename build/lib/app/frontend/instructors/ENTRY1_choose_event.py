@@ -43,7 +43,8 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
     Line,
-    DetailListOfLines, MainMenuBar,
+    DetailListOfLines,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.security.logged_in_user import (
@@ -95,9 +96,9 @@ def display_form_main_instructors_page_sort_order_passed(
     )
 
     lines_inside_form = ListOfLines(
-        [MainMenuBar("Instructors"),
-
-                 _______________,
+        [
+            MainMenuBar("Instructors"),
+            _______________,
             navbar,
             _______________,
             header1,

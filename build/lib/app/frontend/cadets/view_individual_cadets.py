@@ -17,7 +17,8 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 from app.frontend.form_handler import initial_state_form
 from app.objects.abstract_objects.abstract_interface import (
@@ -54,8 +55,9 @@ def display_form_for_selected_cadet(interface: abstractInterface, cadet: Cadet) 
     buttons = buttons_for_view_individual_cadet_form()
     return Form(
         ListOfLines(
-            [MainMenuBar("Sailors"),
-         _______________,
+            [
+                MainMenuBar("Sailors"),
+                _______________,
                 buttons,
                 _______________,
                 str(cadet),

@@ -59,7 +59,7 @@ def get_list_of_allergies_as_df(
     list_of_food_requirements = get_combined_list_of_food_requirement_items(
         object_store=object_store, event=event
     )
-    if len(list_of_food_requirements)==0:
+    if len(list_of_food_requirements) == 0:
         return pd.DataFrame()
 
     list_of_required_df = []

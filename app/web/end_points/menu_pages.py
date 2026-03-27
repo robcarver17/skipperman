@@ -41,6 +41,3 @@ def generate_menu_html() -> Html:
     )
 
     return menu_as_html
-
-
-

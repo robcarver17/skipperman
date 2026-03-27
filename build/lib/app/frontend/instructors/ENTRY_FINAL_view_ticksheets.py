@@ -9,14 +9,18 @@ from app.backend.security.logged_in_user import (
 from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
-from app.frontend.instructors.buttons import is_generic_tick_button_pressed, award_all_full_ticks_button
+from app.frontend.instructors.buttons import (
+    is_generic_tick_button_pressed,
+    award_all_full_ticks_button,
+)
 from app.frontend.shared.buttons import (
     is_button_cadet_selection,
     cadet_from_button_pressed,
 )
 from app.frontend.instructors.parse_ticksheet_table import save_ticksheet_edits
 from app.frontend.instructors.parse_macro_buttons_in_ticksheets import (
-    action_if_macro_tick_button_pressed, action_if_apply_all_qualifications_button_pressed,
+    action_if_macro_tick_button_pressed,
+    action_if_apply_all_qualifications_button_pressed,
 )
 from app.frontend.instructors.print_ticksheet import (
     download_labelled_ticksheet_and_return_file,
@@ -48,7 +52,8 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
@@ -97,9 +102,9 @@ def display_form_view_ticksheets_for_event_and_group(
         )
     )
     lines_inside_form = ListOfLines(
-        [MainMenuBar("Instructors"),
-
-                 _______________,
+        [
+            MainMenuBar("Instructors"),
+            _______________,
             navbar,
             _______________,
             header,

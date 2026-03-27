@@ -154,18 +154,6 @@ def compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
             default=missing_data,
         )
 
-        """
-        FIXME: I Think this code is now redundant, since we can only modify one of the cadets in a partnership 
-        
-        already_in_a_changed_partnership = is_cadet_already_in_changed_partnership(
-            updated_list=updated_list,
-            potentially_updated_cadet_at_event_with_info=potentially_updated_cadet_at_event_with_info,
-        )
-
-        if already_in_a_changed_partnership:
-            continue
-        """
-
         if cadet_in_existing_list is not missing_data:
             if cadet_in_existing_list == potentially_updated_cadet_at_event_with_info:
                 ## no change

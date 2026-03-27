@@ -26,7 +26,8 @@ from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     Line,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 
 from app.objects.abstract_objects.abstract_buttons import (
@@ -71,9 +72,9 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
         )
     )
     lines_inside_form = ListOfLines(
-        [MainMenuBar("Instructors"),
-
-                 _______________,
+        [
+            MainMenuBar("Instructors"),
+            _______________,
             navbar,
             _______________,
             header,

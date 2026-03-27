@@ -51,7 +51,7 @@ def get_availability_checkbox_for_volunteer_at_event(
         event=event,
         input_name=input_name_for_volunteer_availability(volunteer),
         input_label="Confirm availability (click volunteers name to save):",
-        exclude_registration_date=True
+        exclude_registration_date=True,
     )
 
 

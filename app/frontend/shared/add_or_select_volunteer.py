@@ -350,7 +350,7 @@ def response_requires_new_form(interface: abstractInterface):
             check_confirm_volunteer_button,
             check_for_me_volunteer_button,
             refresh_list_button,
-            search_button
+            search_button,
         ],
     )
 

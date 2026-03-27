@@ -22,7 +22,8 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    DetailListOfLines, MainMenuBar,
+    DetailListOfLines,
+    MainMenuBar,
 )
 from app.frontend.shared.events_state import get_event_from_state
 
@@ -51,7 +52,9 @@ def display_form_view_for_food_requirements(interface: abstractInterface) -> For
 
     return Form(
         ListOfLines(
-            [MainMenuBar("Events"), _______________,
+            [
+                MainMenuBar("Events"),
+                _______________,
                 button_bar,
                 title,
                 _______________,

@@ -111,14 +111,13 @@ header_text_for_adding_cadets = ListOfLines(
         bold(
             "DO NOT USE for paid events, unless they will DEFINITELY BE REGISTERED or HAVE BEEN registered in Wild Apricot."
         ),
-        "Enter the details of the cadet you want to add, or enter first and/or surname to search for similar cadets"
+        "Enter the details of the cadet you want to add, or enter first and/or surname to search for similar cadets",
     ]
-
 ).add_Lines()
 
 get_or_select_parameters = parameters = ParametersForGetOrSelectCadetForm(
     header_text=header_text_for_adding_cadets,
     help_string="manually_adding_a_sailor",
     extra_buttons=[cancel_button],
-    include_search_button=True
+    include_search_button=True,
 )

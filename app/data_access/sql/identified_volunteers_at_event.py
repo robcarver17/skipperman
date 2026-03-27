@@ -5,8 +5,6 @@ from app.objects.identified_volunteer_at_event import (
     IdentifiedVolunteerAtEvent,
     PERMANENT_SKIP_VOLUNTEER_ID,
     SKIP_FOR_NOW_VOLUNTEER_ID,
-    OLD_SKIP_FOR_NOW_VOLUNTEER_ID,
-    OLD_PERMANENT_SKIP_VOLUNTEER_ID,
 )
 
 VOLUNTEER_IDENTIFIED_AT_EVENT_TABLE = "volunteer_identified_at_event"
@@ -233,12 +231,6 @@ class SqlDataListOfIdentifiedVolunteersAtEvent(GenericSqlData):
         volunteer_id = identified_volunteer_at_event.volunteer_id
         row_id = str(identified_volunteer_at_event.row_id)
         volunteer_index = int(identified_volunteer_at_event.volunteer_index)
-
-        # FIXME TEMP CODE
-        if volunteer_id == OLD_SKIP_FOR_NOW_VOLUNTEER_ID:
-            volunteer_id = SKIP_FOR_NOW_VOLUNTEER_ID
-        elif volunteer_id == OLD_PERMANENT_SKIP_VOLUNTEER_ID:
-            volunteer_id = PERMANENT_SKIP_VOLUNTEER_ID
 
         insertion = "INSERT INTO %s (%s, %s, %s, %s) VALUES (?, ?,?, ?)" % (
             VOLUNTEER_IDENTIFIED_AT_EVENT_TABLE,

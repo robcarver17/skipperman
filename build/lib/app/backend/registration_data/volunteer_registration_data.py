@@ -25,27 +25,40 @@ def get_availability_volunteer_at_event(
 def get_availability_dict_for_volunteers_at_event(
     object_store: ObjectStore, event: Event
 ) -> Dict[Volunteer, DaySelector]:
-    availability_dict= object_store.get(
+    availability_dict = object_store.get(
         object_store.data_api.data_list_of_volunteers_at_event.get_availability_dict_for_volunteers_at_event,
         event_id=event.id,
     )
-    availability_dict =filter_out_registration_date(availability_dict=availability_dict, event=event)
+    availability_dict = filter_out_registration_date(
+        availability_dict=availability_dict, event=event
+    )
 
     return availability_dict
 
-def filter_out_registration_date(availability_dict: Dict[Volunteer, DaySelector], event: Event) -> Dict[Volunteer, DaySelector]:
-    event_volunteer_days_as_selector = DaySelector.from_list_of_days(event.volunteer_days_in_event())
+
+def filter_out_registration_date(
+    availability_dict: Dict[Volunteer, DaySelector], event: Event
+) -> Dict[Volunteer, DaySelector]:
+    event_volunteer_days_as_selector = DaySelector.from_list_of_days(
+        event.volunteer_days_in_event()
+    )
     return dict(
         [
-            (volunteer, availability_combine_with_event_days_for_volunteer(
-                availability=availability,
-                event_volunteer_days_as_selector=event_volunteer_days_as_selector
-            ))
-            for volunteer,availability in availability_dict.items()
+            (
+                volunteer,
+                availability_combine_with_event_days_for_volunteer(
+                    availability=availability,
+                    event_volunteer_days_as_selector=event_volunteer_days_as_selector,
+                ),
+            )
+            for volunteer, availability in availability_dict.items()
         ]
     )
 
-def availability_combine_with_event_days_for_volunteer(availability: DaySelector,event_volunteer_days_as_selector : DaySelector) -> DaySelector:
+
+def availability_combine_with_event_days_for_volunteer(
+    availability: DaySelector, event_volunteer_days_as_selector: DaySelector
+) -> DaySelector:
     return DaySelector.from_list_of_days(
         availability.days_that_intersect_with(event_volunteer_days_as_selector)
     )

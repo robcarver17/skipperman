@@ -25,7 +25,7 @@ from app.objects.abstract_objects.abstract_form import (
     dateInput,
     intInput,
     listInput,
-yes_no_radio,
+    yes_no_radio,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -76,8 +76,10 @@ def get_add_event_form_with_information_passed(
         [
             Heading("Add a new event", centred=True, size=4),
             _______________,
-            form_entries]+
-            verification_lines+[
+            form_entries,
+        ]
+        + verification_lines
+        + [
             footer_buttons,
         ]
     )
@@ -130,7 +132,7 @@ def form_fields_for_add_event(
     first_day_is_registration = yes_no_radio(
         input_label="First day of event is registration (no volunteer rota)",
         input_name=FIRST_DAY_IS_REGISTRATION,
-        default_is_yes=event.first_date_is_registration
+        default_is_yes=event.first_date_is_registration,
     )
     list_of_form_entries = [
         event_name,
@@ -186,11 +188,15 @@ def get_event_from_form(interface) -> Event:
     event_name = interface.value_from_form(EVENT_NAME)
     start_date = interface.value_from_form(EVENT_START_DATE, value_is_date=True)
     duration = int(interface.value_from_form(EVENT_LENGTH_DAYS))
-    first_date_is_registration_date = interface.true_if_radio_was_yes(FIRST_DAY_IS_REGISTRATION)
+    first_date_is_registration_date = interface.true_if_radio_was_yes(
+        FIRST_DAY_IS_REGISTRATION
+    )
 
     event = Event.from_date_length_and_name_only(
-        event_name=event_name, start_date=start_date, duration=duration,
-        first_date_is_registration_date=first_date_is_registration_date
+        event_name=event_name,
+        start_date=start_date,
+        duration=duration,
+        first_date_is_registration_date=first_date_is_registration_date,
     )
 
     return event
@@ -221,6 +227,7 @@ EVENT_START_DATE = "event_start_date"
 EVENT_LENGTH_DAYS = "event_length_days"
 EVENT_CONTAINS = "event_contains"
 FIRST_DAY_IS_REGISTRATION = "first_day_is_registration"
+
 
 def previous_form(interface: abstractInterface):
     return interface.get_new_display_form_for_parent_of_function(

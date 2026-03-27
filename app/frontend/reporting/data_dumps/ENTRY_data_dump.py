@@ -11,7 +11,12 @@ from app.objects.abstract_objects.abstract_form import (
     File,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, Line, MainMenuBar, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    Line,
+    MainMenuBar,
+    _______________,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -34,9 +39,9 @@ def display_form_for_data_dump_report(interface: abstractInterface):
         ]
     )
     contents_of_form = ListOfLines(
-        [MainMenuBar("Reports"),
-
-         _______________,
+        [
+            MainMenuBar("Reports"),
+            _______________,
             ButtonBar([main_menu_button, back_menu_button, help_button]),
             title,
             list_of_buttons_as_line,

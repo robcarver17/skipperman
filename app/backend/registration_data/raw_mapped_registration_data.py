@@ -27,7 +27,6 @@ from app.objects.events import Event
 def get_cadet_data_from_row_of_registration_data_no_checks(
     row_of_mapped_data: RowInRegistrationData,
 ) -> Cadet:
-    print(row_of_mapped_data)
     first_name = row_of_mapped_data.get(CADET_FIRST_NAME, "")
     second_name = row_of_mapped_data.get(CADET_SURNAME, "")
     dob = row_of_mapped_data.get(CADET_DATE_OF_BIRTH, None)

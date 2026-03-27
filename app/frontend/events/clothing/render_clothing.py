@@ -89,10 +89,6 @@ help_button = HelpButton("clothing_help")
 def get_clothing_table(interface: abstractInterface, event: Event) -> Table:
     sort_order = get_sort_order(interface)
     only_committee = are_we_showing_only_committee(interface)
-    print(
-        "Showing only committee??? %s type %s"
-        % (str(only_committee), str(type(only_committee)))
-    )
 
     dict_of_cadets_with_clothing = get_dict_of_active_cadets_with_clothing_at_event(
         object_store=interface.object_store, event=event, only_committee=only_committee

@@ -304,7 +304,6 @@ def generic_post_response_to_add_or_select_cadet(
 ) -> ResultFromAddOrSelect:
     parameters.get_values_from_state(interface)
     last_button_pressed = interface.last_button_pressed()
-    print("last button %s" % last_button_pressed)
 
     if response_requires_new_form(interface):
         return generic_post_response_to_add_or_select_when_returning_new_form(
@@ -360,7 +359,7 @@ def response_requires_new_form(interface: abstractInterface):
             check_confirm_allow_to_add_cadet_button,
             check_cadet_for_me_button,
             refresh_button,
-            search_button
+            search_button,
         ],
     )
 
@@ -370,7 +369,6 @@ def generic_post_response_to_add_or_select_when_returning_new_form(
 ) -> ResultFromAddOrSelect():
     last_button_pressed = interface.last_button_pressed()
     if is_button_a_sort_button(last_button_pressed):
-        print("Sorting by %s" % last_button_pressed)
         parameters.sort_by = last_button_pressed
     elif refresh_button.pressed(last_button_pressed):
         pass

@@ -139,8 +139,10 @@ def get_html_for_action_link_button(action_link: ActionLink):
     url = get_action_first_page_url(action_name)
     on_submenu_bar = action_link.on_submenu_bar
     return nav_button_with_link_to_avoid_weird_routing_issue(
-        action_label, url=url, open_new_window=action_link.open_new_window,
-        on_submenu_bar=on_submenu_bar
+        action_label,
+        url=url,
+        open_new_window=action_link.open_new_window,
+        on_submenu_bar=on_submenu_bar,
     )
 
 
@@ -209,7 +211,11 @@ def generic_html_button(
 
 
 def nav_button_with_link_to_avoid_weird_routing_issue(
-    button_text, url, open_new_window: bool = False, shortcut=arg_not_passed, on_submenu_bar: bool = False
+    button_text,
+    url,
+    open_new_window: bool = False,
+    shortcut=arg_not_passed,
+    on_submenu_bar: bool = False,
 ):
     ## Shouldn't really be required but button breaks for main menu
     if open_new_window:

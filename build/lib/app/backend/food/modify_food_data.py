@@ -69,7 +69,6 @@ def update_cadet_food_data(
     cadet: Cadet,
     new_food_requirements: FoodRequirements,
 ):
-    print("updating %s with %s" % (cadet, new_food_requirements))
     interface.update(
         interface.object_store.data_api.data_list_of_cadets_with_food_requirement_at_event.update_cadet_food_data,
         event_id=event.id,

@@ -73,7 +73,7 @@ def save_dict_of_df_as_xls(
                 datetime.now(local_timezone).strftime("%b %d %H%M"),
                 header_str,
             )
-            full_sheet_name=full_sheet_name[:31]
+            full_sheet_name = full_sheet_name[:31]
             df.to_excel(writer, sheet_name=full_sheet_name, index=write_index)
 
     return path_and_filename
@@ -94,7 +94,9 @@ def save_dict_of_df_as_csv(
 
     return path_and_filename
 
+
 SPREADSHEET_FILE_EXTENSIONS = [".csv", ".xlsx"]
+
 
 def load_spreadsheet_file_and_clear_nans(filename: str) -> pd.DataFrame:
     wa_as_df = load_spreadsheet_file(filename)

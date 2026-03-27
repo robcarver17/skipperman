@@ -5,7 +5,8 @@ from app.objects.abstract_objects.abstract_interface import (
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    Line, MainMenuBar,
+    Line,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
@@ -45,7 +46,8 @@ def display_form_for_clone_event_field_mapping(interface: abstractInterface):
     else:
         return Form(
             ListOfLines(
-                [nav_bar,
+                [
+                    nav_bar,
                     Line(
                         "Choose event to clone event field mapping for %s"
                         % str(current_event),

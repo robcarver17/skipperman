@@ -72,7 +72,8 @@ from app.objects.abstract_objects.abstract_lines import (
     _______________,
     DetailListOfLines,
     Line,
-    make_long_thing_detail_box, MainMenuBar,
+    make_long_thing_detail_box,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_tables import (
     Table,
@@ -106,7 +107,9 @@ def display_form_allocate_cadets_at_event(
     )
     return Form(
         ListOfLines(
-            [MainMenuBar("Events"), _______________,
+            [
+                MainMenuBar("Events"),
+                _______________,
                 get_nav_bar_top(interface),
                 Heading(
                     "Cadets in %s: Allocate groups, boats and sailing partners"

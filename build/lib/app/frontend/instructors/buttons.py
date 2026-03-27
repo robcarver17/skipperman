@@ -117,13 +117,13 @@ def get_cadet_buttons_at_start_of_row_in_edit_state(
             already_qualified=already_qualified,
         )
 
+
 AWARD_ALL_FULL_TICKS_BUTTON_VALUE = "award_all_full_ticks"
 
 award_all_full_ticks_button = Button(
-            label="Award qualification to fully ticked sailors",
-            value=AWARD_ALL_FULL_TICKS_BUTTON_VALUE
-        )
-
+    label="Award qualification to fully ticked sailors",
+    value=AWARD_ALL_FULL_TICKS_BUTTON_VALUE,
+)
 
 
 def get_cadet_buttons_at_start_of_row_in_edit_state_if_can_award_qualification(

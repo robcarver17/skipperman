@@ -24,7 +24,12 @@ from app.objects.abstract_objects.abstract_form import (
     Form,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, MainMenuBar, _______________, Line
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    MainMenuBar,
+    _______________,
+    Line,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -54,8 +59,18 @@ def display_form_WA_import_gateway(
     nav_bar = ButtonBar([main_menu_button, back_menu_button, help_button])
     upload_status = report_on_status_of_upload(interface=interface, event=event)
     buttons = get_buttons_depending_on_event_status(interface=interface, event=event)
-    return Form(ListOfLines(
-        [MainMenuBar("Events"), _______________, nav_bar, Line(heading), upload_status, buttons]))
+    return Form(
+        ListOfLines(
+            [
+                MainMenuBar("Events"),
+                _______________,
+                nav_bar,
+                Line(heading),
+                upload_status,
+                buttons,
+            ]
+        )
+    )
 
 
 def report_on_status_of_upload(

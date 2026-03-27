@@ -28,7 +28,11 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    MainMenuBar,
+)
 
 from app.data_access.init_directories import skipperman_directory
 

@@ -118,7 +118,6 @@ def get_row_for_volunteer_at_event(
     volunteer_data_at_event: AllEventDataForVolunteer,
     ready_to_swap: bool = False,
 ) -> RowInTable:
-    print(volunteer)
     first_part = get_first_part_of_row_for_volunteer_at_event(
         interface=interface,
         volunteer=volunteer,
@@ -143,7 +142,9 @@ def get_first_part_of_row_for_volunteer_at_event(
     volunteer: Volunteer,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ) -> list:
-    name_button = get_volunteer_name_cell(interface=interface, volunteer_data_at_event=volunteer_data_at_event)
+    name_button = get_volunteer_name_cell(
+        interface=interface, volunteer_data_at_event=volunteer_data_at_event
+    )
     location = get_location_button(
         interface=interface,
         volunteer_data_at_event=volunteer_data_at_event,
@@ -190,7 +191,6 @@ def get_volunteer_name_cell(
     return ListOfLines([volunteer_button, other_material, line_of_buttons]).add_Lines()
 
 
-
 def get_volunteer_button_and_other_material(
     interface: abstractInterface, volunteer_data_at_event: AllEventDataForVolunteer
 ) -> Tuple[Button, str]:
@@ -206,7 +206,7 @@ def get_volunteer_button_and_other_material(
         volunteer_label = volunteer.name
 
     if volunteer_data_at_event.unavailable_on_all_days():
-        other_material+="On site but not volunteering"
+        other_material += "On site but not volunteering"
 
     volunteer_button = Button(
         label=volunteer_label, value=get_button_value_for_volunteer_selection(volunteer)

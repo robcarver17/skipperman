@@ -456,12 +456,6 @@ class SqlDataListOfVolunteersAtEventWithPatrolBoats(GenericSqlData):
     ):
         volunteer_id = volunteer_and_boat.volunteer_id
 
-        ## FIXME TEMP CODE
-        if volunteer_id == OLD_EMPTY_VOLUNTEER_ID:
-            volunteer_id = int(EMPTY_VOLUNTEER_ID)
-        else:
-            volunteer_id = int(volunteer_id)
-
         day = volunteer_and_boat.day.name
         patrol_boat_id = int(volunteer_and_boat.patrol_boat_id)
 

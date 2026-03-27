@@ -42,7 +42,11 @@ from app.objects.abstract_objects.abstract_form import (
     File,
 )
 from app.objects.abstract_objects.abstract_text import bold, Heading
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    MainMenuBar,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
     ButtonBar,
@@ -85,9 +89,15 @@ def display_initial_generic_report_form(
         size=4,
     )
     lines_inside_form = ListOfLines(
-        [MainMenuBar("Reports"),
-         _______________,
-            nav_bar, _______________, heading, _______________, list_of_events]
+        [
+            MainMenuBar("Reports"),
+            _______________,
+            nav_bar,
+            _______________,
+            heading,
+            _______________,
+            list_of_events,
+        ]
     )
 
     return Form(lines_inside_form)
@@ -157,8 +167,9 @@ def display_form_for_generic_report_all_options(
 
     return Form(
         ListOfLines(
-            [MainMenuBar("Reports"),
-         _______________,
+            [
+                MainMenuBar("Reports"),
+                _______________,
                 navbar,
                 _______________,
                 Heading(
@@ -257,8 +268,9 @@ def display_form_for_generic_report_additional_options(
     )
     return Form(
         ListOfLines(
-            [MainMenuBar("Reports"),
-         _______________,
+            [
+                MainMenuBar("Reports"),
+                _______________,
                 ButtonBar(
                     [
                         back_menu_button,
@@ -356,8 +368,9 @@ def display_form_for_generic_report_print_options(
 
     return Form(
         ListOfLines(
-            [MainMenuBar("Reports"),
-         _______________,
+            [
+                MainMenuBar("Reports"),
+                _______________,
                 ButtonBar(
                     [
                         back_menu_button,
@@ -455,8 +468,9 @@ def display_form_for_generic_report_arrangement_options(
 
     return Form(
         ListOfLines(
-            [MainMenuBar("Reports"),
-         _______________,
+            [
+                MainMenuBar("Reports"),
+                _______________,
                 ButtonBar(
                     [
                         back_menu_button,

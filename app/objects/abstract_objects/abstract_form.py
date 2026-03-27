@@ -32,6 +32,7 @@ class Form(list):
     def include_main_menu_bar(self, include: bool):
         self._main_meny = include
 
+
 @dataclass
 class Link:
     string: str

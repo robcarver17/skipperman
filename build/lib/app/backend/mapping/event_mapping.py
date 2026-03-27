@@ -73,11 +73,9 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
     object_store: ObjectStore, event: Event, wa_id: str
 ) -> bool:
     event_id = event.id
-    print("WA %s event %s" % (event.id, wa_id))
     event_is_already_in_mapping_list = is_event_mapped_with_wa_id(
         object_store=object_store, event=event
     )
-    print("event already in mapping list %s" % str(event_is_already_in_mapping_list))
 
     if event_is_already_in_mapping_list:
         existing_wa_id = get_wa_id_for_event(event=event, object_store=object_store)
@@ -92,9 +90,6 @@ def confirm_correct_wa_mapping_and_return_true_if_new_event(
 
     wa_event_is_already_in_mapping_list = is_wa_id_in_mapping_list(
         object_store=object_store, wa_id=wa_id
-    )
-    print(
-        "wa event already in mapping list %s" % str(wa_event_is_already_in_mapping_list)
     )
 
     if wa_event_is_already_in_mapping_list:

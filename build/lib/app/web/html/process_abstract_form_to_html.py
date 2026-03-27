@@ -1,4 +1,3 @@
-
 from app.objects.abstract_objects.abstract_interface import UrlsOfInterest
 
 from app.objects.abstract_objects.abstract_form import *
@@ -25,7 +24,7 @@ def process_abstract_objects_to_html(
 ) -> Html:
     return_html = ""
 
-    #if form.include_main_menu_bar:
+    # if form.include_main_menu_bar:
     #    html_this_element =get_html_for_element_in_form(get_button_bar_of_menu_buttons_for_actions(), urls_of_interest=urls_of_interest)
     #    return_html = return_html + html_this_element
 

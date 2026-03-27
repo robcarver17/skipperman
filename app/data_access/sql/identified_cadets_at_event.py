@@ -238,10 +238,6 @@ class SqlDataListOfIdentifiedCadetsAtEvent(GenericSqlData):
         cadet_id = int(identified_cadet_at_event.cadet_id)
         row_id = str(identified_cadet_at_event.row_id)
 
-        ## FIXME: EVENTUALLY REMOVE
-        if cadet_id == OLD_TEMPORARY_SKIP_TEST_CADET_ID:
-            cadet_id = TEMPORARY_SKIP_TEST_CADET_ID
-
         insertion = "INSERT INTO %s (%s, %s, %s) VALUES (?, ?,?)" % (
             CADET_IDENTIFIED_AT_EVENT_TABLE,
             EVENT_ID,

@@ -16,7 +16,6 @@ from app.frontend.events.volunteer_rota.swapping import (
 from app.frontend.shared.buttons import (
     get_button_value_given_type_and_attributes,
     get_attributes_from_button_pressed_of_known_type,
-
 )
 from app.objects.abstract_objects.abstract_buttons import (
     Button,
@@ -101,7 +100,6 @@ def get_sort_parameters_from_buttons(button_pressed: str) -> SortParameters:
         sort_by_location=sort_by_location,
         sort_by_volunteer_name=sort_by_volunteer_name,
     )
-    print(sort_parameters)
 
     return sort_parameters
 

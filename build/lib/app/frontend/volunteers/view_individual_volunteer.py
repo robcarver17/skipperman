@@ -21,7 +21,8 @@ from app.objects.abstract_objects.abstract_buttons import (
 from app.objects.abstract_objects.abstract_lines import (
     Line,
     ListOfLines,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 from app.frontend.form_handler import (
     initial_state_form,
@@ -65,9 +66,9 @@ def display_form_for_selected_volunteer(
     buttons = buttons_for_volunteer_form()
     return Form(
         ListOfLines(
-            [MainMenuBar("Volunteers"),
-
-                 _______________,
+            [
+                MainMenuBar("Volunteers"),
+                _______________,
                 buttons,
                 _______________,
                 str(volunteer),

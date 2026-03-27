@@ -81,21 +81,6 @@ def display_login_form_on_password_error():
     return render_template("login_page_password_error.html")
 
 
-"""
-    print("login page")
-    message = html_line_wrapper.wrap_around(get_html_of_flashed_messages())
-    username = html_line_wrapper.wrap_around(html_form_text_input(input_label="Username", input_name=USERNAME))
-    password = html_line_wrapper.wrap_around(html_form_password_input(input_label="Password", input_name=PASSWORD))
-    button = html_line_wrapper.wrap_around(html_button("Log in"))
-
-    return login_html_wrapper.wrap_around(message+username+password+button)
-
-login_html_wrapper = HtmlWrapper(
-    html_container_wrapper.wrap_around(Html("%s"))
-            )
-"""
-
-
 def process_login(username: str, password: str):
     all_flask_users = get_all_flask_users()
     if username not in all_flask_users:

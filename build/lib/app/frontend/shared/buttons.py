@@ -8,7 +8,8 @@ from app.frontend.menu_define import REPORT_LINK
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     cancel_menu_button,
-    Button, ActionLink,
+    Button,
+    ActionLink,
 )
 from app.objects.abstract_objects.abstract_lines import ListOfLines
 from app.objects.cadets import Cadet

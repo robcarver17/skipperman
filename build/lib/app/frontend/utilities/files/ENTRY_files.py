@@ -17,7 +17,11 @@ from app.frontend.utilities.files.render_files import *
 
 from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.abstract_objects.abstract_lines import ListOfLines, _______________, MainMenuBar
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    _______________,
+    MainMenuBar,
+)
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.abstract_objects.abstract_buttons import (
     back_menu_button,
@@ -40,9 +44,9 @@ def display_form_file_management(interface: abstractInterface) -> Form:
     upload_files = list_of_all_upload_files_with_options()
 
     lines_inside_form = ListOfLines(
-        [MainMenuBar("Utilities"),
-
-                 _______________,
+        [
+            MainMenuBar("Utilities"),
+            _______________,
             nav_buttons,
             Heading("File Management"),
             _______________,

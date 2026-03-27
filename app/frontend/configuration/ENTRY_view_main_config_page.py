@@ -35,7 +35,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    Line, MainMenuBar, _______________,
+    Line,
+    MainMenuBar,
+    _______________,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
@@ -66,10 +68,14 @@ config_option_buttons = Line([Button(label, tile=True) for label in all_options]
 
 
 def display_form_main_config_page(interface: abstractInterface) -> Form:
-    lines_inside_form = ListOfLines([MainMenuBar("Configuration"),
-
-                 _______________,
-                                     nav_buttons, config_option_buttons])
+    lines_inside_form = ListOfLines(
+        [
+            MainMenuBar("Configuration"),
+            _______________,
+            nav_buttons,
+            config_option_buttons,
+        ]
+    )
 
     return Form(lines_inside_form)
 

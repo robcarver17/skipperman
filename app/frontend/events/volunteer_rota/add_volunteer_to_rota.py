@@ -32,8 +32,7 @@ def display_form_add_new_volunteer_to_rota_at_event(
 header_text = ListOfLines(
     [
         "Enter the details of a new volunteer to be added, or select an existing volunteer.",
-        "You should also add any parents who need to be on site for new or primary school cadets, but won't be volunteering."
-
+        "You should also add any parents who need to be on site for new or primary school cadets, but won't be volunteering.",
     ]
 )
 
@@ -42,7 +41,7 @@ parameters_for_form = ParametersForGetOrSelectVolunteerForm(
     help_string="volunteer_rota_help#add-a-volunteer",
     extra_buttons=[cancel_menu_button],
     availability_checkbox=True,
-    include_search_button=True
+    include_search_button=True,
 )
 
 

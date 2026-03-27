@@ -28,11 +28,12 @@ from app.objects.abstract_objects.abstract_buttons import (
     main_menu_button,
     Button,
     ButtonBar,
-    HelpButton
+    HelpButton,
 )
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
-    _______________, MainMenuBar,
+    _______________,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.abstract_objects.abstract_tables import Table, RowInTable
@@ -58,8 +59,9 @@ def display_form_view_of_cadets_with_sort_order_passed(
         interface=interface, sort_order=sort_order
     )
     form_contents = ListOfLines(
-        [MainMenuBar("Sailors"),
-         _______________,
+        [
+            MainMenuBar("Sailors"),
+            _______________,
             nav_buttons,
             _______________,
             sort_buttons,

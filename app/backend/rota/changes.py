@@ -169,7 +169,6 @@ def update_role_and_group_at_event_for_volunteer_on_day(
     new_group: Group,
     allow_replacement: bool,
 ):
-    print("update %s on %s to %s, %s" % (volunteer, day, new_role, new_group))
     interface.update(
         interface.object_store.data_api.data_list_of_volunteers_in_roles_at_event.update_role_and_group_at_event_for_volunteer_on_day,
         event_id=event.id,

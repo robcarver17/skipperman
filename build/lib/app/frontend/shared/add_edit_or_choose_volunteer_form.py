@@ -21,7 +21,6 @@ from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
     HelpButton,
-
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -120,8 +119,6 @@ def get_add_volunteer_form_with_information_passed(
     return Form(list_of_lines_inside_form)
 
 
-
-
 def form_fields_for_add_volunteer(
     volunteer: Volunteer, availability_checkbox: bool = False
 ):
@@ -133,13 +130,12 @@ def form_fields_for_add_volunteer(
     )
     form_fields = [first_name, surname]
     if availability_checkbox:
-        form_fields.append(
-            dropdown_for_helping()
-        )
+        form_fields.append(dropdown_for_helping())
 
     form_fields = ListOfLines(form_fields).add_Lines()
 
     return form_fields
+
 
 def dropdown_for_helping():
     return dropDownInput(

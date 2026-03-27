@@ -22,7 +22,8 @@ from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     DetailListOfLines,
     DetailLine,
-    ProgressBar, MainMenuBar,
+    ProgressBar,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_tables import (
     DetailTable,
@@ -36,7 +37,9 @@ from app.objects.abstract_objects.abstract_text import (
     Heading,
 )
 from app.objects.utilities.exceptions import arg_not_passed
-from app.web.end_points.underlying_menu_pages import get_button_bar_of_menu_buttons_for_actions
+from app.web.end_points.underlying_menu_pages import (
+    get_button_bar_of_menu_buttons_for_actions,
+)
 
 from app.web.html.abstract_components_to_html import (
     generic_html_button,
@@ -53,7 +56,8 @@ from app.web.html.html_components import (
     html_table_row_wrapper,
     html_table_heading_row_wrapper,
     html_table_element_wrapper,
-    html_table_heading_wrapper, submenu_bar_wrapper,
+    html_table_heading_wrapper,
+    submenu_bar_wrapper,
 )
 from app.web.html.config_html import DEBUG
 from app.objects.abstract_objects.abstract_lines import HorizontalLine

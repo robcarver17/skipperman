@@ -7,7 +7,6 @@ from app.data_access.configuration.configuration import (
     MAX_CADET_AGE,
 )
 from app.data_access.configuration.fixed import (
-
     DAYS_IN_YEAR,
 )
 from app.objects.utilities.generic_list_of_objects import (
@@ -278,7 +277,6 @@ class ListOfCadets(GenericListOfObjectsWithIds):
             return temporary_skip_cadet
 
         return self.object_with_id(cadet_id, default=default)
-
 
     def list_of_DOB(self):
         return [item.date_of_birth_as_string() for item in self]

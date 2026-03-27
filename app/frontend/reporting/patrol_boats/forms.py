@@ -39,7 +39,7 @@ def reporting_options_form_for_patrol_boats_additional_parameters(
         line_break=True,
         include_all=True,
         event=event,
-        exclude_registration_date=True
+        exclude_registration_date=True,
     )
 
     my_options = ListOfLines(

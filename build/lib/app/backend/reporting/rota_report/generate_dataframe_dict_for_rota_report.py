@@ -58,8 +58,6 @@ def get_df_for_reporting_volunteers_with_flags(
         [(day_name, df) for day_name, df in dict_of_df.items() if len(df) > 0]
     )
 
-    print("days in dict %s" % str(dict_of_df_excluding_empty.keys()))
-
     return dict_of_df_excluding_empty
 
 

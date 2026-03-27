@@ -73,7 +73,6 @@ class DictOfVolunteersWithFoodRequirementsAtEvent(Dict[Volunteer, FoodRequiremen
         unique_list = list(set(self.values()))
         unique_list = [item for item in unique_list if not item.is_empty()]
 
-
         return unique_list
 
     def filter_for_list_of_volunteers(self, list_of_volunteers: ListOfVolunteers):

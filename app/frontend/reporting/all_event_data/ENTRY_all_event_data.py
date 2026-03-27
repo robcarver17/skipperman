@@ -20,7 +20,11 @@ from app.objects.abstract_objects.abstract_form import (
     File,
     NewForm,
 )
-from app.objects.abstract_objects.abstract_lines import ListOfLines, MainMenuBar, _______________
+from app.objects.abstract_objects.abstract_lines import (
+    ListOfLines,
+    MainMenuBar,
+    _______________,
+)
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
     main_menu_button,
@@ -36,8 +40,13 @@ def display_form_for_all_event_data_report(interface: abstractInterface):
         "Select to dump giant spreadsheet of all event data", centred=True, size=4
     )
     contents_of_form = ListOfLines(
-        [MainMenuBar("Reports"),
-         _______________,ButtonBar([main_menu_button, back_menu_button]), title, event_buttons]
+        [
+            MainMenuBar("Reports"),
+            _______________,
+            ButtonBar([main_menu_button, back_menu_button]),
+            title,
+            event_buttons,
+        ]
     )
 
     return Form(contents_of_form)

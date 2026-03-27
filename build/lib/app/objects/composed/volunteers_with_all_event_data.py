@@ -57,9 +57,9 @@ class AllEventDataForVolunteer:
     club_boats: DictOfDaysAndClubDinghiesAtEventForPerson
     most_common_role_group_and_team_at_previous_events: RoleAndGroupAndTeam
 
-
     def unavailable_on_all_days(self):
-        return len(self.registration_data.availablity.days_available())==0
+        return len(self.registration_data.availablity.days_available()) == 0
+
     def not_on_patrol_boat_on_given_day(self, day: Day) -> bool:
         return self.patrol_boats.not_on_patrol_boat_on_given_day(day)
 

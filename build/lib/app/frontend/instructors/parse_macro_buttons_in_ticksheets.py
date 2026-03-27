@@ -100,31 +100,38 @@ def action_if_cadet_apply_qualification_button_pressed(
     )
 
 
-def action_if_apply_all_qualifications_button_pressed(
-    interface: abstractInterface
-):
+def action_if_apply_all_qualifications_button_pressed(interface: abstractInterface):
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to apply qualifications_and_ticks!")
 
     qualification = get_qualification_from_state(interface)
     awarded_by = get_volunteer_name_for_logged_in_user(interface)
-    ticksheet=get_ticksheet_data_from_state(interface)
+    ticksheet = get_ticksheet_data_from_state(interface)
     for cadet in ticksheet.list_of_cadets:
-        award_qualification_if_completed(interface=interface,
-                                         qualification=qualification,
-                                         ticksheet=ticksheet,
-                                         cadet=cadet,
-                                         awarded_by=awarded_by)
+        award_qualification_if_completed(
+            interface=interface,
+            qualification=qualification,
+            ticksheet=ticksheet,
+            cadet=cadet,
+            awarded_by=awarded_by,
+        )
 
-def award_qualification_if_completed(interface: abstractInterface, qualification: Qualification,
-                                     ticksheet: DictOfCadetsAndTicksWithinQualification,
-                                     cadet: Cadet, awarded_by: str):
+
+def award_qualification_if_completed(
+    interface: abstractInterface,
+    qualification: Qualification,
+    ticksheet: DictOfCadetsAndTicksWithinQualification,
+    cadet: Cadet,
+    awarded_by: str,
+):
     if ticksheet[cadet].already_qualified:
         return
     completed = ticksheet[cadet].all_tick_sheet_items_and_ticks().completed()
     if completed:
-        interface.log_error("Cadet %s has completed all ticks, awarding %s" % (cadet, qualification))
+        interface.log_error(
+            "Cadet %s has completed all ticks, awarding %s" % (cadet, qualification)
+        )
         apply_qualification_to_cadet(
             interface=interface,
             cadet=cadet,

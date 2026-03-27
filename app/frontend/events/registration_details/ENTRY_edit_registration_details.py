@@ -30,7 +30,8 @@ from app.objects.abstract_objects.abstract_form import Form, NewForm, File
 from app.objects.abstract_objects.abstract_lines import (
     ListOfLines,
     _______________,
-    Line, MainMenuBar,
+    Line,
+    MainMenuBar,
 )
 from app.objects.abstract_objects.abstract_buttons import (
     ButtonBar,
@@ -70,7 +71,9 @@ def display_form_edit_registration_details_given_event_and_sort_order(
     sort_buttons = get_sort_buttons()
     return Form(
         ListOfLines(
-            [MainMenuBar("Events"), _______________,
+            [
+                MainMenuBar("Events"),
+                _______________,
                 nav_buttons_top,
                 _______________,
                 Line(

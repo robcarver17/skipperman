@@ -119,8 +119,10 @@ def get_availability_information_for_volunteer(
     )
 
     if volunteer_availability.is_empty():
-        cadet_availability_overlap_rota_days = cadet_availability.days_that_intersect_with(
-            DaySelector.from_list_of_days(event.volunteer_days_in_event())
+        cadet_availability_overlap_rota_days = (
+            cadet_availability.days_that_intersect_with(
+                DaySelector.from_list_of_days(event.volunteer_days_in_event())
+            )
         )
         volunteer_availability = cadet_availability_overlap_rota_days
 

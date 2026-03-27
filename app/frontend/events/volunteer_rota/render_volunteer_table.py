@@ -206,7 +206,7 @@ def get_volunteer_button_and_other_material(
         volunteer_label = volunteer.name
 
     if volunteer_data_at_event.unavailable_on_all_days():
-        other_material+="Parent on site, not volunteering on any days"
+        other_material+="On site but not volunteering"
 
     volunteer_button = Button(
         label=volunteer_label, value=get_button_value_for_volunteer_selection(volunteer)

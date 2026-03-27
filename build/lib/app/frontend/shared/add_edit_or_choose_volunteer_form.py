@@ -21,6 +21,7 @@ from app.objects.abstract_objects.abstract_buttons import (
     cancel_menu_button,
     Button,
     HelpButton,
+
 )
 from app.objects.abstract_objects.abstract_form import (
     Form,
@@ -119,6 +120,8 @@ def get_add_volunteer_form_with_information_passed(
     return Form(list_of_lines_inside_form)
 
 
+
+
 def form_fields_for_add_volunteer(
     volunteer: Volunteer, availability_checkbox: bool = False
 ):
@@ -131,20 +134,23 @@ def form_fields_for_add_volunteer(
     form_fields = [first_name, surname]
     if availability_checkbox:
         form_fields.append(
-            dropDownInput(
-                dict_of_options={
-                    VOLUNTEERING: VOLUNTEERING,
-                    NO_AVAILABILITY: NO_AVAILABILITY,
-                },
-                input_label="Select if parent on site ",
-                input_name=NO_AVAILABILITY_NAME,
-                default_label=VOLUNTEERING,
-            )
+            dropdown_for_helping()
         )
 
     form_fields = ListOfLines(form_fields).add_Lines()
 
     return form_fields
+
+def dropdown_for_helping():
+    return dropDownInput(
+        dict_of_options={
+            VOLUNTEERING: VOLUNTEERING,
+            NO_AVAILABILITY: NO_AVAILABILITY,
+        },
+        input_label="Select if parent on site ",
+        input_name=NO_AVAILABILITY_NAME,
+        default_label=VOLUNTEERING,
+    )
 
 
 NO_AVAILABILITY = "Parent on site, not volunteering"

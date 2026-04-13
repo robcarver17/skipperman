@@ -80,21 +80,16 @@ from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
-    st = SimpleTimer()
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
-    st.elapsed("Sorts and filters")
     event = get_event_from_state(interface)
 
     preamble_before_table = get_preamble_before_table(interface=interface, event=event)
-    st.elapsed("preamble")
     volunteer_table = get_volunteer_table(
         event=event, interface=interface, sorts_and_filters=sorts_and_filters
     )
-    st.elapsed("table")
     material_around_table = get_filters_and_buttons(
         interface=interface, event=event, sorts_and_filters=sorts_and_filters
     )
-    st.elapsed("material")
     form = Form(
         ListOfLines(
             preamble_before_table

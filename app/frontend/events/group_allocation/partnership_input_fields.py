@@ -167,7 +167,6 @@ def get_dropdown_field_for_partner_allocation(
     list_of_other_cadets: List[str],
     current_partner_name: str,
 ) -> dropDownInput:
-    list_of_other_cadets = NO_PARTNERSHIP_LIST_OF_STR + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
         [(cadet_name, cadet_name) for cadet_name in list_of_other_cadets]
     )

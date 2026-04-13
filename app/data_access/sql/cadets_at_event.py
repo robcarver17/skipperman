@@ -128,6 +128,39 @@ class SqlDataListOfCadetsAtEvent(GenericSqlData):
         finally:
             self.close()
 
+    def is_cadet_at_event_and_active(self, event_id: str, cadet_id: str):
+        if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT %s FROM %s WHERE %s=%d AND %s=%d """
+                % (
+                    CADET_REGISTRATION_STATUS,
+                    CADETS_AT_EVENT_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
+                )
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading cadets at events" % str(e1))
+        finally:
+            self.close()
+
+        if len(raw_list) == 0:
+            return False
+        elif len(raw_list) > 1:
+            raise MultipleMatches
+
+        raw_data = raw_list[0]
+        status = RegistrationStatus(raw_data[0])
+
+        return status.is_active
+
     def get_existing_cadet_at_event(
         self, event_id: str, cadet_id: str, default=missing_data
     ) -> CadetWithIdAtEvent:

@@ -78,8 +78,12 @@ class Cadet(GenericSkipperManObjectWithIds):
             self.first_name,
             self.surname,
             self.date_of_birth_as_string(),
-            describe_status(self.membership_status),
+            self.describe_status,
         )
+
+    @property
+    def describe_status(self):
+        return describe_status(self.membership_status)
 
     def date_of_birth_as_string(self):
         if self.has_default_date_of_birth:
@@ -178,6 +182,13 @@ class Cadet(GenericSkipperManObjectWithIds):
     def has_irrelevant_date_of_birth(self):
         return self.date_of_birth == IRRELEVANT_DATE_OF_BIRTH
 
+    @property
+    def is_non_member(self):
+        return not self.is_member
+
+    @property
+    def is_member(self):
+        return self.membership_status is current_member
 
 def dob_from_passed_dob(date_of_birth: datetime.date, dob_status: str):
     if dob_status == DOB_SURE:

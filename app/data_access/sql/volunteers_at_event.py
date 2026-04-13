@@ -2,11 +2,13 @@ from typing import Dict
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
+from app.objects.cadets import Cadet
 from app.objects.composed.volunteers_at_event_with_registration_data import (
     DictOfRegistrationDataForVolunteerAtEvent,
     RegistrationDataForVolunteerAtEvent,
 )
 from app.objects.day_selectors import DaySelector, Day
+from app.objects.events import Event
 from app.objects.utilities.exceptions import missing_data, MultipleMatches
 from app.objects.volunteer_at_event_with_id import (
     ListOfVolunteersAtEventWithId,
@@ -19,6 +21,27 @@ INDEX_VOLUNTEERS_AT_EVENT_TABLE = "index_volunteers_at_event"
 
 
 class SqlDataListOfVolunteersAtEvent(GenericSqlData):
+    def get_list_of_volunteers_associated_with_cadet_at_event(
+            self, cadet: Cadet, event: Event
+    ) -> ListOfVolunteers:
+        list_of_volunteers = self.get_list_of_volunteers_associated_with_cadet(
+             cadet=cadet
+        )
+        volunteers = [
+            volunteer
+            for volunteer in list_of_volunteers
+            if self.is_volunteer_already_at_event(
+                 event_id=event.id, volunteer_id=volunteer.id
+            )
+        ]
+        return ListOfVolunteers(volunteers)
+
+    def get_list_of_volunteers_associated_with_cadet(self, cadet: Cadet) -> ListOfVolunteers:
+        return self.object_store.get(
+            self.object_store.data_api.data_list_of_cadet_volunteer_associations.get_list_of_volunteers_associated_with_cadet,
+            cadet_id=cadet.id,
+        )
+
     def make_volunteer_available_on_day(
         self, volunteer_id: str, event_id: str, day: Day
     ):

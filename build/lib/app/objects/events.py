@@ -2,7 +2,6 @@ from typing import List
 from dataclasses import dataclass
 import datetime
 
-
 from app.objects.utilities.utils import similar
 from app.objects.utilities.transform_data import transform_date_into_str
 from app.objects.utilities.generic_list_of_objects import (
@@ -382,3 +381,38 @@ def get_past_days_selector_from_event_or_all_days_if_missing(
         return event.day_selector_for_days_in_event()
     else:
         return day_selector
+
+
+def remove_event_and_possibly_past_events_and_sort(
+    list_of_events_sorted_by_date_asc: ListOfEvents,
+    excluding_event: Event = arg_not_passed,
+    only_events_before_excluded_event: bool = True,
+):
+    try:  # weird not a singleton error
+        if excluding_event == arg_not_passed:
+            return list_of_events_sorted_by_date_asc
+    except:
+        pass
+
+    idx_of_event = list_of_events_sorted_by_date_asc.index_of_id(excluding_event.id)
+    if only_events_before_excluded_event:
+        list_of_events_sorted_by_date_asc = list_of_events_sorted_by_date_asc[
+            :idx_of_event
+        ]  ## only those that occured before this event
+    else:
+        list_of_events_sorted_by_date_asc.pop(idx_of_event)
+
+    return ListOfEvents(list_of_events_sorted_by_date_asc)
+ALL_EVENTS = 99999999999999
+
+
+def get_N_most_recent_events_newest_last(
+    list_of_events: ListOfEvents,
+    N_events: int = ALL_EVENTS,
+) -> ListOfEvents:
+    list_of_events_sorted_by_date_desc = (
+        list_of_events.sort_by_start_date_asc()
+    )  ## newest last
+
+    return ListOfEvents(list_of_events_sorted_by_date_desc[-N_events:])
+

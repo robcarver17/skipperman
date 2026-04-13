@@ -19,6 +19,7 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.identified_volunteer_at_event import RowIDAndIndex
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
+from app.objects.utilities.utils import SimpleTimer
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -75,18 +76,25 @@ from app.backend.events.event_warnings import (
 
 
 def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
+    st = SimpleTimer()
     warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
+    st.elapsed("skips")
     warn_on_all_volunteers_availability_volunteers_missing(
         interface=interface, event=event
     )
+    st.elapsed("missing")
     warn_on_all_volunteers_availability_sailors_missing(
         interface=interface, event=event
     )
+    st.elapsed("sailors missing")
     warn_on_all_volunteers_group(interface=interface, event=event)
+    st.elapsed("groups")
     warn_on_all_volunteers_unconnected(interface=interface, event=event)
+    st.elapsed("unconnected")
     warn_on_volunteer_qualifications(interface=interface, event=event)
+    st.elapsed("qualifications")
     warn_on_cadets_which_should_have_volunteers(interface=interface, event=event)
-
+    st.elapsed("volunteers")
 
 def warn_on_all_volunteers_availability_volunteers_missing(
     interface: abstractInterface, event: Event
@@ -497,7 +505,6 @@ def warn_on_cadets_which_should_have_volunteers(
         )
         for cadet in active_cadets
     ]
-
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
     process_list_of_warnings_which_auto_clear(
         interface=interface,
@@ -507,36 +514,39 @@ def warn_on_cadets_which_should_have_volunteers(
         category=CADET_WITHOUT_ADULT,
     )
 
-
 def warning_for_specific_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
     no_volunteer = cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
     )
-    warning = ""
     if no_volunteer:
-        first_event = is_event_first_event_for_cadet(
-            object_store=object_store, event=event, cadet=cadet
-        )
-        too_young = cadet_is_too_young_to_be_without_parent(cadet)
-        status_text = get_volunteer_status_and_possible_names(
-            object_store=object_store, event=event, cadet=cadet
-        )
-        if first_event:
-            warning += (
-                "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"
-                % (cadet.name, status_text)
-            )
+        return warning_for_specific_cadet_at_event_without_volunteer(object_store=object_store,
+                                                                     event=event,
+                                                                     cadet=cadet)
+    else:
+        return ""
 
-        if too_young:
-            warning += (
-                "%s is too young to be at the event by themselves but has no connected volunteer %s"
-                % (cadet.name, status_text)
-            )
+def warning_for_specific_cadet_at_event_without_volunteer(
+    object_store: ObjectStore, event: Event, cadet: Cadet
+) -> str:
+    status_text = get_volunteer_status_and_possible_names(
+        object_store=object_store, event=event, cadet=cadet
+    )
+    too_young = cadet_is_too_young_to_be_without_parent(cadet)
+    if too_young:
+        return  "%s is too young to be at the event by themselves but has no connected volunteer %s" % (cadet.name, status_text)
 
-    return warning
+    if cadet.is_non_member:
+        return "%s is not a member (status: %s) so should not be at event by themselves but has no connected volunteer %s" % (cadet.name, cadet.describe_status, status_text)
 
+    first_event = is_event_first_event_for_cadet(
+        object_store=object_store, event=event, cadet=cadet
+    )
+    if first_event:
+        return  "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"  % (cadet.name, status_text)
+
+    return ""
 
 def cadet_has_no_active_volunteer(
     object_store: ObjectStore, event: Event, cadet: Cadet

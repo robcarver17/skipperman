@@ -1,3 +1,5 @@
+from copy import copy
+
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.objects.utilities.transform_data import date2int, int2date
 
@@ -18,7 +20,7 @@ from app.objects.events import (
     SORT_BY_START_ASC,
     SORT_BY_NAME,
     Event,
-    NO_REGISTRATION_DATE,
+     remove_event_and_possibly_past_events_and_sort, get_N_most_recent_events_newest_last,
 )
 
 
@@ -34,6 +36,27 @@ def get_sort_clause(sort_by: str = arg_not_passed):
 
 
 class SqlDataListOfEvents(GenericSqlData):
+    def get_list_of_last_N_events(
+            self,
+            excluding_event: Event,
+            only_events_before_excluded_event: bool,
+            N_events: int,
+    ) -> ListOfEvents:
+
+        list_of_events_sorted_by_date_asc = copy(self.read(sort_by=SORT_BY_START_ASC))
+
+        list_of_events = remove_event_and_possibly_past_events_and_sort(
+            list_of_events_sorted_by_date_asc=list_of_events_sorted_by_date_asc,
+            excluding_event=excluding_event,
+            only_events_before_excluded_event=only_events_before_excluded_event,
+        )
+
+        list_of_events = get_N_most_recent_events_newest_last(
+            list_of_events, N_events=N_events
+        )
+
+        return list_of_events
+
     def add_event(self, event: Event):
         if event.invalid:
             raise Exception("Event invalid because %s" % event.invalid_reason())

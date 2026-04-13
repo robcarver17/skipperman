@@ -1,4 +1,5 @@
 from collections import Counter
+from datetime import datetime
 
 from difflib import SequenceMatcher
 
@@ -6,6 +7,16 @@ from itertools import groupby
 
 OPTIMAL_LINE_LENGTH = 20
 
+
+class SimpleTimer:
+    def __init__(self):
+        self._current = datetime.now()
+
+    def elapsed(self, name:str):
+        time_now = datetime.now()
+        d = time_now - self._current
+        print("%s took %f seconds" % (name, d.total_seconds()))
+        self._current = time_now
 
 def all_equal(iterable):
     g = groupby(iterable)

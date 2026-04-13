@@ -39,11 +39,13 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
+from app.objects.utilities.utils import SimpleTimer
 
 
 def get_preamble_before_table(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
+
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     header_buttons = get_header_buttons_for_rota(interface)
     if is_ready_to_swap(interface):
@@ -57,7 +59,6 @@ def get_preamble_before_table(
                 Heading("Swapping: click on swapper or cancel", size=3, centred=True),
             ]
         )
-
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
     summary_group_table = get_summary_group_table(interface=interface, event=event)
     summary_instructor_table = get_summary_instructor_group_table(
@@ -67,7 +68,6 @@ def get_preamble_before_table(
         interface=interface, event=event
     )
     warnings = get_volunteer_warning_table(interface)
-
     return ListOfLines(
         [
             MainMenuBar("Events"),
@@ -153,12 +153,14 @@ def get_volunteer_warning_table(
     interface: abstractInterface,
 ) -> ListOfLines:
     event = get_event_from_state(interface)
+    st = SimpleTimer()
 
     process_all_warnings_for_rota(interface=interface, event=event)
     interface.clear()
-
+    st.elapsed("process")
     all_warnings = get_all_saved_warnings_for_volunteer_rota(
         object_store=interface.object_store, event=event
     )
+    st.elapsed("get saved")
 
     return display_warnings_tables(all_warnings)

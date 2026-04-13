@@ -157,13 +157,11 @@ def is_event_first_event_for_cadet(
 
 
 def is_cadet_at_event_and_active(object_store: ObjectStore, event: Event, cadet: Cadet):
-    item = object_store.data_api.data_cadets_at_event.get_existing_cadet_at_event(
-        event_id=event.id, cadet_id=cadet.id, default=missing_data
-    )  ## no cache
-    if item is missing_data:
-        return False
-
-    return item.status.is_active
+    ## no cache
+    return object_store.data_api.data_cadets_at_event.is_cadet_at_event_and_active(
+        event_id=event.id,
+        cadet_id=cadet.id
+    )
 
 
 def is_cadet_already_at_event(

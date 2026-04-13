@@ -517,37 +517,36 @@ def warn_on_cadets_which_should_have_volunteers(
 def warning_for_specific_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
-    st= SimpleTimer()
     no_volunteer = cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
     )
-    st.elapsed("no volunteer for %s?" % cadet)
-    warning = ""
     if no_volunteer:
-        first_event = is_event_first_event_for_cadet(
-            object_store=object_store, event=event, cadet=cadet
-        )
-        st.elapsed("first event")
-        too_young = cadet_is_too_young_to_be_without_parent(cadet)
-        st.elapsed("too young")
-        status_text = get_volunteer_status_and_possible_names(
-            object_store=object_store, event=event, cadet=cadet
-        )
-        st.elapsed("status text")
-        if first_event:
-            warning += (
-                "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"
-                % (cadet.name, status_text)
-            )
+        return warning_for_specific_cadet_at_event_without_volunteer(object_store=object_store,
+                                                                     event=event,
+                                                                     cadet=cadet)
+    else:
+        return ""
 
-        if too_young:
-            warning += (
-                "%s is too young to be at the event by themselves but has no connected volunteer %s"
-                % (cadet.name, status_text)
-            )
+def warning_for_specific_cadet_at_event_without_volunteer(
+    object_store: ObjectStore, event: Event, cadet: Cadet
+) -> str:
+    status_text = get_volunteer_status_and_possible_names(
+        object_store=object_store, event=event, cadet=cadet
+    )
+    too_young = cadet_is_too_young_to_be_without_parent(cadet)
+    if too_young:
+        return  "%s is too young to be at the event by themselves but has no connected volunteer %s" % (cadet.name, status_text)
 
-    return warning
+    if cadet.is_non_member:
+        return "%s is not a member (status: %s) so should not be at event by themselves but has no connected volunteer %s" % (cadet.name, cadet.describe_status, status_text)
 
+    first_event = is_event_first_event_for_cadet(
+        object_store=object_store, event=event, cadet=cadet
+    )
+    if first_event:
+        return  "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"  % (cadet.name, status_text)
+
+    return ""
 
 def cadet_has_no_active_volunteer(
     object_store: ObjectStore, event: Event, cadet: Cadet

@@ -126,18 +126,12 @@ def are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_d
 
 def get_list_of_volunteers_associated_with_cadet_at_event(
     object_store: ObjectStore, cadet: Cadet, event: Event
-):
-    list_of_volunteers = get_list_of_volunteers_associated_with_cadet(
-        object_store=object_store, cadet=cadet
+) -> ListOfVolunteers:
+    return object_store.get(
+        object_store.data_api.data_list_of_volunteers_at_event.get_list_of_volunteers_associated_with_cadet_at_event,
+        event= event,
+        cadet=cadet
     )
-    volunteers = [
-        volunteer
-        for volunteer in list_of_volunteers
-        if is_volunteer_at_event(
-            object_store=object_store, event=event, volunteer=volunteer
-        )
-    ]
-    return ListOfVolunteers(volunteers)
 
 
 def get_cadet_location_string_for_volunteer(

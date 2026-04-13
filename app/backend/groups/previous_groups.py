@@ -3,7 +3,6 @@ from typing import List, Dict
 from app.backend.cadets.list_of_cadets import get_list_of_cadets
 from app.backend.events.list_of_events import (
     get_list_of_last_N_events,
-    ALL_EVENTS,
     get_list_of_events,
 )
 from app.backend.groups.cadets_with_groups_at_event import (
@@ -20,7 +19,7 @@ from app.objects.composed.cadets_at_event_with_groups import (
 from app.objects.composed.dict_of_previous_cadet_groups import (
     DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds,
 )
-from app.objects.events import Event, ListOfEvents
+from app.objects.events import Event, ListOfEvents, ALL_EVENTS
 from app.objects.utilities.exceptions import arg_not_passed
 from app.objects.groups import Group, missing_group_display_only
 

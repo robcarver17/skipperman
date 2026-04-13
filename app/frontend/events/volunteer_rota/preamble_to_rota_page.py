@@ -153,14 +153,10 @@ def get_volunteer_warning_table(
     interface: abstractInterface,
 ) -> ListOfLines:
     event = get_event_from_state(interface)
-    st = SimpleTimer()
-
     process_all_warnings_for_rota(interface=interface, event=event)
     interface.clear()
-    st.elapsed("process")
     all_warnings = get_all_saved_warnings_for_volunteer_rota(
         object_store=interface.object_store, event=event
     )
-    st.elapsed("get saved")
 
     return display_warnings_tables(all_warnings)

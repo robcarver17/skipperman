@@ -278,12 +278,11 @@ def warn_about_single_volunteer_availablity_at_event_missing_volunteer(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,
 ) -> str:
-    active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
-        object_store=object_store, event=event, volunteer=volunteer
-    )
+    active_connected_cadets = volunteer_event_data.associated_cadets
 
     if len(active_connected_cadets) == 0:
         return ""
+
     return warn_about_volunteer_availablity_at_event_with_connected_cadets(
         event=event,
         volunteer=volunteer,

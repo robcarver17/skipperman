@@ -5,6 +5,7 @@ from app.objects.cadets import ListOfCadets
 from app.objects.composed.cadet_volunteer_associations import (
     DictOfCadetsAssociatedWithVolunteer,
 )
+from app.objects.composed.cadets_at_event_with_registration_data import DictOfCadetsWithRegistrationData
 from app.objects.composed.people_at_event_with_club_dinghies import (
     DictOfPeopleAndClubDinghiesAtEvent,
 )
@@ -84,6 +85,12 @@ class ComposedDataAllEventInfoForVolunteers(ComposedBaseData):
             event_id=event.id,
         )
 
+        dict_of_cadets_at_event= self.object_store.get(
+        self.object_store.data_api.data_cadets_at_event.read_dict_of_cadets_with_registration_data_at_event,
+        event_id=event.id,
+    )
+
+
         return compose_dict_of_all_event_data_for_volunteers(
             event=event,
             dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
@@ -97,6 +104,7 @@ class ComposedDataAllEventInfoForVolunteers(ComposedBaseData):
             list_of_groups=list_of_groups,
             list_of_roles_with_skills=list_of_roles_with_skills,
             dict_of_patrol_boat_labels_for_event=dict_of_patrol_boat_labels_for_event,
+            dict_of_cadets_at_event=dict_of_cadets_at_event
         )
 
 
@@ -113,6 +121,7 @@ def compose_dict_of_all_event_data_for_volunteers(
     list_of_roles_with_skills: ListOfRolesWithSkills,
     list_of_groups: ListOfGroups,
     dict_of_patrol_boat_labels_for_event: DictOfLabelsForEvent,
+    dict_of_cadets_at_event: DictOfCadetsWithRegistrationData
 ) -> DictOfAllEventDataForVolunteers:
     raw_dict = compose_raw_dict_of_all_event_data_for_volunteers(
         dict_of_volunteers_with_skills=dict_of_volunteers_with_skills,
@@ -122,6 +131,7 @@ def compose_dict_of_all_event_data_for_volunteers(
         dict_of_cadets_associated_with_volunteers=dict_of_cadets_associated_with_volunteers,
         dict_of_people_and_club_dinghies_at_event=dict_of_people_and_club_dinghies_at_event,
         dict_of_volunteers_with_most_common_role_and_group_across_events=dict_of_volunteers_with_most_common_role_and_group_across_events,
+        dict_of_cadets_at_event=dict_of_cadets_at_event,
         event=event,
     )
 
@@ -150,6 +160,7 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
     dict_of_cadets_associated_with_volunteers: DictOfCadetsAssociatedWithVolunteer,
     dict_of_people_and_club_dinghies_at_event: DictOfPeopleAndClubDinghiesAtEvent,
     dict_of_volunteers_with_most_common_role_and_group_across_events: DictOfVolunteersWithMostCommonRoleAndGroupAcrossEvents,
+        dict_of_cadets_at_event: DictOfCadetsWithRegistrationData,
     event: Event,
 ) -> Dict[Volunteer, AllEventDataForVolunteer]:
     ## THis construction means if we delete from registration data they won't be seen elsewhere
@@ -175,8 +186,9 @@ def compose_raw_dict_of_all_event_data_for_volunteers(
                     patrol_boats=dict_of_volunteers_at_event_with_patrol_boats.get(
                         volunteer, PatrolBoatByDayDict()
                     ),
-                    associated_cadets=dict_of_cadets_associated_with_volunteers.get(
-                        volunteer, ListOfCadets([])
+                    associated_cadets=dict_of_cadets_associated_with_volunteers.get_associated_and_active_cadets(
+                        volunteer,
+                        list_of_active_cadets=dict_of_cadets_at_event.list_of_active_cadets()
                     ),
                     club_boats=dict_of_people_and_club_dinghies_at_event.club_dinghys_for_person(
                         volunteer

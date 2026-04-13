@@ -135,4 +135,11 @@ class DEPRECATE_ListOfCadetVolunteerAssociations(
 
 
 class DictOfCadetsAssociatedWithVolunteer(Dict[Volunteer, ListOfCadets]):
-    pass
+    def get_associated_and_active_cadets(self,volunteer: Volunteer, list_of_active_cadets: ListOfCadets):
+        cadets=self.get(volunteer, None)
+        if cadets is None:
+            return ListOfCadets([])
+
+        return ListOfCadets([
+            cadet for cadet in cadets if cadet in list_of_active_cadets
+        ])

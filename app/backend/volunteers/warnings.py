@@ -496,20 +496,16 @@ def warn_on_cadets_which_should_have_volunteers(
     interface: abstractInterface, event: Event
 ):
     ## NOT GENERIC!
-    st = SimpleTimer()
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=interface.object_store, event=event
     )
-    st.elapsed("get cadets")
     list_of_warnings = [
         warning_for_specific_cadet_at_event(
             object_store=interface.object_store, event=event, cadet=cadet
         )
         for cadet in active_cadets
     ]
-    st.elapsed("warnings")
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
-    st.elapsed("remove")
     process_list_of_warnings_which_auto_clear(
         interface=interface,
         event=event,
@@ -517,23 +513,27 @@ def warn_on_cadets_which_should_have_volunteers(
         priority=HIGH_PRIORITY,
         category=CADET_WITHOUT_ADULT,
     )
-    st.elapsed("process")
 
 def warning_for_specific_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet
 ) -> str:
+    st= SimpleTimer()
     no_volunteer = cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
     )
+    st.elapsed("no volunteer for %s?" % cadet)
     warning = ""
     if no_volunteer:
         first_event = is_event_first_event_for_cadet(
             object_store=object_store, event=event, cadet=cadet
         )
+        st.elapsed("first event")
         too_young = cadet_is_too_young_to_be_without_parent(cadet)
+        st.elapsed("too young")
         status_text = get_volunteer_status_and_possible_names(
             object_store=object_store, event=event, cadet=cadet
         )
+        st.elapsed("status text")
         if first_event:
             warning += (
                 "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"

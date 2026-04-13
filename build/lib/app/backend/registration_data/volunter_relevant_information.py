@@ -124,7 +124,7 @@ def get_availability_information_for_volunteer(
                 DaySelector.from_list_of_days(event.volunteer_days_in_event())
             )
         )
-        volunteer_availability = cadet_availability_overlap_rota_days
+        volunteer_availability = DaySelector.from_list_of_days(cadet_availability_overlap_rota_days)
 
     return RelevantInformationForVolunteerAvailability(
         cadet_availability=cadet_availability,

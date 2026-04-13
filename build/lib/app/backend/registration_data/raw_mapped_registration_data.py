@@ -67,8 +67,11 @@ def get_row_in_raw_registration_data_given_id(
     registration_data = get_raw_mapped_registration_data(
         object_store=object_store, event=event
     )
+    lid = registration_data.list_of_row_ids()
+    lid.sort()
+    row_of_data = registration_data.get_row_with_rowid(row_id=row_id, default=default)
 
-    return registration_data.get_row_with_rowid(row_id=row_id, default=default)
+    return row_of_data
 
 
 def get_list_of_row_ids_in_raw_registration_data_for_event(

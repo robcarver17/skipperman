@@ -196,6 +196,18 @@ class SqlDataListOfIdentifiedVolunteersAtEvent(GenericSqlData):
 
         return ListOfIdentifiedVolunteersAtEvent(new_list)
 
+    def delete_volunteers_at_event(self, event_id: str):
+        if self.table_does_not_exist(VOLUNTEER_IDENTIFIED_AT_EVENT_TABLE):
+            return
+
+        self.cursor.execute(
+            "DELETE FROM %s WHERE %s=%d"
+            % (VOLUNTEER_IDENTIFIED_AT_EVENT_TABLE, EVENT_ID, int(event_id))
+        )
+
+        self.conn.commit()
+
+
     def write(
         self,
         list_of_identified_volunteers: ListOfIdentifiedVolunteersAtEvent,
@@ -206,7 +218,7 @@ class SqlDataListOfIdentifiedVolunteersAtEvent(GenericSqlData):
                 self.create_table()
 
             self.cursor.execute(
-                "DELETE FROM %s WHERE %s='%d"
+                "DELETE FROM %s WHERE %s=%d"
                 % (VOLUNTEER_IDENTIFIED_AT_EVENT_TABLE, EVENT_ID, int(event_id))
             )
 

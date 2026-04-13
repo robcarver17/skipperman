@@ -16,7 +16,7 @@ from app.objects.partners import (
     no_partnership_given_partner_cadet,
     NoCadetPartner,
     from_no_partner_object_to_str,
-    NO_PARTNERSHIP_LIST_OF_STR,
+    NO_PARTNERSHIP_LIST_OF_STR, NOT_ALLOCATED_STR,
 )
 from app.objects.utilities.exceptions import missing_data
 
@@ -167,6 +167,7 @@ def get_dropdown_field_for_partner_allocation(
     list_of_other_cadets: List[str],
     current_partner_name: str,
 ) -> dropDownInput:
+    list_of_other_cadets = [NOT_ALLOCATED_STR ] + list_of_other_cadets
     dict_of_all_possible_cadets = dict(
         [(cadet_name, cadet_name) for cadet_name in list_of_other_cadets]
     )

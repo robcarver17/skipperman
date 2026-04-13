@@ -45,7 +45,6 @@ from app.objects.utilities.utils import SimpleTimer
 def get_preamble_before_table(
     interface: abstractInterface, event: Event
 ) -> ListOfLines:
-    st = SimpleTimer()
 
     title = Heading("Volunteer rota for event %s" % str(event), centred=True, size=4)
     header_buttons = get_header_buttons_for_rota(interface)
@@ -61,19 +60,14 @@ def get_preamble_before_table(
             ]
         )
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
-    st.elapsed("roles")
     summary_group_table = get_summary_group_table(interface=interface, event=event)
-    st.elapsed("groups")
     summary_instructor_table = get_summary_instructor_group_table(
         interface=interface, event=event
     )
-    st.elapsed("instructors")
     targets = get_volunteer_targets_table_and_save_button(
         interface=interface, event=event
     )
-    st.elapsed("targets")
     warnings = get_volunteer_warning_table(interface)
-    st.elapsed("warnings")
     return ListOfLines(
         [
             MainMenuBar("Events"),
@@ -159,12 +153,14 @@ def get_volunteer_warning_table(
     interface: abstractInterface,
 ) -> ListOfLines:
     event = get_event_from_state(interface)
+    st = SimpleTimer()
 
     process_all_warnings_for_rota(interface=interface, event=event)
     interface.clear()
-
+    st.elapsed("process")
     all_warnings = get_all_saved_warnings_for_volunteer_rota(
         object_store=interface.object_store, event=event
     )
+    st.elapsed("get saved")
 
     return display_warnings_tables(all_warnings)

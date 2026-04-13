@@ -19,6 +19,7 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
 from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.identified_volunteer_at_event import RowIDAndIndex
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
+from app.objects.utilities.utils import SimpleTimer
 from app.objects.volunteers import Volunteer
 
 from app.data_access.store.object_store import ObjectStore
@@ -75,18 +76,25 @@ from app.backend.events.event_warnings import (
 
 
 def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
+    st = SimpleTimer()
     warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
+    st.elapsed("skips")
     warn_on_all_volunteers_availability_volunteers_missing(
         interface=interface, event=event
     )
+    st.elapsed("missing")
     warn_on_all_volunteers_availability_sailors_missing(
         interface=interface, event=event
     )
+    st.elapsed("sailors missing")
     warn_on_all_volunteers_group(interface=interface, event=event)
+    st.elapsed("groups")
     warn_on_all_volunteers_unconnected(interface=interface, event=event)
+    st.elapsed("unconnected")
     warn_on_volunteer_qualifications(interface=interface, event=event)
+    st.elapsed("qualifications")
     warn_on_cadets_which_should_have_volunteers(interface=interface, event=event)
-
+    st.elapsed("volunteers")
 
 def warn_on_all_volunteers_availability_volunteers_missing(
     interface: abstractInterface, event: Event

@@ -15,7 +15,7 @@ class SimpleTimer:
     def elapsed(self, name:str):
         time_now = datetime.now()
         d = time_now - self._current
-        print("%s took %d seconds" % (name, d.total_seconds()))
+        print("%s took %f seconds" % (name, d.total_seconds()))
         self._current = time_now
 
 def all_equal(iterable):

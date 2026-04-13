@@ -496,17 +496,20 @@ def warn_on_cadets_which_should_have_volunteers(
     interface: abstractInterface, event: Event
 ):
     ## NOT GENERIC!
+    st = SimpleTimer()
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=interface.object_store, event=event
     )
+    st.elapsed("get cadets")
     list_of_warnings = [
         warning_for_specific_cadet_at_event(
             object_store=interface.object_store, event=event, cadet=cadet
         )
         for cadet in active_cadets
     ]
-
+    st.elapsed("warnings")
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
+    st.elapsed("remove")
     process_list_of_warnings_which_auto_clear(
         interface=interface,
         event=event,
@@ -514,7 +517,7 @@ def warn_on_cadets_which_should_have_volunteers(
         priority=HIGH_PRIORITY,
         category=CADET_WITHOUT_ADULT,
     )
-
+    st.elapsed("process")
 
 def warning_for_specific_cadet_at_event(
     object_store: ObjectStore, event: Event, cadet: Cadet

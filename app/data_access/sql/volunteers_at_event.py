@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import *
@@ -21,26 +21,7 @@ INDEX_VOLUNTEERS_AT_EVENT_TABLE = "index_volunteers_at_event"
 
 
 class SqlDataListOfVolunteersAtEvent(GenericSqlData):
-    def get_list_of_volunteers_associated_with_cadet_at_event(
-            self, cadet: Cadet, event: Event
-    ) -> ListOfVolunteers:
-        list_of_volunteers = self.get_list_of_volunteers_associated_with_cadet(
-             cadet=cadet
-        )
-        volunteers = [
-            volunteer
-            for volunteer in list_of_volunteers
-            if self.is_volunteer_already_at_event(
-                 event_id=event.id, volunteer_id=volunteer.id
-            )
-        ]
-        return ListOfVolunteers(volunteers)
 
-    def get_list_of_volunteers_associated_with_cadet(self, cadet: Cadet) -> ListOfVolunteers:
-        return self.object_store.get(
-            self.object_store.data_api.data_list_of_cadet_volunteer_associations.get_list_of_volunteers_associated_with_cadet,
-            cadet_id=cadet.id,
-        )
 
     def make_volunteer_available_on_day(
         self, volunteer_id: str, event_id: str, day: Day
@@ -291,6 +272,35 @@ class SqlDataListOfVolunteersAtEvent(GenericSqlData):
             self_declared_status=str(raw_item[5]),
             list_of_associated_cadet_id=[],
         )
+
+    def list_of_volunteer_ids_at_event(self, event_id:str) -> List[str]:
+        try:
+            if self.table_does_not_exist(VOLUNTEERS_AT_EVENT_TABLE):
+                return ListOfVolunteersAtEventWithId.create_empty()
+
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT %s FROM %s WHERE %s=%d """
+                % (
+                    VOLUNTEER_ID,
+                    VOLUNTEERS_AT_EVENT_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                )
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading volunteers at event" % str(e1))
+        finally:
+            self.close()
+
+        new_list = [str(raw_item[0])
+            for raw_item in raw_list
+        ]
+
+        return new_list
+
+
 
     def read(self, event_id: str) -> ListOfVolunteersAtEventWithId:
         try:

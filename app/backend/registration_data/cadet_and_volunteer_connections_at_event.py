@@ -3,6 +3,7 @@ from typing import List, Union
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
 )
+from app.backend.registration_data.volunteer_registration_data import is_volunteer_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.registration_data.cadet_registration_data import (
@@ -120,14 +121,24 @@ def are_all_cadets_associated_with_volunteer_in_registration_data_cancelled_or_d
     return list_of_relevant_information.all_cancelled_or_deleted()
 
 
+from app.backend.volunteers.connected_cadets import get_list_of_volunteers_associated_with_cadet
+
 def get_list_of_volunteers_associated_with_cadet_at_event(
     object_store: ObjectStore, cadet: Cadet, event: Event
 ) -> ListOfVolunteers:
-    return object_store.get(
-        object_store.data_api.data_list_of_volunteers_at_event.get_list_of_volunteers_associated_with_cadet_at_event,
-        event= event,
-        cadet=cadet
-    )
+    list_of_volunteers = get_list_of_volunteers_associated_with_cadet(object_store=object_store,
+             cadet=cadet
+        )
+    volunteers = [
+        volunteer
+        for volunteer in list_of_volunteers
+        if is_volunteer_at_event(
+             object_store=object_store,event=event,
+            volunteer=volunteer
+        )
+    ]
+
+    return ListOfVolunteers(volunteers)
 
 
 def get_cadet_location_string_for_volunteer(

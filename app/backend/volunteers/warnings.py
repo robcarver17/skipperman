@@ -16,8 +16,7 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
 )
 
-from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer, \
-    DictOfAllEventDataForVolunteers
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
 from app.objects.identified_volunteer_at_event import RowIDAndIndex
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
 from app.objects.utilities.utils import SimpleTimer
@@ -505,16 +504,13 @@ def warn_on_cadets_which_should_have_volunteers(
 
 def get_list_of_active_cadets_at_event_without_volunteers(object_store: ObjectStore,
                                                           event: Event):
-    st = SimpleTimer()
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=object_store, event=event
     )
-    st.elapsed("active cadets")
 
     list_of_cadets_without_volunteers = [cadet for cadet in active_cadets if cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
     )]
-    st.elapsed("list of cadets")
 
     return ListOfCadets(list_of_cadets_without_volunteers)
 

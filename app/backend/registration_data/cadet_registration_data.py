@@ -110,11 +110,10 @@ def add_new_cadet_to_event(
 def get_list_of_active_cadets_at_event(
     object_store: ObjectStore, event: Event
 ) -> ListOfCadets:
-    return object_store.get(
-        object_store.data_api.data_cadets_at_event.get_list_of_active_cadets_at_event,
-        event_id=event.id,
-    )
+    dict_of_cadets_with_registration_data = get_dict_of_cadets_with_registration_data(object_store=object_store,
+                                                                                      event=event)
 
+    return dict_of_cadets_with_registration_data.list_of_active_cadets()
 
 def get_dict_of_cadets_with_registration_data(
     object_store: ObjectStore, event: Event

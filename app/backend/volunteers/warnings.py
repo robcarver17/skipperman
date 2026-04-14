@@ -504,13 +504,15 @@ def warn_on_cadets_which_should_have_volunteers(
 
 def get_list_of_active_cadets_at_event_without_volunteers(object_store: ObjectStore,
                                                           event: Event):
+    st = SimpleTimer()
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=object_store, event=event
     )
-
+    st.elapsed("active cadtes")
     list_of_cadets_without_volunteers = [cadet for cadet in active_cadets if cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
     )]
+    st.elapsed("without vol")
 
     return ListOfCadets(list_of_cadets_without_volunteers)
 

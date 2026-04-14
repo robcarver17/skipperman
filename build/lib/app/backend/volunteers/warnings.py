@@ -76,25 +76,18 @@ from app.backend.events.event_warnings import (
 
 
 def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
-    st = SimpleTimer()
+
     warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
-    st.elapsed("skips")
     warn_on_all_volunteers_availability_volunteers_missing(
         interface=interface, event=event
     )
-    st.elapsed("missing")
     warn_on_all_volunteers_availability_sailors_missing(
         interface=interface, event=event
     )
-    st.elapsed("sailors missing")
     warn_on_all_volunteers_group(interface=interface, event=event)
-    st.elapsed("groups")
     warn_on_all_volunteers_unconnected(interface=interface, event=event)
-    st.elapsed("unconnected")
     warn_on_volunteer_qualifications(interface=interface, event=event)
-    st.elapsed("qualifications")
     warn_on_cadets_which_should_have_volunteers(interface=interface, event=event)
-    st.elapsed("volunteers")
 
 def warn_on_all_volunteers_availability_volunteers_missing(
     interface: abstractInterface, event: Event
@@ -491,17 +484,21 @@ def warn_on_cadets_which_should_have_volunteers(
     interface: abstractInterface, event: Event
 ):
     ## NOT GENERIC!
-    active_cadets = get_list_of_active_cadets_at_event(
-        object_store=interface.object_store, event=event
+    st = SimpleTimer()
+    active_cadets_at_event_without_volunteers = get_list_of_active_cadets_at_event_without_volunteers(
+        object_store=interface.object_store,
+        event=event
     )
-
+    st.elapsed("active cadets")
     list_of_warnings = [
-        warning_for_specific_cadet_at_event(
+        warning_for_specific_cadet_at_event_without_volunteer(
             object_store=interface.object_store, event=event, cadet=cadet,
         )
-        for cadet in active_cadets
+        for cadet in active_cadets_at_event_without_volunteers
     ]
+    st.elapsed("warnings")
     list_of_warnings = remove_empty_values_in_warning_list(list_of_warnings)
+    st.elapsed("list of warnings")
     process_list_of_warnings_which_auto_clear(
         interface=interface,
         event=event,
@@ -509,20 +506,18 @@ def warn_on_cadets_which_should_have_volunteers(
         priority=HIGH_PRIORITY,
         category=CADET_WITHOUT_ADULT,
     )
+    st.elapsed("processed")
 
-def warning_for_specific_cadet_at_event(
-    object_store: ObjectStore,
-        event: Event, cadet: Cadet
-) -> str:
-    no_volunteer = cadet_has_no_active_volunteer(
-        object_store=object_store, event=event, cadet=cadet
+def get_list_of_active_cadets_at_event_without_volunteers(object_store: ObjectStore,
+                                                          event: Event):
+    active_cadets = get_list_of_active_cadets_at_event(
+        object_store=object_store, event=event
     )
-    if no_volunteer:
-        return warning_for_specific_cadet_at_event_without_volunteer(object_store=object_store,
-                                                                     event=event,
-                                                                     cadet=cadet)
-    else:
-        return ""
+
+    return ListOfCadets([cadet for cadet in active_cadets if cadet_has_no_active_volunteer(
+        object_store=object_store, event=event, cadet=cadet
+    )])
+
 
 def warning_for_specific_cadet_at_event_without_volunteer(
     object_store: ObjectStore, event: Event, cadet: Cadet,

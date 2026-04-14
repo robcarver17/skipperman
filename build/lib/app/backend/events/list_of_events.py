@@ -1,10 +1,12 @@
+from copy import copy
+
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import (
     ListOfEvents,
     SORT_BY_START_DSC,
     SORT_BY_START_ASC,
     SORT_BY_NAME,
-    Event, ALL_EVENTS,
+    Event, ALL_EVENTS, get_N_most_recent_events_newest_last, remove_event_and_possibly_past_events_and_sort,
 )
 
 from app.data_access.store.object_store import ObjectStore
@@ -63,11 +65,19 @@ def get_list_of_last_N_events(
     only_events_before_excluded_event: bool = True,
     N_events: int = ALL_EVENTS,
 ) -> ListOfEvents:
-    return object_store.get(
-        object_store.data_api.data_list_of_events.get_list_of_last_N_events,
+
+    list_of_events_sorted_by_date_asc = get_sorted_list_of_events(object_store, sort_by=SORT_BY_START_ASC)
+
+    list_of_events = remove_event_and_possibly_past_events_and_sort(
+        list_of_events_sorted_by_date_asc=list_of_events_sorted_by_date_asc,
         excluding_event=excluding_event,
         only_events_before_excluded_event=only_events_before_excluded_event,
-        N_events=N_events
     )
+
+    list_of_events = get_N_most_recent_events_newest_last(
+        list_of_events, N_events=N_events
+    )
+
+    return list_of_events
 
 

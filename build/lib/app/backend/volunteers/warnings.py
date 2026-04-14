@@ -16,7 +16,8 @@ from app.objects.composed.volunteers_at_event_with_registration_data import (
     RegistrationDataForVolunteerAtEvent,
 )
 
-from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer
+from app.objects.composed.volunteers_with_all_event_data import AllEventDataForVolunteer, \
+    DictOfAllEventDataForVolunteers
 from app.objects.identified_volunteer_at_event import RowIDAndIndex
 from app.objects.relevant_information_for_volunteers import missing_relevant_information
 from app.objects.utilities.utils import SimpleTimer
@@ -42,7 +43,6 @@ from app.backend.cadets_at_event.cadet_availability import (
 )
 from app.backend.registration_data.cadet_and_volunteer_connections_at_event import (
     get_list_of_volunteers_associated_with_cadet_at_event,
-    get_list_of_cadets_associated_with_volunteer_at_event,
 )
 
 from app.objects.cadets import (
@@ -299,9 +299,7 @@ def warn_about_single_volunteer_availablity_at_event_missing_sailor(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,
 ) -> str:
-    active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
-        object_store=object_store, event=event, volunteer=volunteer
-    )
+    active_connected_cadets = volunteer_event_data.associated_cadets
 
     if len(active_connected_cadets) == 0:
         return ""
@@ -478,9 +476,7 @@ def warn_about_single_volunteer_with_no_cadet_at_event(
     volunteer_event_data: AllEventDataForVolunteer,
     object_store: ObjectStore,  ## not used
 ) -> str:
-    active_connected_cadets = get_list_of_cadets_associated_with_volunteer_at_event(
-        object_store=object_store, event=event, volunteer=volunteer
-    )
+    active_connected_cadets = volunteer_event_data.associated_cadets
 
     if len(active_connected_cadets) == 0:
         return (
@@ -498,9 +494,10 @@ def warn_on_cadets_which_should_have_volunteers(
     active_cadets = get_list_of_active_cadets_at_event(
         object_store=interface.object_store, event=event
     )
+
     list_of_warnings = [
         warning_for_specific_cadet_at_event(
-            object_store=interface.object_store, event=event, cadet=cadet
+            object_store=interface.object_store, event=event, cadet=cadet,
         )
         for cadet in active_cadets
     ]
@@ -514,7 +511,8 @@ def warn_on_cadets_which_should_have_volunteers(
     )
 
 def warning_for_specific_cadet_at_event(
-    object_store: ObjectStore, event: Event, cadet: Cadet
+    object_store: ObjectStore,
+        event: Event, cadet: Cadet
 ) -> str:
     no_volunteer = cadet_has_no_active_volunteer(
         object_store=object_store, event=event, cadet=cadet
@@ -527,23 +525,21 @@ def warning_for_specific_cadet_at_event(
         return ""
 
 def warning_for_specific_cadet_at_event_without_volunteer(
-    object_store: ObjectStore, event: Event, cadet: Cadet
+    object_store: ObjectStore, event: Event, cadet: Cadet,
+
 ) -> str:
-    status_text = get_volunteer_status_and_possible_names(
-        object_store=object_store, event=event, cadet=cadet
-    )
+    if cadet.is_non_member:
+        return "%s is not a member (status: %s) so should not be at event by themselves but has no connected volunteer" % (cadet.name, cadet.describe_status)
+
     too_young = cadet_is_too_young_to_be_without_parent(cadet)
     if too_young:
-        return  "%s is too young to be at the event by themselves but has no connected volunteer %s" % (cadet.name, status_text)
-
-    if cadet.is_non_member:
-        return "%s is not a member (status: %s) so should not be at event by themselves but has no connected volunteer %s" % (cadet.name, cadet.describe_status, status_text)
+        return  "%s is too young to be at the event by themselves but has no connected volunteer" % (cadet.name)
 
     first_event = is_event_first_event_for_cadet(
         object_store=object_store, event=event, cadet=cadet
     )
     if first_event:
-        return  "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer %s"  % (cadet.name, status_text)
+        return  "It's the first event for %s and must not be at the event by themselves but they have no connected volunteer"  % (cadet.name)
 
     return ""
 
@@ -576,7 +572,7 @@ def get_volunteer_status_and_possible_names(
     if len(status_in_rows) > 1:
         status_in_rows.append("[for different registered cadets]")
 
-    return "(Declared volunteer status: %s)" % ", ".join(status_in_rows)
+    return "(Declared volunteer status: '%s')" % ", ".join(status_in_rows)
 
 
 from app.backend.registration_data.identified_volunteers_at_event import (

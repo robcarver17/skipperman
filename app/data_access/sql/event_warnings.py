@@ -171,18 +171,19 @@ class SqlDataListOfEventWarnings(GenericSqlData):
 
             cursor = self.cursor
             cursor.execute(
-                """SELECT * FROM %s WHERE %s=%d AND %s='%s' AND %s='%s' AND %s='%s' """
+                """SELECT * FROM %s WHERE %s=%d AND %s=? AND %s=? AND %s=? """
                 % (
                     EVENT_WARNING_TABLE,
                     EVENT_ID,
                     int(event_id),
                     CATEGORY,
-                    str(warning_log.category),
                     PRIORITY,
-                    str(warning_log.priority),
                     WARNING_TEXT,
-                    str(warning_log.warning),
-                )
+                ),
+                (                    str(warning_log.category),
+                                     str(warning_log.priority),
+                                     str(warning_log.warning)
+                                     )
             )
             raw_list = cursor.fetchall()
         except Exception as e1:

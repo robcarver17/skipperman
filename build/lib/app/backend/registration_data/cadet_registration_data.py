@@ -146,11 +146,12 @@ def is_event_first_event_for_cadet(
         excluding_event=event,
         only_events_before_excluded_event=True,
     )
-    list_of_events_where_active = [
-        is_cadet_at_event_and_active(
-            object_store=object_store, event=other_event, cadet=cadet
-        )
+    list_of_events_where_active = [event
         for other_event in list_of_events
+         if   is_cadet_at_event_and_active(
+        object_store=object_store, event=other_event, cadet=cadet
+    )
+
     ]
 
     return len(list_of_events_where_active) == 0

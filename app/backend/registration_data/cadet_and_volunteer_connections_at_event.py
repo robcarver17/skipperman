@@ -3,9 +3,6 @@ from typing import List, Union
 from app.backend.groups.cadets_with_groups_at_event import (
     get_dict_of_cadets_with_groups_at_event,
 )
-from app.backend.registration_data.volunteer_registration_data import (
-    is_volunteer_at_event,
-)
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.registration_data.cadet_registration_data import (
@@ -21,7 +18,6 @@ from app.backend.registration_data.identified_volunteers_at_event import (
 from app.backend.volunteers.connected_cadets import (
     get_list_of_cadets_associated_with_volunteer,
     add_list_of_cadets_to_volunteer_connection,
-    get_list_of_volunteers_associated_with_cadet,
 )
 from app.data_access.store.object_store import ObjectStore
 from app.objects.cadets import ListOfCadets, Cadet
@@ -138,13 +134,7 @@ def get_cadet_location_string_for_volunteer(
     object_store: ObjectStore,
     volunteer_data_at_event: AllEventDataForVolunteer,
 ):
-    list_of_cadets_at_event_and_associated = (
-        get_list_of_cadets_associated_with_volunteer_at_event(
-            object_store=object_store,
-            event=volunteer_data_at_event.event,
-            volunteer=volunteer_data_at_event.volunteer,
-        )
-    )
+    list_of_cadets_at_event_and_associated = volunteer_data_at_event.associated_cadets
     if len(list_of_cadets_at_event_and_associated) == 0:
         return "xx No associated sailor(s) at event"  ## trick to get at end of sort
 
@@ -197,18 +187,3 @@ def list_of_cadet_groups_associated_with_volunteer(
 
 no_cadets_allocated_to_groups_yet = object()
 
-
-def get_list_of_cadets_associated_with_volunteer_at_event(
-    object_store: ObjectStore, event: Event, volunteer: Volunteer
-):
-    list_of_cadets = get_list_of_cadets_associated_with_volunteer(
-        volunteer=volunteer, object_store=object_store
-    )
-    active_cadets_at_event = get_list_of_active_cadets_at_event(
-        object_store=object_store, event=event
-    )
-    list_of_cadets_at_event = [
-        cadet for cadet in list_of_cadets if cadet in active_cadets_at_event
-    ]
-
-    return ListOfCadets(list_of_cadets_at_event)

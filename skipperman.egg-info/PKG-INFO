@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: skipperman
 Version: 0.1
 Summary: BSC Cadet skipper management system
@@ -12,6 +12,9 @@ Classifier: License :: GNU v3
 Classifier: Operating System :: Linux
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
 
 # 'SKIPPERMAN'
 

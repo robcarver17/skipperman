@@ -27,11 +27,15 @@ EDIT_CHECKBOX_BUTTON_LABEL = "Edit using checkboxes (allows entry of full ticks 
 SAVE_BUTTON_LABEL = "Save changes"
 PRINT_BUTTON_LABEL = "Print ticksheet to excel file"
 SHOW_ALL_CADETS_BUTTON_LABEL = "Show all cadets"
-
+AWARD_ALL_WITH_FULL_TICKS = "Award qualification to all cadets with full ticks"
+AWARD_ALL_ANYWAY = "Award qualification to all cadets - whether ticked or not"
 
 def get_buttons_for_ticksheet(interface: abstractInterface) -> Line:
     if not_editing(interface):
         return get_buttons_for_ticksheet_when_not_editing(interface)
+
+    if user_can_award_qualifications(interface):
+        return Line([award_all_with_full_ticks, award_qualification_to_all_in_group])
     else:
         ## No buttons, just the save / cancel on top of the nav bar
         return Line([])
@@ -54,6 +58,8 @@ def get_buttons_for_ticksheet_when_not_editing(interface: abstractInterface) -> 
 edit_checkbox_button = Button(EDIT_CHECKBOX_BUTTON_LABEL)
 edit_dropdown_button = Button(EDIT_DROPDOWN_BUTTON_LABEL)
 print_button = Button(PRINT_BUTTON_LABEL)
+award_all_with_full_ticks=Button(AWARD_ALL_WITH_FULL_TICKS)
+award_qualification_to_all_in_group = Button(AWARD_ALL_ANYWAY)
 show_all_cadets_button = Button(SHOW_ALL_CADETS_BUTTON_LABEL)
 
 

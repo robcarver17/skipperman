@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Union
 
+from app.backend.cadets_at_event.update_status_and_availability_of_cadets_at_event import \
+    update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting
 from app.backend.events.event_warnings import (
     add_new_event_warning_given_components_checking_for_duplicate,
 )
@@ -8,7 +10,7 @@ from app.data_access.configuration.configuration import local_timezone
 from app.objects.cadets import Cadet
 
 from app.backend.registration_data.update_cadets_at_event import (
-    no_important_difference_between_cadets_at_event,
+    no_important_difference_between_cadets_at_event, was_unpaid_no_paid_no_availability_changes,
 )
 from app.backend.registration_data.cadet_registration_data import (
     is_cadet_already_at_event,
@@ -188,8 +190,23 @@ def process_update_to_existing_cadet_at_event(
             row_in_registration_data=row_in_registration_data, event=event, cadet=cadet
         )
     )
+    if was_unpaid_no_paid_no_availability_changes(
+            new_cadet_at_event_data=new_cadet_at_event_data,
+            existing_cadet_at_event_data=existing_cadet_at_event_data,
 
-    if no_important_difference_between_cadets_at_event(
+    ):
+        print("Cadet %s payment status has changed but nothing else" % str(cadet))
+        interface.log_error("Cadet %s status was %s and is now %s" % (cadet.name, existing_cadet_at_event_data.status,
+                                                               new_cadet_at_event_data.status))
+        update_status_of_existing_cadet_at_event_when_not_cancelling_or_deleting(
+            interface=interface,
+            event=event,
+            cadet=cadet,
+            new_status=new_cadet_at_event_data.status,
+        )
+        return process_next_cadet_at_event(interface)
+
+    elif no_important_difference_between_cadets_at_event(
         new_cadet_at_event_data=new_cadet_at_event_data,
         existing_cadet_at_event_data=existing_cadet_at_event_data,
     ):

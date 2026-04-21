@@ -20,7 +20,7 @@ from app.frontend.instructors.buttons import (
     get_cadet_buttons_at_start_of_row_in_edit_state,
     get_button_or_label_for_tickitem_name,
     get_select_cadet_button_when_in_no_edit_mode,
-    award_all_full_ticks_button,
+
 )
 from app.backend.qualifications_and_ticks.ticksheets import (
     get_ticksheet_data_for_cadets_at_event_in_group_with_qualification,
@@ -75,7 +75,7 @@ def get_top_two_rows_for_table(
         ticksheet_data.list_of_substage_names_aligned_to_tick_sheet_items
     )
 
-    first_row = [get_corner_cell(interface)]
+    first_row = [""]
     second_row = [""]
     current_substage = ""
     for tick_item, substage_name in zip(
@@ -98,15 +98,6 @@ def get_top_two_rows_for_table(
 
     return [first_row, second_row]
 
-
-def get_corner_cell(interface: abstractInterface) -> Union[Button, str]:
-    if not_editing(interface):
-        return ""
-    can_award_qualification = user_can_award_qualifications(interface)
-    if can_award_qualification:
-        return award_all_full_ticks_button
-    else:
-        return ""
 
 
 def get_body_of_table(

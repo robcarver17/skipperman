@@ -4,7 +4,7 @@ from app.objects.cadets import Cadet
 
 from app.objects.cadet_with_id_at_event import CadetWithIdAtEvent
 from app.objects.events import Event
-
+from app.objects.registration_status import active_paid_status, active_unpaid_status, active_part_paid_status
 
 def no_important_difference_between_cadets_at_event(
     new_cadet_at_event_data: CadetWithIdAtEvent,
@@ -22,6 +22,20 @@ def no_important_difference_between_cadets_at_event(
 
     return status_matches and available_matches
 
+def was_unpaid_no_paid_no_availability_changes(
+        new_cadet_at_event_data: CadetWithIdAtEvent,
+        existing_cadet_at_event_data: CadetWithIdAtEvent,
+):
+    if existing_cadet_at_event_data.status in [active_unpaid_status, active_part_paid_status]:
+        if new_cadet_at_event_data.status in [active_part_paid_status, active_paid_status]:
+            available_matches = (
+                    new_cadet_at_event_data.availability
+                    == existing_cadet_at_event_data.availability
+            )
+            if available_matches:
+                return True
+
+    return False
 
 def registration_replacing_manual(
     new_cadet_at_event_data: CadetWithIdAtEvent,

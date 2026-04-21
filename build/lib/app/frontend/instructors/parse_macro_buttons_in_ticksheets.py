@@ -100,7 +100,7 @@ def action_if_cadet_apply_qualification_button_pressed(
     )
 
 
-def action_if_apply_all_qualifications_button_pressed(interface: abstractInterface):
+def action_if_apply_all_qualifications_button_pressed(interface: abstractInterface, include_unticked: bool = False):
     can_award_qualification = user_can_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to apply qualifications_and_ticks!")
@@ -109,30 +109,46 @@ def action_if_apply_all_qualifications_button_pressed(interface: abstractInterfa
     awarded_by = get_volunteer_name_for_logged_in_user(interface)
     ticksheet = get_ticksheet_data_from_state(interface)
     for cadet in ticksheet.list_of_cadets:
-        award_qualification_if_completed(
+        award_qualification_if_completed_or_forced(
             interface=interface,
             qualification=qualification,
             ticksheet=ticksheet,
             cadet=cadet,
             awarded_by=awarded_by,
+            force_award=include_unticked
         )
 
 
-def award_qualification_if_completed(
+def award_qualification_if_completed_or_forced(
     interface: abstractInterface,
     qualification: Qualification,
     ticksheet: DictOfCadetsAndTicksWithinQualification,
     cadet: Cadet,
     awarded_by: str,
+        force_award: bool = False
 ):
     if ticksheet[cadet].already_qualified:
+        interface.log_error("%s already has qualification" % cadet.name)
         return
+
     completed = ticksheet[cadet].all_tick_sheet_items_and_ticks().completed()
-    if completed:
+
+    if (not force_award) and (not completed):
+        interface.log_error("%s does not have all ticks, not awarding" % cadet.name)
+        return
+
+    elif force_award and not completed:
         interface.log_error(
-            "Cadet %s has completed all ticks, awarding %s" % (cadet, qualification)
+            "Cadet %s has not completed all ticks but forcing, awarding %s" % (cadet.name, qualification)
         )
-        apply_qualification_to_cadet(
+    elif completed: ## doesn't matter if forcing or not
+        interface.log_error(
+            "Cadet %s has completed all ticks, awarding %s" % (cadet.name, qualification)
+        )
+    else:
+        interface.log_error("Something went wrong processing %s" % cadet.name)
+
+    apply_qualification_to_cadet(
             interface=interface,
             cadet=cadet,
             qualification=qualification,

@@ -11,7 +11,7 @@ from app.backend.security.user_access import can_see_all_groups_and_award_qualif
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.buttons import (
     is_generic_tick_button_pressed,
-    award_all_full_ticks_button,
+
 )
 from app.frontend.shared.buttons import (
     is_button_cadet_selection,
@@ -29,7 +29,7 @@ from app.frontend.instructors.print_ticksheet import (
 from app.frontend.instructors.render_ticksheet_table import get_ticksheet_table
 from app.frontend.instructors.ticksheet_table_elements import (
     get_buttons_for_ticksheet,
-    get_instructions_for_ticksheet,
+    get_instructions_for_ticksheet, award_all_with_full_ticks, award_qualification_to_all_in_group,
 )
 from app.frontend.instructors.ticksheet_table_elements import (
     edit_checkbox_button,
@@ -199,7 +199,9 @@ def button_pressed_modifies_ticksheet(interface: abstractInterface):
         return True
     if is_generic_tick_button_pressed(last_button):
         return True
-    elif award_all_full_ticks_button.pressed(last_button):
+    elif award_all_with_full_ticks.pressed(last_button):
+        return True
+    elif award_qualification_to_all_in_group.pressed(last_button):
         return True
     return False
 
@@ -269,8 +271,10 @@ def post_form_view_ticksheets_for_event_and_saving_ticksheets(
         save_ticksheet_edits(interface)
 
     ## Saving
-    elif award_all_full_ticks_button.pressed(button_pressed):
+    elif award_all_with_full_ticks.pressed(button_pressed):
         action_if_apply_all_qualifications_button_pressed(interface)
+    elif award_qualification_to_all_in_group.pressed(button_pressed):
+        action_if_apply_all_qualifications_button_pressed(interface, include_unticked=True)
     elif save_menu_button.pressed(button_pressed):
         save_ticksheet_edits(interface)
         set_edit_state_of_ticksheet(interface=interface, state=NO_EDIT_STATE)
@@ -282,6 +286,7 @@ def post_form_view_ticksheets_for_event_and_saving_ticksheets(
     return interface.get_new_form_given_function(
         display_form_view_ticksheets_for_event_and_group
     )
+
 
 
 def previous_form(interface: abstractInterface):

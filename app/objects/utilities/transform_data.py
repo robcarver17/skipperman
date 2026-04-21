@@ -188,7 +188,7 @@ def transform_str_into_datetime(date_string: str) -> datetime.datetime:
 
 DATE_STR = "%Y/%m/%d"
 DATETIME_STR = "%Y/%m/%d %H:%M:%S.%f"
-
+DATETIME_STR_ROUND_SECONDS = "%Y/%m/%d %H:%M:%S"
 
 def dict_as_single_str(some_dict: dict) -> str:
     single_list = ["%s:%s" % (key, value) for key, value in some_dict.items()]

@@ -392,16 +392,18 @@ def remove_event_and_possibly_past_events_and_sort(
     copy_of_list_of_events_sorted_by_date_asc = copy(list_of_events_sorted_by_date_asc)
     try:  # weird not a singleton error
         if excluding_event == arg_not_passed:
-            return list_of_events_sorted_by_date_asc
+            return copy_of_list_of_events_sorted_by_date_asc
     except:
         pass
+
     idx_of_event = copy_of_list_of_events_sorted_by_date_asc.index_of_id(excluding_event.id)
 
     if only_events_before_excluded_event:
-        list_of_events_sorted_by_date_asc = copy_of_list_of_events_sorted_by_date_asc[
+        copy_of_list_of_events_sorted_by_date_asc = copy_of_list_of_events_sorted_by_date_asc[
             :idx_of_event
         ]  ## only those that occured before this event
     else:
+        ## all events just not this one
         copy_of_list_of_events_sorted_by_date_asc.pop(idx_of_event)
 
     return ListOfEvents(copy_of_list_of_events_sorted_by_date_asc)

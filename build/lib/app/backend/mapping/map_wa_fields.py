@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from datetime import date
 import pandas as pd
 
 from app.data_access.configuration.configuration import (
@@ -49,12 +49,19 @@ def map_wa_fields_in_df_for_event_and_add_special_fields(
     mapped_wa_event_data_with_row_status = (
         create_row_status_from_wa_fields_in_event_data(mapped_wa_event_data)
     )
+    round_seconds = round_seconds_in_datetime(event)
     mapped_wa_event_data_with_row_status_and_id = (
-        add_row_id_from_wa_fields_in_event_data(mapped_wa_event_data_with_row_status)
+        add_row_id_from_wa_fields_in_event_data(mapped_wa_event_data_with_row_status,
+                                                round_seconds=round_seconds)
     )
 
     return mapped_wa_event_data_with_row_status_and_id
 
+def round_seconds_in_datetime(event: Event):
+    if event.start_date>date(2026,4,20):
+        return True
+    else:
+        return False
 
 def map_wa_fields_in_df_for_event(
     object_store: ObjectStore, event: Event, filename: str
@@ -151,10 +158,10 @@ def get_status_str_from_row_of_mapped_wa_event_data(
 
 
 def add_row_id_from_wa_fields_in_event_data(
-    registration_data: RegistrationDataForEvent,
+    registration_data: RegistrationDataForEvent,round_seconds:bool = True
 ) -> RegistrationDataForEvent:
     for row_in_registration_data in registration_data:
-        add_unique_row_identified_to_row(row_in_registration_data)
+        add_unique_row_identified_to_row(row_in_registration_data, round_seconds=round_seconds)
 
     return registration_data
 
@@ -169,21 +176,25 @@ except:
     )
 
 
-def add_unique_row_identified_to_row(row_in_registration_data: RowInRegistrationData):
+def add_unique_row_identified_to_row(row_in_registration_data: RowInRegistrationData, round_seconds: bool = True):
     row_id = unique_row_identifier(
         registration_date=row_in_registration_data[REGISTRATION_DATE],
         registered_by_first_name=row_in_registration_data[REGISTERED_BY_FIRST_NAME],
         registered_by_last_name=row_in_registration_data[REGISTERED_BY_LAST_NAME],
+        round_seconds=round_seconds
     )
     row_in_registration_data.row_id = row_id
 
 
 def unique_row_identifier(
-    registration_date: datetime.date,
+    registration_date: datetime,
     registered_by_last_name: str,
     registered_by_first_name: str,
+        round_seconds: bool = True
 ) -> str:
     ## generate a unique hash from reg date, name, first name
+    if round_seconds:
+        registration_date = registration_date.replace(microsecond=0)
     reg_datetime_as_str = transform_datetime_into_str(registration_date)
     row_id = "%s_%s_%s" % (
         reg_datetime_as_str,

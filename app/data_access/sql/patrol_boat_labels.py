@@ -35,19 +35,6 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
             self.object_store.data_api.data_list_of_patrol_boats.read
         )
 
-    def update_patrol_boat_label_at_event(
-        self, event_id: str, patrol_boat_id: str, label: str, day: Day
-    ):
-        if self.is_an_existing_patrol_boat_label_at_event(
-            event_id=event_id, patrol_boat_id=patrol_boat_id, day=day
-        ):
-            self._modify_existing_patrol_boat_label_at_event_without_checks(
-                event_id=event_id, patrol_boat_id=patrol_boat_id, day=day, label=label
-            )
-        else:
-            self._add_patrol_boat_label_at_event_without_checks(
-                event_id=event_id, patrol_boat_id=patrol_boat_id, day=day, label=label
-            )
 
     def is_an_existing_patrol_boat_label_at_event(
         self, event_id: str, patrol_boat_id: str, day: Day
@@ -80,7 +67,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
 
         return len(raw_list) > 0
 
-    def _modify_existing_patrol_boat_label_at_event_without_checks(
+    def update_existing_patrol_boat_label_at_event(
         self, event_id: str, patrol_boat_id: str, label: str, day: Day
     ):
         try:
@@ -97,6 +84,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
                 DAY,
                 day.name,
             )
+            print(insertion)
 
             self.cursor.execute(insertion, (label,))
 
@@ -108,10 +96,11 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
         finally:
             self.close()
 
-    def _add_patrol_boat_label_at_event_without_checks(
+    def add_patrol_boat_label_at_event_not_checking_for_existing_label(
         self, event_id: str, patrol_boat_id: str, label: str, day: Day
     ):
         try:
+
             if self.table_does_not_exist(PATROL_BOATS_LABELS_TABLE):
                 self.create_table()
             boat_label = PatrolBoatLabelAtEvent(
@@ -226,6 +215,7 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
     def _add_patrol_boat_label_without_checks_or_commits(
         self, boat_label: PatrolBoatLabelAtEvent
     ):
+
         event_id = int(boat_label.event_id)
         day = boat_label.day.name
         boat_id = int(boat_label.boat_id)
@@ -238,8 +228,8 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
             DAY,
             PATROL_BOAT_LABEL,
         )
-
-        self.cursor.execute(insertion, (event_id, boat_id, day, label))
+        parameters =(event_id, boat_id, day, label)
+        self.cursor.execute(insertion, parameters)
 
     def create_table(self):
         table_creation_query = """

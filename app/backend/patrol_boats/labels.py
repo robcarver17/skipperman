@@ -47,7 +47,20 @@ def update_list_of_patrol_boat_labels_at_events(
     )
 
 
-def update_patrol_boat_label_at_event(
+def add_patrol_boat_label_at_event(interface: abstractInterface,
+                                   event: Event,
+                                   patrol_boat: PatrolBoat,
+                                   day: Day,
+                                   label: str, ):
+    interface.update(
+        interface.object_store.data_api.data_list_of_patrol_boat_labels.add_patrol_boat_label_at_event_not_checking_for_existing_label,
+        event_id=event.id,
+        patrol_boat_id=patrol_boat.id,
+        label=label,
+        day=day,
+    )
+
+def update_existing_patrol_boat_label_at_event(
     interface: abstractInterface,
     event: Event,
     patrol_boat: PatrolBoat,
@@ -55,12 +68,13 @@ def update_patrol_boat_label_at_event(
     label: str,
 ):
     interface.update(
-        interface.object_store.data_api.data_list_of_patrol_boat_labels.update_patrol_boat_label_at_event,
+        interface.object_store.data_api.data_list_of_patrol_boat_labels.update_existing_patrol_boat_label_at_event,
         event_id=event.id,
         patrol_boat_id=patrol_boat.id,
         label=label,
         day=day,
     )
+    interface.clear()
 
 
 def copy_patrol_boat_labels_across_event(

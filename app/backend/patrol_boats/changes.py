@@ -1,5 +1,6 @@
 from typing import List
 
+from app.backend.patrol_boats.labels import add_patrol_boat_label_at_event
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.composed.volunteers_at_event_with_patrol_boats import (
     ListOfBoatDayVolunteer,
@@ -64,7 +65,19 @@ def add_named_boat_to_event_with_no_allocation(
         add_patrol_boat_to_event_with_no_allocation_on_day(
             interface=interface, boat_added=patrol_boat, event=event, day=day
         )
+        try:
+            add_patrol_boat_label_at_event(
+                interface=interface,
+                event=event,
+                patrol_boat=patrol_boat,
+                label="",
+                day=day
+            ) ## makes labelling an update only activity
+        except Exception as e:
+            print("Error adding label %s ok if unique constraint fails" % str(e))
+            pass ## no worries if unique constraint fails
 
+    return patrol_boat
 
 def add_patrol_boat_to_event_with_no_allocation_on_day(
     interface: abstractInterface, event: Event, boat_added: PatrolBoat, day: Day

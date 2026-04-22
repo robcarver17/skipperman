@@ -258,11 +258,15 @@ def post_form_view_for_volunteer_rota_if_data_changed(
 
 
 def save_all_information_across_forms(interface: abstractInterface):
+    st = SimpleTimer()
     save_all_information_in_rota_page(interface)
+    st.elapsed("1: save rota")
     save_volunteer_targets(interface)
+    st.elapsed("1: save targets")
     save_group_notes_from_form(interface)
-    save_warnings_from_table(interface)
-
+    st.elapsed("1: save notes")
+    #save_warnings_from_table(interface)
+    st.elapsed("1: save warnings")
     interface.clear()
 
 

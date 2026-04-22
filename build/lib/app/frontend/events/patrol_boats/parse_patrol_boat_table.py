@@ -3,7 +3,7 @@ from typing import Union
 from app.backend.patrol_boats.volunteers_at_event_on_patrol_boats import (
     get_sorted_list_of_patrol_boats_at_event,
 )
-from app.backend.patrol_boats.labels import update_patrol_boat_label_at_event
+from app.backend.patrol_boats.labels import update_existing_patrol_boat_label_at_event
 from app.backend.patrol_boats.volunteers_patrol_boats_skills_and_roles_in_event import (
     get_list_of_volunteers_at_event_with_skills_and_roles_and_patrol_boats,
 )
@@ -20,6 +20,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.utils import SimpleTimer
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (
@@ -88,15 +89,19 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
         return
     if not is_admin_or_skipper(interface):
         return
-
+    st = SimpleTimer()
     update_boat_labels(interface)
+    st.elapsed("1: save labels")
     update_skills_checkbox(interface)
+    st.elapsed("1: save skills")
     update_role_dropdowns(interface)
+    st.elapsed("1: save roles")
     update_adding_volunteers_to_specific_boats_and_days(
         interface
     )  ## must come last or will confuse role and skills
+    st.elapsed("1: save on boats")
     save_warnings_from_table(interface)
-
+    st.elapsed("1: save warnings")
     interface.clear()
 
 
@@ -107,10 +112,10 @@ def update_boat_labels(interface: abstractInterface):
     )
     for day in event.days_in_event():
         for patrol_boat in list_of_boats_at_event:
+
             update_boat_labels_for_specific_boat_and_day(
                 interface=interface, event=event, day=day, patrol_boat=patrol_boat
             )
-
 
 def update_boat_labels_for_specific_boat_and_day(
     interface: abstractInterface, event: Event, day: Day, patrol_boat: PatrolBoat
@@ -122,7 +127,7 @@ def update_boat_labels_for_specific_boat_and_day(
     if label is MISSING_FROM_FORM:
         return
 
-    update_patrol_boat_label_at_event(
+    update_existing_patrol_boat_label_at_event(
         interface=interface,
         event=event,
         patrol_boat=patrol_boat,
@@ -305,6 +310,7 @@ def update_adding_boat(interface: abstractInterface):
             name_of_boat_added=name_of_boat_added,
             event=event,
         )
+
     except Exception as e:
         interface.log_error(
             "Can't add boat %s, error %s" % (name_of_boat_added, str(e))

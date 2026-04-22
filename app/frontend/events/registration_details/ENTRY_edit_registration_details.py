@@ -48,6 +48,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.events import Event
 from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_edit_registration_details(
@@ -64,10 +65,13 @@ def display_form_edit_registration_details(
 def display_form_edit_registration_details_given_event_and_sort_order(
     interface: abstractInterface, event: Event, sort_order: str
 ) -> Union[Form, NewForm]:
+    st = SimpleTimer()
     warnings_detail = get_warnings_table(interface, event)
+    st.elapsed("1: display warnings")
     table = get_registration_details_inner_form_for_event(
         interface=interface, event=event, sort_order=sort_order
     )
+    st.elapsed("1: display table")
     sort_buttons = get_sort_buttons()
     return Form(
         ListOfLines(
@@ -186,9 +190,11 @@ def post_form_edit_registration_details(
 
 def save_details_from_form(interface: abstractInterface):
     event = get_event_from_state(interface)
-
+    st=SimpleTimer()
     parse_registration_details_from_form(interface=interface, event=event)
+    st.elapsed("1: save reg details")
     save_warnings_from_table(interface)
+    st.elapsed("1: save warnings")
 
     interface.clear()
 

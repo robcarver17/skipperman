@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.objects.utilities.transform_data import bool2int, int2bool
@@ -11,29 +11,40 @@ INDEX_EVENT_WARNING_TABLE = "index_event_warning_table"
 
 
 class SqlDataListOfEventWarnings(GenericSqlData):
-    def mark_event_warning_with_id_with_ignore_flag(
-        self, event_id: str, warning_id: str, ignore_flag: bool
-    ):
+    def mark_multiple_warnings_with_id_with_ignore_flags(self, event_id: str,
+                                                         list_of_warning_ids_and_flags: List[Tuple[str, bool]]):
+
         try:
             if self.table_does_not_exist(EVENT_WARNING_TABLE):
                 self.create_table()
 
-            insertion = "UPDATE %s SET %s=%d WHERE %s=%d AND %s=%d" % (
-                EVENT_WARNING_TABLE,
-                WARNING_IGNORE,
-                bool2int(ignore_flag),
-                WARNING_ID,
-                int(warning_id),
-                EVENT_ID,
-                int(event_id),
-            )
-            self.cursor.execute(insertion)
+            for warning_and_flag in list_of_warning_ids_and_flags:
+                self._mark_single_event_warning_with_id_with_ignore_flag_without_commit(
+                    event_id=event_id,
+                    warning_id=warning_and_flag[0],
+                    ignore_flag=warning_and_flag[1]
+                )
 
             self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing event warnings" % str(e1))
         finally:
             self.close()
+
+    def _mark_single_event_warning_with_id_with_ignore_flag_without_commit(
+            self, event_id: str, warning_id: str, ignore_flag: bool
+    ):
+        insertion = "UPDATE %s SET %s=%d WHERE %s=%d AND %s=%d" % (
+            EVENT_WARNING_TABLE,
+            WARNING_IGNORE,
+            bool2int(ignore_flag),
+            WARNING_ID,
+            int(warning_id),
+            EVENT_ID,
+            int(event_id),
+        )
+        self.cursor.execute(insertion)
+
 
     def reverse_ignore_on_active_event_warnings_with_priority_and_category(
         self,

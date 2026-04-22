@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -54,26 +54,14 @@ def add_new_event_warning_checking_for_duplicate(
     )
 
 
-def mark_event_warning_with_id_as_ignore(
-    interface: abstractInterface, event: Event, warning_id: str
-):
+def mark_multiple_warnings_with_id_with_ignore_flags(interface: abstractInterface, event: Event,
+                                                     list_of_warning_ids_and_flags: List[Tuple[str, bool]]):
     interface.update(
-        interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
+        interface.object_store.data_api.data_event_warnings.mark_multiple_warnings_with_id_with_ignore_flags,
         event_id=event.id,
-        warning_id=warning_id,
-        ignore_flag=True,
+        list_of_warning_ids_and_flags=list_of_warning_ids_and_flags,
     )
 
-
-def mark_event_warning_with_id_as_unignore(
-    interface: abstractInterface, event: Event, warning_id: str
-):
-    interface.update(
-        interface.object_store.data_api.data_event_warnings.mark_event_warning_with_id_with_ignore_flag,
-        event_id=event.id,
-        warning_id=warning_id,
-        ignore_flag=False,
-    )
 
 
 def get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(

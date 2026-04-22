@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List, Tuple
 
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import update_warnings_button
 from app.frontend.shared.events_state import get_event_from_state
@@ -10,10 +10,11 @@ from app.objects.abstract_objects.abstract_lines import DetailListOfLines, ListO
 from app.objects.event_warnings import ListOfEventWarnings, EventWarningLog
 from app.backend.events.event_warnings import (
     get_list_of_all_warning_ids_at_event,
-    mark_event_warning_with_id_as_ignore,
+
     mark_all_active_event_warnings_with_priority_and_category_as_ignored,
     mark_all_ignored_event_warnings_with_priority_and_category_as_unignored,
-    mark_event_warning_with_id_as_unignore,
+    mark_multiple_warnings_with_id_with_ignore_flags,
+
 )
 from app.objects.events import Event
 from app.frontend.shared.buttons import (
@@ -217,33 +218,29 @@ def save_warnings_from_table_checkboxes(interface: abstractInterface, event: Eve
     list_of_ids = get_list_of_all_warning_ids_at_event(
         object_store=interface.object_store, event=event
     )
-    st.elapsed("3: got lis of warning ids")
-    for warning_id in list_of_ids:
-        process_warning_with_id_from_table(
-            interface=interface, event=event, warning_id=warning_id
-        )
-    st.elapsed("3: processed warning ids")
+    st.elapsed("3: got list of warning ids")
+    list_of_warnings = [
+        process_warning_with_id_from_table(interface=interface, warning_id=warning_id)
+        for warning_id in list_of_ids
+        ]
+    list_of_warnings = [warning for warning in list_of_warnings if not warning is None]
+    mark_multiple_warnings_with_id_with_ignore_flags(interface=interface, event=event,
+                                                     list_of_warning_ids_and_flags=list_of_warnings)
 
 
 def process_warning_with_id_from_table(
-    interface: abstractInterface, event: Event, warning_id: str
-):
+    interface: abstractInterface, warning_id: str
+) -> Union[Tuple[str, bool], None]:
     field_name = get_field_for_warning(warning_id)
     checkboxvalue_list = interface.value_of_multiple_options_from_form(
         field_name, default=MISSING_FROM_FORM
     )
     if checkboxvalue_list is MISSING_FROM_FORM:
         # not all warnings are visible, might be on wrong page
-        print("%s not visible" % field_name)
-        return
-    if IGNORE in checkboxvalue_list:
-        mark_event_warning_with_id_as_ignore(
-            interface=interface, event=event, warning_id=warning_id
-        )
-    else:
-        mark_event_warning_with_id_as_unignore(
-            interface=interface, event=event, warning_id=warning_id
-        )
+        return None
+    mark_as_ignore = IGNORE in checkboxvalue_list
+
+    return warning_id, mark_as_ignore
 
 
 def save_multiple_warnings_given_specific_button_pressed(

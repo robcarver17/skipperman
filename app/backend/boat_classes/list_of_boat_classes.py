@@ -7,9 +7,8 @@ from app.objects.boat_classes import ListOfBoatClasses, BoatClass, no_boat_class
 def get_boat_class_from_name(
     object_store: ObjectStore, boat_class_name: str, default=no_boat_class
 ) -> BoatClass:
-    return object_store.data_api.data_list_of_dinghies.get_boat_class_from_name(
-        boat_class_name, default=default
-    )
+    list_of_boat_classes = get_list_of_boat_classes(object_store)
+    return list_of_boat_classes.get_boat_with_name(boat_class_name, default=default)
 
 
 def add_new_boat_class_given_string(

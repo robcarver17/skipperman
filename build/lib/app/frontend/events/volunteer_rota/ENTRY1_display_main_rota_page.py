@@ -1,6 +1,6 @@
 import datetime
 from typing import Union
-
+from app.objects.utilities.utils import SimpleTimer
 from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import (
     update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data,
 )
@@ -76,20 +76,23 @@ from app.frontend.events.volunteer_rota.volunteer_targets_and_group_notes import
     save_group_notes_from_form,
 )
 from app.frontend.events.volunteer_rota.volunteer_rota_buttons import *
-from app.objects.utilities.utils import SimpleTimer
+
 
 
 def display_form_view_for_volunteer_rota(interface: abstractInterface) -> Form:
     sorts_and_filters = get_sorts_and_filters_from_state(interface)
     event = get_event_from_state(interface)
-
+    st=SimpleTimer()
     preamble_before_table = get_preamble_before_table(interface=interface, event=event)
+    st.elapsed("1: preamble")
     volunteer_table = get_volunteer_table(
         event=event, interface=interface, sorts_and_filters=sorts_and_filters
     )
+    st.elapsed("1: table")
     material_around_table = get_filters_and_buttons(
         interface=interface, event=event, sorts_and_filters=sorts_and_filters
     )
+    st.elapsed("1: around")
     form = Form(
         ListOfLines(
             preamble_before_table

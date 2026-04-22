@@ -45,56 +45,24 @@ from app.objects.utilities.exceptions import MISSING_FROM_FORM
 
 
 def parse_registration_details_from_form(interface: abstractInterface, event: Event):
-    ## This loads the existing data
     registration_details = get_registration_data(interface=interface, event=event)
+    parse_registration_details_from_form_special_fields(interface=interface, registration_details=registration_details)
+    parse_registration_details_from_form_other_fields(interface=interface, registration_details=registration_details)
+
+def parse_registration_details_from_form_special_fields(interface: abstractInterface,
+                                                        registration_details: RegistrationDetailsForEvent):
+
     registration_data = registration_details.registration_data
 
     for cadet in registration_data.list_of_cadets():
         ## in place update so doesn't return anything
-        get_registration_details_for_row_in_form_and_alter_registration_data(
-            interface=interface,
-            registration_details=registration_details,
-            cadet=cadet,
+        get_days_attending_for_row_in_form_and_alter_registration_data(
+            interface=interface, cadet=cadet, registration_details=registration_details
+        )
+        get_cadet_event_status_for_row_in_form_and_alter_registration_data(
+            interface=interface, cadet=cadet, registration_details=registration_details
         )
 
-
-def get_registration_details_for_row_in_form_and_alter_registration_data(
-    interface: abstractInterface,
-    cadet: Cadet,
-    registration_details: RegistrationDetailsForEvent,
-):
-    ## in place updates so doesn't return anything
-    get_special_fields_from_form_and_alter_registration_data(
-        interface=interface,
-        cadet=cadet,
-        registration_details=registration_details,
-    )
-
-    get_other_fields_from_form_and_alter_registration_data(
-        interface=interface,
-        cadet=cadet,
-        registration_details=registration_details,
-    )
-
-
-def get_special_fields_from_form_and_alter_registration_data(
-    interface: abstractInterface,
-    cadet: Cadet,
-    registration_details: RegistrationDetailsForEvent,
-):
-    get_days_attending_for_row_in_form_and_alter_registration_data(
-        interface=interface, cadet=cadet, registration_details=registration_details
-    )
-    get_cadet_event_status_for_row_in_form_and_alter_registration_data(
-        interface=interface, cadet=cadet, registration_details=registration_details
-    )
-    get_cadet_notes_for_row_in_form_and_alter_registration_data(
-        interface=interface, cadet=cadet, registration_details=registration_details
-    )
-
-    get_cadet_health_for_row_in_form_and_alter_registration_data(
-        interface=interface, cadet=cadet, registration_details=registration_details
-    )
 
 
 def get_days_attending_for_row_in_form_and_alter_registration_data(
@@ -196,6 +164,28 @@ def get_cadet_event_status_for_row_in_form_and_alter_registration_data(
     )
 
 
+
+def parse_registration_details_from_form_other_fields(interface: abstractInterface,
+                                                        registration_details: RegistrationDetailsForEvent):
+
+    registration_data = registration_details.registration_data
+
+    for cadet in registration_data.list_of_cadets():
+        ## in place update so doesn't return anything
+        get_other_fields_from_form_and_alter_registration_data(
+            interface=interface,
+            cadet=cadet,
+            registration_details=registration_details,
+        )
+        get_cadet_notes_for_row_in_form_and_alter_registration_data(
+            interface=interface, cadet=cadet, registration_details=registration_details
+        )
+
+        get_cadet_health_for_row_in_form_and_alter_registration_data(
+            interface=interface, cadet=cadet, registration_details=registration_details
+        )
+
+
 def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     interface: abstractInterface,
     cadet: Cadet,
@@ -283,6 +273,9 @@ def get_registration_details_for_row_and_column_name_in_form_and_alter_registrat
     new_value_for_column = typecast_input_of_column(
         column_name=column_name, value=form_value
     )
+    existing_value = registration_details.registration_data.registration_data_for_cadet(cadet).data_in_row[column_name]
+    if existing_value == new_value_for_column:
+        return
 
     update_data_row_for_existing_cadet_at_event(
         interface=interface,

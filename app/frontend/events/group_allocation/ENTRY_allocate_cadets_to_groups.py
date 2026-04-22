@@ -91,6 +91,7 @@ from app.objects.abstract_objects.abstract_interface import (
 )
 
 from app.frontend.shared.events_state import get_event_from_state
+from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
@@ -231,9 +232,13 @@ def post_form_allocate_cadets_when_changing_data(
 
 
 def save_all_information_in_forms_on_page(interface: abstractInterface):
+    st = SimpleTimer()
     update_club_boat_limits_for_event_from_form(interface)
+    st.elapsed("1: save boat limts")
     save_event_selection_from_form(interface)
+    st.elapsed("1: save event selection")
     update_data_given_allocation_form(interface)
+    st.elapsed("1: save form")
 
     interface.clear()
 

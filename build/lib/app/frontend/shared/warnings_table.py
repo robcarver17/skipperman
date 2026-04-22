@@ -201,7 +201,6 @@ def is_save_warnings_button_pressed(last_button: str):
 
 
 def save_warnings_from_table(interface: abstractInterface):
-    print("Saving warnings")
     event = get_event_from_state(interface)
     st = SimpleTimer()
     save_warnings_from_table_checkboxes(interface, event)
@@ -225,7 +224,6 @@ def save_warnings_from_table_checkboxes(interface: abstractInterface, event: Eve
         for warning_id in list_of_ids
         ]
     list_of_warnings = [warning for warning in list_of_warnings if not warning is None]
-    print(list_of_warnings)
     mark_multiple_warnings_with_id_with_ignore_flags(interface=interface, event=event,
                                                      list_of_warning_ids_and_flags=list_of_warnings)
 
@@ -239,7 +237,6 @@ def process_warning_with_id_from_table(
     )
     if checkboxvalue_list is MISSING_FROM_FORM:
         # not all warnings are visible, might be on wrong page
-        print("%s not visible" % field_name)
         return None
     mark_as_ignore = IGNORE in checkboxvalue_list
 

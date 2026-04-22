@@ -1,7 +1,7 @@
 from typing import Union
 
 from app.backend.registration_data.warnings import (
-    refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings,
+    get_sorted_list_of_active_warnings,
 )
 from app.data_access.configuration.fixed import ADD_KEYBOARD_SHORTCUT
 from app.frontend.events.registration_details.add_unregistered_cadet import (
@@ -96,7 +96,7 @@ def display_form_edit_registration_details_given_event_and_sort_order(
 
 def get_warnings_table(interface: abstractInterface, event: Event) -> ListOfLines:
     warnings = (
-        refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
+        get_sorted_list_of_active_warnings(
             interface=interface, event=event
         )
     )

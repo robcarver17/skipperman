@@ -30,10 +30,9 @@ from app.backend.registration_data.cadet_registration_data import (
 )
 
 
-def refresh_registration_data_warnings_and_return_sorted_list_of_active_warnings(
+def get_sorted_list_of_active_warnings(
     interface: abstractInterface, event: Event
 ) -> ListOfEventWarnings:
-    refresh_registration_data_warnings(interface=interface, event=event)
 
     all_warnings = (
         get_list_of_warnings_at_event_for_categories_sorted_by_category_and_priority(

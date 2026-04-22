@@ -117,6 +117,7 @@ def update_boat_labels(interface: abstractInterface):
             update_boat_labels_for_specific_boat_and_day(
                 interface=interface, event=event, day=day, patrol_boat=patrol_boat
             )
+            st.elapsed("2: saving %s %s" % (day, patrol_boat))
     st.elapsed("2: update lables")
 
 def update_boat_labels_for_specific_boat_and_day(

@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.groups.previous_groups import (
     update_dict_of_group_names_for_events_and_cadets_persistent_version_from_core_data,
 )
@@ -95,6 +96,7 @@ from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_allocate_cadets(interface: abstractInterface) -> Union[Form, NewForm]:
+
     event = get_event_from_state(interface)
     sort_order = get_current_sort_order(interface=interface)
     return display_form_allocate_cadets_at_event(

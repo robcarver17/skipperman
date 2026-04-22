@@ -1,3 +1,5 @@
+from copy import copy
+
 from app.data_access.store.object_store import ObjectStore
 
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -7,10 +9,11 @@ from app.objects.boat_classes import ListOfBoatClasses, BoatClass, no_boat_class
 def get_boat_class_from_name(
     object_store: ObjectStore, boat_class_name: str, default=no_boat_class
 ) -> BoatClass:
-    return object_store.data_api.data_list_of_dinghies.get_boat_class_from_name(
-        boat_class_name, default=default
-    )
+    ##return object_store.data_api.data_list_of_dinghies.get_boat_class_from_name(boat_class_name, default=no_boat_class)
+    list_of_boat_classes = get_list_of_boat_classes(object_store)
+    boat_class = copy(list_of_boat_classes.get_boat_with_name(boat_class_name, default=default))
 
+    return boat_class
 
 def add_new_boat_class_given_string(
     interface: abstractInterface, name_of_entry_to_add: str
@@ -33,8 +36,9 @@ def modify_boat_class(
 
 
 def get_list_of_boat_classes(object_store: ObjectStore) -> ListOfBoatClasses:
-    return object_store.get(object_store.data_api.data_list_of_dinghies.read)
+    boat_classes = copy(object_store.get(object_store.data_api.data_list_of_dinghies.read))
 
+    return boat_classes
 
 def update_list_of_boat_classes(
     interface: abstractInterface, updated_list_of_boat_classes: ListOfBoatClasses

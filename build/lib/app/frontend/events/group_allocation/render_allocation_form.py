@@ -1,5 +1,6 @@
 from typing import Union, List
 
+from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
@@ -92,6 +93,7 @@ def display_form_allocate_cadets_at_event(
     interface: abstractInterface, event: Event, sort_order: SortOrderGroups
 ) -> Union[Form, NewForm]:
     st = SimpleTimer()
+
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
@@ -109,6 +111,7 @@ def display_form_allocate_cadets_at_event(
         interface=interface, event=event, sort_order=sort_order
     )
     st.elapsed("1: inner form")
+
     return Form(
         ListOfLines(
             [
@@ -288,6 +291,7 @@ def get_inner_form_for_cadet_allocation(
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event
     )
+
     st.elapsed("2: all cadet data")
 
     day_or_none = get_day_from_state_or_none(interface)
@@ -298,6 +302,7 @@ def get_inner_form_for_cadet_allocation(
         day_or_none=day_or_none,
     )
     st.elapsed("2: sorted active cadets")
+
     prior_events = get_prior_events_to_show(interface=interface, event=event)
     previous_groups_for_cadets = (
         get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
@@ -324,6 +329,7 @@ def get_inner_form_for_cadet_allocation(
         dict_of_all_event_data=dict_of_all_event_data,
     )
     st.elapsed("3: body of table")
+
     return Table(
         [top_row] + body,
         has_column_headings=True,
@@ -388,6 +394,7 @@ def get_body_of_table_for_cadet_allocation(
     list_of_boat_groupings = ListOfBoatGroupings(
         dict_of_all_event_data.dict_of_cadets_and_boat_class_and_partners
     )
+
     table_rows = [
         get_row_for_cadet(
             interface=interface,
@@ -431,12 +438,14 @@ def get_row_for_cadet(
     days_attending_field = get_days_attending_field(
         dict_of_all_event_data=dict_of_all_event_data, cadet=cadet
     )
+
     input_fields = get_input_fields_for_cadet(
         interface=interface,
         cadet=cadet,
         dict_of_all_event_data=dict_of_all_event_data,
         list_of_boat_groupings=list_of_boat_groupings,
     )
+
     if is_admin_or_skipper(interface):
         return RowInTable(
             [cell_for_cadet, days_attending_field]
@@ -500,13 +509,3 @@ def any_cadet_clicked_on(interface: abstractInterface):
         return True
     except MissingData:
         return False
-
-
-def get_list_of_all_cadets_with_event_data(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event
-    )
-    list_of_cadets = dict_of_all_event_data.list_of_cadets
-
-    return list_of_cadets

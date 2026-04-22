@@ -1,13 +1,11 @@
 from typing import List
 
+from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
 from app.backend.groups.data_for_group_display import (
     guess_name_of_boat_class_on_day_from_other_information,
-)
-from app.frontend.events.group_allocation.render_allocation_form import (
-    get_list_of_all_cadets_with_event_data,
 )
 from app.frontend.events.group_allocation.store_state import (
     no_day_set_in_state,
@@ -44,7 +42,7 @@ from app.backend.boat_classes.update_boat_information import (
 from app.objects.composed.cadets_at_event_with_boat_classes_groups_club_dnghies_and_partners import (
     CadetWithDinghySailNumberBoatClassAndPartner,
 )
-from app.objects.partners import NOT_ALLOCATED_STR
+
 from app.backend.registration_data.update_cadets_at_event import (
     update_notes_for_existing_cadet_at_event,
 )
@@ -114,34 +112,45 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
 
 
 def update_data_given_allocation_form(interface: abstractInterface):
-    list_of_cadets = get_list_of_all_cadets_with_event_data(interface=interface)
+    event = get_event_from_state(interface)
+    print("update data")
     st = SimpleTimer()
+
+    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
+        object_store=interface.object_store, event=event
+    )
+    st.elapsed("2: get dict of event data")
+
     update_attendance_data_and_notes_for_all_cadets_in_form(
-        interface, list_of_cadets=list_of_cadets
+        interface, dict_of_all_event_data=dict_of_all_event_data
     )
     st.elapsed("2: save attendance and notes")
+
     ## has to be done in one go because of swaps
+
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
-        interface=interface, list_of_cadets=list_of_cadets
+        interface=interface, dict_of_all_event_data=dict_of_all_event_data
     )
     st.elapsed("2: save other")
 
 
+
 def update_attendance_data_and_notes_for_all_cadets_in_form(
-    interface: abstractInterface, list_of_cadets: ListOfCadets
+    interface: abstractInterface, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ):
     event = get_event_from_state(interface)
     st = SimpleTimer()
     if is_admin_or_skipper(interface):
-        for cadet in list_of_cadets:
+        for cadet in dict_of_all_event_data.list_of_cadets:
             update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
     st.elapsed("3: save attendance")
 
-    for cadet in list_of_cadets:
+    for cadet in dict_of_all_event_data.list_of_cadets:
         get_cadet_notes_for_row_in_form_and_alter_registration_data(
             interface=interface,
             event=event,
             cadet=cadet,
+            dict_of_all_event_data=dict_of_all_event_data
         )
     st.elapsed("3: save notes")
 
@@ -176,6 +185,7 @@ def update_attendance_data_for_cadet_in_form(
 
 def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     interface: abstractInterface,
+    dict_of_all_event_data: DictOfAllEventInfoForCadets,
     cadet: Cadet,
     event: Event,
 ):
@@ -184,6 +194,10 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
         default=MISSING_FROM_FORM,
     )
     if new_notes == MISSING_FROM_FORM:
+        return
+
+    existing_notes = dict_of_all_event_data.event_data_for_cadet(cadet).registration_data.notes
+    if existing_notes == new_notes:
         return
 
     update_notes_for_existing_cadet_at_event(
@@ -195,15 +209,18 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
 
 
 def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
-    interface: abstractInterface, list_of_cadets: ListOfCadets
+    interface: abstractInterface, dict_of_all_event_data: DictOfAllEventInfoForCadets
 ):
     event = get_event_from_state(interface)
+    st = SimpleTimer()
     list_of_updates = get_list_of_updates(
-        interface=interface, list_of_cadets=list_of_cadets
+        interface=interface, list_of_cadets=dict_of_all_event_data.list_of_cadets
     )
+    st.elapsed("3: save get list of updates")
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(
         interface=interface, event=event, list_of_updates=list_of_updates
     )
+    st.elapsed("3: save do updates")
 
 
 def get_list_of_updates(

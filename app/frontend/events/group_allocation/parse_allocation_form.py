@@ -1,5 +1,6 @@
 from typing import List
 
+from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.cadets_at_event.dict_of_all_cadet_at_event_data import (
     get_dict_of_all_event_info_for_cadets,
 )
@@ -112,19 +113,26 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
 
 def update_data_given_allocation_form(interface: abstractInterface):
     event = get_event_from_state(interface)
+    print("update data")
+    st = SimpleTimer()
+
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=interface.object_store, event=event
     )
-    st = SimpleTimer()
+    st.elapsed("2: get dict of event data")
+
     update_attendance_data_and_notes_for_all_cadets_in_form(
         interface, dict_of_all_event_data=dict_of_all_event_data
     )
     st.elapsed("2: save attendance and notes")
+
     ## has to be done in one go because of swaps
+
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
         interface=interface, dict_of_all_event_data=dict_of_all_event_data
     )
     st.elapsed("2: save other")
+
 
 
 def update_attendance_data_and_notes_for_all_cadets_in_form(

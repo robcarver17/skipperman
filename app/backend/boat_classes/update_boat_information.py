@@ -1,6 +1,7 @@
 from app.backend.boat_classes.from_boat_update_with_str_to_update import (
     convert_list_of_inputs_to_list_of_cadet_at_event_objects,
 )
+from app.backend.boat_classes.list_of_boat_classes import get_list_of_boat_classes
 from app.backend.cadets_at_event.cadet_availability import (
     is_cadet_available_on_day_loading_all_event_data,
 )

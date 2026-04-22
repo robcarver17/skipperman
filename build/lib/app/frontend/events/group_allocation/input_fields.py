@@ -451,7 +451,7 @@ def get_dropdown_input_for_boat_class_allocation(
 def get_dict_of_boat_classes(
     dict_of_all_event_data: DictOfAllEventInfoForCadets, current_boat_class_name: str
 ):
-    boat_classes = dict_of_all_event_data.list_of_boat_classes
+    boat_classes = copy(dict_of_all_event_data.list_of_boat_classes)
     boat_classes.append(no_boat_class)
     dict_of_all_possible_boat_classes = dict(
         [

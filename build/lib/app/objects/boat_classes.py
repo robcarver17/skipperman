@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.objects.cadets import Cadet
-from app.objects.utilities.exceptions import arg_not_passed
+from app.objects.utilities.exceptions import arg_not_passed, MultipleMatches
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
     get_idx_of_unique_object_with_attr_in_list,
@@ -50,12 +50,15 @@ class ListOfBoatClasses(GenericListOfObjectsWithIds):
         return BoatClass
 
     def get_boat_with_name(self, boat_class_name: str, default=arg_not_passed):
-        return get_unique_object_with_attr_in_list(
-            some_list=self,
-            attr_name="name",
-            attr_value=boat_class_name,
-            default=default,
-        )
+        list_of_boats = [boat for boat in self if boat.name == boat_class_name]## non standard code here as just weird bug can't fix
+        if len(list_of_boats)==1:
+            return list_of_boats[0]
+        elif len(list_of_boats)==0:
+            if default is arg_not_passed:
+                raise Exception("Boat %s not found" % boat_class_name)
+            return default
+        else:
+            raise MultipleMatches("More than one boat called %s" % boat_class_name)
 
     def boat_with_id(self, id: str):
         if id == NO_BOAT_CLASS_ID:

@@ -20,6 +20,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.patrol_boats import PatrolBoat
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.utils import SimpleTimer
 from app.objects.volunteers import Volunteer
 
 from app.backend.volunteers.skills import (
@@ -88,15 +89,19 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
         return
     if not is_admin_or_skipper(interface):
         return
-
+    st = SimpleTimer()
     update_boat_labels(interface)
+    st.elapsed("1: save labels")
     update_skills_checkbox(interface)
+    st.elapsed("1: save skills")
     update_role_dropdowns(interface)
+    st.elapsed("1: save roles")
     update_adding_volunteers_to_specific_boats_and_days(
         interface
     )  ## must come last or will confuse role and skills
+    st.elapsed("1: save on boats")
     save_warnings_from_table(interface)
-
+    st.elapsed("1: save warnings")
     interface.clear()
 
 

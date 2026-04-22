@@ -84,7 +84,7 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
     )
     st.elapsed("1: top material")
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
-    st.elapsed("")
+    st.elapsed("1: table")
     bottom_button_bar = get_bottom_button_bar_for_patrol_boats(interface)
     return Form(
         ListOfLines(

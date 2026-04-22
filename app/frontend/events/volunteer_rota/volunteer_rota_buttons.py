@@ -189,3 +189,5 @@ def last_button_pressed_was_copy_button(copy_button: str):
         or last_button_pressed_was_copyover_button(copy_button)
         or last_button_pressed_was_copyfill_button(copy_button)
     )
+
+update_warnings_button = Button("Update warnings (may be slow)")

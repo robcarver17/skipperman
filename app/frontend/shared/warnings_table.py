@@ -1,5 +1,6 @@
 from typing import Union
 
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import update_warnings_button
 from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_form import checkboxInput
@@ -34,7 +35,8 @@ def display_warnings_tables(list_of_warnings: ListOfEventWarnings) -> ListOfLine
         list_of_warnings.ignored_only(), detail_name="Ignored warnings", active=False
     )
 
-    return ListOfLines([active_table, ignored_table])
+    return ListOfLines([active_table, ignored_table, update_warnings_button])
+
 
 
 def display_active_warnings_table(

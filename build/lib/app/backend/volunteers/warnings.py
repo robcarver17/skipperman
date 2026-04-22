@@ -75,18 +75,25 @@ from app.backend.events.event_warnings import (
 
 
 def process_all_warnings_for_rota(interface: abstractInterface, event: Event):
-
+    st= SimpleTimer()
     warn_on_volunteers_with_skipped_registration(interface=interface, event=event)
+    st.elapsed("4: skipped")
     warn_on_all_volunteers_availability_volunteers_missing(
         interface=interface, event=event
     )
+    st.elapsed("4: missing volunteers")
     warn_on_all_volunteers_availability_sailors_missing(
         interface=interface, event=event
     )
+    st.elapsed("4: missing sailors")
     warn_on_all_volunteers_group(interface=interface, event=event)
+    st.elapsed("4: missing groups")
     warn_on_all_volunteers_unconnected(interface=interface, event=event)
+    st.elapsed("4: unconeccted")
     warn_on_volunteer_qualifications(interface=interface, event=event)
+    st.elapsed("4: qualifications")
     warn_on_cadets_which_should_have_volunteers(interface=interface, event=event)
+    st.elapsed("4: should have volunteers")
 
 def warn_on_all_volunteers_availability_volunteers_missing(
     interface: abstractInterface, event: Event

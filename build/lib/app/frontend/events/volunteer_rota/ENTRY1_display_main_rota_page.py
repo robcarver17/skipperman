@@ -1,5 +1,7 @@
 import datetime
 from typing import Union
+
+from app.backend.volunteers.warnings import process_all_warnings_for_rota
 from app.objects.utilities.utils import SimpleTimer
 from app.backend.volunteers.volunteers_with_most_common_role_and_group_at_event import (
     update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data,
@@ -230,6 +232,8 @@ def post_form_view_for_volunteer_rota_if_data_changed(
         update_dict_of_volunteers_with_most_common_role_and_group_across_events_from_core_data(
             interface
         )
+    elif update_warnings_button.pressed(last_button_pressed):
+        process_all_warnings_for_rota(interface=interface, event=get_event_from_state(interface))
 
     ## SAVES
 

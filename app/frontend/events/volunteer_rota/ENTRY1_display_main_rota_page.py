@@ -265,7 +265,7 @@ def save_all_information_across_forms(interface: abstractInterface):
     st.elapsed("1: save targets")
     save_group_notes_from_form(interface)
     st.elapsed("1: save notes")
-    save_warnings_from_table(interface)
+    #save_warnings_from_table(interface)
     st.elapsed("1: save warnings")
     interface.clear()
 

@@ -500,13 +500,3 @@ def any_cadet_clicked_on(interface: abstractInterface):
         return True
     except MissingData:
         return False
-
-
-def get_list_of_all_cadets_with_event_data(interface: abstractInterface):
-    event = get_event_from_state(interface)
-    dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
-        object_store=interface.object_store, event=event
-    )
-    list_of_cadets = dict_of_all_event_data.list_of_cadets
-
-    return list_of_cadets

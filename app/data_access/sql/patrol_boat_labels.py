@@ -84,7 +84,6 @@ class SqlDataListOfPatrolBoatLabelsAtEvent(GenericSqlData):
                 DAY,
                 day.name,
             )
-            print(insertion)
 
             self.cursor.execute(insertion, (label,))
 

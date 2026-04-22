@@ -23,6 +23,7 @@ from app.frontend.shared.buttons import (
 )
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
 from app.objects.utilities.transform_data import from_bool_to_str, from_str_to_bool
+from app.objects.utilities.utils import SimpleTimer
 
 WARNING_FIELD_ID = "**warnings"
 
@@ -200,23 +201,28 @@ def is_save_warnings_button_pressed(last_button: str):
 
 def save_warnings_from_table(interface: abstractInterface):
     event = get_event_from_state(interface)
+    st = SimpleTimer()
     save_warnings_from_table_checkboxes(interface, event)
-
+    st.elapsed("2: save warning checkboxes")
     last_button = interface.last_button_pressed()
     if was_specific_button_to_flag_warnings_pressed(last_button):
         save_multiple_warnings_given_specific_button_pressed(
             interface=interface, last_button=last_button
         )
+        st.elapsed("2: save warnings with flag")
 
 
 def save_warnings_from_table_checkboxes(interface: abstractInterface, event: Event):
+    st=SimpleTimer()
     list_of_ids = get_list_of_all_warning_ids_at_event(
         object_store=interface.object_store, event=event
     )
+    st.elapsed("3: got lis of warning ids")
     for warning_id in list_of_ids:
         process_warning_with_id_from_table(
             interface=interface, event=event, warning_id=warning_id
         )
+    st.elapsed("3: processed warning ids")
 
 
 def process_warning_with_id_from_table(

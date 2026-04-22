@@ -27,6 +27,7 @@ from typing import List, Union
 from app.objects.cadets import Cadet
 from app.objects.day_selectors import Day
 from app.objects.events import Event
+from app.objects.utilities.utils import SimpleTimer
 
 
 def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_event(
@@ -36,9 +37,11 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
     day: Day,
 ) -> List[str]:
     object_store = interface.object_store
+    st = SimpleTimer()
     dict_of_all_event_info_for_cadets = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event
     )
+    st.elapsed("4: save get dict of all event info")
     list_of_existing_cadets_boats_groups_club_dinghies_and_partners = dict_of_all_event_info_for_cadets.list_of_cadets_boat_classes_groups_sail_numbers_and_partners_at_event_on_day(
         day
     )
@@ -51,16 +54,19 @@ def update_boat_class_sail_number_group_club_dinghy_and_partner_for_cadets_at_ev
             dict_of_all_event_info_for_cadets=dict_of_all_event_info_for_cadets,
         )
     )
+    st.elapsed("4: get list of potential updates")
 
     list_of_updated_cadets_boats_groups_club_dinghies_and_partners = compare_list_of_cadets_with_dinghies_and_return_list_with_changed_values(
         new_list=list_of_potentially_updated_cadets_boats_groups_club_dinghies_and_partners,
         existing_list=list_of_existing_cadets_boats_groups_club_dinghies_and_partners,
     )
+    st.elapsed("4: do comparision")
     messages = update_boat_info_for_updated_cadets_at_event(
         interface=interface,
         event=event,
         list_of_updated_cadets_boats_groups_club_dinghies_and_partners=list_of_updated_cadets_boats_groups_club_dinghies_and_partners,
     )
+    st.elapsed("4: do updates")
 
     return messages
 

@@ -60,8 +60,9 @@ def get_preamble_before_table(
             ]
         )
     st = SimpleTimer()
-    summary_of_filled_roles = get_summary_table(interface=interface, event=event)
-    st.elapsed("2: summary")
+    # Not really used
+    #summary_of_filled_roles = get_summary_table(interface=interface, event=event)
+    #st.elapsed("2: summary")
     summary_group_table = get_summary_group_table(interface=interface, event=event)
     st.elapsed("2: group table")
     summary_instructor_table = get_summary_instructor_group_table(

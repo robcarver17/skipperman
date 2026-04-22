@@ -23,6 +23,7 @@ from app.objects.day_selectors import Day
 from app.objects.events import Event
 from app.objects.groups import ListOfGroups
 from app.objects.roles_and_teams import ListOfTeams, no_team
+from app.objects.utilities.utils import SimpleTimer
 from app.objects.volunteer_roles_and_groups_with_id import (
     TeamAndGroup,
 )
@@ -57,20 +58,25 @@ def get_summary_list_of_roles_and_groups_for_event_as_pd_df(
 def get_list_of_day_summaries_for_roles_at_event(
     object_store: ObjectStore, event: Event
 ) -> List[pd.DataFrame]:
+    st = SimpleTimer()
     volunteers_in_roles_at_event = (
         get_dict_of_volunteers_with_roles_and_groups_at_event(
             object_store=object_store, event=event
         )
     )
+    st.elapsed("3: volunteers in roles at event")
     if len(volunteers_in_roles_at_event) == 0:
         return []
 
     sorted_roles_at_event = get_sorted_roles_at_event(
         object_store=object_store, event=event
     )
+    st.elapsed("3: sorted roles at event")
+
     sorted_groups_at_event = get_sorted_list_of_groups_at_event(
         object_store=object_store, event=event
     )
+    st.elapsed("3: sorted groups at event")
 
     days_at_event = event.volunteer_days_in_event()
     all_day_summaries = []
@@ -82,6 +88,9 @@ def get_list_of_day_summaries_for_roles_at_event(
             sorted_groups_at_event=sorted_groups_at_event,
         )
         all_day_summaries.append(this_day_summary)
+
+    st.elapsed("3: make summaries")
+
 
     return all_day_summaries
 

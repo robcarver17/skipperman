@@ -85,14 +85,17 @@ from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.events import (
     Event,
 )
+from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_allocate_cadets_at_event(
     interface: abstractInterface, event: Event, sort_order: SortOrderGroups
 ) -> Union[Form, NewForm]:
+    st = SimpleTimer()
     allocations_and_class_summary = get_allocations_and_classes_detail(
         event=event, interface=interface
     )
+    st.elapsed("1: display allocations")
     clicker_line = (
         Line(
             "Click on another cadet name to show history / Click on cadet with history showing to hide"
@@ -105,6 +108,7 @@ def display_form_allocate_cadets_at_event(
     inner_form = get_inner_form_for_cadet_allocation(
         interface=interface, event=event, sort_order=sort_order
     )
+    st.elapsed("1: inner form")
     return Form(
         ListOfLines(
             [
@@ -279,10 +283,13 @@ sort_order_change_button = Button("Change sort order")
 def get_inner_form_for_cadet_allocation(
     interface: abstractInterface, event: Event, sort_order: SortOrderGroups
 ) -> Table:
+    st = SimpleTimer()
     object_store = interface.object_store
     dict_of_all_event_data = get_dict_of_all_event_info_for_cadets(
         object_store=object_store, event=event
     )
+    st.elapsed("2: all cadet data")
+
     day_or_none = get_day_from_state_or_none(interface)
     list_of_cadets = sorted_active_cadets(
         object_store=object_store,
@@ -290,6 +297,7 @@ def get_inner_form_for_cadet_allocation(
         sort_order=sort_order,
         day_or_none=day_or_none,
     )
+    st.elapsed("2: sorted active cadets")
     prior_events = get_prior_events_to_show(interface=interface, event=event)
     previous_groups_for_cadets = (
         get_dict_of_event_allocations_given_list_of_events_from_persistent_data(
@@ -298,7 +306,11 @@ def get_inner_form_for_cadet_allocation(
             list_of_events=prior_events,
         )
     )
+    st.elapsed("2: previous groups")
+
     group_allocation_info = get_group_allocation_info(dict_of_all_event_data)
+    st.elapsed("3: group allocation dict")
+
     top_row = get_top_row(
         previous_groups_for_cadets=previous_groups_for_cadets,
         group_allocation_info=group_allocation_info,
@@ -311,7 +323,7 @@ def get_inner_form_for_cadet_allocation(
         interface=interface,
         dict_of_all_event_data=dict_of_all_event_data,
     )
-
+    st.elapsed("3: body of table")
     return Table(
         [top_row] + body,
         has_column_headings=True,

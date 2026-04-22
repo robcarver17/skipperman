@@ -57,6 +57,7 @@ from app.frontend.shared.events_state import get_event_from_state
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import Cadet, ListOfCadets
 from app.objects.utilities.exceptions import MISSING_FROM_FORM
+from app.objects.utilities.utils import SimpleTimer
 
 
 def guess_boat_classes_in_allocation_form(interface: abstractInterface):
@@ -114,30 +115,35 @@ def get_list_of_updates_if_guessing_boat_classes_in_allocation_form(
 
 def update_data_given_allocation_form(interface: abstractInterface):
     list_of_cadets = get_list_of_all_cadets_with_event_data(interface=interface)
-
+    st = SimpleTimer()
     update_attendance_data_and_notes_for_all_cadets_in_form(
         interface, list_of_cadets=list_of_cadets
     )
+    st.elapsed("2: save attendance and notes")
     ## has to be done in one go because of swaps
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_form(
         interface=interface, list_of_cadets=list_of_cadets
     )
+    st.elapsed("2: save other")
 
 
 def update_attendance_data_and_notes_for_all_cadets_in_form(
     interface: abstractInterface, list_of_cadets: ListOfCadets
 ):
     event = get_event_from_state(interface)
-    for cadet in list_of_cadets:
-        if is_admin_or_skipper(interface):
+    st = SimpleTimer()
+    if is_admin_or_skipper(interface):
+        for cadet in list_of_cadets:
             update_attendance_data_for_cadet_in_form(interface=interface, cadet=cadet)
+    st.elapsed("3: save attendance")
 
+    for cadet in list_of_cadets:
         get_cadet_notes_for_row_in_form_and_alter_registration_data(
             interface=interface,
             event=event,
             cadet=cadet,
         )
-
+    st.elapsed("3: save notes")
 
 def update_attendance_data_for_cadet_in_form(
     interface: abstractInterface, cadet: Cadet
@@ -179,6 +185,7 @@ def get_cadet_notes_for_row_in_form_and_alter_registration_data(
     )
     if new_notes == MISSING_FROM_FORM:
         return
+
     update_notes_for_existing_cadet_at_event(
         interface=interface,
         event=event,

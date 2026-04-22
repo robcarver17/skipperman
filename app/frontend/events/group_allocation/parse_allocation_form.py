@@ -198,12 +198,15 @@ def update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_in_
     interface: abstractInterface, list_of_cadets: ListOfCadets
 ):
     event = get_event_from_state(interface)
+    st = SimpleTimer()
     list_of_updates = get_list_of_updates(
         interface=interface, list_of_cadets=list_of_cadets
     )
+    st.elapsed("3: save get list of updates")
     update_boat_class_sail_number_group_club_boat_and_partner_for_all_cadets_given_update_list(
         interface=interface, event=event, list_of_updates=list_of_updates
     )
+    st.elapsed("3: save do updates")
 
 
 def get_list_of_updates(

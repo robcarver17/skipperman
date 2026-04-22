@@ -107,15 +107,17 @@ def update_data_from_form_entries_in_patrol_boat_allocation_page(
 
 def update_boat_labels(interface: abstractInterface):
     event = get_event_from_state(interface)
+    st = SimpleTimer()
     list_of_boats_at_event = get_sorted_list_of_patrol_boats_at_event(
         object_store=interface.object_store, event=event
     )
+    st.elapsed("2: save get list of boats at event")
     for day in event.days_in_event():
         for patrol_boat in list_of_boats_at_event:
             update_boat_labels_for_specific_boat_and_day(
                 interface=interface, event=event, day=day, patrol_boat=patrol_boat
             )
-
+    st.elapsed("2: update lables")
 
 def update_boat_labels_for_specific_boat_and_day(
     interface: abstractInterface, event: Event, day: Day, patrol_boat: PatrolBoat

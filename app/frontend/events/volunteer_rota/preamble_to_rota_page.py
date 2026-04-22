@@ -59,15 +59,21 @@ def get_preamble_before_table(
                 Heading("Swapping: click on swapper or cancel", size=3, centred=True),
             ]
         )
+    st = SimpleTimer()
     summary_of_filled_roles = get_summary_table(interface=interface, event=event)
+    st.elapsed("2: summary")
     summary_group_table = get_summary_group_table(interface=interface, event=event)
+    st.elapsed("2: group table")
     summary_instructor_table = get_summary_instructor_group_table(
         interface=interface, event=event
     )
+    st.elapsed("2: instructors")
     targets = get_volunteer_targets_table_and_save_button(
         interface=interface, event=event
     )
+    st.elapsed("2: targets")
     warnings = get_volunteer_warning_table(interface)
+    st.elapsed("2: warnings")
     return ListOfLines(
         [
             MainMenuBar("Events"),

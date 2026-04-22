@@ -1,6 +1,8 @@
+from app.backend.patrol_boats.patrol_boat_warnings import process_all_warnings_for_patrol_boats
 from app.frontend.events.patrol_boats.copy_menu import (
     display_form_patrol_boat_copy_menu,
 )
+from app.frontend.events.volunteer_rota.volunteer_rota_buttons import update_warnings_button
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.events.patrol_boats.copying import (
     update_if_copy_individual_button_pressed,
@@ -63,6 +65,7 @@ from app.objects.abstract_objects.abstract_lines import (
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.objects.abstract_objects.abstract_text import Heading
+from app.objects.utilities.utils import SimpleTimer
 
 
 def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -> Form:
@@ -75,11 +78,13 @@ def display_form_view_for_patrol_boat_allocation(interface: abstractInterface) -
     title = Heading(
         "Patrol boat allocation for event %s" % str(event), centred=True, size=4
     )
-
+    st = SimpleTimer()
     top_material = get_top_material_for_patrol_boat_form(
         interface=interface, event=event
     )
+    st.elapsed("1: top material")
     patrol_boat_table = get_patrol_boat_table(event=event, interface=interface)
+    st.elapsed("")
     bottom_button_bar = get_bottom_button_bar_for_patrol_boats(interface)
     return Form(
         ListOfLines(
@@ -151,6 +156,8 @@ def post_form_view_for_patrol_boat_allocation(
         )
     elif is_club_dinghy_instructor_button(last_button_pressed):
         handle_club_dinghy_instructor_allocation_button_pressed(interface)
+    elif update_warnings_button.pressed(last_button_pressed):
+        process_all_warnings_for_patrol_boats(interface=interface, event=get_event_from_state(interface))
 
     ## exception
     else:

@@ -21,11 +21,11 @@ def load_spreadsheet_file(filename: str) -> pd.DataFrame:
     for engine in engine_types:
         try:
             if engine == "csv":
-                #wa_as_df = pd.read_csv(filename, parse_dates=True, date_format='%m/%d/%Y %H:%M:%S')
-                wa_as_df = pd.read_csv(filename, parse_dates=True)
+                wa_as_df = pd.read_csv(filename, parse_dates=True, date_format='%m/%d/%Y %H:%M:%S')
+                #wa_as_df = pd.read_csv(filename, parse_dates=True)
             else:
-                #wa_as_df = pd.read_excel(filename, engine=engine, parse_dates=True, date_format='%d/%m/%Y %H:%M:%S')
-                wa_as_df = pd.read_excel(filename, engine=engine, parse_dates=True)
+                wa_as_df = pd.read_excel(filename, engine=engine, parse_dates=True, date_format='%d/%m/%Y %H:%M:%S')
+                #wa_as_df = pd.read_excel(filename, engine=engine, parse_dates=True)
             return wa_as_df
         except Exception as e:
             error = "Error importing file %s using engine %s python version for pandas is %s" % (str(e), engine, pd.__version__)

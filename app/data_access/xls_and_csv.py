@@ -26,7 +26,7 @@ def load_spreadsheet_file(filename: str) -> pd.DataFrame:
                 wa_as_df = pd.read_excel(filename, engine=engine, parse_dates=True, date_format='%d/%m/%Y %H:%M:%S')
             return wa_as_df
         except Exception as e:
-            error = "Error importing file %s using engine %s. " % (str(e), engine)
+            error = "Error importing file %s using engine %s python version for pandas is %s" % (str(e), engine, pd.__version__)
             error_str += error
 
     raise NoValidFile(error_str)

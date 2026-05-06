@@ -41,6 +41,7 @@ Select 'Web' in the menu. Click on 'reload' and 'run until 3 months from now'
 
 Navigate to `https://bsccadetskipper.pythonanywhere.com/`
 
+If you have issues you may need to change the version of python (on the web tab) and /or [install new package versions](https://help.pythonanywhere.com/pages/InstallingNewModules).
 
 # Usernames and log in fresh install
 

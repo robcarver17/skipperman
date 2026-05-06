@@ -115,7 +115,7 @@ def get_report_filename_from_storage_or_use_default(
 def save_print_options(
     report_type: str, interface: abstractInterface, print_options: PrintOptions
 ):
-    print("Saving print shared %s" % str(print_options))
+    print("*** Saving print shared %s" % str(print_options))
     interface.set_persistent_value(REPORT_TITLE, print_options.title_str)
     interface.set_persistent_value(REPORT_FILENAME, print_options.filename)
 
@@ -284,7 +284,7 @@ def get_print_options_from_main_option_form_fields(
 def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOfLines:
     landscape_str = LANDSCAPE if print_options.landscape else PORTRAIT
     output_to_str = PDF if print_options.output_pdf else CSV
-
+    print("*** PRINT OPTIONS %s" % str(print_options))
     print_options_form = ListOfLines(
         [
             _______________,

@@ -77,12 +77,12 @@ class listInput(Input):
 
 
 def yes_no_radio(input_label, input_name, default_is_yes: bool = True) -> radioInput:
-    dict_of_options = dict(Yes=YES, No=NO)
+    dict_of_options = {YES:YES, NO:NO}
     if default_is_yes:
         default_label = YES
     else:
         default_label = NO
-
+    print("%s dict %s default %s" % (input_label, str(dict_of_options), default_label))
     return radioInput(
         input_label=input_label,
         input_name=input_name,

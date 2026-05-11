@@ -15,7 +15,7 @@ def get_print_options(
     ignore_stored_values_and_use_default: bool,
 ) -> PrintOptions:
     if ignore_stored_values_and_use_default:
-
+        print("Using default print options")
         return get_default_print_options(
             object_store=object_store, report_name=report_name
         )

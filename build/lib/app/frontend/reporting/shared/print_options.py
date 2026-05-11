@@ -296,7 +296,7 @@ def report_print_options_as_form_contents(print_options: PrintOptions) -> ListOf
             ),
             _______________,
             yes_no_radio(
-                input_label="Output to public with shareable web link (ensure no private information!)",
+                input_label="Output to public with shareable web link: ensure no private information!",
                 input_name=PUBLIC,
                 default_is_yes=print_options.publish_to_public,
             ),

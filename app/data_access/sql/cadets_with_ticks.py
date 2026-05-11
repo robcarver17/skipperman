@@ -23,6 +23,7 @@ from app.objects.ticks import (
     Tick,
     DictOfTicksWithItem,
     no_tick,
+full_tick
 )
 
 TICKS_FOR_CADET_TABLE = "ticks_for_cadet"
@@ -162,6 +163,7 @@ class SqlDataListOfCadetsWithTickListItems(GenericSqlData):
                         self.dict_of_ticks_for_qualification_and_substage_for_cadet(
                             substage_id=substage.id,
                             raw_ticks_for_cadet=raw_ticks_for_cadet,
+                            already_qualified=already_qualified
                         ),
                     )
                     for substage in self.list_of_substages.substages_for_qualification_id(
@@ -174,14 +176,32 @@ class SqlDataListOfCadetsWithTickListItems(GenericSqlData):
         )
 
     def dict_of_ticks_for_qualification_and_substage_for_cadet(
-        self, substage_id, raw_ticks_for_cadet: Dict[str, Tick]
+        self, substage_id, raw_ticks_for_cadet: Dict[str, Tick],
+            already_qualified: bool
     ) -> DictOfTickSheetItemsAndTicksForCadet:
+        if already_qualified:
+            return self.dict_of_ticks_for_qualification_and_substage_for_qualified_cadet(
+                substage_id=substage_id,
+            )
+
         return DictOfTickSheetItemsAndTicksForCadet(
             [
                 (tick_sheet_item, raw_ticks_for_cadet.get(tick_sheet_item.id, no_tick))
                 for tick_sheet_item in self.list_of_tick_sheet_items.subset_for_substage_id(
                     substage_id=substage_id
                 )
+            ]
+        )
+
+    def dict_of_ticks_for_qualification_and_substage_for_qualified_cadet(
+        self, substage_id
+    ) -> DictOfTickSheetItemsAndTicksForCadet:
+        return DictOfTickSheetItemsAndTicksForCadet(
+            [
+                (tick_sheet_item, full_tick)
+                for tick_sheet_item in self.list_of_tick_sheet_items.subset_for_substage_id(
+                substage_id=substage_id
+            )
             ]
         )
 

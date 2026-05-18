@@ -91,11 +91,28 @@ def map_wa_fields_in_df(
     dict_of_mapped_data = {}
     for wa_fieldname in matching_wa_fields:
         my_fieldname = wa_field_mapping.skipperman_field_given_wa_field(wa_fieldname)
-        dict_of_mapped_data[my_fieldname] = wa_as_df[wa_fieldname]
+        data_in_field = wa_as_df[wa_fieldname]
+        data_in_field = clean_text_fields_in_series(data_in_field)
+        dict_of_mapped_data[my_fieldname] = data_in_field
 
     mapped_wa_event_data = RegistrationDataForEvent.from_dict(dict_of_mapped_data)
 
     return mapped_wa_event_data
+
+def clean_text_fields_in_series(data_in_field: pd.Series):
+    if _is_string_only(data_in_field):
+        return pd.Series([x.encode("latin-1", errors="replace").decode("latin-1") for x in data_in_field])
+    else:
+        return data_in_field
+
+def _is_string_only(    data_in_field: pd.Series):
+    type_list = data_in_field.apply(type).unique()
+    if len(type_list)>0:
+        return False
+    elif len(type_list)==0:
+        return False ## shouldn't happen, but...
+
+    return type_list[0] is str
 
 
 def create_row_status_from_wa_fields_in_event_data(

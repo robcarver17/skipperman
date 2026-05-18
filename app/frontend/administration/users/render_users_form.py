@@ -8,7 +8,6 @@ from app.data_access.configuration.fixed import (
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 from app.backend.volunteers.list_of_volunteers import (
-    get_volunteer_from_id,
     get_sorted_list_of_volunteers,
 )
 
@@ -35,12 +34,13 @@ from app.objects.abstract_objects.abstract_buttons import (
     HelpButton,
 )
 from app.objects.users_and_security import (
-    ListOfSkipperManUsers,
-    SkipperManUser,
+
+ListOfSkipperManUsersWithVolunteerNames,
+SkipperManUserWithVolunteerName,
     ALL_GROUPS,
     new_blank_user,
 )
-from app.backend.security.list_of_users import get_list_of_users, list_of_admin_users
+from app.backend.security.list_of_users import list_of_admin_users
 from app.frontend.shared.buttons import (
     get_button_value_given_type_and_attributes,
     is_button_of_type,
@@ -52,8 +52,9 @@ SAVE_AND_BACK_BUTTON_LABEL = "Save and go back"
 ADD_ENTRY_BUTTON_LABEL = "Add a new user"
 
 
+
 def display_form_edit_list_of_users(
-    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsers
+    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsersWithVolunteerNames
 ) -> Union[Form, NewForm]:
     header_text = Heading(
         "List of current skipperman users",
@@ -133,7 +134,7 @@ def warning_text(interface: abstractInterface):
 
 
 def table_for_users(
-    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsers
+    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsersWithVolunteerNames
 ) -> Table:
     existing_entries = rows_for_existing_list_of_users(
         interface=interface, existing_list_of_users=existing_list_of_users
@@ -159,19 +160,20 @@ def row_for_new_user(interface: abstractInterface) -> RowInTable:
 
 
 def rows_for_existing_list_of_users(
-    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsers
+    interface: abstractInterface, existing_list_of_users: ListOfSkipperManUsersWithVolunteerNames
 ) -> List[RowInTable]:
     return [
-        get_row_for_existing_user(interface=interface, existing_user=user)
+        get_row_for_existing_user(interface=interface, existing_user=user, existing_list_of_users=existing_list_of_users)
         for user in existing_list_of_users
     ]
 
 
 def get_row_for_existing_user(
-    interface: abstractInterface, existing_user: SkipperManUser
+    interface: abstractInterface, existing_user: SkipperManUserWithVolunteerName,
+existing_list_of_users:  ListOfSkipperManUsersWithVolunteerNames
 ) -> RowInTable:
-    list_of_users = get_list_of_users(interface.object_store)
-    if list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
+    print("**** %s" % existing_user)
+    if existing_list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
         delete_button = "Cannot delete"
         group_dropdown = "Cannot change access"
     else:
@@ -202,7 +204,7 @@ VOLUNTEER = "volunteer"
 GENERATE_NEW_PASSWORD = "Generate new password"
 
 
-def text_box_for_username(user: SkipperManUser) -> textInput:
+def text_box_for_username(user: SkipperManUserWithVolunteerName) -> textInput:
     return textInput(
         value=user.username,
         input_label="",
@@ -210,7 +212,7 @@ def text_box_for_username(user: SkipperManUser) -> textInput:
     )
 
 
-def text_box_for_password(user: SkipperManUser, confirm=False) -> textInput:
+def text_box_for_password(user: SkipperManUserWithVolunteerName, confirm=False) -> textInput:
     if confirm:
         name = PASSWORD_CONFIRM
         label = "   Confirm password"
@@ -223,31 +225,26 @@ def text_box_for_password(user: SkipperManUser, confirm=False) -> textInput:
 
 
 def dropdown_for_volunteer(
-    interface: abstractInterface, user: SkipperManUser
+    interface: abstractInterface, user: SkipperManUserWithVolunteerName
 ) -> dropDownInput:
+    print(" - %s " % str(user))
     volunteers = get_sorted_list_of_volunteers(
         object_store=interface.object_store, sort_by=SORT_BY_FIRSTNAME
     )
     dict_of_volunteers = dict(
         [(volunteer.name, volunteer.name) for volunteer in volunteers]
     )
-    try:
-        volunteer = get_volunteer_from_id(
-            object_store=interface.object_store, volunteer_id=user.volunteer_id
-        )
-        name = volunteer.name
-    except:
-        name = ""
+    current_name = getattr(user, 'volunteer_name', '')
 
     return dropDownInput(
-        default_label=name,
+        default_label=current_name,
         dict_of_options=dict_of_volunteers,
         input_name=name_for_user_and_input_type(user, VOLUNTEER),
         input_label="Associated volunteer:",
     )
 
 
-def dropdown_for_group(user: SkipperManUser) -> dropDownInput:
+def dropdown_for_group(user: SkipperManUserWithVolunteerName) -> dropDownInput:
     return dropDownInput(
         default_label=user.group.name,
         dict_of_options=user_group_options_as_dict,
@@ -259,14 +256,14 @@ def dropdown_for_group(user: SkipperManUser) -> dropDownInput:
 user_group_options_as_dict = dict([(group.name, group.name) for group in ALL_GROUPS])
 
 
-def button_to_reset_password(user: SkipperManUser) -> Button:
+def button_to_reset_password(user: SkipperManUserWithVolunteerName) -> Button:
     return Button(
         label="Reset password to random value",
         value=button_name_for_reset_password(user),
     )
 
 
-def button_for_deletion(user: SkipperManUser) -> Button:
+def button_for_deletion(user: SkipperManUserWithVolunteerName) -> Button:
     return Button(label="Delete", value=button_name_for_deletion(user))
 
 
@@ -274,13 +271,13 @@ button_type_reset_password = "resetPassword"
 button_type_deletion = "deleteUser"
 
 
-def button_name_for_deletion(user: SkipperManUser):
+def button_name_for_deletion(user: SkipperManUserWithVolunteerName):
     return get_button_value_given_type_and_attributes(
         button_type_deletion, user.username
     )
 
 
-def button_name_for_reset_password(user: SkipperManUser):
+def button_name_for_reset_password(user: SkipperManUserWithVolunteerName):
     return get_button_value_given_type_and_attributes(
         button_type_reset_password, user.username
     )
@@ -310,5 +307,5 @@ def username_from_reset_button(button_name: str) -> str:
     )
 
 
-def name_for_user_and_input_type(user: SkipperManUser, input_type: str):
+def name_for_user_and_input_type(user: SkipperManUserWithVolunteerName, input_type: str):
     return user.username + "_" + input_type

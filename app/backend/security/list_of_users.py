@@ -1,11 +1,13 @@
 from werkzeug.security import generate_password_hash
 
+from app.backend.volunteers.list_of_volunteers import get_list_of_volunteers
 from app.data_access.configuration.configuration import HOMEPAGE
 from app.data_access.init_data import object_store as default_object_store
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.users_and_security import (
     ListOfSkipperManUsers,
+ListOfSkipperManUsersWithVolunteerNames,
     SkipperManUser,
     get_random_string,
 )
@@ -15,25 +17,39 @@ from app.web.html.url_define import LINK_LOGIN
 
 
 def already_in_list(object_store: ObjectStore, username: str) -> bool:
-    list_of_users = get_list_of_users(object_store)
+    list_of_users = get_raw_list_of_users(object_store)
     return list_of_users.already_in_list(username=username)
 
 
 def get_list_of_users(object_store: ObjectStore) -> ListOfSkipperManUsers:
-    list_of_users = get_list_of_users_could_be_empty(object_store)
+    list_of_users = get_raw_list_of_users(object_store)
 
     return list_of_users.list_of_users()
 
 
 def list_of_admin_users(object_store: ObjectStore) -> ListOfSkipperManUsers:
-    all_users = get_list_of_users(object_store)
+    all_users = get_raw_list_of_users(object_store)
     return all_users.list_of_admin_users()
 
 
-def get_list_of_users_could_be_empty(
+def get_list_of_users_with_names(
+    object_store: ObjectStore,
+) -> ListOfSkipperManUsersWithVolunteerNames:
+    users = get_raw_list_of_users(object_store)
+    users = users.list_of_users()
+    volunteers  = get_list_of_volunteers(object_store)
+    users_with_names = ListOfSkipperManUsersWithVolunteerNames.create_from_list_of_users(
+        users, list_of_volunteers=volunteers
+    )
+    users_with_names = users_with_names.sort_by_volunteer_name()
+
+    return users_with_names
+
+def get_raw_list_of_users(
     object_store: ObjectStore,
 ) -> ListOfSkipperManUsers:
-    return object_store.get(object_store.data_api.data_list_of_users.read)
+    users = object_store.get(object_store.data_api.data_list_of_users.read)
+    return users
 
 
 def change_password_for_user(

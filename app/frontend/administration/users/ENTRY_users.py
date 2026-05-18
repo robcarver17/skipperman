@@ -1,6 +1,6 @@
 from typing import Union
 
-from app.backend.security.list_of_users import get_list_of_users
+from app.backend.security.list_of_users import get_list_of_users, get_list_of_users_with_names
 from app.frontend.administration.users.parse_user_form import (
     delete_selected_user_from_user_list,
     generate_reset_message_for_user_name,
@@ -22,7 +22,7 @@ from app.objects.abstract_objects.abstract_interface import abstractInterface
 
 
 def display_form_security(interface: abstractInterface) -> Union[Form, NewForm]:
-    existing_list_of_users = get_list_of_users(interface.object_store)
+    existing_list_of_users = get_list_of_users_with_names(interface.object_store)
 
     return display_form_edit_list_of_users(
         interface=interface, existing_list_of_users=existing_list_of_users

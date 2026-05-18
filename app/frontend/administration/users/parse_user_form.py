@@ -259,7 +259,7 @@ def is_user_valid_text(
     if already_in_list(
         object_store=interface.object_store, username=user_values.username
     ):
-        valid_error += "Username is not unique. "
+        valid_error += "Username %s is not unique. " % user_values.username
     return valid_error
 
 

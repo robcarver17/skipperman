@@ -2,9 +2,10 @@ from random import choice
 import string
 from dataclasses import dataclass
 from enum import Enum
+from typing import List, Union
 
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
-from app.objects.volunteers import Volunteer
+from app.objects.volunteers import Volunteer, ListOfVolunteers
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.objects.utilities.generic_list_of_objects import (
@@ -68,8 +69,6 @@ class SkipperManUser(GenericSkipperManObject):
 
 
 #
-#
-
 
 NO_VOLUNTEER_ID = "-1"
 DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists at first login or on test machine
@@ -92,9 +91,6 @@ default_user_if_not_logged_in = SkipperManUser(
 )
 
 
-new_blank_user = SkipperManUser(
-    "", "", ADMIN_GROUP, email_address="", volunteer_id=NO_VOLUNTEER_ID
-)
 
 
 class ListOfSkipperManUsers(GenericListOfObjects):
@@ -131,8 +127,59 @@ class ListOfSkipperManUsers(GenericListOfObjects):
     def list_of_users(self) -> "ListOfSkipperManUsers":
         return list_of_users_or_default_if_empty(self)
 
+
+    def list_of_admin_users(self):
+        admin = [user for user in self if user.group == ADMIN_GROUP]
+
+        return ListOfSkipperManUsers(admin)
+
+
+
+
+@dataclass
+class SkipperManUserWithVolunteerName(GenericSkipperManObject):
+    username: str
+    password_hash: str
+    group: UserGroup
+    email_address: str  ## not currently used
+    volunteer_name: str
+
+    @classmethod
+    def create_from_list_of_users(cls, user: SkipperManUser, list_of_volunteers: ListOfVolunteers):
+        volunteer =list_of_volunteers.volunteer_with_id(user.volunteer_id, default=None)
+        if volunteer is None:
+            volunteer_name = ""
+        else:
+            volunteer_name = volunteer.name
+        return cls(
+            username=user.username,
+            password_hash=user.password_hash,
+            group=user.group,
+            email_address=user.email_address,
+            volunteer_name=volunteer_name
+        )
+
+new_blank_user = SkipperManUserWithVolunteerName(
+    "", "", INSTRUCTOR_GROUP, email_address="",
+    volunteer_name=""
+)
+
+
+
+class ListOfSkipperManUsersWithVolunteerNames(List[SkipperManUserWithVolunteerName]):
+    def sort_by_volunteer_name(self):
+        return ListOfSkipperManUsersWithVolunteerNames(sorted(self, key=lambda x: x.volunteer_name))
+
+    @classmethod
+    def create_from_list_of_users(cls, list_of_users: ListOfSkipperManUsers, list_of_volunteers: ListOfVolunteers):
+        return cls([
+            SkipperManUserWithVolunteerName.create_from_list_of_users(
+                user, list_of_volunteers=list_of_volunteers
+            ) for user in list_of_users
+        ])
+
     def only_one_admin_user_and_it_is_the_passed_user(
-        self, user: SkipperManUser
+        self, user: Union[SkipperManUser, 'SkipperManUserWithVolunteerName']
     ) -> bool:
         ## doesn't use list of users
         admin_users = self.list_of_admin_users()
@@ -142,10 +189,14 @@ class ListOfSkipperManUsers(GenericListOfObjects):
         else:
             return False
 
+
     def list_of_admin_users(self):
         admin = [user for user in self if user.group == ADMIN_GROUP]
 
-        return ListOfSkipperManUsers(admin)
+        return ListOfSkipperManUsersWithVolunteerNames(admin)
+
+
+
 
 
 def list_of_users_or_default_if_empty(

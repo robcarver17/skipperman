@@ -31,21 +31,21 @@ INDEX_NAME_CADETS_TABLE = "cadet_id_index"
 
 
 class SqlDataListOfCadets(GenericSqlData):
-    def delete_cadet(self, cadet: Cadet):
+    def delete_cadet(self, cadet: Cadet, commit_and_close: bool = True):
         matching_cadet = self.get_cadet_from_id(cadet.id, default=missing_data)
         if matching_cadet is missing_data:
             raise MissingData("Can't delete cadet %s as doesn't exist" % cadet)
 
         try:
             insertion = "DELETE FROM %s WHERE %s=?" % (CADETS_TABLE, CADET_ID)
-
-            self.cursor.execute(insertion, (int(cadet.id)))
-
-            self.conn.commit()
+            self.cursor.execute(insertion, (int(cadet.id),))
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception("error %s when deleting %s" % (str(e1), cadet))
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def add_cadet(self, new_cadet: Cadet):
         if self.does_matching_cadet_exist(new_cadet):

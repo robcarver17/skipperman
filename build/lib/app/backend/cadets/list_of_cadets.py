@@ -140,3 +140,16 @@ def bulk_update_of_list_of_cadets(
 
 
 all_sort_types = [SORT_BY_SURNAME, SORT_BY_FIRSTNAME, SORT_BY_DOB_ASC, SORT_BY_DOB_DSC]
+
+
+def merge_cadets_in_list_of_cadets(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets.delete_cadet,
+            cadet = cadet_to_delete,
+            commit_and_close = False
+        )
+        interface.log_error("Deleted cadet %s" % cadet_to_delete)
+
+    except Exception as e:
+        raise Exception("Can't delete %s, because %s" % (cadet_to_delete,str(e)))

@@ -71,3 +71,18 @@ def get_dict_of_cadets_with_qualifications_and_ticks(
         object_store.data_api.data_list_of_cadets_with_tick_list_items.get_dict_of_cadets_with_qualifications_and_ticks,
         list_of_cadet_ids=list_of_cadet_ids,
     )
+
+
+def merge_cadet_ticks(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        msgs = interface.update(
+            interface.object_store.data_api.data_list_of_cadets_with_tick_list_items.merge_cadet_ticks,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        msgs.append("Deleted all ticks for cadet %s with id %s. Cadet %s (%s) will keep all their existing ticks" % (cadet_to_delete, cadet_to_delete.id, cadet_to_keep, cadet_to_keep.id))
+        for msg in msgs:
+            interface.log_error(msg)
+
+    except Exception as e:
+        raise Exception("Can't merge ticks data for %s with %s, because %s" % (cadet_to_keep, cadet_to_delete,str(e)))

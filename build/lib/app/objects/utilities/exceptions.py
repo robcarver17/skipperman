@@ -60,3 +60,7 @@ MISSING_FROM_FORM = "Missing from form"
 
 class MissingMethod(Exception):
     pass
+
+
+class AlreadyQualified(Exception):
+    pass

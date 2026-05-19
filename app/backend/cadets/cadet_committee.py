@@ -177,3 +177,16 @@ def get_list_of_cadets_on_committee(
     return object_store.get(
         object_store.data_api.data_list_of_cadets_on_committee.get_list_of_cadets_on_committee
     )
+
+
+def merge_cadets_on_committee(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        msg = interface.update(
+            interface.object_store.data_api.data_list_of_cadets_on_committee.merge_cadets_on_committee,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error(msg)
+
+    except Exception as e:
+        raise Exception("Can't merge committee membership for %s with %s, because %s" % (cadet_to_keep, cadet_to_delete,str(e)))

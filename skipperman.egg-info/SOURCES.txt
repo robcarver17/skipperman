@@ -9,6 +9,7 @@ app/backend/../data_access/configuration/configuration.yaml
 app/backend/administration_and_utilities/__init__.py
 app/backend/administration_and_utilities/delete_cadets.py
 app/backend/administration_and_utilities/delete_volunteers.py
+app/backend/administration_and_utilities/merge_cadets.py
 app/backend/administration_and_utilities/notes.py
 app/backend/administration_and_utilities/../../data_access/configuration/configuration.yaml
 app/backend/boat_classes/__init__.py
@@ -622,6 +623,7 @@ app/objects/identified_cadets_at_event.py
 app/objects/identified_volunteer_at_event.py
 app/objects/last_role_for_volunteer.py
 app/objects/membership_status.py
+app/objects/merge_cadet_objects.py
 app/objects/notes.py
 app/objects/partners.py
 app/objects/patrol_boats.py

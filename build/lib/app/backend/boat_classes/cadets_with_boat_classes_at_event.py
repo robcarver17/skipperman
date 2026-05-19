@@ -64,3 +64,16 @@ def remove_cadet_from_boats_data_on_day_and_return_messages(
     )
 
     return message
+
+
+def merge_dinghies_at_event(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet, event: Event):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_with_dinghies_at_event.merge_dinghies_at_event,
+            event_id=event.id,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error("Merged dinghies at event for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+        raise Exception("Can't merge dinghies for %s with %s at %s, because %s" % (cadet_to_keep, cadet_to_delete, event, str(e)))

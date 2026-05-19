@@ -288,3 +288,18 @@ def get_dict_of_group_allocations_for_list_of_events_active_cadets_only(
     )
 
     return allocations_as_dict
+
+
+def merge_group_names_for_events_persistent_version(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_group_names_for_events_and_cadets_persistent_version.merge_group_names_for_events_persistent_version,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error(
+                "Deleted all persistent group names for cadet %s with id %s. Cadet %s (%s) will keep all their existing groups, not copied across. Use 'Update past groups for cadets' from the 'Sailors, groups, boats' page for any event." % (
+                cadet_to_delete, cadet_to_delete.id, cadet_to_keep, cadet_to_keep.id))
+
+    except Exception as e:
+        raise Exception("Can't merge persistent group data for %s with %s, because %s" % (cadet_to_keep, cadet_to_delete,str(e)))

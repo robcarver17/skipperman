@@ -17,10 +17,18 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_text import Heading
 from app.objects.cadets import Cadet
+from app.objects.utilities.exceptions import MissingData
 
 
 def display_deleting_cadet_process(interface: abstractInterface):
-    cadet_to_delete = get_cadet_to_delete_from_state(interface)
+    try:
+        cadet_to_delete = get_cadet_to_delete_from_state(interface)
+    except MissingData:
+        ## deletion has already happened
+        return interface.get_new_display_form_for_parent_of_function(
+            display_deleting_cadet_process
+        )
+
     warnings = delete_cadet_in_data_but_do_not_save_cache_and_return_warnings(
         interface, cadet_to_delete=cadet_to_delete
     )
@@ -35,10 +43,17 @@ def display_deleting_cadet_process(interface: abstractInterface):
 
 
 def post_deleting_cadets_process(interface: abstractInterface):
+    try:
+        cadet_to_delete = get_cadet_to_delete_from_state(interface)
+    except MissingData:
+        ## deletion has already happened
+        return interface.get_new_display_form_for_parent_of_function(
+            display_deleting_cadet_process
+        )
+
     button_pressed = interface.last_button_pressed()
     print("pressed %s" % button_pressed)
     if yes_button.pressed(button_pressed):
-        cadet_to_delete = get_cadet_to_delete_from_state(interface)
         delete_cadet_in_data_and_return_warnings(
             interface, cadet_to_delete=cadet_to_delete
         )

@@ -31,7 +31,30 @@ INDEX_TICKS_FOR_CADET_TABLE = "index_ticks_for_cadet_table"
 
 
 class SqlDataListOfCadetsWithTickListItems(GenericSqlData):
-    def delete_ticks_for_cadet(self, cadet_id: str):
+    def  merge_cadet_ticks(self, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing_ticks=self.ticks_and_ticksheet_items_for_cadet(cadet_id_to_delete)
+        msgs = []
+        count_of_existing_ticks = 0
+        count_of_new_ticks = 0
+        for existing_id, existing_tick in existing_ticks.items():
+            if self.does_tick_exist(cadet_id=cadet_id_to_keep, tick_item_id=existing_id):
+                count_of_existing_ticks+=1
+            else:
+                self.write_tick_for_cadet_without_checks_or_commit(cadet_id=cadet_id_to_keep,
+                                                                   tick_id=existing_id,
+                                                                   tick=existing_tick)
+                count_of_new_ticks+=1
+
+        self.delete_ticks_for_cadet(cadet_id_to_delete, commit_and_close=False)
+        msgs.append([
+            'Cadet we are keeping had %d ticks already, skipped' % count_of_existing_ticks,
+            'Cadet we are keeping had %d new ticks added from deleted cadet' % count_of_existing_ticks,
+            'Deleted all ticks for cadet we are deleting'
+        ])
+
+        return msgs
+
+    def delete_ticks_for_cadet(self, cadet_id: str, commit_and_close: bool = True):
         try:
             if self.table_does_not_exist(TICKS_FOR_CADET_TABLE):
                 return
@@ -40,11 +63,13 @@ class SqlDataListOfCadetsWithTickListItems(GenericSqlData):
                 "DELETE FROM %s WHERE %s=%d "
                 % (TICKS_FOR_CADET_TABLE, CADET_ID, int(cadet_id))
             )
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception("Error %s when writing ticks" % str(e1))
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def save_ticksheet_edits_for_specific_tick(
         self, new_tick: Tick, cadet_id: str, tick_item_id: str

@@ -20,6 +20,24 @@ INDEX_VOLUNTEER_CADET_CONNECTIONS_TABLE = "index_volunteer_cadet_associations"
 
 
 class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
+    def  merge_cadet_volunteer_associations(self, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing_connections_for_delete =  self.get_list_of_volunteer_ids_associated_with_cadet(cadet_id_to_delete)
+        existing_connections_for_keep = self.get_list_of_volunteer_ids_associated_with_cadet(cadet_id_to_delete)
+        msgs = []
+        for volunteer_id in existing_connections_for_delete:
+            if volunteer_id in existing_connections_for_keep:
+                msgs.append("Cadet id %s is already associated with volunteer id %s, skipping" % (cadet_id_to_keep, volunteer_id))
+            else:
+                self._add_row_without_commits_or_checks(
+                    CadetVolunteerAssociationWithIds(
+                        cadet_id=cadet_id_to_keep, volunteer_id=volunteer_id
+                    )
+                )
+                msgs.append("Cadet id %s now associated with volunteer id %s, copied from cadet id %s" % (cadet_id_to_keep, volunteer_id, cadet_id_to_delete))
+
+        self.delete_all_connections_for_cadet_id(cadet_id_to_delete, commit_and_close= False)
+        return msgs
+
     def get_dict_of_cadets_associated_with_volunteers(
         self,
     ) -> DictOfCadetsAssociatedWithVolunteer:
@@ -68,6 +86,9 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
             self.close()
 
     def delete_all_connections_for_cadet(self, cadet: Cadet):
+        self.delete_all_connections_for_cadet_id(cadet_id=cadet.id)
+
+    def delete_all_connections_for_cadet_id(self, cadet_id:str, commit_and_close: bool = True):
         if self.table_does_not_exist(CADET_VOLUNTEER_CONNECTIONS_TABLE):
             return
 
@@ -78,14 +99,16 @@ class SqlDataListOfCadetVolunteerAssociations(GenericSqlData):
                 % (
                     CADET_VOLUNTEER_CONNECTIONS_TABLE,
                     CADET_ID,
-                    int(cadet.id),
+                    int(cadet_id),
                 )
             )
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise e1
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def add_volunteer_connection_to_cadet(self, cadet: Cadet, volunteer: Volunteer):
         if self.is_cadet_associated_with_volunteer(cadet=cadet, volunteer=volunteer):

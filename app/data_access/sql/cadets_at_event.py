@@ -13,6 +13,7 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
 )
 from app.objects.day_selectors import DaySelector, Day
+from app.objects.merge_cadet_objects import ActionToTake
 from app.objects.registration_data import RowInRegistrationData
 from app.objects.registration_status import RegistrationStatus, ACTIVE_STATUS_NAMES
 from app.objects.utilities.exceptions import missing_data, MultipleMatches
@@ -27,7 +28,49 @@ INDEX_REGISTRATION_ROW_FOR_CADETS_TABLE = (
 ACTIVE_STATUS_NAMES_AS_STR = "('%s')" % ("','".join(ACTIVE_STATUS_NAMES))
 
 
+
 class SqlDataListOfCadetsAtEvent(GenericSqlData):
+    def merge_cadet_registration_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str,
+                                          action_to_take: ActionToTake):
+
+        msgs=[]
+        if self.table_does_not_exist(CADETS_AT_EVENT_TABLE):
+            return []
+
+        if action_to_take.remove_reg_id_for_keep_cadet:
+            ## do this first so don't get conflict
+            existing = self.is_cadet_at_event(event_id=event_id, cadet_id=cadet_id_to_keep)
+            if existing:
+                self.delete_cadet_from_event(event_id=event_id, cadet_id=cadet_id_to_keep)
+                msgs.append("Deleted cadet we are keeping as wasn't active at event")
+        if action_to_take.update_cadet_id_reg_id:
+            ## do this next or lose data
+            try:
+
+                insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                    CADETS_AT_EVENT_TABLE,
+                    CADET_ID,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id_to_delete)
+                )
+                self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+            except Exception as e1:
+                raise Exception(
+                    "error %s when writing to cadet registration table at event# %s"
+                    % (str(e1), event_id)
+                )
+            msgs.append("Replaced cadet id at event with new one")
+        if action_to_take.remove_reg_id_for_delete_cadet:
+            ## do this last
+            existing = self.is_cadet_at_event(event_id=event_id, cadet_id=cadet_id_to_delete)
+            if existing:
+                self.delete_cadet_from_event(event_id=event_id, cadet_id=cadet_id_to_delete)
+                msgs.append("Deleted cadet we are keeping as wasn't active at event")
+
+        return msgs
+
     def update_registration_details_for_existing_cadet_at_event_who_was_manual(
         self,
         event_id: str,

@@ -10,12 +10,58 @@ from app.objects.identified_cadets_at_event import (
     IdentifiedCadetAtEvent,
 )
 from app.data_access.sql.shared_column_names import *
+from app.objects.merge_cadet_objects import ActionToTake
 
 CADET_IDENTIFIED_AT_EVENT_TABLE = "identified_cadets_at_event"
 INDEX_CADET_IDENTIFIED_AT_EVENT_TABLE = "index_identified_cadets_at_event"
 
 
 class SqlDataListOfIdentifiedCadetsAtEvent(GenericSqlData):
+    def merge_identified_cadets_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str,
+                                         action_to_take: ActionToTake):
+
+        if self.table_does_not_exist(CADET_IDENTIFIED_AT_EVENT_TABLE):
+            return
+
+        if action_to_take.remove_reg_id_for_keep_cadet:
+            ## do this first to avoid conflicts
+            existing = self.is_cadet_identified_at_event(event_id=event_id, cadet_id=cadet_id_to_keep)
+            if existing:
+                self.delete_cadet_from_identified_data(event_id=event_id, cadet_id=cadet_id_to_keep,
+                                                       commit_and_close=False)
+                print("Existing cadet was already identified at event (must have been cancelled), removing")
+
+        if action_to_take.update_cadet_id_reg_id:
+            ## do this next or lose data
+            try:
+                if self.table_does_not_exist(CADET_IDENTIFIED_AT_EVENT_TABLE):
+                    return
+
+                insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                    CADET_IDENTIFIED_AT_EVENT_TABLE,
+                    CADET_ID,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id_to_delete)
+                )
+                self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+                print("Updated cadet ID in identification data")
+            except Exception as e1:
+                raise Exception(
+                    "error %s when writing to cadet dinghy table at event# %s"
+                    % (str(e1), event_id)
+                )
+
+        ## do this last
+        if action_to_take.remove_reg_id_for_delete_cadet:
+            existing = self.is_cadet_identified_at_event(event_id=event_id, cadet_id=cadet_id_to_delete)
+            if existing:
+                self.delete_cadet_from_identified_data(event_id=event_id, cadet_id=cadet_id_to_delete,
+                                                       commit_and_close=True)
+                print("Deleted identification for cadet being removed at event")
+
+
     def delete_cadet_from_identified_data_and_return_messages(
         self, event_id: str, cadet_id: str
     ):
@@ -53,7 +99,7 @@ class SqlDataListOfIdentifiedCadetsAtEvent(GenericSqlData):
 
         return len(raw_list) > 0
 
-    def delete_cadet_from_identified_data(self, event_id: str, cadet_id: str):
+    def delete_cadet_from_identified_data(self, event_id: str, cadet_id: str, commit_and_close: bool = True):
         try:
             if self.table_does_not_exist(CADET_IDENTIFIED_AT_EVENT_TABLE):
                 return
@@ -70,15 +116,16 @@ class SqlDataListOfIdentifiedCadetsAtEvent(GenericSqlData):
                     int(cadet_id),
                 )
             )
-
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception(
                 "Error %s when writing to identified cadets at event table event# %s"
                 % (str(e1), event_id)
             )
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def mark_row_as_permanently_skip_cadet(self, event_id: str, row_id: str):
         self.update_or_add_identified_cadet_and_row(

@@ -24,6 +24,7 @@ from app.objects.composed.cadets_at_event_with_registration_data import (
     DictOfCadetsWithRegistrationData,
     CadetRegistrationData,
 )
+from app.objects.merge_cadet_objects import ActionToTake
 from app.objects.utilities.exceptions import arg_not_passed, missing_data
 from app.objects.registration_data import (
     RowInRegistrationData,
@@ -195,3 +196,21 @@ def update_list_of_cadets_with_registration_data(
         event_id=event.id,
         list_of_cadets_at_event=list_of_cadets_at_event,
     )
+
+
+def merge_cadet_registration_at_event(interface: abstractInterface, cadet_to_delete: Cadet,
+                                      cadet_to_keep: Cadet, event: Event,
+                                      action_to_take: ActionToTake):
+
+    try:
+        interface.update(
+            interface.object_store.data_api.data_cadets_at_event.merge_cadet_registration_at_event,
+            event_id=event.id,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id,
+            action_to_take=action_to_take
+        )
+
+        interface.log_error("Merged registration data for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+        raise Exception("Can't merge registration data for %s with %s at %s, because %s" % (cadet_to_keep, cadet_to_delete, event, str(e)))

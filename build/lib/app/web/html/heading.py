@@ -48,7 +48,10 @@ def get_html_header(
     <header class="w3-container w3-padding w3-orange" id="myHeader">
       <div class="w3-center">
       <h4>Blackwater Sailing Club - Cadet Skipper Management System</h4>
-      <h1 class="w3-xxxlarge ">%s</h1>
+      
+      <h1 class="w3-xxxlarge ">%s</h1><img src="/static/logo.png">
+      
+      
       
       <h5>%s</h5>
         %s 

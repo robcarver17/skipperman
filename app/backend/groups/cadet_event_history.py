@@ -115,3 +115,5 @@ def get_group_name_for_cadet_at_event(
         return "Not at event"
 
     return group.name
+
+

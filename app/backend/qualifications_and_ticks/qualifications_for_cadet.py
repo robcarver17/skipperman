@@ -94,3 +94,18 @@ def highest_qualification_for_cadet(
     )
 
     return ordered_list.highest_qualification_if_ordered()
+
+
+def merge_cadet_qualifications_data(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        msgs = interface.update(
+            interface.object_store.data_api.data_list_of_cadets_with_qualifications.merge_cadet_qualifications_data,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        msgs.append("Deleted all qualifications for cadet %s with id %s. Cadet %s (%s) will keep all their existing qualifications" % (cadet_to_delete, cadet_to_delete.id, cadet_to_keep, cadet_to_keep.id))
+        for msg in msgs:
+            interface.log_error(msg)
+
+    except Exception as e:
+        raise Exception("Can't merge qualifications data for %s with %s, because %s" % (cadet_to_keep, cadet_to_delete,str(e)))

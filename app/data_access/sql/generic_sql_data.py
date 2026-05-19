@@ -26,6 +26,9 @@ class DBConnection:
 
         return conn
 
+    def commit(self):
+        self.conn.commit()
+
 
 class GenericSqlData(object):
     def __init__(self, db_connection: DBConnection, object_store: "ObjectStore"):

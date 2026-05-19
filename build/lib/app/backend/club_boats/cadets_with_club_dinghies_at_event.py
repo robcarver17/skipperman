@@ -58,3 +58,21 @@ def add_club_dinghy_for_cadet_on_day(
         cadet_id=cadet.id,
         club_dinghy_id=club_dinghy.id,
     )
+
+
+def merge_club_dinghies_at_event(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet, event: Event):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_at_event_with_club_dinghies.merge_club_dinghies_at_event,
+            event_id=event.id,
+            cadet_id_to_keep=cadet_to_keep.id,
+            cadet_id_to_delete = cadet_to_delete.id
+        )
+        interface.log_error("Merged club dinghies for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+        raise Exception("Error merging club dinghies for %s %s at event %s %s" %(
+            cadet_to_delete,
+            cadet_to_keep,
+            event,
+            str(e)
+        ))

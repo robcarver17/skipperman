@@ -36,6 +36,12 @@ def update_status_of_existing_cadet_at_event_to_cancelled_or_deleted_and_return_
     assert new_status.is_cancelled_or_deleted
 
     interface.update(
+        interface.object_store.data_api.data_attendance_at_events_for_specific_cadet.delete_attendance_data_for_cadet_at_event,
+        event_id=event.id,
+        cadet_id=cadet.id
+    )
+
+    interface.update(
         interface.object_store.data_api.data_cadets_at_event.update_status_of_existing_cadet_at_event,
         event_id=event.id,
         cadet_id=cadet.id,

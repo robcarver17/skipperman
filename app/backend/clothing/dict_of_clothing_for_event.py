@@ -202,3 +202,17 @@ def add_new_cadet_with_clothing_to_event(
         cadet_id=cadet.id,
         size=size,
     )
+
+
+def merge_clothing_at_event(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet, event: Event):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_with_clothing_at_event.merge_clothing_at_event,
+            event_id=event.id,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error("Merged clothing for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+         raise Exception("Can't merge clothing %s with %s at %s, because %s" % (cadet_to_keep, cadet_to_delete, event, str(e)))
+

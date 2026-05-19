@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+import app.objects.merge_cadet_objects
 from app.objects.utilities.generic_objects import GenericSkipperManObjectWithIds
 from app.objects.utilities.generic_list_of_objects import (
     GenericListOfObjectsWithIds,
@@ -52,7 +53,8 @@ class ListOfEventWarnings(GenericListOfObjectsWithIds):
         return in_categories
 
     def active_only(self) -> "ListOfEventWarnings":
-        return ListOfEventWarnings([item for item in self if item.active])
+        return ListOfEventWarnings([item for item in self if
+                                    app.objects.merge_cadet_objects.active])
 
     def ignored_only(self) -> "ListOfEventWarnings":
         return ListOfEventWarnings([item for item in self if item.ignored])

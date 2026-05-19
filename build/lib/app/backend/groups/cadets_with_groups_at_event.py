@@ -150,3 +150,16 @@ def get_sorted_list_of_groups_at_event(
             sorted_groups_at_event.remove(unallocated_group)
 
     return sorted_groups_at_event
+
+
+def merge_groups_at_event(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet, event: Event):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_list_of_cadets_with_groups.merge_groups_at_event,
+            event_id=event.id,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error("Merged groups for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+        raise Exception("Can't merge groups for %s with %s at %s, because %s" % (cadet_to_keep, cadet_to_delete, event, str(e)))

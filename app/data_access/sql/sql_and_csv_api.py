@@ -110,6 +110,12 @@ class MixedSqlAndCsvDataApi(object):
         db_connection = DBConnection(master_data_path)
         self._db_connection = db_connection
 
+    def commit(self):
+        self.db_connection.commit()
+
+    def close(self):
+        self.db_connection.close()
+
     def add_object_store(self, object_store):
         self._object_store = object_store
 

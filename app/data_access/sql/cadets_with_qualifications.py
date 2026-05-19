@@ -2,6 +2,7 @@ import datetime
 
 
 from app.data_access.sql.generic_sql_data import GenericSqlData
+from app.objects.utilities.exceptions import AlreadyQualified
 from app.objects.utilities.transform_data import date2int, int2date
 from app.data_access.sql.shared_column_names import *
 from app.objects.cadets import ListOfCadets
@@ -21,16 +22,36 @@ INDEX_NAME_CADETS_WITH_QUALIFICATION_TABLE = "cadets_with_qualifications_id"
 
 
 class SqlListOfCadetsWithQualifications(GenericSqlData):
+    def  merge_cadet_qualifications_data(self, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing_as_dict=self.get_ordered_list_of_qualifications_for_cadet(cadet_id_to_delete)
+        msgs = []
+        for existing in existing_as_dict:
+            try:
+                self.apply_qualification_to_cadet(cadet_id=cadet_id_to_keep,
+                                                  awarded_by=existing.awarded_by,
+                                                  qualification_id=existing.qualification.id,
+                                                  commit_and_close=False)
+                msgs.append("Awarded %s to cadet ID %s copied from %s" % (existing.qualification, cadet_id_to_keep, cadet_id_to_delete))
+            except AlreadyQualified:
+                msgs.append("Cadet ID %s already had %s, skipping" % (cadet_id_to_keep, existing.qualification))
+            except Exception as e:
+                raise Exception(str(e))
+
+        self.delete_all_qualifications_for_cadet(cadet_id=cadet_id_to_delete)
+
+        return msgs
+
     def apply_qualification_to_cadet(
         self,
         cadet_id: str,
         qualification_id: str,
         awarded_by: str,
+            commit_and_close: bool = True
     ):
         if self.does_cadet_have_qualification(
             cadet_id=cadet_id, qualification_id=qualification_id
         ):
-            raise Exception("Cadet already has qualification")
+            raise AlreadyQualified("Cadet already has qualification")
 
         cadet_with_qualifications = CadetWithIdAndQualification(
             cadet_id=cadet_id,
@@ -46,14 +67,15 @@ class SqlListOfCadetsWithQualifications(GenericSqlData):
             self._write_qualification_for_cadet_without_checks_or_commit(
                 cadet_with_qualifications
             )
-
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception(
                 "Error %s when writing to cadet with qualifications table" % str(e1)
             )
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def remove_qualification_from_cadet(
         self,

@@ -172,7 +172,6 @@ def get_row_for_existing_user(
     interface: abstractInterface, existing_user: SkipperManUserWithVolunteerName,
 existing_list_of_users:  ListOfSkipperManUsersWithVolunteerNames
 ) -> RowInTable:
-    print("**** %s" % existing_user)
     if existing_list_of_users.only_one_admin_user_and_it_is_the_passed_user(existing_user):
         delete_button = "Cannot delete"
         group_dropdown = "Cannot change access"
@@ -227,7 +226,6 @@ def text_box_for_password(user: SkipperManUserWithVolunteerName, confirm=False) 
 def dropdown_for_volunteer(
     interface: abstractInterface, user: SkipperManUserWithVolunteerName
 ) -> dropDownInput:
-    print(" - %s " % str(user))
     volunteers = get_sorted_list_of_volunteers(
         object_store=interface.object_store, sort_by=SORT_BY_FIRSTNAME
     )

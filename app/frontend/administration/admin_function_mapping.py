@@ -1,3 +1,5 @@
+from app.frontend.administration.data.merging_cadets_process import display_merging_cadet_process, \
+    post_merging_cadets_process
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
     NestedDictOfMappings,
@@ -50,7 +52,9 @@ admin_function_mapping = DisplayAndPostFormFunctionMaps.from_nested_dict_of_func
                             (
                                 display_deleting_cadet_process,
                                 post_deleting_cadets_process,
-                            ): 0
+                            ): 0,
+                            (display_merging_cadet_process,
+                             post_merging_cadets_process):0
                         }
                     },
                     (

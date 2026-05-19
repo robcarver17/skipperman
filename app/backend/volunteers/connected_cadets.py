@@ -182,3 +182,21 @@ def get_dict_of_cadets_associated_with_volunteers(
     return object_store.get(
         object_store.data_api.data_list_of_cadet_volunteer_associations.get_dict_of_cadets_associated_with_volunteers
     )
+
+
+def merge_cadet_volunteer_associations(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet):
+    try:
+        msgs = interface.update(
+            interface.object_store.data_api.data_list_of_cadet_volunteer_associations.merge_cadet_volunteer_associations,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        msgs.append(
+                "Deleted all volunteer associations for cadet %s with id %s. Cadet %s (%s) will keep all their existing associations" % (
+                cadet_to_delete, cadet_to_delete.id, cadet_to_keep, cadet_to_keep.id))
+        for msg in msgs:
+            interface.log_error(msg)
+
+
+    except Exception as e:
+        raise Exception("Can't merge connections for %s with %s, because %s" % (cadet_to_keep, cadet_to_delete,str(e)))

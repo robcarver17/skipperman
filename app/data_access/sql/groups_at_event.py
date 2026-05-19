@@ -26,6 +26,30 @@ INDEX_NAME_CADETS_WITH_GROUP_ID_TABLE = "event_cadet_day"
 
 
 class SqlDataListOfCadetsWithGroups(GenericSqlData):
+    def merge_groups_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing = self.is_cadet_in_group_already_on_any_day(event_id=event_id, cadet_id=cadet_id_to_keep)
+        if existing:
+            raise Exception("cadet we are keeping is already at the event")
+
+        try:
+            if self.table_does_not_exist(CADETS_WITH_GROUP_ID_TABLE):
+                return
+
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                CADETS_WITH_GROUP_ID_TABLE,
+                CADET_ID,
+                EVENT_ID,
+                int(event_id),
+                CADET_ID,
+                int(cadet_id_to_delete)
+            )
+            self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+        except Exception as e1:
+            raise Exception(
+                "error %s when writing to cadet dinghy table at event# %s"
+                % (str(e1), event_id)
+            )
+
     def delete_cadet_group_on_day(self, event_id: str, cadet_id: str, day: Day):
         try:
             if self.table_does_not_exist(CADETS_WITH_GROUP_ID_TABLE):
@@ -212,6 +236,35 @@ class SqlDataListOfCadetsWithGroups(GenericSqlData):
                     int(cadet_id),
                     DAY,
                     day.name,
+                )
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading groups at events" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list) > 0
+
+
+    def is_cadet_in_group_already_on_any_day(
+        self,
+        event_id: str,
+        cadet_id: str,
+    ):
+        if self.table_does_not_exist(CADETS_WITH_GROUP_ID_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s=%d AND %s=%d """
+                % (
+                    CADETS_WITH_GROUP_ID_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id),
                 )
             )
             raw_list = cursor.fetchall()

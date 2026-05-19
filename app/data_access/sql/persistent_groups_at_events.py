@@ -1,3 +1,5 @@
+from typing import Dict
+
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.data_access.sql.shared_column_names import (
     CADET_ID,
@@ -12,6 +14,7 @@ from app.objects.previous_cadet_groups import (
     ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds,
     GroupNamesForEventsAndCadetPersistentVersionWithIds,
 )
+from app.objects.utilities.exceptions import MultipleMatches
 from app.objects.utilities.transform_data import dict_as_str, dict_from_str
 
 PERSISTENT_CADETS_WITH_GROUP_ID_TABLE = (
@@ -20,7 +23,12 @@ PERSISTENT_CADETS_WITH_GROUP_ID_TABLE = (
 INDEX_NAME_PERSISTENT_CADETS_WITH_GROUP_ID_TABLE = "cadet_id_in_persistent_table_index"
 
 
+
+
 class SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(GenericSqlData):
+    def  merge_group_names_for_events_persistent_version(self, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        self.delete_persistent_version_of_previous_groups_for_cadet(cadet_id_to_delete, commit_and_close=False)
+
     def get_dict_of_group_names_for_events_and_cadets_persistent_version(
         self,
     ) -> DictOfOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
@@ -55,7 +63,7 @@ class SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(GenericSqlData):
             self.object_store.data_api.data_list_of_events.read
         )
 
-    def delete_persistent_version_of_previous_groups_for_cadet(self, cadet_id: str):
+    def delete_persistent_version_of_previous_groups_for_cadet(self, cadet_id: str, commit_and_close: bool = True):
         try:
             if self.table_does_not_exist(PERSISTENT_CADETS_WITH_GROUP_ID_TABLE):
                 return
@@ -64,14 +72,15 @@ class SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(GenericSqlData):
                 "DELETE FROM %s WHERE %s=%d "
                 % (PERSISTENT_CADETS_WITH_GROUP_ID_TABLE, CADET_ID, int(cadet_id))
             )
-
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception(
                 "Error %s when writing to persistent groups at event table" % str(e1)
             )
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def update_dict_of_group_names_for_events_and_cadets_persistent_version(
         self,
@@ -79,6 +88,38 @@ class SqlDataListOfGroupNamesForEventsAndCadetPersistentVersion(GenericSqlData):
     ):
         as_list_with_ids = dict_of_group_names_for_events_and_cadets.as_list_with_ids()
         self.write(as_list_with_ids)
+
+    def read_for_cadet_id(self, cadet_id: str) ->Dict[str, str]:
+        if self.table_does_not_exist(PERSISTENT_CADETS_WITH_GROUP_ID_TABLE):
+            return {}
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT %s FROM %s WHERE %s=%d"""
+                % (
+                    DICT_OF_EVENT_IDS_AND_GROUP_NAMES,
+                    PERSISTENT_CADETS_WITH_GROUP_ID_TABLE,
+                    CADET_ID,
+                    int(cadet_id)
+                )
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when reading persistent groups at events" % str(e1)
+            )
+        finally:
+            self.close()
+
+        if len(raw_list)>0:
+            raise MultipleMatches
+
+        if len(raw_list)==0:
+            return {}
+
+        return dict_from_str(raw_list[0][0])
+
 
     def read(self) -> ListOfGroupNamesForEventsAndCadetPersistentVersionWithIds:
         if self.table_does_not_exist(PERSISTENT_CADETS_WITH_GROUP_ID_TABLE):

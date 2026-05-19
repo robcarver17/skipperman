@@ -1,3 +1,5 @@
+from copy import copy
+
 from app.data_access.sql.generic_sql_data import GenericSqlData
 from app.objects.utilities.transform_data import date2int, int2date
 from app.data_access.sql.shared_column_names import *
@@ -20,9 +22,52 @@ INDEX_CADET_ATTENDANCE_TABLE = "index_cadet_attendance"
 
 
 class SqlDataAttendanceAtEventsForSpecificCadet(GenericSqlData):
+    def merge_attendance_for_cadets_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
+            return
+
+        existing = copy(self.get_raw_attendance_at_event_for_cadet(cadet_id_to_delete, event_id=event_id))
+
+        if existing:
+            raise Exception("cadet we are keeping is already at the event")
+
+        try:
+
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                CADET_ATTENDANCE_TABLE,
+                CADET_ID,
+                EVENT_ID,
+                int(event_id),
+                CADET_ID,
+                int(cadet_id_to_delete)
+            )
+            self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+        except Exception as e1:
+            raise Exception(
+                "error %s when writing to attendance table at event# %s"
+                % (str(e1), event_id)
+            )
+
     def get_events_cadet_attended(self, cadet: Cadet):
         raw_list = self.read(cadet.id)
         return raw_list.list_of_event_ids()
+
+
+    def delete_attendance_data_for_cadet_at_event(self, cadet_id: str, event_id: str):
+        try:
+            if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
+                return
+
+            self.cursor.execute(
+                "DELETE FROM %s WHERE %s=%d AND %s=%d "
+                % (CADET_ATTENDANCE_TABLE, CADET_ID, int(cadet_id), EVENT_ID, int(event_id))
+            )
+
+            self.conn.commit()
+        except Exception as e1:
+            raise Exception("Error %s when writing attendance" % str(e1))
+        finally:
+            self.close()
 
     def delete_attendance_data_for_cadet(self, cadet: Cadet):
         try:
@@ -102,6 +147,32 @@ class SqlDataAttendanceAtEventsForSpecificCadet(GenericSqlData):
                 ]
             )
         )
+
+    def is_cadet_in_attendance_data_for_event(
+        self, cadet_id: str, event_id: str
+    ):
+        try:
+            if self.table_does_not_exist(CADET_ATTENDANCE_TABLE):
+                return False
+
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s="%s" AND %s="%s" """
+                % (
+                    CADET_ATTENDANCE_TABLE,
+                    CADET_ID,
+                    int(cadet_id),
+                    EVENT_ID,
+                    int(event_id),
+                )
+            )
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception("Error %s when reading attendance" % str(e1))
+        finally:
+            self.close()
+
+        return len(raw_list)>0
 
     def get_raw_attendance_at_event_for_cadet(
         self, cadet_id: str, event_id: str

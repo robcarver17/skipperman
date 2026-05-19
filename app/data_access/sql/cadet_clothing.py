@@ -16,6 +16,31 @@ INDEX_CADET_WITH_CLOTHING_AT_EVENT_TABLE = "index_cadet_with_clothing_at_event"
 
 
 class SqlDataListOfCadetsWithClothingAtEvent(GenericSqlData):
+    def merge_clothing_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing = self.does_cadet_have_clothing_record_at_event(cadet_id=cadet_id_to_keep, event_id=event_id)
+        if existing:
+            raise Exception("cadet we are keeping is already at the event")
+
+        try:
+            if self.table_does_not_exist(CADET_WITH_CLOTHING_AT_EVENT_TABLE):
+                return
+
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                CADET_WITH_CLOTHING_AT_EVENT_TABLE,
+                CADET_ID,
+                EVENT_ID,
+                int(event_id),
+                CADET_ID,
+                int(cadet_id_to_delete)
+            )
+            self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+        except Exception as e1:
+            raise Exception(
+                "error %s when writing to cadet clothing table event# %s"
+                % (str(e1), event_id)
+            )
+
+
     def delete_cadet_from_event_and_return_messages(self, event_id: str, cadet_id: str):
         if not self.does_cadet_have_clothing_record_at_event(
             event_id=event_id, cadet_id=cadet_id
@@ -200,6 +225,8 @@ class SqlDataListOfCadetsWithClothingAtEvent(GenericSqlData):
         )
 
         return list_of_cadets
+
+
 
     def read(self, event_id: str) -> ListOfCadetsWithClothingAndIdsAtEvent:
         try:

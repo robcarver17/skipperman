@@ -31,6 +31,12 @@ class ObjectStore:
     def backup_underlying_data(self):
         self.data_api.make_backup()
 
+    def commit(self):
+        self.data_api.commit()
+
+    def close(self):
+        self.data_api.close()
+
     def clear_memory_cache_in_store(self):
         self.new_object_cache.clear()
 
@@ -38,7 +44,7 @@ class ObjectStore:
         self, data_api_property_and_method: Callable, **kwargs
     ):
         ### does not update cache, so after use will need to clear cache without flushing
-        data_api_property_and_method(**kwargs)
+        return data_api_property_and_method(**kwargs)
 
     def get(self, data_api_property_and_method: Callable, **kwargs):
         definition_with_args = DefinitionWithArgsAndMethod(

@@ -23,25 +23,54 @@ INDEX_CADETS_ON_COMMITTEE_TABLE = "index_cadets_on_committee"
 
 
 class SqlDataListOfCadetsOnCommitte(GenericSqlData):
-    def delete_cadet_from_committee_data(self, cadet: Cadet):
-        if not self.is_cadet_on_committe(cadet.id):
+    def merge_cadets_on_committee(self,  cadet_id_to_delete: str, cadet_id_to_keep: str):
+        if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):
+            return "Cadet we are deleting not on committee, no action to take"
+
+        elif not self.is_cadet_on_committe(cadet_id_to_delete):
+            return "Cadet we are deleting not on committee, no action to take"
+
+        elif self.is_cadet_on_committe(cadet_id_to_keep):
+            self.delete_cadet_with_id_from_committee_data(cadet_id_to_delete, commit_and_close= False)
+            return "Merging cadet already on committee, not adding again. Deleted existing member"
+        else:
+            ## existing on commitee, new one is not
+            try:
+                insertion = "UPDATE %s SET %s=%d WHERE %s=%d" % (
+                    CADETS_ON_COMMITTEE_TABLE,
+                    CADET_ID,
+                    int(cadet_id_to_keep),
+                    CADET_ID,
+                    int(cadet_id_to_delete),
+                )
+                self.cursor.execute(insertion)
+            except Exception as e1:
+                raise Exception(str(e1))
+
+
+    def delete_cadet_from_committee_data(self, cadet: Cadet, commit_and_close: bool = True):
+        self.delete_cadet_with_id_from_committee_data(cadet_id=cadet.id, commit_and_close=commit_and_close)
+
+    def delete_cadet_with_id_from_committee_data(self, cadet_id:str, commit_and_close: bool = True):
+        if not self.is_cadet_on_committe(cadet_id):
             raise MissingData
 
         try:
             sql = "DELETE FROM %s WHERE %s=%d" % (
                 CADETS_ON_COMMITTEE_TABLE,
                 CADET_ID,
-                int(cadet.id),
+                int(cadet_id),
             )
 
             self.cursor.execute(sql)
-
-            self.conn.commit()
+            if commit_and_close:
+                self.conn.commit()
         except Exception as e1:
             raise Exception(str(e1))
 
         finally:
-            self.close()
+            if commit_and_close:
+                self.close()
 
     def is_cadet_on_committe(self, cadet_id: str):
         if self.table_does_not_exist(CADETS_ON_COMMITTEE_TABLE):

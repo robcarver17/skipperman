@@ -21,6 +21,36 @@ INDEX_NAME_CADETS_AND_CLUB_DINGHIES_TABLE = "cadets_and_club_dinghies_table_inde
 
 
 class SqlDataListOfCadetAtEventWithClubDinghies(GenericSqlData):
+
+    def merge_club_dinghies_at_event(self, cadet_id_to_delete: str, cadet_id_to_keep:str,
+                                     event_id:str):
+        if self.is_a_club_dinghy_allocated_for_cadet_on_any_day_at_event(
+            event_id=event_id,
+            cadet_id=cadet_id_to_keep
+        ):
+            raise Exception("cadet to keep already has club dinghy at this event")
+
+        try:
+            if self.table_does_not_exist(CADETS_AND_CLUB_DINGHIES_TABLE):
+                return
+
+            self.cursor.execute(
+                "UPDATE %s SET %s='%d' WHERE %s='%s' AND %s=%d "
+                % (
+                    CADETS_AND_CLUB_DINGHIES_TABLE,
+                    CADET_ID,
+                    int(cadet_id_to_keep),
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id_to_delete),
+                )
+            )
+
+        except Exception as e1:
+            raise Exception("Error %s when writing club dinghies at event" % str(e1))
+
+
     def update_or_add_cadet_with_club_dinghy_on_day(
         self, event_id: str, cadet_id: str, day: Day, club_dinghy_id: str
     ):

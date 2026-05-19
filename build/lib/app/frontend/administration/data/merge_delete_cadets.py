@@ -8,7 +8,7 @@ from app.frontend.administration.data.deleting_cadets_process import (
     display_deleting_cadet_process,
 )
 from app.frontend.administration.data.merging_cadets_process import (
-    set_cadet_to_merge_with_in_state,
+    set_cadet_to_merge_with_in_state, display_merging_cadet_process,
 )
 from app.frontend.cadets.ENTRY_view_cadets import get_table_of_cadets_with_buttons
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
@@ -35,6 +35,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.cadet_matching_and_sorting import SORT_BY_SIMILARITY_BOTH
+from app.objects.utilities.exceptions import MissingData
 
 
 def display_form_merge_delete_cadets(interface: abstractInterface):
@@ -90,7 +91,12 @@ def form_for_view_individual_cadet(interface: abstractInterface) -> NewForm:
 
 
 def display_form_merge_delete_individual_cadet(interface: abstractInterface):
-    cadet = get_cadet_to_delete_from_state(interface)
+    try:
+        cadet = get_cadet_to_delete_from_state(interface)
+    except MissingData:
+        ## deletion has already happened
+        return interface.get_new_form_given_function(display_form_merge_delete_cadets)
+
     table_of_cadets_with_buttons = get_table_of_cadets_with_buttons(
         interface=interface,
         exclude_cadet=cadet,
@@ -145,8 +151,7 @@ def launch_merge_cadet_process(interface: abstractInterface) -> Union[Form, NewF
     )
     set_cadet_to_merge_with_in_state(interface=interface, cadet=cadet_to_merge_with)
 
-    interface.log_error("Merge not implemented")
-    return interface.get_new_form_given_function(display_deleting_cadet_process)
+    return interface.get_new_form_given_function(display_merging_cadet_process)
 
 
 def launch_delete_cadet_process(interface: abstractInterface):

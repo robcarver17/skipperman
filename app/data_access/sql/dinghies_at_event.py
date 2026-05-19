@@ -37,6 +37,40 @@ INDEX_NAME_CADETS_AND_DINGHIES_TABLE = "cadets_and_dinghies_table_index"
 
 
 class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
+    def merge_dinghies_at_event(self, event_id: str, cadet_id_to_delete: str, cadet_id_to_keep: str):
+        existing = self.is_cadet_in_data_for_any_day(event_id=event_id, cadet_id=cadet_id_to_keep)
+        if existing:
+            raise Exception("cadet we are keeping is already at the event")
+
+        try:
+            if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
+                return
+
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                CADETS_AND_DINGHIES_TABLE,
+                CADET_ID,
+                EVENT_ID,
+                int(event_id),
+                CADET_ID,
+                int(cadet_id_to_delete)
+            )
+            self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+
+            insertion = "UPDATE %s SET %s=? WHERE %s=%d AND %s=%d" % (
+                CADETS_AND_DINGHIES_TABLE,
+                PARTNER_CADET_ID,
+                EVENT_ID,
+                int(event_id),
+                PARTNER_CADET_ID,
+                int(cadet_id_to_delete)
+            )
+            self.cursor.execute(insertion, (int(cadet_id_to_keep),))
+        except Exception as e1:
+            raise Exception(
+                "error %s when writing to cadet dinghy table at event# %s"
+                % (str(e1), event_id)
+            )
+
     def remove_cadet_from_boats_data_on_day_and_breakup_any_partnerships(
         self,
         event_id: str,
@@ -446,6 +480,36 @@ class SqlDataListOfCadetAtEventWithDinghies(GenericSqlData):
         )
 
         return list_of_boat_classes
+
+
+
+
+    def is_cadet_in_data_for_any_day(self, event_id: str, cadet_id: str) -> bool:
+        if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):
+            return False
+
+        try:
+            cursor = self.cursor
+            cursor.execute(
+                """SELECT * FROM %s WHERE %s=%d AND %s=%d """
+                % (
+                    CADETS_AND_DINGHIES_TABLE,
+                    EVENT_ID,
+                    int(event_id),
+                    CADET_ID,
+                    int(cadet_id)
+                )
+            )
+
+            raw_list = cursor.fetchall()
+        except Exception as e1:
+            raise Exception(
+                "Error %s when reading cadets and dinghies at event" % str(e1)
+            )
+        finally:
+            self.close()
+
+        return len(raw_list)>0 ## can be duplicate different days
 
     def read(self, event_id: str) -> ListOfCadetAtEventWithBoatClassAndPartnerWithIds:
         if self.table_does_not_exist(CADETS_AND_DINGHIES_TABLE):

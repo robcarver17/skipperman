@@ -176,3 +176,17 @@ def are_all_cadets_in_group_marked_in_registration_as_present_absent_or_late(
     ]
 
     return not any(requires_save)
+
+
+def merge_attendance_for_cadets_at_event(interface: abstractInterface, cadet_to_delete: Cadet, cadet_to_keep: Cadet, event: Event):
+    try:
+        interface.update(
+            interface.object_store.data_api.data_attendance_at_events_for_specific_cadet.merge_attendance_for_cadets_at_event,
+            event_id=event.id,
+            cadet_id_to_delete=cadet_to_delete.id,
+            cadet_id_to_keep=cadet_to_keep.id
+        )
+        interface.log_error("Merged attendance for %s and %s at event %s" % (cadet_to_keep, cadet_to_delete, event))
+    except Exception as e:
+        raise Exception("Can't merge groups for %s with %s at %s, because %s" % (cadet_to_keep, cadet_to_delete, event, str(e)))
+

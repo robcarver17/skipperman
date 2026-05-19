@@ -22,6 +22,8 @@ INDEX_TICK_SHEET_ITEM_TABLE = "index_tick_sheet_items"
 
 
 class SqlDataListOfTickSheetItems(GenericSqlData):
+
+
     def add_new_ticklistitem_to_qualification(
         self,
         substage_id: str,

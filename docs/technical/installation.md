@@ -20,8 +20,7 @@ Once all installed you can run a local instance with (assuming a Linux command l
 
 ```
 cd skipperman
-export FLASK_APP=flask_app.py
-flask run
+. run
 ```
 
 Then go to `http://127.0.0.1:5000/` on your chrome browser and you should see the skipperman home page.

@@ -20,6 +20,7 @@ def get_html_header(
     include_user_options: bool = True,
     include_backup_option: bool = False,
     include_support_email_and_global_help: bool = False,
+        include_logo:bool = True
 ):
     if include_user_options:
         user_options_line = html_code_depending_on_whether_logged_in(
@@ -44,12 +45,18 @@ def get_html_header(
     else:
         support_email_and_global_help = ""
 
+    if include_logo:
+        logo1_html = '<img src="/static/logo.png">'
+        logo2_html = ''
+    else:
+        logo1_html = logo2_html=''
+
     html_header = """
     <header class="w3-container w3-padding w3-orange" id="myHeader">
       <div class="w3-center">
       <h4>Blackwater Sailing Club - Cadet Skipper Management System</h4>
       
-      <h1 class="w3-xxxlarge ">%s</h1><img src="/static/logo.png">
+      <h1 class="w3-xxxlarge ">%s %s %s</h1>
       
       
       
@@ -58,7 +65,9 @@ def get_html_header(
           %s
       </div>
     </header>""" % (
+        logo1_html,
         include_title,
+        logo2_html,
         username_banner,
         user_options_line,
         support_email_and_global_help,

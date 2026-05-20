@@ -9,6 +9,7 @@ def get_master_layout(
     include_user_options: bool = True,
     include_backup_option: bool = False,
     include_support_email_and_global_help_link: bool = False,
+        include_logo: bool = True
 ):
     links = ListOfHtmlElements(
         [
@@ -33,6 +34,7 @@ def get_master_layout(
         include_user_options=include_user_options,
         include_backup_option=include_backup_option,
         include_support_email_and_global_help=include_support_email_and_global_help_link,
+        include_logo=include_logo
     )
     flash_block = get_flash_block()
     html_page_master_layout = HtmlPage(

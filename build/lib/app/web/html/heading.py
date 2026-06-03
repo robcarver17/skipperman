@@ -56,10 +56,10 @@ def get_html_header(
       <div class="w3-center">
       <h4>Blackwater Sailing Club - Cadet Skipper Management System</h4>
       
-      <h1 class="w3-xxxlarge ">%s %s %s</h1>
-      
-      
-      
+      <h1 class="w3-xxxlarge ">%s %s %s</h1>      
+      <h6>(Not a spreadsheet))</h4>
+            <hr>
+
       <h5>%s</h5>
         %s 
           %s

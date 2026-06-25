@@ -100,7 +100,7 @@ def get_dict_of_df_for_reporting_allocations_with_flags(
         object_store=object_store, event=event
     )
     dict_of_df = {}
-    for day in days_to_show:
+    for day in days_to_show.days_available():
         list_of_cadets_with_groups = (
             group_allocations_data.get_list_of_cadets_with_group_for_specific_day(
                 day=day,

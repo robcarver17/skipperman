@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union, Dict, List
 
-
+import pandas as pd
 
 from app.backend.cadets_at_event.instructor_marked_attendance import \
     mark_unknown_cadets_across_groups_as_not_attending_or_unregistered, get_attendance_on_day_for_all_cadets_at_event
@@ -68,6 +68,7 @@ def display_form_see_all_groups_for_event(interface: abstractInterface) -> Union
     list_of_rows  =get_cadet_data_as_list_of_rows(interface=interface, event=event, day=day)
     sort_order = get_sort_order(interface)
     list_of_rows.sort_by(sort_order)
+    summary = get_summary_table(list_of_rows)
     table = get_table_to_mark_attendance(sorted_list_of_rows=list_of_rows)
     navbar = get_nav_bar()
     header = Line(
@@ -85,6 +86,8 @@ def display_form_see_all_groups_for_event(interface: abstractInterface) -> Union
             navbar,
             _______________,
             header,
+            _______________,
+            summary,
             _______________,
             Line("Click button to sort by relevant column"),
             table,
@@ -190,6 +193,45 @@ class ListOfRowsForCadets(List[RowForCadet]):
     def sort_by_attendance(self):
         ## attendance, first name, surname
         self.sort(key=lambda x: (x.current_attendance, x.cadet_first_name, x.cadet_surname))
+
+def get_summary_table(    sorted_list_of_rows: ListOfRowsForCadets,
+
+):
+    all_group_names = list(set([row.group_name for row in sorted_list_of_rows]))
+    all_current_attendance= list(set([row.current_attendance for row in sorted_list_of_rows]))
+
+    df = pd.DataFrame(
+
+                 [
+                     counts_over_groups(
+                         sorted_list_of_rows=sorted_list_of_rows,
+                         group_name=group_name,
+                         all_current_attendance=all_current_attendance
+                     )  for group_name in all_group_names
+                 ]
+             )
+    df.index = all_group_names
+
+    return PandasDFTable(df)
+
+def counts_over_groups(  sorted_list_of_rows: ListOfRowsForCadets, group_name: str, all_current_attendance: List[str]):
+    return dict(
+        [(current_attendance, count_of_status_and_group_order(
+            sorted_list_of_rows=sorted_list_of_rows,
+            group_name=group_name,
+            current_attendance=current_attendance
+        )) for current_attendance in all_current_attendance]
+    )
+
+def count_of_status_and_group_order(    sorted_list_of_rows: ListOfRowsForCadets,
+                                       group_name: str,
+                                        current_attendance: str
+
+):
+    return sum([1 for row in sorted_list_of_rows if row.group_name==group_name
+                and row.current_attendance==current_attendance])
+
+
 
 
 def get_table_to_mark_attendance(

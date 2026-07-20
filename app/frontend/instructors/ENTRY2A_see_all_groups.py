@@ -309,7 +309,7 @@ def post_form_see_all_groups_for_event(
     return interface.get_new_form_given_function(display_form_see_all_groups_for_event)
 
 def previous_form(interface: abstractInterface):
-    clear_event_id_stored_in_state(interface)
+    
     return interface.get_new_display_form_for_parent_of_function(
         post_form_see_all_groups_for_event
     )

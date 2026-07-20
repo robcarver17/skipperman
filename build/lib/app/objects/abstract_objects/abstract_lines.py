@@ -59,9 +59,9 @@ class DetailLine:
     open: bool = False
 
 
-def make_long_thing_detail_box(some_string: str):
+def make_long_thing_detail_box(some_string: str, detail_name="Detail"):
     if len(some_string) > 100:
-        return DetailLine(string=some_string, name="Detail")
+        return DetailLine(string=some_string, name=detail_name)
     else:
         return some_string
 

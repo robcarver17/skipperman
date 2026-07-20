@@ -475,6 +475,7 @@ app/frontend/forms/reorder_matrix.py
 app/frontend/forms/swaps.py
 app/frontend/forms/../../data_access/configuration/configuration.yaml
 app/frontend/instructors/ENTRY1_choose_event.py
+app/frontend/instructors/ENTRY2A_see_all_groups.py
 app/frontend/instructors/ENTRY2_choose_group.py
 app/frontend/instructors/ENTRY3_choose_level.py
 app/frontend/instructors/ENTRY_FINAL_view_ticksheets.py

@@ -1,3 +1,5 @@
+from app.frontend.instructors.ENTRY2A_see_all_groups import display_form_see_all_groups_for_event, \
+    post_form_see_all_groups_for_event
 from app.objects.abstract_objects.form_function_mapping import (
     DisplayAndPostFormFunctionMaps,
     NestedDictOfMappings,
@@ -44,7 +46,12 @@ instructor_function_mapping = (
                                 display_instructor_attendance,
                                 post_instructor_attendance,
                             ): 0,
-                        }
+                        },
+                        (
+                            display_form_see_all_groups_for_event,
+                            post_form_see_all_groups_for_event,
+                        ): 0,
+
                     }
                 }
             }

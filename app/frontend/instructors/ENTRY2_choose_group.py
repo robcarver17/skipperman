@@ -4,6 +4,7 @@ from app.backend.groups.cadets_with_groups_at_event import (
     get_list_of_all_groups_at_event,
 )
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
+from app.frontend.instructors.ENTRY2A_see_all_groups import display_form_see_all_groups_for_event
 
 from app.frontend.reporting.sailors.qualification_status import (
     write_expected_qualifications_to_temp_csv_file_and_return_filename,
@@ -95,12 +96,14 @@ def get_nav_bar(interface: abstractInterface):
         event=get_event_from_state(interface),
         volunteer=volunteer,
     ):
-        navbar.append(download_qualification_list_button)
         help = HelpButton("ticksheets_choose_group_SI_skipper_help")
+
+        navbar.append(download_qualification_list_button)
+        navbar.append(see_all_groups_button)
+        navbar.append(help)
     else:
         help = HelpButton("ticksheets_choose_group_help")
-
-    navbar.append(help)
+        navbar.append(help)
 
     return ButtonBar(navbar)
 
@@ -109,7 +112,8 @@ DOWNLOAD_QUALIFICATION_LIST = "Download qualification progress for registered ca
 download_qualification_list_button = Button(
     DOWNLOAD_QUALIFICATION_LIST, nav_button=True
 )
-
+SEE_ALL_GROUPS = "See all groups"
+see_all_groups_button = Button(SEE_ALL_GROUPS, nav_button=True)
 
 def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
     if event_is_empty_of_groups(interface=interface, event=event):
@@ -134,6 +138,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
         Button(label=group.name, value=value_for_group_button(group.name), tile=True)
         for group in list_of_groups
     ]
+
 
     return Line(list_with_buttons)
 
@@ -162,13 +167,16 @@ def post_form_choose_group_for_event(
             interface=interface, event=get_event_from_state(interface)
         )
         return File(filename)
-
+    elif see_all_groups_button.pressed(button_pressed):
+        return display_all_groups(interface)
     elif is_group_button(button_pressed):
         return action_when_group_button_clicked(interface)
 
     else:
         return button_error_and_back_to_initial_state_form(interface)
 
+def display_all_groups(interface: abstractInterface):
+    return interface.get_new_form_given_function(display_form_see_all_groups_for_event)
 
 def previous_form(interface: abstractInterface):
     clear_event_id_stored_in_state(interface)

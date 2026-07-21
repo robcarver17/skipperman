@@ -1,7 +1,6 @@
 from copy import copy
 from typing import List
 
-import app.backend.cadets_at_event.summary_attendance
 from app.backend.volunteers.list_of_volunteers import list_of_similar_volunteers
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.utilities.exceptions import missing_data, arg_not_passed
@@ -68,7 +67,7 @@ def get_list_of_cadets_with_names_similar_to_volunteer(
     similar_cadets = get_list_of_cadets_with_similar_surname(
         from_list_of_cadets, surname=volunteer.surname
     )
-    similar_cadets = app.backend.cadets_at_event.summary_attendance.sort_by_firstname()
+    similar_cadets = similar_cadets.sort_by_firstname()
 
     return similar_cadets
 

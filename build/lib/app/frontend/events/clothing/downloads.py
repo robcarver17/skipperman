@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 
+import app.backend.cadets_at_event.summary_attendance
 from app.data_access.configuration.configuration import CADET_COMMITTEE_SHIRT_COLOUR
 from app.data_access.init_directories import download_directory
 
@@ -97,7 +98,7 @@ def export_clothing_colours(interface: abstractInterface) -> File:
             )
         )
         dict_this_colour_without_committee = (
-            dict_this_colour_without_committee.sort_by_firstname()
+            app.backend.cadets_at_event.summary_attendance.sort_by_firstname()
         )
 
         list_of_names = (

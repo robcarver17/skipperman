@@ -6,7 +6,6 @@ from app.backend.groups.cadets_with_groups_at_event import get_list_of_cadets_in
 from app.backend.cadets_at_event.cadet_availability import (
     get_attendance_matrix_for_cadets_at_event,
 )
-from app.backend.registration_data.cadet_registration_data import get_list_of_active_cadets_at_event
 from app.data_access.store.object_store import ObjectStore
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.attendance import (
@@ -79,62 +78,6 @@ def get_attendance_at_event_for_cadets_in_group_at_event(
     return get_attendance_at_event_for_list_of_cadets(
         object_store=object_store, event=event, list_of_cadets=cadets_in_group
     )
-
-
-def get_attendance_at_event_for_all_cadets_at_event(
-    object_store: ObjectStore, event: Event
-) -> AttendanceAtEventAcrossCadets:
-    list_of_cadets = get_list_of_active_cadets_at_event(object_store=object_store, event=event)
-    return get_attendance_at_event_for_list_of_cadets(
-        object_store=object_store, event=event, list_of_cadets=list_of_cadets
-    )
-
-
-def get_attendance_on_day_for_all_cadets_at_event(
-    object_store: ObjectStore, event: Event,  day: Day
-) -> Dict[Cadet, AttendanceOnDay]:
-    dict_of_attendance_at_event_for_list_of_cadets = (
-        get_attendance_at_event_for_all_cadets_at_event(
-            object_store=object_store, event=event
-        )
-    )
-
-    return get_attendance_history_at_event_on_day(
-        day=day,
-        dict_of_attendance_at_event_for_list_of_cadets=dict_of_attendance_at_event_for_list_of_cadets,
-    )
-
-
-def mark_unknown_cadets_across_groups_as_not_attending_or_unregistered(
-    interface: abstractInterface, event: Event,  day: Day
-):
-    availability_dict = get_attendance_matrix_for_cadets_at_event(
-        object_store=interface.object_store, event=event
-    )
-    attendance_dict = get_attendance_on_day_for_all_cadets_at_event(
-        object_store=interface.object_store, event=event, day=day
-    )
-    list_of_cadets = ListOfCadets(list(attendance_dict.keys()))
-    for cadet in list_of_cadets:
-        attending = availability_dict.get(cadet).available_on_day(day)
-        attendance = registration_not_taken if attending else not_attending
-        current_attendance = attendance_dict.get(cadet).current_attendance
-
-        if current_attendance == unknown:
-            ## set attedance
-            update_attendance_for_cadet_on_day_at_event(
-                interface=interface,
-                event=event,
-                cadet=cadet,
-                day=day,
-                attendance=attendance,
-            )
-
-    #### NEEDS TO WRITE TO SQL, CLEAR THAT PART OF CACHE SO RELOADED
-    clear_cache_attendance_at_event_for_list_of_cadets(
-        object_store=interface.object_store, event=event, list_of_cadets=list_of_cadets
-    )
-
 
 
 def mark_unknown_cadets_as_not_attending_or_unregistered(

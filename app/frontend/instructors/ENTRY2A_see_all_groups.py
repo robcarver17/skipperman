@@ -44,7 +44,6 @@ from app.objects.abstract_objects.abstract_form import (
     NewForm,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
-from app.objects.groups import ListOfGroups
 
 
 def display_form_see_all_groups_for_event(interface: abstractInterface) -> Union[Form,NewForm]:

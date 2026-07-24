@@ -1,4 +1,3 @@
-import app.backend.cadets_at_event.summary_attendance
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.cadets import ListOfCadets
 from app.objects.composed.volunteers_at_event_with_registration_data import (
@@ -39,7 +38,7 @@ def get_list_of_volunteers_except_those_already_at_event(
         )
     )
 
-    return app.backend.cadets_at_event.summary_attendance.sort_by_firstname()
+    return volunteers_not_at_event.sort_by_firstname()
 
 
 def add_volunteer_to_event_with_availability(

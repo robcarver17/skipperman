@@ -72,6 +72,7 @@ def get_dict_of_group_annotations(
             (
                 day.name,
                 get_dict_of_group_annotations_on_day(
+                    event=event,
                     day=day,
                     volunteers_in_roles_at_event=volunteers_in_roles_at_event,
                     list_of_roles=list_of_roles,
@@ -86,6 +87,7 @@ def get_dict_of_group_annotations(
 
 
 def get_dict_of_group_annotations_on_day(
+        event: Event,
     day: Day,
     list_of_roles: List[RoleWithSkills],
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
@@ -96,6 +98,7 @@ def get_dict_of_group_annotations_on_day(
             (
                 group.name,
                 get_annotation_for_group(
+                    event=event,
                     day=day,
                     group=group,
                     list_of_roles=list_of_roles,
@@ -110,12 +113,14 @@ def get_dict_of_group_annotations_on_day(
 
 
 def get_annotation_for_group(
+        event: Event,
     day: Day,
     group: Group,
     list_of_roles: List[RoleWithSkills],
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
 ) -> str:
     instructors = get_instructors_at_event_for_group(
+        event=event,
         day=day,
         group=group,
         list_of_roles=list_of_roles,
@@ -127,11 +132,14 @@ def get_annotation_for_group(
 
 
 def get_instructors_at_event_for_group(
+        event: Event,
     day: Day,
     group: Group,
     volunteers_in_roles_at_event: DictOfVolunteersAtEventWithDictOfDaysRolesAndGroups,
     list_of_roles: List[RoleWithSkills],
 ) -> str:
+    if not event.day_selector_for_volunteer_days_in_event().available_on_day(day):
+        return "Non volunteer day"
     instructors = []
     for role in list_of_roles:
         instructors += get_list_of_instructors_on_day_for_specific_role_in_group(

@@ -1,6 +1,5 @@
 from copy import copy
 
-import app.backend.cadets_at_event.summary_attendance
 from app.objects.volunteers import ListOfVolunteers
 
 from app.data_access.store.object_store import ObjectStore
@@ -82,7 +81,7 @@ def sort_volunteer_data_by_role_on_day_and_skills_and_then_name(
     ## Everyone else
     list_of_volunteers_to_choose_from = copy(event_data.list_of_volunteers())
     list_of_volunteers_to_choose_from_sorted_by_name = (
-        app.backend.cadets_at_event.summary_attendance.sort_by_firstname()
+        list_of_volunteers_to_choose_from.sort_by_firstname()
     )
 
     sorted_list_of_volunteers = move_volunteers_from_list_to_sorted_list(

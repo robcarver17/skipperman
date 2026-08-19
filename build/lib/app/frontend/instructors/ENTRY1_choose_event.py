@@ -20,7 +20,7 @@ from app.backend.events.list_of_events import (
 )
 from app.backend.security.user_access import (
     get_list_of_events_entitled_to_see,
-    is_volunteer_SI_or_super_user,
+    is_volunteer_CI_principal_or_super_user,
 )
 
 from app.objects.abstract_objects.abstract_text import Heading
@@ -48,7 +48,7 @@ from app.objects.abstract_objects.abstract_lines import (
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
+    get_volunteer_for_logged_in_user_or_awarding_user, get_group_description_for_logged_in_user,
 )
 from app.objects.events import SORT_BY_START_DSC
 from app.frontend.instructors.ENTRY2_choose_group import (
@@ -114,17 +114,15 @@ def display_form_main_instructors_page_sort_order_passed(
 
 
 def get_heading(interface: abstractInterface):
-    if is_volunteer_SI_or_super_user(interface):
-        text = "Tick sheets and documents for senior instructors and skippers"
-    else:
-        text = "Tick sheets and documents for instructors"
+    description = get_group_description_for_logged_in_user(interface)
+    text = "Tick sheets and documents for %s" % description
 
     return Heading(text, centred=True, size=3)
 
 
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button]
-    if is_volunteer_SI_or_super_user(interface):
+    if is_volunteer_CI_principal_or_super_user(interface):
         navbar.append(download_qualification_list_button)
         help = HelpButton("ticksheets_SI_skipper_help")
     else:
@@ -193,7 +191,7 @@ def form_for_view_event(interface: abstractInterface):
 
 
 def get_event_buttons(interface: abstractInterface, sort_by: str) -> Line:
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
+    volunteer = get_volunteer_for_logged_in_user_or_awarding_user(interface)
     list_of_events = get_list_of_events_entitled_to_see(
         object_store=interface.object_store, volunteer=volunteer, sort_by=sort_by
     )

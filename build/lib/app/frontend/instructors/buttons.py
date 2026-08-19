@@ -1,5 +1,6 @@
 from typing import Tuple, Union
 
+from app.backend.security.logged_in_user import can_logged_in_volunteer_award_qualifications
 from app.objects.abstract_objects.abstract_lines import ListOfLines, Line
 
 from app.frontend.shared.qualification_and_tick_state_storage import (
@@ -7,9 +8,6 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
     EDIT_DROPDOWN_STATE,
     NO_EDIT_STATE,
     return_true_if_a_cadet_id_been_set,
-)
-from app.frontend.instructors.ticksheet_table_elements import (
-    user_can_award_qualifications,
 )
 from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.abstract_objects.abstract_interface import abstractInterface
@@ -96,7 +94,7 @@ def get_cadet_buttons_at_start_of_row_in_edit_state(
     cadet_id: str,
     already_qualified: bool,
 ) -> ListOfLines:
-    can_award_qualification = user_can_award_qualifications(interface)
+    can_award_qualification = can_logged_in_volunteer_award_qualifications(interface)
 
     if can_award_qualification:
         return (

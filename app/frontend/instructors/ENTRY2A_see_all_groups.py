@@ -10,14 +10,14 @@ from app.frontend.instructors.attendance_table import day_given_current_day_and_
 
 from app.backend.security.user_access import (
 
-    can_see_all_groups_and_award_qualifications,
+    can_see_all_groups_at_event,
 )
 
 from app.objects.abstract_objects.abstract_tables import Table, PandasDFTable, RowInTable
 from app.objects.events import Event
 
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
+    get_volunteer_for_logged_in_user_or_awarding_user,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -83,8 +83,8 @@ def display_form_see_all_groups_for_event(interface: abstractInterface) -> Union
     return Form(lines_inside_form)
 
 def user_authorised(interface: abstractInterface):
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
-    return  can_see_all_groups_and_award_qualifications(
+    volunteer = get_volunteer_for_logged_in_user_or_awarding_user(interface)
+    return  can_see_all_groups_at_event(
         object_store=interface.object_store,
         event=get_event_from_state(interface),
         volunteer=volunteer)

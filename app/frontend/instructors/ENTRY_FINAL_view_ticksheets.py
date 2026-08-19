@@ -4,9 +4,9 @@ from app.objects.abstract_objects.abstract_buttons import (
 )
 
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
+    get_volunteer_for_logged_in_user_or_awarding_user, can_logged_in_volunteer_award_qualifications,
 )
-from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
+from app.backend.security.user_access import can_see_all_groups_at_event
 
 from app.frontend.form_handler import button_error_and_back_to_initial_state_form
 from app.frontend.instructors.buttons import (
@@ -136,14 +136,6 @@ def get_nav_bar(interface: abstractInterface):
 
     return ButtonBar(navbar)
 
-
-def can_logged_in_volunteer_award_qualifications(interface: abstractInterface):
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
-    return can_see_all_groups_and_award_qualifications(
-        object_store=interface.object_store,
-        event=get_event_from_state(interface),
-        volunteer=volunteer,
-    )
 
 
 def post_form_view_ticksheets_for_event_and_group(

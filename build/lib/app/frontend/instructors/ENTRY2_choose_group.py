@@ -12,7 +12,7 @@ from app.frontend.reporting.sailors.qualification_status import (
 
 from app.backend.security.user_access import (
     get_list_of_groups_volunteer_can_see,
-    can_see_all_groups_and_award_qualifications,
+    can_see_all_groups_at_event,
 )
 from app.frontend.shared.qualification_and_tick_state_storage import (
     update_state_for_group_name,
@@ -20,7 +20,7 @@ from app.frontend.shared.qualification_and_tick_state_storage import (
 from app.objects.events import Event
 
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
+    get_volunteer_for_logged_in_user_or_awarding_user,
 )
 from app.objects.abstract_objects.abstract_text import Heading
 
@@ -90,8 +90,8 @@ def display_form_choose_group_for_event(interface: abstractInterface) -> Form:
 
 def get_nav_bar(interface: abstractInterface):
     navbar = [main_menu_button, back_menu_button]
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
-    if can_see_all_groups_and_award_qualifications(
+    volunteer = get_volunteer_for_logged_in_user_or_awarding_user(interface)
+    if can_see_all_groups_at_event(
         object_store=interface.object_store,
         event=get_event_from_state(interface),
         volunteer=volunteer,
@@ -119,7 +119,7 @@ def get_group_buttons(interface: abstractInterface, event: Event) -> Line:
     if event_is_empty_of_groups(interface=interface, event=event):
         return Line(Heading("No groups defined at this event yet"))
 
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
+    volunteer = get_volunteer_for_logged_in_user_or_awarding_user(interface)
     list_of_groups = get_list_of_groups_volunteer_can_see(
         object_store=interface.object_store, event=event, volunteer=volunteer
     )

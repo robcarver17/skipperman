@@ -20,8 +20,8 @@ from app.backend.groups.cadets_with_groups_at_event import (
 )
 
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
-    SUPERUSER,
+    get_volunteer_for_logged_in_user_or_awarding_user,
+    VOLUNTEER_IS_PRINCIPAL_CI_SKIPPER_ADMIN,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.events import ListOfEvents, Event
@@ -47,7 +47,7 @@ def get_list_of_events_entitled_to_see(
 def can_volunteer_see_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ):
-    if volunteer == SUPERUSER:
+    if volunteer == VOLUNTEER_IS_PRINCIPAL_CI_SKIPPER_ADMIN:
         return True
 
     list_of_groups = get_list_of_groups_volunteer_can_see(
@@ -59,7 +59,7 @@ def can_volunteer_see_event(
 def get_list_of_groups_volunteer_can_see(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> List[Group]:
-    can_see_all_groups = can_see_all_groups_and_award_qualifications(
+    can_see_all_groups = can_see_all_groups_at_event(
         object_store=object_store, event=event, volunteer=volunteer
     )
 
@@ -79,10 +79,10 @@ def get_list_of_groups_volunteer_can_see(
     return ordered_groups
 
 
-def can_see_all_groups_and_award_qualifications(
+def can_see_all_groups_at_event(
     object_store: ObjectStore, event: Event, volunteer: Volunteer
 ) -> bool:
-    is_superuser = volunteer == SUPERUSER
+    is_superuser = volunteer == VOLUNTEER_IS_PRINCIPAL_CI_SKIPPER_ADMIN
     if is_superuser:
         return True
 
@@ -92,12 +92,10 @@ def can_see_all_groups_and_award_qualifications(
 
     return is_senior_instructor_at_event
 
+def can_award_qualifications():
+    pass
 
-def is_volunteer_SI_or_super_user(interface: abstractInterface):
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
+def is_volunteer_CI_principal_or_super_user(interface: abstractInterface):
+    volunteer = get_volunteer_for_logged_in_user_or_awarding_user(interface)
 
-    if volunteer is SUPERUSER:
-        return True
-    return is_volunteer_qualified_as_SI(
-        object_store=interface.object_store, volunteer=volunteer
-    )
+    return volunteer is VOLUNTEER_IS_PRINCIPAL_CI_SKIPPER_ADMIN

@@ -1,9 +1,9 @@
 from app.frontend.shared.events_state import get_event_from_state
 
 from app.backend.security.logged_in_user import (
-    get_volunteer_for_logged_in_user_or_superuser,
+    get_volunteer_for_logged_in_user_or_awarding_user, can_logged_in_volunteer_award_qualifications,
 )
-from app.backend.security.user_access import can_see_all_groups_and_award_qualifications
+from app.backend.security.user_access import can_see_all_groups_at_event
 
 from app.objects.abstract_objects.abstract_lines import Line, ListOfLines
 
@@ -34,7 +34,7 @@ def get_buttons_for_ticksheet(interface: abstractInterface) -> Line:
     if not_editing(interface):
         return get_buttons_for_ticksheet_when_not_editing(interface)
 
-    if user_can_award_qualifications(interface):
+    if can_logged_in_volunteer_award_qualifications(interface):
         return Line([award_all_with_full_ticks, award_qualification_to_all_in_group])
     else:
         ## No buttons, just the save / cancel on top of the nav bar
@@ -63,19 +63,9 @@ award_qualification_to_all_in_group = Button(AWARD_ALL_ANYWAY)
 show_all_cadets_button = Button(SHOW_ALL_CADETS_BUTTON_LABEL)
 
 
-def user_can_award_qualifications(interface: abstractInterface):
-    volunteer = get_volunteer_for_logged_in_user_or_superuser(interface)
-    event = get_event_from_state(interface)
-
-    can_award_qualificaiton = can_see_all_groups_and_award_qualifications(
-        object_store=interface.object_store, event=event, volunteer=volunteer
-    )
-
-    return can_award_qualificaiton
-
 
 def get_cadet_button_instructions(interface: abstractInterface) -> str:
-    can_award_qualificaiton = user_can_award_qualifications(interface)
+    can_award_qualificaiton = can_logged_in_volunteer_award_qualifications(interface)
     state = get_edit_state_of_ticksheet(interface)
     cadet_id_set = return_true_if_a_cadet_id_been_set(interface)
 

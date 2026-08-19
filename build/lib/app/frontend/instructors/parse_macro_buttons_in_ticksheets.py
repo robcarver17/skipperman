@@ -1,4 +1,5 @@
-from app.backend.security.logged_in_user import get_volunteer_name_for_logged_in_user
+from app.backend.security.logged_in_user import get_volunteer_name_for_logged_in_user, \
+    can_logged_in_volunteer_award_qualifications
 from app.objects.cadets import Cadet
 
 from app.objects.composed.ticksheet import DictOfCadetsAndTicksWithinQualification
@@ -24,9 +25,6 @@ from app.frontend.instructors.render_ticksheet_table import (
 )
 from app.frontend.shared.qualification_and_tick_state_storage import (
     get_qualification_from_state,
-)
-from app.frontend.instructors.ticksheet_table_elements import (
-    user_can_award_qualifications,
 )
 from app.objects.abstract_objects.abstract_interface import abstractInterface
 from app.objects.qualifications import Qualification
@@ -86,7 +84,7 @@ def action_if_cadet_tick_button_pressed(
 def action_if_cadet_apply_qualification_button_pressed(
     interface: abstractInterface, cadet: Cadet
 ):
-    can_award_qualification = user_can_award_qualifications(interface)
+    can_award_qualification = can_logged_in_volunteer_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to apply qualifications_and_ticks!")
 
@@ -101,7 +99,7 @@ def action_if_cadet_apply_qualification_button_pressed(
 
 
 def action_if_apply_all_qualifications_button_pressed(interface: abstractInterface, include_unticked: bool = False):
-    can_award_qualification = user_can_award_qualifications(interface)
+    can_award_qualification =can_logged_in_volunteer_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to apply qualifications_and_ticks!")
 
@@ -159,7 +157,7 @@ def award_qualification_if_completed_or_forced(
 def action_if_cadet_remove_qualification_button_pressed(
     interface: abstractInterface, cadet: Cadet
 ):
-    can_award_qualification = user_can_award_qualifications(interface)
+    can_award_qualification = can_logged_in_volunteer_award_qualifications(interface)
     if not can_award_qualification:
         interface.log_error("User not allowed to remove qualifications_and_ticks!")
 

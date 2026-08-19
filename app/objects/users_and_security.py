@@ -15,10 +15,11 @@ from app.objects.utilities.generic_list_of_objects import (
 )
 from app.objects.utilities.generic_objects import GenericSkipperManObject
 
-UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "RO", "public"])
+UserGroup = Enum("UserGroup", ["admin", "skipper", "instructor", "RO", "public", "principal_CI"])
 ADMIN_GROUP = UserGroup.admin
 SKIPPER_GROUP = UserGroup.skipper
 INSTRUCTOR_GROUP = UserGroup.instructor
+PRINCIPAL_CI_GROUP = UserGroup.principal_CI
 PUBLIC_GROUP = UserGroup.public
 RACE_OFFICER_GROUP = UserGroup.RO
 
@@ -28,8 +29,15 @@ ALL_GROUPS = [
     INSTRUCTOR_GROUP,
     RACE_OFFICER_GROUP,
     PUBLIC_GROUP,
+    PRINCIPAL_CI_GROUP
 ]
 
+GROUP_DESCRIPTION = {ADMIN_GROUP: "Administrator",
+                     SKIPPER_GROUP: "Skipper",
+                     INSTRUCTOR_GROUP: "Instructor",
+                     RACE_OFFICER_GROUP: "Race officer",
+                     PUBLIC_GROUP: "Do not use",
+                     PRINCIPAL_CI_GROUP: "Principal or Chief instructor"}
 
 @dataclass
 class SkipperManUser(GenericSkipperManObject):
@@ -64,11 +72,14 @@ class SkipperManUser(GenericSkipperManObject):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def is_skipper_or_admin(self):
-        return self.group in [SKIPPER_GROUP, ADMIN_GROUP]
+    def is_principal_ci_skipper_or_admin(self):
+        return self.group in [SKIPPER_GROUP, ADMIN_GROUP, PRINCIPAL_CI_GROUP]
 
+    def describe_group(self):
+        return GROUP_DESCRIPTION.get(self.group, "")
 
-#
+    def can_award_qualifications(self):
+        return self.group in [ADMIN_GROUP, PRINCIPAL_CI_GROUP]
 
 NO_VOLUNTEER_ID = "-1"
 DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists at first login or on test machine

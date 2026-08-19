@@ -1,8 +1,5 @@
-from app.frontend.instructors.ticksheet_table_elements import (
-    user_can_award_qualifications,
-)
+
 from app.frontend.shared.events_state import get_event_from_state
-from app.objects.abstract_objects.abstract_buttons import Button
 from app.objects.utilities.exceptions import MissingData, MISSING_FROM_FORM
 
 from app.frontend.shared.cadet_state import get_cadet_from_state

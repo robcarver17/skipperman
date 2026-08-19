@@ -5,7 +5,7 @@ from app.objects.users_and_security import (
     ADMIN_GROUP,
     SKIPPER_GROUP,
     INSTRUCTOR_GROUP,
-    RACE_OFFICER_GROUP,
+    RACE_OFFICER_GROUP, PRINCIPAL_CI_GROUP,
 )
 
 ### MUST MATCH UP TO MENU CONSTRUCT
@@ -33,6 +33,6 @@ menu_security_dict = {
     "view_possible_reports": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_configuration": [ADMIN_GROUP, SKIPPER_GROUP],
     "view_utilities": [ADMIN_GROUP, SKIPPER_GROUP],
-    "view_for_instructors": [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP],
+    "view_for_instructors": [ADMIN_GROUP, SKIPPER_GROUP, INSTRUCTOR_GROUP, PRINCIPAL_CI_GROUP],
     "administration": [ADMIN_GROUP],
 }

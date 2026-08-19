@@ -22,7 +22,7 @@ def get_login_link_html_code():
     )
 
 
-from app.objects.users_and_security import ADMIN_GROUP
+from app.objects.users_and_security import ADMIN_GROUP, describe_user_group
 
 
 def get_read_write_logout_and_change_password_link_html_code(
@@ -55,7 +55,7 @@ change_password_html_string = (
 def get_username_banner():
     try:
         group = get_access_group_for_current_user()
-        return "Logged in as: %s (%s)" % (get_username(), group.name)
+        return "Logged in as: %s (%s)" % (get_username(), describe_user_group(group))
     except:
         return ""
 

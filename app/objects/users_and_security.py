@@ -76,10 +76,14 @@ class SkipperManUser(GenericSkipperManObject):
         return self.group in [SKIPPER_GROUP, ADMIN_GROUP, PRINCIPAL_CI_GROUP]
 
     def describe_group(self):
-        return GROUP_DESCRIPTION.get(self.group, "")
+        return describe_user_group(self.group)
 
     def can_award_qualifications(self):
         return self.group in [ADMIN_GROUP, PRINCIPAL_CI_GROUP]
+
+def describe_user_group(group: UserGroup):
+    return GROUP_DESCRIPTION.get(group, "")
+
 
 NO_VOLUNTEER_ID = "-1"
 DEFAULT_ADMIN_USER = "default"  ### OK to have in cleartext here as only used if no user security file exists at first login or on test machine

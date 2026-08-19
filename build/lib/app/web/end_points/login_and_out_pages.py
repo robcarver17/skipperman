@@ -9,6 +9,8 @@ from app.objects.users_and_security import (
     ADMIN_GROUP,
     SKIPPER_GROUP,
     INSTRUCTOR_GROUP,
+PRINCIPAL_CI_GROUP,
+RACE_OFFICER_GROUP
 )
 from app.web.flask.flash import flash_error, flash_log
 from app.web.flask.security import (
@@ -111,9 +113,13 @@ def welcome_message_for_user():
 
     if access_group == SKIPPER_GROUP:
         return (
-            "Welcome Skipper %s! (well, skipper or not you have skipper access privileges)"
+            "Welcome Skipper %s! (well, Skipper or not you have skipper access privileges)"
             % usernmae
         )
+    elif access_group==PRINCIPAL_CI_GROUP:
+        return ("Welcome oh so important chief instructor or principal, who wields the signature on RYA certificates %s" % usernmae)
+    elif access_group==RACE_OFFICER_GROUP:
+        return "Welcome %s bridge top dog and most mighty person at any racing event" % usernmae
     elif access_group == ADMIN_GROUP:
         return "Welcome oh mighty admin user %s!" % usernmae
     elif access_group == INSTRUCTOR_GROUP:
